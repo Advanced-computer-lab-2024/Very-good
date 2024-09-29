@@ -6,7 +6,7 @@ const tagSchema = new schema({
 
     name: {
         type: String,
-        required: true
+        required: false
     },
     tourismGovernerId: {
         type: schema.Types.ObjectId,

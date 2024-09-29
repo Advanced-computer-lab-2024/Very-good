@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+//import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
-import TouristPage from './TouristPage'; 
+import TouristPage from './Pages/TouristPage';
+import AdvertiserPage from './Pages/AdvertiserPage'; 
+import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -9,6 +11,8 @@ function App() {
   const [role, setRole] = useState(''); // Tracks the selected role
   const [step, setStep] = useState(1); // Tracks if we're on the initial or detailed form
   const [isTouristPageActive, setIsTouristPageActive] = useState(false); // Should we render tourist page
+  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render tourist page
+  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourist page
 
   // Function to handle action selection
   const handleActionSelection = (selectedAction) => {
@@ -30,7 +34,16 @@ function App() {
     if (role === 'tourist') {
       setIsTouristPageActive(true);
       // BACKEND CONNECTION As in Update The dataBase 
-    } else {
+    }
+    else if (role === 'advertiser') {
+      setIsAdvertiserPageActive(true);
+      // BACKEND CONNECTION As in Update The dataBase 
+    }
+    else if (role === 'tourismGovernor') {
+      setTourismGovernerPageActive(true);
+      // BACKEND CONNECTION As in Update The dataBase 
+    }
+    else {
       // Handle other roles or proceed with registration
       console.log(`Role selected: ${role}`);
       // Implement other role redirects here if necessary
@@ -42,7 +55,14 @@ function App() {
       {/* Render Tourist Page if active */}
       {isTouristPageActive ? (
         <TouristPage />
-      ) : (
+      ) :
+      isAdvertiserPageActive ? (
+        <AdvertiserPage />
+      ) :
+      isTourismGovernerPageActive ? (
+        <TourismGovernerPage/>
+      ) :
+      (
         <>
           {/* Welcome Message and Action Selection */}
           {action === '' && (

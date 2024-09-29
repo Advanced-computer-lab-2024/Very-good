@@ -18,10 +18,6 @@ const activitySchema = new schema({
         type: Number, // Duration in hours or minutes depending on your preference
         required: true
     },
-    address: {
-        type: String, // Formatted address
-        required: true
-    },
     location: {
         lat: {
             type: Number, // Latitude
