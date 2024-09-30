@@ -99,5 +99,11 @@ const deleteWorkout = async (req, res) => {
 const updateWorkout = async (req, res) => {
 
 }
+const updateActivity = async (req, res) => {
+
+}
+const deleteActivity = async (req, res) => {
+
+}
 
 module.exports = {createActivity, getActivities}

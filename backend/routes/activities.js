@@ -1,5 +1,6 @@
 const express = require('express')
-const {createActivity, getActivities} = require('../controllers/activityController')
+const {createActivity, getActivities,deleteActivity,updateActivity} = require('../controllers/activityController')
+const { updateMany } = require('../models/tagModel')
 const router = express.Router()
 
 router.get('/', getActivities)
@@ -8,8 +9,8 @@ router.get('/', getActivities)
 
 router.post('/', createActivity)
 
-//router.delete('/:id', deleteWorkout)
+router.delete('/:id', deleteActivity)
 
-//router.patch('/:id', updateWorkout)
+router.patch('/:id', updateActivity)
 
 module.exports = router

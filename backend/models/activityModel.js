@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Tag = require('./tagModel'); // Import the tag model
 const tagSchema = Tag.schema;
+const categorySchema = category.schema;
 
 const schema = mongoose.Schema
 
@@ -47,7 +48,7 @@ const activitySchema = new schema({
         }
     },
     category: {
-        type: String,
+        type: categorySchema,
         required: true
     },
     ratings: {
