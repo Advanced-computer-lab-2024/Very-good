@@ -46,7 +46,7 @@ const getTourismGoverners = async (req, res) => {
         const TourismGoverners = await TourismGoverner.find(); // Fetch all Tour Guides from the database
         res.status(200).json({
             message: 'Tourism Governers retrieved successfully',
-            data: users
+            data: TourismGoverners
         });
     } catch (error) {
         console.error(error);

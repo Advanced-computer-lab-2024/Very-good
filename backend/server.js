@@ -9,6 +9,7 @@ const ItineraryRoutes = require('./routes/itineraries')
 const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
+const tagRoutes = require('./routes/tags')
 const mongoose = require('mongoose')
 const cors = require('cors');
 
@@ -33,6 +34,7 @@ app.use('/api/itineraries', ItineraryRoutes)
 app.use('/api/historicalPlaces', historicalPlaceRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/sellers', sellerRoutes)
+app.use('/api/tags', tagRoutes)
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)

@@ -72,7 +72,18 @@ const historicalPlaceSchema = new schema({
             type: Number,
             required: true
         }
-    }
+    },
+    museum :{
+        type : Boolean
+    },
+    tourismGovernerId:{
+        type:schema.Types.ObjectId,
+        ref: 'tourist',
+    },
+    tags: [{ // Array of ObjectIds referencing the tag model
+        type: schema.Types.ObjectId,
+        ref: 'tag'
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('historicalPlace', historicalPlaceSchema);
