@@ -293,3 +293,15 @@ label {
 .container.shifted {
   margin-right: 250px; /* Shift content when sidebar opens */
 }
+.activity-card {
+  background-color: white;
+  color: #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}

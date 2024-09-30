@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './styles/global.css';
-import { fetchTouristByEmail,updateTouristByEmail } from './RequestSendingMethods';
+import '../styles/global.css';
+import { fetchTouristByEmail,updateTouristByEmail } from '../RequestSendingMethods';
 
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
