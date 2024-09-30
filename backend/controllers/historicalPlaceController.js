@@ -1,11 +1,12 @@
 const { default: mongoose } = require('mongoose')
 const HistoricalPlace = require('../models/historicalPlaceModel');
+const Tag = require('../models/tagModel');
 
 // Create a new Historical Place
 const createHistoricalPlace = async (req, res) => {
     try {
         // Destructure the request body to get historical place details
-        const { name, description, pictures, location, openingHours, ticketPrices, museum, tourismGovernerId } = req.body;
+        const { name, description, pictures, location, openingHours, ticketPrices, museum, tourismGovernerId, tags } = req.body;
 
         const newHistoricalPlace = new HistoricalPlace({
             name,
@@ -15,7 +16,8 @@ const createHistoricalPlace = async (req, res) => {
             openingHours,
             ticketPrices,
             museum,
-            tourismGovernerId
+            tourismGovernerId,
+            tags
         });
 
         await newHistoricalPlace.save();
@@ -32,7 +34,8 @@ const createHistoricalPlace = async (req, res) => {
                 openingHours: newHistoricalPlace.openingHours,
                 ticketPrices: newHistoricalPlace.ticketPrices,
                 museum: newHistoricalPlace.museum,
-                tourismGovernerId: newHistoricalPlace.tourismGovernerId
+                tourismGovernerId: newHistoricalPlace.tourismGovernerId,
+                tags: newHistoricalPlace.tags
             }
         });
     } catch (error) {
@@ -118,7 +121,35 @@ const updateHistoricalPlace = async (req, res) => {
     }
 };
 
-updateHistoricalPlace
+const getHistoricalPlaceTags = async (req, res) => {
+    try {
+        const { id } = req.params; // Get museumId from request parameters
+
+        // Step 1: Find the historical place (museum) by its ID
+        const historicalPlace = await HistoricalPlace.findById(id);
+
+        if (!historicalPlace) {
+            return res.status(404).json({ message: 'Museum not found' });
+        }
+
+        // Step 2: Get the tag IDs from the historical place
+        const tagIds = historicalPlace.tags; // Assuming tags is an array of ObjectId
+
+        if (tagIds.length === 0) {
+            return res.status(200).json({ message: 'No tags associated with this museum', tags: [] });
+        }
+
+        // Step 3: Fetch the tags based on the tag IDs
+        const tags = await Tag.find({ _id: { $in: tagIds } });
+
+        // Step 4: Send the fetched tags as the response
+        return res.status(200).json(tags);
+        
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Placeholder functions
 const getWorkout = async (req, res) => {
@@ -137,4 +168,4 @@ const updateWorkout = async (req, res) => {
     // Function implementation here
 };
 
-module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace};
+module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags};
