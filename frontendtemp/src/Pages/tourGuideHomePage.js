@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import './styles/global.css';
-import { fetchTouristByEmail,updateTouristByEmail } from './RequestSendingMethods';
+import '../styles/global.css';
+import { fetchTourGuideByEmail } from '../RequestSendingMethods';
 
-const TouristPage = ({ email }) => {
-  const [touristData, setTouristData] = useState(null);
+const TourGuideHomePage = ({ email }) => {
+  const [tourGuideData, setTourGuideData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
 
   useEffect(() => {
-    const getTouristData = async () => {
-      const response = await fetchTouristByEmail({ email });
-      if (response) {
-        setTouristData(response.data);
-        setEditedData(response.data); // Initialize editable data with fetched data
+    const getTourGuideData = async () => {
+      try {
+        console.log('Fetching tour guide with email:', email); // Log the email for debugging
+        // Fetch tour guide data by email from the backend
+        const response = await fetchTourGuideByEmail(email); // Pass email directly
+        setTourGuideData(response);
+        setEditedData(response); // Initialize editable data with fetched data
+      } catch (error) {
+        console.error('Error fetching tour guide data:', error);
       }
     };
 
-    getTouristData();
+    getTourGuideData();
   }, [email]);
 
   const toggleSidebar = () => {
@@ -37,19 +41,18 @@ const TouristPage = ({ email }) => {
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
       }
-      
-      // Update touristData with the new editedData so the frontend reflects the changes
-      setTouristData(editedData);
 
-      // Perform your function call to save the changes here
+      // Update tourGuideData with the new editedData so the frontend reflects the changes
+      setTourGuideData(editedData);
+
+      // Placeholder for updating the tour guide profile
+      // updateTourGuideByEmail(oldEmail, editedData);
       console.log('Changes saved:', editedData, oldEmail);
-      // here we should send the changed data to the function that would make a request editedData is in Jason Format , object like 
-      updateTouristByEmail(oldEmail,editedData);
     }
   };
 
   return (
-    <div className="tourist-page">
+    <div className="tour-guide-page">
       {/* Sidebar Toggle Button */}
       <button className="toggle-btn" onClick={toggleSidebar}>
         {isSidebarOpen ? 'Close' : 'Menu'}
@@ -69,7 +72,7 @@ const TouristPage = ({ email }) => {
       {/* Main Container */}
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
         <header className="header">
-          <h1>Welcome, Tourist!</h1>
+          <h1>Welcome, Tour Guide!</h1>
         </header>
 
         <div className="profile">
@@ -84,7 +87,7 @@ const TouristPage = ({ email }) => {
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{touristData?.name || 'NA'}</p>
+              <p>{tourGuideData?.name || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
@@ -97,7 +100,7 @@ const TouristPage = ({ email }) => {
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{touristData?.email || 'NA'}</p>
+              <p>{tourGuideData?.email || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
@@ -110,7 +113,7 @@ const TouristPage = ({ email }) => {
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{touristData?.mobile || 'NA'}</p>
+              <p>{tourGuideData?.mobile || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
@@ -123,37 +126,33 @@ const TouristPage = ({ email }) => {
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{touristData?.nationality || 'NA'}</p>
+              <p>{tourGuideData?.nationality || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
-            <label>Job:</label>
+            <label>Previous Work:</label>
             {isEditing ? (
               <input
                 type="text"
-                name="job"
-                value={editedData?.job || ''}
+                name="previousWork"
+                value={editedData?.previousWork || ''}
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{touristData?.job || 'NA'}</p>
+              <p>{tourGuideData?.previousWork || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
-            <label>Date of Birth:</label>
-            <p>{touristData?.p || 'NA'}</p> {/* Static as requested */}
-          </div>
-          <div className="profile-info">
-            <label>Wallet Balance:</label>
+            <label>Years of Experience:</label>
             {isEditing ? (
               <input
-                type="text"
-                name="wallet"
-                value={editedData?.wallet || ''}
+                type="number"
+                name="yearsOfExperience"
+                value={editedData?.yearsOfExperience || ''}
                 onChange={handleEditChange}
               />
             ) : (
-              <p>${touristData?.wallet || 'NA'}</p>
+              <p>{tourGuideData?.yearsOfExperience || 'NA'}</p>
             )}
           </div>
 
@@ -177,4 +176,4 @@ const TouristPage = ({ email }) => {
   );
 };
 
-export default TouristPage;
+export default TourGuideHomePage;

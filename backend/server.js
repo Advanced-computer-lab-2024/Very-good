@@ -22,8 +22,9 @@ app.use((req, res, next) => {
     console.log(req.path, req.method)
     next()
 })
-
+//To send a request that reaches the createTourist method, you'll need to construct your HTTP request URL based on how you've defined your routes in your Express app.
 app.use('/api/tourists', touristRoutes)
+        
 app.use('/api/tourGuides', tourGuideRoutes)
 app.use('/api/tourismGoverners', tourismGovernerRoutes)
 app.use('/api/advertisers', advertiserRoutes)
