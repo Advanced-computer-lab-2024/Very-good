@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {fetchMuseumTags} from '../Services/museumServices'
 import './ActivityDisplay.css'; // Reuse the same CSS file for consistency
 
 const MuseumDisplay = ({ museum, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false); // Toggle between edit and view mode
   const [updatedMuseum, setUpdatedMuseum] = useState(museum); // Copy of museum object for editing
+  const [tags, setTags] = useState([]); // State to store fetched tags
+
+  // Fetch the museum's tags when the component mounts
+  useEffect(() => {
+    const getTags = async () => {
+      try {
+        const fetchedTags = await fetchMuseumTags(museum._id); // Fetch tags using the museum ID
+        setTags(fetchedTags); // Set the fetched tags to state
+      } catch (err) {
+        console.error('Failed to fetch museum tags:', err.message);
+      }
+    };
+    getTags();
+  }, [museum._id]);
 
   const handleEditClick = () => {
     setIsEditing(true); // Switch to edit mode
@@ -208,6 +223,16 @@ const MuseumDisplay = ({ museum, onDelete, onUpdate }) => {
           <p className="museum-status">
             Is this a museum? {museum.museum ? "Yes" : "No"}
           </p>
+
+          {/* Tags Display */}
+          {tags.length > 0 && (
+            <div className="tags-container">
+              <p>Tags:</p>
+              {tags.map((tag) => (
+                <span key={tag._id} className="tag">{tag.name+" ,"}</span>
+              ))}
+            </div>
+          )}
 
           <div className="activity-buttons">
             <button className="edit-button" onClick={handleEditClick}>Edit</button>

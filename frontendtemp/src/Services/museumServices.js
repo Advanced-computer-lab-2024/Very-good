@@ -23,6 +23,12 @@ export const createMuseum = async (newMuseum) => {
     return response.data;
 };
 
+export const fetchMuseumTags = async(museumId) => {
+    const url = `http://localhost:4000/api/historicalPlaces/${museumId}/tags`;
+    const response = await axios.get(url);
+    return response.data;
+}
+
 export const fetchTags = async() => {
     const url = `http://localhost:4000/api/tags/`;
     const response = await axios.get(url);

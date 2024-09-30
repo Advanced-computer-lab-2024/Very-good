@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { createMuseum, fetchTags } from '../Services/museumServices'; // Adjust the import path as needed
-import './form.css'
 
 const CreateMuseumForm = ({ onClose }) => {
     const [newMuseum, setNewMuseum] = useState({
@@ -177,19 +176,19 @@ const CreateMuseumForm = ({ onClose }) => {
 
             {/* Tags Section */}
 {/* Tags Section */}
-<h3>Select Tags</h3>
-<div className="tags-container">
-    {availableTags.map(tag => (
-        <button
-            key={tag._id}
-            type="button"
-            className={`tag-button ${newMuseum.tags.includes(tag._id) ? 'selected-tag' : ''}`}
-            onClick={() => handleTagClick(tag._id)}
-        >
-            {tag.name}
-        </button>
-    ))}
-</div>
+            <h3>Select Tags</h3>
+            <div className="tags-container">
+            {availableTags.map(tag => (
+                    <button
+                        key={tag._id}
+                        type="button"
+                        className={`tag-button ${newMuseum.tags.includes(tag._id) ? 'selected-tag' : ''}`}
+                        onClick={() => handleTagClick(tag._id)}
+                    >
+                    {tag.name}
+                    </button>
+                ))}
+            </div>
 
 
             {/* Museum Checkbox */}
