@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+//import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
-import TouristPage from './TouristPage'; 
+import TouristPage from './Pages/TouristPage';
+import AdvertiserPage from './Pages/AdvertiserPage'; 
+import TourismGovernerPage from './Pages/TourismGovernerPage'; 
+import TourGuideHomePage from './Pages/tourGuideHomePage'; 
+import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
 import FilterPage from './FilterPage'; // If the file is named FilterPage.js
 
 function App() {
@@ -10,6 +14,11 @@ function App() {
   const [role, setRole] = useState(''); // Tracks the selected role
   const [step, setStep] = useState(1); // Tracks if we're on the initial or detailed form
   const [isTouristPageActive, setIsTouristPageActive] = useState(false); // Should we render tourist page
+  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render tourist page
+  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourist page
+  const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
+  const [emailagain, setEmail] = useState(''); // Holds the tourist email
+  const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
   const [isFilterPageActive, setIsFilterPageActive] = useState(false); // Track filter page state
 
 
@@ -25,15 +34,75 @@ function App() {
   };
 
   // Function to handle form submission (register button click)
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     console.log("Register button clicked");
     event.preventDefault(); // Prevent the default form submission behavior
+    const formElements = event.target.elements;
 
-    // Based on the role, set state to render the tourist page if applicable
+    // Based on the role, set state to render the tourist or tour guide page if applicable
     if (role === 'tourist') {
+      // Collect the form data
+      let touristData = {
+        name: event.target.username.value,
+        email: event.target.email.value,
+        password: event.target.password.value,
+        mobile: event.target.mobile.value,
+        dob: event.target.dob.value,
+        nationality: event.target.nationality.value,
+        job: event.target.job.value,
+      };
+
+      // Pass it to a function
       setIsTouristPageActive(true);
+      // BACKEND CONNECTION - Update the database
+      await registerTourist(touristData);
+    } 
+    
+    if (role === 'tourGuide') {
+      // Collect the form data
+      let tourGuideData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        mobile: formElements.mobile.value,
+        dob: formElements.dob.value,
+        nationality: formElements.nationality.value,
+        yearsOfExperience: formElements.experience.value,
+        previousJob: formElements.previousWork.value,
+      };
+
+      // Render the tour guide home page
+      setIsTourGuidePageActive(true);
+
+      // BACKEND CONNECTION - Update the database
+      await createTourGuideRequest(tourGuideData);
+    }
+
+    // Handle other roles or proceed with registration
+    if (role === 'tourismGovernor') {
+      // Handle tourism governor registration
+    }
+
+    if (role === 'seller') {
+      // Handle seller registration
+    }
+
+    if (role === 'advertiser') {
+      // Handle advertiser registration
+    }
+
+    console.log(`Role selected: ${role}`);
       // BACKEND CONNECTION As in Update The dataBase 
-    } else {
+    
+    if (role === 'advertiser') {
+      setIsAdvertiserPageActive(true);
+      // BACKEND CONNECTION As in Update The dataBase 
+    }
+     if (role === 'tourismGovernor') {
+      setTourismGovernerPageActive(true);
+      // BACKEND CONNECTION As in Update The dataBase 
+    }
+    else {
       // Handle other roles or proceed with registration
       console.log(`Role selected: ${role}`);
       // Implement other role redirects here if necessary
@@ -44,8 +113,17 @@ function App() {
     <div className="container">
       {/* Render Tourist Page if active */}
       {isTouristPageActive ? (
-        <TouristPage />
-      ) : (
+        <TouristPage email={emailagain} />
+      ) : isTourGuidePageActive ? (
+        <TourGuideHomePage email={emailtourguide} />
+      ) :
+      isAdvertiserPageActive ? (
+        <AdvertiserPage />
+      ) :
+      isTourismGovernerPageActive ? (
+        <TourismGovernerPage/>
+      ) :
+      (
         <>
           {/* Welcome Message and Action Selection */}
           {action === '' && (
@@ -124,7 +202,7 @@ function App() {
                     <input type="text" id="username" name="username" required />
 
                     <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input type="email" id="email" name="email" required onChange={(e) => setEmail(e.target.value)} />
 
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
@@ -149,7 +227,7 @@ function App() {
                     <input type="text" id="username" name="username" required />
 
                     <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input type="email" id="email" name="email" required onChange={(e) => setEmailTourGuide(e.target.value)} />
 
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
@@ -171,74 +249,15 @@ function App() {
                   </>
                 )}
 
-                {role === 'tourismGovernor' && (
-                  <>
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" required />
+                {/* Add forms for other roles like tourismGovernor, seller, advertiser here */}
 
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
-
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
-
-                    <label htmlFor="mobile">Mobile Number:</label>
-                    <input type="tel" id="mobile" name="mobile" required />
-
-                    <label htmlFor="dob">Date of Birth:</label>
-                    <input type="date" id="dob" name="dob" required />
-
-                    <label htmlFor="nationality">Nationality:</label>
-                    <input type="text" id="nationality" name="nationality" required />
-                  </>
-                )}
-
-                {role === 'seller' && (
-                  <>
-                    <label htmlFor="storeName">Store Name:</label>
-                    <input type="text" id="storeName" name="storeName" required />
-
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" required />
-
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
-
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
-
-                    <label htmlFor="description">Description:</label>
-                    <textarea id="description" name="description" required></textarea>
-                  </>
-                )}
-
-                {role === 'advertiser' && (
-                  <>
-                    <label htmlFor="name">Name:</label>
-                    <input type="text" id="name" name="name" required />
-
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" required />
-
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
-
-                    <label htmlFor="website">Link to Website:</label>
-                    <input type="url" id="website" name="website" required />
-
-                    <label htmlFor="hotline">Hotline:</label>
-                    <input type="tel" id="hotline" name="hotline" required />
-                  </>
-                )}
                 <button type="submit" className="btn register-btn">Register</button>
-                <button type="button" className="btn" onClick={() => setStep(1)}>Back</button>
               </form>
             </div>
           )}
         </>
       )}
     </div>
-    
   );
 }
 

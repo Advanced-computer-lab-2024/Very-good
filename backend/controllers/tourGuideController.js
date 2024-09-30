@@ -61,12 +61,24 @@ const getTourGuides = async (req, res) => {
     }
 };
 
-// get a single workout
-const getWorkout = async (req, res) => {
+// a method that gets a single tour guide data based on email
+const getTourGuideByEmail = async (req, res) => {
+  const { email } = req.body; // Ensure the email is in the request body
+  
+  try {
+      const tourGuide = await TourGuide.findOne({ email });
+
+      if (!tourGuide) {
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      res.status(200).json({ tourGuide });
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching Tour Guide', error: error.message });
+  }
+};
 
 
-
-}
 
 // create a workout
 const createWorkout = async (req, res) => {
@@ -84,4 +96,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createTourGuide, getTourGuides}
+module.exports = {createTourGuide, getTourGuides,getTourGuideByEmail}
