@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './TouristPage'; 
+import FilterPage from './FilterPage'; // If the file is named FilterPage.js
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -9,6 +10,8 @@ function App() {
   const [role, setRole] = useState(''); // Tracks the selected role
   const [step, setStep] = useState(1); // Tracks if we're on the initial or detailed form
   const [isTouristPageActive, setIsTouristPageActive] = useState(false); // Should we render tourist page
+  const [isFilterPageActive, setIsFilterPageActive] = useState(false); // Track filter page state
+
 
   // Function to handle action selection
   const handleActionSelection = (selectedAction) => {

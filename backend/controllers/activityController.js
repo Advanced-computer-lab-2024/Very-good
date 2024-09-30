@@ -84,6 +84,60 @@ const getActivities = async (req, res) => {
     }
 };
 
+// Import Activity model
+//const Activity = require('../models/activityModel');    ((already present))
+
+// Controller for filtering activities based on budget, date, category, or ratings
+const filterActivities = async (req, res) => {
+  try {
+    // Extract query parameters from the request
+    const { budget, startDate, endDate, category, minRating } = req.query;
+
+    // Build a filter object dynamically
+    let filter = {};
+
+    // Apply filters based on query parameters
+    if (budget) {
+      filter.price = { $lte: budget }; // Less than or equal to the specified budget
+    }
+
+    if (startDate && endDate) {
+      filter.date = {
+        $gte: new Date(startDate), // Greater than or equal to the start date
+        $lte: new Date(endDate) // Less than or equal to the end date
+      };
+    } else if (startDate) {
+      filter.date = { $gte: new Date(startDate) }; // Only apply start date if no end date is provided
+    }
+
+    if (category) {
+      filter.category = category; // Match the category exactly
+    }
+
+    if (minRating) {
+      filter.ratings = { $gte: minRating }; // Minimum rating
+    }
+
+    // Find activities that match the filter
+    const filteredActivities = await Activity.find(filter);
+
+    // Send response with the filtered activities
+    res.status(200).json({
+      message: 'Filtered activities retrieved successfully',
+      data: filteredActivities
+    });
+  } catch (error) {
+    console.error('Error filtering activities:', error);
+    res.status(500).json({
+      message: 'Error filtering activities',
+      error: error.message
+    });
+  }
+};
+
+module.exports = { filterActivities };
+
+
 // create a workout
 const createWorkout = async (req, res) => {
 
@@ -100,4 +154,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createActivity, getActivities}
+module.exports = {createActivity, getActivities, filterActivities}

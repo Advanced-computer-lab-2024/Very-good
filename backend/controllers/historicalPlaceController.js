@@ -58,6 +58,28 @@ const getHistoricalPlaces = async (req, res) => {
     }
 };
 
+
+// Filter Historical Places by Tag
+// const filterHistoricalPlacesByTag = async (req, res) => {
+//     try {
+//         const { tagId } = req.query; // Get the tag ID from query parameters
+
+//         // Directly filter historical places associated with the tag
+//         const historicalPlaces = await HistoricalPlace.find({ tags: tagId }); // Assuming tags are stored in an array in HistoricalPlace
+
+//         res.status(200).json({
+//             message: 'Filtered Historical Places retrieved successfully',
+//             data: historicalPlaces
+//         });
+//     } catch (error) {
+//         console.error('Error filtering Historical Places:', error);
+//         res.status(500).json({
+//             message: 'Error filtering Historical Places',
+//             error: error.message
+//         });
+//     }
+// };
+
 // Placeholder functions
 const getWorkout = async (req, res) => {
     // Function implementation here

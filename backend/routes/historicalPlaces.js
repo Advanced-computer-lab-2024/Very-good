@@ -10,6 +10,9 @@ router.post('/', createHistoricalPlace)
 
 //router.delete('/:id', deleteWorkout)
 
+// router.get('/', filterHistoricalPlacesByTag)
+
+
 //router.patch('/:id', updateWorkout)
 
 module.exports = router
