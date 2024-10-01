@@ -1,8 +1,14 @@
 const express = require('express')
-const {createTourGuide, getTourGuides,getTourGuideByEmail} = require('../controllers/tourGuideController')
+const {createTourGuide, getTourGuides, getTourGuideByEmail, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId} = require('../controllers/tourGuideController')
 const router = express.Router()
 
 router.get('/', getTourGuides)
+
+router.get('/:id/itineraries', getItinerarieswithTourGuideId)
+
+router.delete('/:id/itineraries', deleteItineraryById);
+
+router.put('/:id/itineraries', updateItineraryWithId);
 
 //router.get('/:id', getWorkout)
 

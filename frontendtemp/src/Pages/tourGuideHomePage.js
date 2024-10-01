@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
 import { fetchTourGuideByEmail } from '../RequestSendingMethods';
+import ItineraryList from '../Components/ItineraryList';
+import CreateItineraryForm from '../Components/CreateItineraryForm';
+
+const id = "66fc1fbc46fa6d1f6fb6295a"
 
 const TourGuideHomePage = ({ email }) => {
+  const [showItineraryDisplay, setShowItineraryDisplay] = useState(false);
   const [tourGuideData, setTourGuideData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
+
+  const [isCreating, setIsCreating] = useState(false); // State to manage the visibility of the form
+
+  const handleCreateButtonClick = () => {
+      setIsCreating(true); // Show the form when the button is clicked
+  };
+
+  const closeForm = () => {
+      setIsCreating(false); // Hide the form
+  };
 
   useEffect(() => {
     const getTourGuideData = async () => {
@@ -27,6 +42,10 @@ const TourGuideHomePage = ({ email }) => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleViewItineraryDisplay = () => {
+    setShowItineraryDisplay(prevState => !prevState); // Set state to true to show the ItineraryDisplay
   };
 
   const handleEditChange = (e) => {
@@ -163,10 +182,17 @@ const TourGuideHomePage = ({ email }) => {
 
         <div className="itinerary-layout">
           <h2 className="itinerary-header">Your Itinerary</h2>
-          <button className="btn" onClick={() => alert('View Full Itinerary')}>
-            View Full Itinerary
+          <button className="btn" onClick={handleViewItineraryDisplay}>
+            {showItineraryDisplay ? 'Hide Full Itinerary' : 'View Full Itinerary'}
+          </button>
+          <button className="btn" onClick={handleCreateButtonClick}>
+            Create Itinerary
           </button>
         </div>
+
+        {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={id}/>}
+
+        {showItineraryDisplay && <ItineraryList tourGuideId={id} />}
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
