@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
+import AdminPage from './Pages/adminpage';
 import AdvertiserPage from './Pages/AdvertiserPage'; 
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
+import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerAdmin ,registerTourist,} from './RequestSendingMethods';
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -16,8 +17,12 @@ function App() {
   const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render tourist page
   const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourist page
   const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
+  const [isAdminPageActive, setIsAdminPageActive] = useState(false); // Should we render tourist page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
+
+  //setIsAdminPageActive
+
 
   // Function to handle action selection
   const handleActionSelection = (selectedAction) => {
@@ -74,7 +79,21 @@ function App() {
       // BACKEND CONNECTION - Update the database
       await createTourGuideRequest(tourGuideData);
     }
+    if (role === 'admin') {
+      // Collect the form data
+      let adminData = {
+        name: event.target.username.value,
+        email: event.target.email.value,
+        password: event.target.password.value,
+        mobile: event.target.mobile.value,
+        
+      };
 
+      // Pass it to a function
+      setIsAdminPageActive(true);
+      // BACKEND CONNECTION - Update the database
+      await registerAdmin(adminData);
+    } 
     // Handle other roles or proceed with registration
     if (role === 'tourismGovernor') {
       // Handle tourism governor registration
@@ -90,12 +109,11 @@ function App() {
 
     console.log(`Role selected: ${role}`);
       // BACKEND CONNECTION As in Update The dataBase 
-    
     if (role === 'advertiser') {
       setIsAdvertiserPageActive(true);
       // BACKEND CONNECTION As in Update The dataBase 
     }
-     if (role === 'tourismGovernor') {
+    if (role === 'tourismGovernor') {
       setTourismGovernerPageActive(true);
       // BACKEND CONNECTION As in Update The dataBase 
     }
@@ -119,6 +137,9 @@ function App() {
       ) :
       isTourismGovernerPageActive ? (
         <TourismGovernerPage/>
+      ) :
+      isAdminPageActive ? (
+        <AdminPage />
       ) :
       (
         <>
@@ -162,6 +183,9 @@ function App() {
                       <option value="tourist">Tourist</option>
                       <option value="tourGuide">Tour Guide</option>
                       <option value="tourismGovernor">Tourism Governor</option>
+                      <option value="admin">Admin</option>
+
+
                     </select>
                   </>
                 )}
@@ -245,8 +269,24 @@ function App() {
                     <input type="text" id="previousWork" name="previousWork" />
                   </>
                 )}
+                {role === 'admin' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
 
-                {/* Add forms for other roles like tourismGovernor, seller, advertiser here */}
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required onChange={(e) => setEmailTourGuide(e.target.value)} />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="mobile">Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" required />
+                    
+                  </>
+                )}
+
+                {/* Add forms for other roles like tourismGovernor, seller, admin,advertiser here */}
 
                 <button type="submit" className="btn register-btn">Register</button>
               </form>

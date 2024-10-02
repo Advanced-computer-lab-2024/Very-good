@@ -1,5 +1,9 @@
 require('dotenv').config()
 const express = require('express')
+
+const app = express()
+
+
 const touristRoutes = require('./routes/tourists')
 const tourGuideRoutes = require('./routes/tourGuides')
 const tourismGovernerRoutes = require('./routes/tourismGoverners')
@@ -10,10 +14,17 @@ const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
 const tagRoutes = require('./routes/tags')
+const adminRoutes = require('./routes/admin')
+const categoryRoutes = require('./routes/category')
+const categoryRouter = require('./routes/category'); // Adjust the path as necessary
+
+
+
+
+
 const mongoose = require('mongoose')
 const cors = require('cors');
 
-const app = express()
 
 app.use(cors());
 
@@ -23,9 +34,12 @@ app.use((req, res, next) => {
     console.log(req.path, req.method)
     next()
 })
+app.use('/api/categories', categoryRouter); // Register the category router
+
 //To send a request that reaches the createTourist method, you'll need to construct your HTTP request URL based on how you've defined your routes in your Express app.
 app.use('/api/tourists', touristRoutes)
-        
+app.use('/api/admins', adminRoutes)
+app.use('/api/categories', categoryRoutes)
 app.use('/api/tourGuides', tourGuideRoutes)
 app.use('/api/tourismGoverners', tourismGovernerRoutes)
 app.use('/api/advertisers', advertiserRoutes)
@@ -36,6 +50,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
 
+
 // connect to db
 mongoose.connect(process.env.MONG_URI)
     .then(() => {
@@ -45,5 +60,5 @@ mongoose.connect(process.env.MONG_URI)
         }) 
     })
     .catch((error) => {
-        console.log(error)
+        console.log("couldn't connect to db ",error)
     })

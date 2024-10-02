@@ -109,6 +109,33 @@ const createTourGuideRequest = async (tourGuideData) => {
     }
 };
 
+//Admin regest
+const registerAdmin = async (adminData) => {
+    try {
+        const response = await fetch('http://localhost:4000/api/admins', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(adminData),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Admin registered successfully:', data);
+            // Handle success here
+            return data; // You can return data for further processing if needed
+        } else {
+            console.error('Error during registration:', data);
+            // Handle error response here
+            return null; // Return null in case of error
+        }
+    } catch (error) {
+        console.error('Network or server error:', error);
+        // Handle network errors
+        return null; // Return null to signify an error occurred
+    }
+  };
 
 
 // a method that handles reading the info of the tour guide by email 
@@ -138,4 +165,4 @@ const fetchTourGuideByEmail = async (email) => {
 };
 
 // Export the new method along with others
-export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail };
+export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,registerAdmin };
