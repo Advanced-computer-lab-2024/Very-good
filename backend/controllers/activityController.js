@@ -2,8 +2,7 @@ const { default: mongoose } = require('mongoose')
 const Activity = require('../models/activityModel')
 const tourGuide = require('../models/tourGuideModel')
 const advertiser = require('../models/advertiserModel')
-
-
+const activity = require('../models/activityModel');
 
 // get all workout
 const createActivity = async (req, res) => {
@@ -149,7 +148,7 @@ const filterActivities = async (req, res) => {
       });
     }
   };
-  
+ 
   
 
 module.exports = {createActivity, getActivities,filterActivities}

@@ -3,40 +3,96 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const itinerarySchema = new schema({
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  ratings: {
+    type: Number, // Assuming ratings are out of 5
+    min: 0,
+    max: 5,
+    default: 0 // Default rating if not provided
+},
+  activities: [{
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
-    description: {
-        type: String,
-        required: false
+    description: String,
+    duration: {
+      type: Number, // in minutes
+      required: true
     },
-    activities: [{
-        type: schema.Types.ObjectId,
-        ref: 'activity' // Reference to the Activity model
-    }],
-    touristIds: [{ // Changed to an array to hold multiple tourist references
-        type: schema.Types.ObjectId,
-        ref: 'tourist', // Reference to the Tourist model
-        required: true
-    }],
-    tourGuideId: {
-        type: schema.Types.ObjectId,
-        ref: 'tourGuide', // Reference to the Tour Guide model
-        required: true
+    startTime: {
+      type: String,
+      required: true
     },
-    startDate: {
-        type: Date,
-        required: true
+    endTime: {
+      type: String,
+      required: true
     },
-    endDate: {
-        type: Date,
-        required: true
+    location: {
+      coordinates: {
+        lat: Number,
+        lng: Number
+      },
+      address: String
     },
-    totalPrice: {
-        type: Number,
-        required: false
-    }
+    price: Number
+  }],
+  locationsToVisit: [{
+    name: String,
+    coordinates: {
+      lat: Number,
+      lng: Number
+    },
+    address: String
+  }],
+  language: {
+    type: String,
+    enum: ['English', 'Spanish', 'French', 'German', 'Chinese', 'Other'],
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  availableDates: [{
+    type: Date,
+    required: true
+  }],
+  availableTimes: [{
+    type: String, // e.g., "09:00 AM", "02:00 PM"
+    required: true
+  }],
+  accessibility: {
+    type: Boolean,
+    default: false
+  },
+  pickUpLocation: {
+    type: String,
+    required: true
+  },
+  dropOffLocation: {
+    type: String,
+    required: true
+  },
+  touristIds: [{ // Changed to an array to hold multiple tourist references
+    type: schema.Types.ObjectId,
+    ref: 'tourist', // Reference to the Tourist model
+    required: true
+}],
+tourGuideId: {
+    type: schema.Types.ObjectId,
+    ref: 'tourGuide', // Reference to the Tour Guide model
+    required: true
+}
 }, { timestamps: true });
 
-module.exports = mongoose.model('itinerary', itinerarySchema);
+const Itinerary = mongoose.model('itinerary', itinerarySchema);
+
+module.exports = Itinerary;

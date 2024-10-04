@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
-import AdvertiserPage from './Pages/AdvertiserPage'; 
-import TourismGovernerPage from './Pages/TourismGovernerPage'; 
-import TourGuideHomePage from './Pages/tourGuideHomePage'; 
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
+import SellerPage from './Pages/SellerPage';  // Import SellerPage
+import AdvertiserPage from './Pages/AdvertiserPage';
+import TourismGovernerPage from './Pages/TourismGovernerPage';
+import TourGuideHomePage from './Pages/tourGuideHomePage';
+import { registerTourist, fetchTouristByEmail, createTourGuideRequest, registerSeller } from './RequestSendingMethods';  // Assuming registerSeller is added
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -13,9 +14,10 @@ function App() {
   const [role, setRole] = useState(''); // Tracks the selected role
   const [step, setStep] = useState(1); // Tracks if we're on the initial or detailed form
   const [isTouristPageActive, setIsTouristPageActive] = useState(false); // Should we render tourist page
-  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render tourist page
-  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourist page
+  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render advertiser page
+  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourism governor page
   const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
+  const [isSellerPageActive, setIsSellerPageActive] = useState(false); // Should we render seller page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
 
@@ -36,9 +38,8 @@ function App() {
     event.preventDefault(); // Prevent the default form submission behavior
     const formElements = event.target.elements;
 
-    // Based on the role, set state to render the tourist or tour guide page if applicable
+    // Handle tourist registration
     if (role === 'tourist') {
-      // Collect the form data
       let touristData = {
         name: event.target.username.value,
         email: event.target.email.value,
@@ -49,14 +50,12 @@ function App() {
         job: event.target.job.value,
       };
 
-      // Pass it to a function
       setIsTouristPageActive(true);
-      // BACKEND CONNECTION - Update the database
       await registerTourist(touristData);
-    } 
+    }
     
-    if (role === 'tourGuide') {
-      // Collect the form data
+    // Handle tour guide registration
+    else if (role === 'tourGuide') {
       let tourGuideData = {
         name: formElements.username.value,
         email: formElements.email.value,
@@ -68,59 +67,50 @@ function App() {
         previousJob: formElements.previousWork.value,
       };
 
-      // Render the tour guide home page
       setIsTourGuidePageActive(true);
-
-      // BACKEND CONNECTION - Update the database
       await createTourGuideRequest(tourGuideData);
     }
 
-    // Handle other roles or proceed with registration
-    if (role === 'tourismGovernor') {
-      // Handle tourism governor registration
+    // Handle seller registration
+    else if (role === 'seller') {
+      let sellerData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        mobile: formElements.mobile.value,
+        businessName: formElements.businessName.value,
+        website: formElements.website.value,
+      };
+
+      setIsSellerPageActive(true);
+      await registerSeller(sellerData); // Assuming you have this API endpoint
     }
 
-    if (role === 'seller') {
-      // Handle seller registration
-    }
-
-    if (role === 'advertiser') {
-      // Handle advertiser registration
+    // Handle other roles (e.g., advertiser, tourism governor)
+    else if (role === 'advertiser') {
+      setIsAdvertiserPageActive(true);
+    } 
+    else if (role === 'tourismGovernor') {
+      setTourismGovernerPageActive(true);
     }
 
     console.log(`Role selected: ${role}`);
-      // BACKEND CONNECTION As in Update The dataBase 
-    
-    if (role === 'advertiser') {
-      setIsAdvertiserPageActive(true);
-      // BACKEND CONNECTION As in Update The dataBase 
-    }
-     if (role === 'tourismGovernor') {
-      setTourismGovernerPageActive(true);
-      // BACKEND CONNECTION As in Update The dataBase 
-    }
-    else {
-      // Handle other roles or proceed with registration
-      console.log(`Role selected: ${role}`);
-      // Implement other role redirects here if necessary
-    }
   };
 
   return (
     <div className="container">
-      {/* Render Tourist Page if active */}
-      {isTouristPageActive ? (
+      {/* Render SellerPage if active */}
+      {isSellerPageActive ? (
+        <SellerPage />
+      ) : isTouristPageActive ? (
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
-      ) :
-      isAdvertiserPageActive ? (
+      ) : isAdvertiserPageActive ? (
         <AdvertiserPage />
-      ) :
-      isTourismGovernerPageActive ? (
-        <TourismGovernerPage/>
-      ) :
-      (
+      ) : isTourismGovernerPageActive ? (
+        <TourismGovernerPage />
+      ) : (
         <>
           {/* Welcome Message and Action Selection */}
           {action === '' && (
@@ -241,12 +231,32 @@ function App() {
                     <label htmlFor="experience">Years of Experience:</label>
                     <input type="number" id="experience" name="experience" required />
 
-                    <label htmlFor="previousWork">Previous Work (if any):</label>
-                    <input type="text" id="previousWork" name="previousWork" />
+                    <label htmlFor="previousWork">Previous Job:</label>
+                    <input type="text" id="previousWork" name="previousWork" required />
                   </>
                 )}
 
-                {/* Add forms for other roles like tourismGovernor, seller, advertiser here */}
+                {role === 'seller' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="mobile">Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" required />
+
+                    <label htmlFor="businessName">Business Name:</label>
+                    <input type="text" id="businessName" name="businessName" required />
+
+                    <label htmlFor="website">Website:</label>
+                    <input type="url" id="website" name="website" />
+                  </>
+                )}
 
                 <button type="submit" className="btn register-btn">Register</button>
               </form>
