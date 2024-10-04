@@ -9,7 +9,7 @@ const itinerarySchema = new schema({
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   activities: [{
     title: {
@@ -78,7 +78,7 @@ const itinerarySchema = new schema({
   touristIds: [{ // Changed to an array to hold multiple tourist references
     type: schema.Types.ObjectId,
     ref: 'tourist', // Reference to the Tourist model
-    required: true
+    required: false
 }],
 tourGuideId: {
     type: schema.Types.ObjectId,

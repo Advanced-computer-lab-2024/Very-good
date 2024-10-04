@@ -25,6 +25,31 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
     };
 
     const handleSaveClick = async () => {
+        const requiredFields = {
+            title: newItinerary.title,
+            price: newItinerary.price,
+            activityTitle: newItinerary.activities[0].title,
+            activityDuration: newItinerary.activities[0].duration,
+            activityStartTime: newItinerary.activities[0].startTime,
+            activityEndTime: newItinerary.activities[0].endTime,
+            activityLocationLat: newItinerary.activities[0].location.lat,
+            activityLocationLng: newItinerary.activities[0].location.lng,
+            language: newItinerary.language,
+            pickUpLocation: newItinerary.pickUpLocation,
+            dropOffLocation: newItinerary.dropOffLocation,
+            availableDate: newItinerary.availableDates[0],
+            availableTime: newItinerary.availableTimes[0],
+        };
+    
+        const missingFields = Object.entries(requiredFields)
+            .filter(([key, value]) => value === '' || value === undefined)
+            .map(([key]) => key);
+    
+        if (missingFields.length > 0) {
+            alert(`Please fill in the following required fields: ${missingFields.join(', ')}`);
+            return;
+        }
+    
         try {
             const itineraryWithTourGuideId = {
                 ...newItinerary,
@@ -48,8 +73,10 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
             onClose(); // Close the form after successful creation
         } catch (err) {
             console.error('Failed to create itinerary:', err.message);
+            alert('Failed to create itinerary:', err.message);
         }
     };
+    
 
     const handleAddActivity = () => {
         setNewItinerary(prevState => ({
@@ -82,12 +109,23 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
     return (
         <div className="itinerary-card">
             {/* Form fields */}
-            <input type="text" name="title" value={newItinerary.title} onChange={handleInputChange} placeholder="Itinerary Title" />
+            <input type="text" name="title" value={newItinerary.title} onChange={handleInputChange} placeholder="Itinerary Title" required />
             <textarea name="description" value={newItinerary.description} onChange={handleInputChange} placeholder="Itinerary Description" />
             <input type="number" name="price" value={newItinerary.price} onChange={handleInputChange} placeholder="Price" />
-            <input type="text" name="language" value={newItinerary.language} onChange={handleInputChange} placeholder="Language" />
-            <input type="text" name="pickUpLocation" value={newItinerary.pickUpLocation} onChange={handleInputChange} placeholder="Pick Up Location" />
-            <input type="text" name="dropOffLocation" value={newItinerary.dropOffLocation} onChange={handleInputChange} placeholder="Drop Off Location" />
+            
+            {/* Language Dropdown */}
+            <select name="language" value={newItinerary.language} onChange={handleInputChange} required>
+                <option value="" disabled>Select Language</option>
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <input type="text" name="pickUpLocation" value={newItinerary.pickUpLocation} onChange={handleInputChange} placeholder="Pick Up Location" required />
+            <input type="text" name="dropOffLocation" value={newItinerary.dropOffLocation} onChange={handleInputChange} placeholder="Drop Off Location" required />
 
             {/* Activities */}
             <div className="itinerary-activities">
@@ -104,6 +142,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder={`Activity Title`}
+                            required
                         />
                         <input
                             type="text"
@@ -126,6 +165,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder="Duration (minutes)"
+                            required
                         />
                         <input
                             type="number"
@@ -148,6 +188,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder="Start Time"
+                            required
                         />
                         <input
                             type="text"
@@ -159,6 +200,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder="End Time"
+                            required
                         />
                         <input
                             type="text"
@@ -170,6 +212,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder="Activity Location Latitude"
+                            required
                         />
                         <input
                             type="text"
@@ -181,6 +224,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                                 setNewItinerary({ ...newItinerary, activities: newActivities });
                             }}
                             placeholder="Activity Location Longitude"
+                            required
                         />
                     </div>
                 ))}
@@ -242,53 +286,54 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
             </div>
 
             {/* Available Dates */}
-            <div className="itinerary-dates">
+            <div className="itinerary-available-dates">
                 <h3>Available Dates</h3>
                 {newItinerary.availableDates.map((date, index) => (
-                    <input
-                        key={index}
-                        type="date"
-                        name={`availableDate-${index}`}
-                        value={date}
-                        onChange={(e) => {
-                            const newDates = [...newItinerary.availableDates];
-                            newDates[index] = e.target.value;
-                            setNewItinerary({ ...newItinerary, availableDates: newDates });
-                        }}
-                    />
+                    <div key={index}>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => {
+                                const newDates = [...newItinerary.availableDates];
+                                newDates[index] = e.target.value;
+                                setNewItinerary({ ...newItinerary, availableDates: newDates });
+                            }}
+                        />
+                    </div>
                 ))}
-                <button onClick={handleAddAvailableDate}>Add Date</button>
+                <button onClick={handleAddAvailableDate}>Add Available Date</button>
             </div>
 
             {/* Available Times */}
-            <div className="itinerary-times">
+            <div className="itinerary-available-times">
                 <h3>Available Times</h3>
                 {newItinerary.availableTimes.map((time, index) => (
-                    <input
-                        key={index}
-                        type="time"
-                        name={`availableTime-${index}`}
-                        value={time}
-                        onChange={(e) => {
-                            const newTimes = [...newItinerary.availableTimes];
-                            newTimes[index] = e.target.value;
-                            setNewItinerary({ ...newItinerary, availableTimes: newTimes });
-                        }}
-                    />
+                    <div key={index}>
+                        <input
+                            type="time"
+                            value={time}
+                            onChange={(e) => {
+                                const newTimes = [...newItinerary.availableTimes];
+                                newTimes[index] = e.target.value;
+                                setNewItinerary({ ...newItinerary, availableTimes: newTimes });
+                            }}
+                        />
+                    </div>
                 ))}
-                <button onClick={handleAddAvailableTime}>Add Time</button>
+                <button onClick={handleAddAvailableTime}>Add Available Time</button>
             </div>
 
-            <input
-                type="checkbox"
-                name="accessibility"
-                checked={newItinerary.accessibility}
-                onChange={(e) => setNewItinerary({ ...newItinerary, accessibility: e.target.checked })}
-            />
-            Accessible
+            <label>
+                Accessibility:
+                <input
+                    type="checkbox"
+                    checked={newItinerary.accessibility}
+                    onChange={() => setNewItinerary(prevState => ({ ...prevState, accessibility: !prevState.accessibility }))}
+                />
+            </label>
 
-            <button className="save-button" onClick={handleSaveClick}>Save</button>
-            <button className="cancel-button" onClick={onClose}>Cancel</button>
+            <button onClick={handleSaveClick}>Save Itinerary</button>
+            <button onClick={onClose}>Close</button> 
         </div>
     );
 };

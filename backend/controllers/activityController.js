@@ -9,7 +9,7 @@ const advertiser = require('../models/advertiserModel')
 const createActivity = async (req, res) => {
     try {
         // Destructure the request body to get activity details
-        const { name, date, duration, address, location, price, time, category, ratings, tags, tourGuideId, advertiserId, specialDiscount, bookingOpen} = req.body;
+        const { name, date, duration, address, location, price, time, categoryId, ratings, tags, tourGuideId, advertiserId, specialDiscount, bookingOpen} = req.body;
 
         const newActivity = new Activity({
             name,
@@ -19,11 +19,13 @@ const createActivity = async (req, res) => {
             location,
             price,
             time,
-            category,
+            categoryId,
             ratings,
             tags,
             tourGuideId,
-            advertiserId
+            advertiserId,
+            specialDiscount,
+            bookingOpen
         });
 
         await newActivity.save();
@@ -51,11 +53,13 @@ const createActivity = async (req, res) => {
                 location: newActivity.location,
                 price: newActivity.price,
                 time: newActivity.time,
-                category: newActivity.category,
+                categoryId: newActivity.categoryId,
                 ratings: newActivity.ratings,
                 tags: newActivity.tags,
                 tourGuideId: newActivity.tourGuideId,
-                advertiserId: newActivity.advertiserId
+                advertiserId: newActivity.advertiserId,
+                bookingOpen: newActivity.bookingOpen,
+                specialDiscount: newActivity.specialDiscount
             }
         });
     } catch (error) {

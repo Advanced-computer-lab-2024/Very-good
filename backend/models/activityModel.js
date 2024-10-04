@@ -42,8 +42,9 @@ const activitySchema = new schema({
             required: true
         }
     },
-    category: {
-        type: String,
+    categoryId: {
+        type: schema.Types.ObjectId,
+        ref: 'category', // Reference to the Category model
         required: true
     },
     ratings: {
