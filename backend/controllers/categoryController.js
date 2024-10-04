@@ -1,5 +1,7 @@
 const { default: mongoose } = require('mongoose')
 const Category = require('../models/categoryModel')
+const Activity = require('../models/activityModel');
+
 
 const createCategory = async (req, res) => {
     try {
@@ -58,18 +60,27 @@ const getCategoryById = async (req, res) => {
 
 
 const deleteCategory = async (req, res) => {
-    const categoryName = req.params.name; // Get the category name from the route parameters
-    try {
-      const deletedCategory = await Category.findOneAndDelete({ name: categoryName }); // Delete by name
-      if (!deletedCategory) {
-        return res.status(404).json({ message: 'Category not found' });
+  try {
+      const categoryId = req.params.id; // Make sure this is the ID
+      const category = await Category.findById(categoryId);
+
+      if (!category) {
+          return res.status(404).json({ message: 'Category not found' });
       }
-      res.status(200).json({ message: 'Category deleted successfully' });
-    } catch (error) {
-      console.error('Error deleting category:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  };
+
+      // Delete activities associated with the category
+      await Activity.deleteMany({ categoryId: category._id });
+
+      // Delete the category
+      await Category.findByIdAndDelete(category._id);
+
+      res.status(200).json({ message: 'Category and associated activities deleted successfully' });
+  } catch (error) {
+      console.error(error); // Log the error for debugging
+      res.status(500).json({ message: 'Error deleting category', error: error.message });
+  }
+};
+
 const updateCategory = async (req, res) => {
     const { categoryName } = req.params; // Get the category name from the route parameters
   const updatedData = req.body; // Get the updated data from the request body
