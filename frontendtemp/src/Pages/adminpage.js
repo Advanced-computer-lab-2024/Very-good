@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function AdminPage() {
-  const [categories, setCategories] = useState([]); // Initialize as an empty array
+  const [categories, setCategories] = useState([]); 
   const [formData, setFormData] = useState({ name: '' });
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null); // Track the category being edited
@@ -148,11 +148,11 @@ function AdminPage() {
             {categories.map((category) => (
               <li key={category._id}>
                 {category.name}
-                <button onClick={() => {
+                {/* <button onClick={() => {
                   setSelectedOperation('update');
                   setSelectedCategory(category.name);
-                  setFormData({ name: category.name });
-                }}>Update</button>
+                  setFormData({ name: category.name }); */}
+                {/* }}>Update</button> */}
               </li>
             ))}
           </ul>
