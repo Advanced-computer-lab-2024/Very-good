@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
-import { fetchCategoryById, fetchCategories } from '../Services/activityServices'; // Import fetchCategories
+import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
+import MapComponent from './MapComponent';
+import SimpleMapComponent from './SimpleMapComponent'; // Import your MapComponent
 
 const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedActivity, setUpdatedActivity] = useState(activity);
   const [categoryName, setCategoryName] = useState('');
-  const [categories, setCategories] = useState([]); // State to hold categories
+  const [categories, setCategories] = useState([]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -34,12 +36,11 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
     getCategoryName();
   }, [activity.categoryId]);
 
-  // Fetch categories on component mount
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const allCategories = await fetchCategories(); // Fetch all categories
-        setCategories(allCategories); // Assuming it returns an array of categories
+        const allCategories = await fetchCategories();
+        setCategories(allCategories);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -66,6 +67,17 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
     } catch (err) {
       console.error('Failed to update activity:', err.message);
     }
+  };
+
+  // Function to handle location selection from the map
+  const handleLocationSelect = (location) => {
+    setUpdatedActivity({
+      ...updatedActivity,
+      location: {
+        lat: location.lat,
+        lng: location.lng,
+      },
+    });
   };
 
   return (
@@ -99,29 +111,26 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
             onChange={handleInputChange}
             placeholder="Duration (minutes)"
           />
-          
-          {/* Dropdown for Category */}
           <select
             name="categoryId"
-            value={updatedActivity.categoryId} // Bind the selected value to categoryId
+            value={updatedActivity.categoryId}
             onChange={(e) => {
               const selectedCategoryId = e.target.value;
               setUpdatedActivity({
                 ...updatedActivity,
-                categoryId: selectedCategoryId, // Update the categoryId
+                categoryId: selectedCategoryId,
               });
               const selectedCategory = categories.find(category => category._id === selectedCategoryId);
-              setCategoryName(selectedCategory ? selectedCategory.name : ''); // Update categoryName
+              setCategoryName(selectedCategory ? selectedCategory.name : '');
             }}
           >
             <option value="" disabled>Select a category</option>
             {categories.map((category) => (
               <option key={category._id} value={category._id}>
-                {category.name} {/* Display category name */}
+                {category.name}
               </option>
             ))}
           </select>
-
           <input
             type="text"
             name="ratings"
@@ -136,6 +145,7 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
             onChange={handleInputChange}
             placeholder="Special Discount (%)"
           />
+
           <div className="activity-tags">
             {updatedActivity.tags.map((tag, index) => (
               <input
@@ -155,6 +165,7 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
               />
             ))}
           </div>
+
           <input
             type="checkbox"
             name="bookingOpen"
@@ -167,36 +178,16 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
             }
           />
           Booking Open
-          <input
-            type="text"
-            name="locationLat"
-            value={updatedActivity.location.lat}
-            onChange={(e) =>
-              setUpdatedActivity({
-                ...updatedActivity,
-                location: {
-                  ...updatedActivity.location,
-                  lat: parseFloat(e.target.value),
-                },
-              })
-            }
-            placeholder="Location Latitude"
-          />
-          <input
-            type="text"
-            name="locationLng"
-            value={updatedActivity.location.lng}
-            onChange={(e) =>
-              setUpdatedActivity({
-                ...updatedActivity,
-                location: {
-                  ...updatedActivity.location,
-                  lng: parseFloat(e.target.value),
-                },
-              })
-            }
-            placeholder="Location Longitude"
-          />
+
+          {/* Replacing Lat/Lng input fields with the map */}
+          <div className="map-container">
+            <MapComponent
+              initialLocation={updatedActivity.location}
+              onLocationSelect={handleLocationSelect}
+              allowMarkerChange={true} // Allow changing marker to select new location
+            />
+          </div>
+
           <button className="save-button" onClick={handleSaveClick}>Save</button>
           <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
         </>
@@ -210,9 +201,17 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
           <p className="activity-ratings">Ratings: {activity.ratings}/5</p>
           <p className="activity-special-discount">Special Discount: {activity.specialDiscount}%</p>
           <p className="activity-booking-status">Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+          
+          {/* Displaying location coordinates */}
           <p className="activity-location">
             Location: {activity.location.lat}, {activity.location.lng}
           </p>
+
+          {/* Render the MapComponent */}
+          <SimpleMapComponent
+            location={activity.location}
+          />
+
           <div className="tags-container">
             {activity.tags.map((tag, index) => (
               <span key={index} className="activity-tag">{tag.name}</span>

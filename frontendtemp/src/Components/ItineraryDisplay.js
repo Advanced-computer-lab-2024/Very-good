@@ -74,6 +74,7 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
             placeholder="Drop Off Location"
           />
 
+          {/* Edit activities */}
           <div className="activities-container">
             <h3>Activities</h3>
             {updatedItinerary.activities.map((activity, index) => (
@@ -124,6 +125,69 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
             ))}
           </div>
 
+          {/* Edit locations to visit */}
+          <div className="locations-container">
+            <h3>Locations to Visit</h3>
+            {updatedItinerary.locationsToVisit.map((location, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  name={`locationName-${index}`}
+                  value={location.name}
+                  onChange={(e) => {
+                    const newLocations = [...updatedItinerary.locationsToVisit];
+                    newLocations[index].name = e.target.value;
+                    setUpdatedItinerary({
+                      ...updatedItinerary,
+                      locationsToVisit: newLocations,
+                    });
+                  }}
+                  placeholder="Location Name"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Edit available dates */}
+          <div className="dates-container">
+            <h3>Available Dates</h3>
+            {updatedItinerary.availableDates.map((date, index) => (
+              <input
+                key={index}
+                type="date"
+                value={date}
+                onChange={(e) => {
+                  const newDates = [...updatedItinerary.availableDates];
+                  newDates[index] = e.target.value;
+                  setUpdatedItinerary({
+                    ...updatedItinerary,
+                    availableDates: newDates,
+                  });
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Edit available times */}
+          <div className="times-container">
+            <h3>Available Times</h3>
+            {updatedItinerary.availableTimes.map((time, index) => (
+              <input
+                key={index}
+                type="time"
+                value={time}
+                onChange={(e) => {
+                  const newTimes = [...updatedItinerary.availableTimes];
+                  newTimes[index] = e.target.value;
+                  setUpdatedItinerary({
+                    ...updatedItinerary,
+                    availableTimes: newTimes,
+                  });
+                }}
+              />
+            ))}
+          </div>
+
           <button className="save-button" onClick={handleSaveClick}>Save</button>
           <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
         </>
@@ -143,6 +207,30 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
                 <h4>{activity.title} :</h4>
                 <p>Duration: {activity.duration} minutes</p>
                 <p>Price: ${activity.price}</p>
+              </div>
+            ))}
+          </div>
+          <h3>Locations to visit :</h3>
+          <div className="activities-list">
+            {itinerary.locationsToVisit.map((location, index) => (
+              <div key={index} className="activity-item">
+                <p>{index+1}. {location.name}</p>
+              </div>
+            ))}
+          </div>
+          <h3>Available Dates :</h3>
+          <div className="activities-list">
+            {itinerary.availableDates.map((date, index) => (
+              <div key={index} className="activity-item">
+                <p>{index+1}. {date}</p>
+              </div>
+            ))}
+          </div>
+          <h3>Available Times :</h3>
+          <div className="activities-list">
+            {itinerary.availableTimes.map((time, index) => (
+              <div key={index} className="activity-item">
+                <p>{index+1}. {time}</p>
               </div>
             ))}
           </div>

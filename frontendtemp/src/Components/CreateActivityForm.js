@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { createActivity, fetchCategories } from '../Services/activityServices'; // Adjust the import path as needed
+import { createActivity, fetchCategories } from '../Services/activityServices';
+import MapComponent from './MapComponent'; // Import the MapComponent
 
 const CreateActivityForm = ({ onClose, advertiserId }) => {
     const [newActivity, setNewActivity] = useState({
@@ -7,7 +8,7 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
         date: '',
         price: '',
         duration: '',
-        categoryId: '', // Replace 'category' with 'categoryId'
+        categoryId: '',
         ratings: '',
         specialDiscount: '',
         tags: [{ name: '' }],
@@ -16,14 +17,13 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
         time: { hours: '', minutes: '' },
     });
 
-    const [availableCategories, setAvailableCategories] = useState([]); // State to store fetched categories
+    const [availableCategories, setAvailableCategories] = useState([]);
 
     useEffect(() => {
-        // Fetch categories when component mounts
         const getCategories = async () => {
             try {
                 const fetchedCategories = await fetchCategories();
-                setAvailableCategories(fetchedCategories); // Set the fetched categories
+                setAvailableCategories(fetchedCategories);
             } catch (err) {
                 console.error('Failed to fetch categories:', err.message);
             }
@@ -50,7 +50,7 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
             price,
             time.hours,
             time.minutes,
-            categoryId, // Ensure categoryId is selected
+            categoryId,
         ];
 
         const numericFields = {
@@ -63,21 +63,19 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
             timeHours: parseInt(time.hours, 10),
             timeMinutes: parseInt(time.minutes, 10),
         };
-    
+
         for (const [field, value] of Object.entries(numericFields)) {
             if (isNaN(value) || value < 0) {
                 alert(`Please enter a valid number for ${field.charAt(0).toUpperCase() + field.slice(1)}.`);
-                return; // Exit the function to prevent saving
+                return;
             }
         }
-    
-        // If any required field is empty, alert the user
+
         if (requiredFields.some(field => field === '' || field === undefined)) {
             alert('Please fill in all required fields: Name, Date, Duration, Location (Lat & Lng), Price, Time (Hours & Minutes), and Category.');
             return;
         }
-    
-        // Create activity data with advertiser ID
+
         const activityWithAdvertiserId = {
             ...newActivity,
             advertiserId: advertiserId,
@@ -90,7 +88,7 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
                 minutes: numericFields.timeMinutes,
             },
         };
-    
+
         try {
             console.log(activityWithAdvertiserId)
             const createdActivity = await createActivity(activityWithAdvertiserId);
@@ -109,6 +107,17 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
         }));
     };
 
+    // Function to handle location selection from MapComponent
+    const handleLocationSelect = (location) => {
+        setNewActivity(prevState => ({
+            ...prevState,
+            location: {
+                lat: location.lat,
+                lng: location.lng,
+            },
+        }));
+    };
+
     return (
         <div className="activity-card">
             <input type="text" name="name" value={newActivity.name} onChange={handleInputChange} placeholder="Activity Name" />
@@ -116,7 +125,6 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
             <input type="number" name="price" value={newActivity.price} onChange={handleInputChange} placeholder="Price" />
             <input type="number" name="duration" value={newActivity.duration} onChange={handleInputChange} placeholder="Duration (minutes)" />
 
-            {/* Dropdown for category selection */}
             <select name="categoryId" value={newActivity.categoryId} onChange={handleInputChange}>
                 <option value="">Select a Category</option>
                 {availableCategories.map(category => (
@@ -155,20 +163,8 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
             />
             Booking Open
 
-            <input
-                type="text"
-                name="locationLat"
-                value={newActivity.location.lat}
-                onChange={(e) => setNewActivity({ ...newActivity, location: { ...newActivity.location, lat: e.target.value } })}
-                placeholder="Location Latitude"
-            />
-            <input
-                type="text"
-                name="locationLng"
-                value={newActivity.location.lng}
-                onChange={(e) => setNewActivity({ ...newActivity, location: { ...newActivity.location, lng: e.target.value } })}
-                placeholder="Location Longitude"
-            />
+            {/* Integrate MapComponent to select location */}
+            <MapComponent onLocationSelect={handleLocationSelect} allowMarkerChange={true} />
 
             <input
                 type="number"

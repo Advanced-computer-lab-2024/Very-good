@@ -7,6 +7,7 @@ import AdvertiserPage from './Pages/AdvertiserPage';
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
 import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerAdmin ,registerTourist,} from './RequestSendingMethods';
+import {LoadScript } from '@react-google-maps/api';
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -133,7 +134,9 @@ function App() {
         <TourGuideHomePage email={emailtourguide} />
       ) :
       isAdvertiserPageActive ? (
+        <LoadScript googleMapsApiKey="AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA">
         <AdvertiserPage />
+        </LoadScript>
       ) :
       isTourismGovernerPageActive ? (
         <TourismGovernerPage/>
