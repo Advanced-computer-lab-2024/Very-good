@@ -21,7 +21,7 @@ export const deleteProduct = async (sellerId) => {
 };
 
 export const updateProduct = async (sellerId, productId, updatedData) => {
-    const url = `http://localhost:4000/api/sellers/${sellerId}/products/${productId}`;
+    const url = `http://localhost:4000/api/products/${sellerId}/products/${productId}`;
     console.log('Updating product at:', url);
 
     const response = await axios.patch(url, updatedData); // Change to PATCH if that is your backend method

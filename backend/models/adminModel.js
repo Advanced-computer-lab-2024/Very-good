@@ -14,10 +14,6 @@ const adminSchema = new schema({
     password: {
         type: String,
         required: true
-    },
-    mobile: {
-        type: String,
-        required: true
     }
 }, { timestamps: true });
 

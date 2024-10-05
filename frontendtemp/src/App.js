@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
+import AdminPage from './Pages/AdminPage';
 import AdvertiserPage from './Pages/AdvertiserPage'; 
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
+import { registerTourist, fetchTouristByEmail, createTourGuideRequest ,registerSeller,registerAdvertiser} from './RequestSendingMethods';
 import {LoadScript } from '@react-google-maps/api';
+import SellerPage from './Pages/SellerPage';
 
 
 function App() {
@@ -73,11 +75,8 @@ function App() {
     }
 
 
-      // Pass it to a function
-      setIsAdminPageActive(true);
-      // BACKEND CONNECTION - Update the database
-      await registerAdmin(adminData);
-    } 
+
+     
     if (role === 'tourismGovernor') {
       let tourismGovernorData = {
         name: formElements.username.value,
@@ -114,11 +113,11 @@ function App() {
       // Handle advertiser registration and backend call
       await registerAdvertiser(advertiserData);
     }
-  };
+  }
 
   // Function to handle Admin Sign In form submission
   const handleAdminSignIn = (event) => {
-    event.preventDefault();
+
     // Add logic to handle admin sign in here
     setIsAdminPageActive(true);
     console.log("Admin Sign In submitted");
@@ -130,6 +129,8 @@ function App() {
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
+      ) :  isSellerPageActive ? (
+        <SellerPage email={emailofseller} />
       ) :
       isAdvertiserPageActive ? (
         <LoadScript googleMapsApiKey="AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA">
@@ -139,6 +140,7 @@ function App() {
       isTourismGovernerPageActive ? (
         <TourismGovernerPage/>
       ) :
+
       isAdminPageActive ? (
         <AdminPage />
       ) :
@@ -150,7 +152,7 @@ function App() {
               <h1>Welcome to the Very Good Travel App</h1>
               <p>Please select an action:</p>
               <button onClick={() => handleActionSelection('register')}>Register</button>
-              <button onClick={() => setIsAdminSignInActive(true)}>Sign In as an Admin</button>
+              <button onClick={() => handleAdminSignIn()}>Sign In as an Admin</button>
             </div>
           )}
 
@@ -183,7 +185,7 @@ function App() {
                       <option value="tourist">Tourist</option>
                       <option value="tourGuide">Tour Guide</option>
                       <option value="tourismGovernor">Tourism Governor</option>
-                      <option value="admin">Admin</option>
+                      
 
 
                     </select>
