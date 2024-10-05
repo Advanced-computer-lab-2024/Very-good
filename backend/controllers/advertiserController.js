@@ -163,5 +163,6 @@ const updateWorkout = async (req, res) => {
 }
 
 
-module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId,
+
+module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
   fetchAdvertiserByEmail,deleteAdvertiser}

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
-import AdvertiserPage from './Pages/AdvertiserPage';
-import TourismGovernerPage from './Pages/TourismGovernerPage';
-import TourGuideHomePage from './Pages/tourGuideHomePage';
-import AdminPage from './Pages/AdminPage'; // Import the AdminPage
-import SellerPage from './Pages/SellerPage';
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest,registerAdvertiser,registerSeller } from './RequestSendingMethods';
+import AdvertiserPage from './Pages/AdvertiserPage'; 
+import TourismGovernerPage from './Pages/TourismGovernerPage'; 
+import TourGuideHomePage from './Pages/tourGuideHomePage'; 
+import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
+import {LoadScript } from '@react-google-maps/api';
+
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -18,11 +18,11 @@ function App() {
   const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render advertiser page
   const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourism governor page
   const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
+  const [isAdminPageActive, setIsAdminPageActive] = useState(false); // Should we render tourist page
+  const [isSellerPageActive, setIsSellerPageActive] = useState(false); // Should we render seller page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
   const [isAdminSignInActive, setIsAdminSignInActive] = useState(false); // State to track Admin Sign In form visibility
-  const [isAdminPageActive, setIsAdminPageActive] = useState(false); 
-  const [isSellerPageActive,setIsSellerPageActive]= useState(false);
   const[emailofseller,setEmailOfSeller]=useState('');
   const[emailAdvertiser,setEmailOfAdvertiser]=useState('');
   // Function to handle action selection
@@ -42,7 +42,7 @@ function App() {
     event.preventDefault(); // Prevent the default form submission behavior
     const formElements = event.target.elements;
 
-    // Based on the role, set state to render the tourist or tour guide page if applicable
+    // Handle tourist registration
     if (role === 'tourist') {
       let touristData = {
         name: formElements.username.value,
@@ -72,6 +72,12 @@ function App() {
       await createTourGuideRequest(tourGuideData);
     }
 
+
+      // Pass it to a function
+      setIsAdminPageActive(true);
+      // BACKEND CONNECTION - Update the database
+      await registerAdmin(adminData);
+    } 
     if (role === 'tourismGovernor') {
       let tourismGovernorData = {
         name: formElements.username.value,
@@ -124,30 +130,21 @@ function App() {
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
-      ) : isAdvertiserPageActive ? (
-        <AdvertiserPage email={emailAdvertiser}/>
-      ) : isTourismGovernerPageActive ? (
-        <TourismGovernerPage />
-      ) : isAdminPageActive ? ( // Render the Admin Page if active
-      <AdminPage />
-    ) : isSellerPageActive ? ( // Check for Seller Page
-    <SellerPage email={emailofseller} /> 
-    ) : isAdminSignInActive ? (
-        <div className="form-container">
-          <h2 className="form-header">Admin Sign In</h2>
-          <form onSubmit={handleAdminSignIn}>
-            <label htmlFor="adminUsername">Username:</label>
-            <input type="text" id="adminUsername" name="adminUsername" required />
-
-            <label htmlFor="adminPassword">Password:</label>
-            <input type="password" id="adminPassword" name="adminPassword" required />
-
-            <button type="submit" className="btn proceed-btn">Proceed</button>
-            <button type="button" className="btn" onClick={() => setIsAdminSignInActive(false)}>Back</button>
-          </form>
-        </div>
-      ) : (
+      ) :
+      isAdvertiserPageActive ? (
+        <LoadScript googleMapsApiKey="AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA">
+        <AdvertiserPage email={emailAdvertiser} />
+        </LoadScript>
+      ) :
+      isTourismGovernerPageActive ? (
+        <TourismGovernerPage/>
+      ) :
+      isAdminPageActive ? (
+        <AdminPage />
+      ) :
+      (
         <>
+          {/* Welcome Message and Action Selection */}
           {action === '' && (
             <div className="welcome-message">
               <h1>Welcome to the Very Good Travel App</h1>
@@ -186,6 +183,9 @@ function App() {
                       <option value="tourist">Tourist</option>
                       <option value="tourGuide">Tour Guide</option>
                       <option value="tourismGovernor">Tourism Governor</option>
+                      <option value="admin">Admin</option>
+
+
                     </select>
                   </>
                 )}

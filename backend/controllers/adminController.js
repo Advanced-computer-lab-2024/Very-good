@@ -1,49 +1,51 @@
 const Admin = require('../models/adminModel');
-const bcrypt = require('bcrypt');
+const { default: mongoose } = require('mongoose')
 
-// Create a new Admin
+
+const checkAdmin = async (req, res) => {
+
+}
+
 const createAdmin = async (req, res) => {
     try {
-        const { username, password, email } = req.body; // Destructure email from request body
-
-        // Check if the username already exists
-        const existingAdmin = await Admin.findOne({ username });
-        if (existingAdmin) {
-            return res.status(400).json({ message: 'Username already exists' });
+      // Destructure the request body to get user details
+      const { name, email, password, mobile} = req.body;
+  
+      // Create a new user instance with the role of tourist
+      const admin = new Admin({
+        name,
+        email,
+        password,
+        mobile
+        // No need to set bookedItineraries, createdItineraries, or wallet; they will default to appropriate values
+      });
+  
+      // Save the user to the database
+      await admin.save();
+  
+      // Send success response
+      res.status(200).json({
+        message: 'Admin created successfully',
+        admin: {
+          id: admin._id,
+          name: admin.name,
+          email: admin.email,
+          mobile: admin.mobile
         }
-
-        // Check if the email already exists
-        const existingEmail = await Admin.findOne({ email });
-        if (existingEmail) {
-            return res.status(400).json({ message: 'Email already exists' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newAdmin = new Admin({
-            username,
-            password: hashedPassword,
-            email // Include email when creating a new admin
-        });
-
-        await newAdmin.save();
-
-        res.status(201).json({
-            message: 'Admin created successfully',
-            admin: {
-                id: newAdmin._id,
-                username: newAdmin.username,
-                email: newAdmin.email // Optionally include email in response
-            }
-        });
+      });
     } catch (error) {
-        console.error(error);
-        res.status(400).json({
-            message: 'Error creating Admin',
-            error: error.message
-        });
+      // Handle errors
+      console.error(error);
+      res.status(400).json({
+        message: 'Error creating admin',
+        error: error.message
+      });
     }
 };
 
-module.exports = { createAdmin };
+
+const getAdmins = async (req, res) => {
+    
+}
+
+module.exports = {checkAdmin, createAdmin,  getAdmins };

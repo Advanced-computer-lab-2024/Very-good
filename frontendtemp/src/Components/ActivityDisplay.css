@@ -11,6 +11,20 @@
   position: relative; /* Allow absolute positioning within this container */
   width: 1000px;
 }
+.itinerary-card,.opening-hours {
+  background-color: white; /* Light background for the activity card */
+  color: #333; /* Dark text for readability */
+  border-radius: 10px; /* Rounded corners for a softer look */
+  padding: 20px; /* Padding around the content */
+  margin: 15px; /* Margin to separate multiple cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+  transition: transform 0.2s; /* Animation for hover effect */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  position: relative; /* Allow absolute positioning within this container */
+  width: 1000px;
+}
+
   
   .activity-card:hover {
     transform: scale(1.02); /* Scale up on hover for interactivity */
@@ -45,6 +59,11 @@
     display: inline-flex; /* Display tags inline */
     flex-wrap: wrap; /* Allow wrapping for tags */
   }
+
+  .selected-tag {
+    background-color: green; /* Background color for selected tag */
+    color: white; /* Text color for selected tag */
+}
   
   .activity-tag {
     background-color: #0284c7; /* Blue color for tags to match your theme */

@@ -42,8 +42,9 @@ const activitySchema = new schema({
             required: true
         }
     },
-    category: {
-        type: String,
+    categoryId: {
+        type: schema.Types.ObjectId,
+        ref: 'category', // Reference to the Category model
         required: true
     },
     ratings: {
@@ -78,13 +79,11 @@ const activitySchema = new schema({
     }
 
 }, { timestamps : true})
-
 activitySchema.pre('validate', function (next) {
-    // Ensure that either tourGuideId or advertiserId is present, but not both
     if ((this.tourGuideId && this.advertiserId) || (!this.tourGuideId && !this.advertiserId)) {
         next(new Error('Either tourGuideId or advertiserId is required, but both cannot be filled or missing.'));
     } else {
-        next(); // Validation passed, continue to save
+        next();
     }
 });
 

@@ -13,4 +13,18 @@ router.post('/createadmintag', createTag); // Create a new tag
 router.patch('/updateadmintag/:id', updateTag); // Update an existing tag by ID
 router.delete('/deleteadmintag/:id', deleteTag); // Delete a tag by ID
 
-module.exports = router;
+module.exports = router;const express = require('express')
+const {createAdmin, getAdmins} = require('../controllers/adminController')
+const router = express.Router()
+
+router.get('/', getAdmins)
+
+//router.get('/:id', getWorkout)
+
+router.post('/', createAdmin)
+
+//router.delete('/:id', deleteWorkout)
+
+//router.patch('/:id', updateWorkout)
+
+module.exports = router
