@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import ProductSort from '../Components/SortProductRate.js';
 function AdminPage() {
   const [categories, setCategories] = useState([]); 
   const [formData, setFormData] = useState({ name: '' });
@@ -177,9 +177,10 @@ function AdminPage() {
             ))}
         </ul>
         <button onClick={() => setSelectedOperation(null)}>Back</button>
+        
     </div>
 )}
-
+    <ProductSort/>
     </div>
   );
 }

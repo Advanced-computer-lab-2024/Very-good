@@ -10,6 +10,7 @@ import TourGuideHomePage from './Pages/tourGuideHomePage';
 import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerSeller, registerAdmin ,registerTourist,} from './RequestSendingMethods';  // Assuming registerSeller is added
 import {LoadScript } from '@react-google-maps/api';
 
+
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
   const [registrationType, setRegistrationType] = useState(''); // Tracks if user is individual or organization
@@ -79,10 +80,10 @@ function App() {
     if (role === 'admin') {
       // Collect the form data
       let adminData = {
-        name: event.target.username.value,
-        email: event.target.email.value,
-        password: event.target.password.value,
-        mobile: event.target.mobile.value,
+        name: event.target.name.value,
+        // email: event.target.email.value,
+        // password: event.target.password.value,
+        // mobile: event.target.mobile.value,
         
       };
 
@@ -98,6 +99,7 @@ function App() {
 
     if (role === 'seller') {
       // Handle seller registration
+      setIsSellerPageActive(true);
     }
 
     if (role === 'advertiser') {
