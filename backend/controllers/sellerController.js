@@ -51,5 +51,80 @@ const getSellers = async (req, res) => {
         });
     }
 };
+// Method to fetch seller by email
+const fetchSellerByEmail = async (req, res) => {
+    try {
+        // Get the email from the request body
+        const { email } = req.body; // Expecting { email: 'Smirbdr@gmail.com' }
 
-module.exports = {createSeller, getSellers}
+        // Ensure email is a string
+        if (typeof email !== 'string') {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        // Find the seller by email
+        const seller = await Seller.findOne({ email }).populate('createdProducts');
+
+        if (!seller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        // Send success response
+        res.status(200).json({
+            message: 'Seller fetched successfully',
+            seller: seller,
+        });
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+        res.status(500).json({
+            message: 'Error fetching Seller',
+            error: error.message,
+        });
+    }
+};
+const updateSeller = async (req, res) => {
+    const { email } = req.body; // Extract email from request body
+    const updatedData = req.body.updatedData; // Extract updated data
+  
+    try {
+      // Find seller by email and update with new data
+      const seller = await Seller.findOneAndUpdate(
+        { email }, // Search by email
+        updatedData, // New data
+        { new: true } // Return the updated document
+      );
+  
+      if (!seller) {
+        return res.status(404).json({ message: "Seller not found" });
+      }
+  
+      return res.status(200).json({ message: "Seller updated successfully", seller });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Error updating seller", error });
+    }
+  };
+
+// Delete seller by ID
+const deleteSeller = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the seller ID from the request parameters
+
+        // Find the seller and delete them
+        const deletedSeller = await Seller.findByIdAndDelete(id);
+
+        // Check if the seller was found and deleted
+        if (!deletedSeller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        res.status(200).json({ message: 'Seller deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting seller', error: error.message });
+    }
+};
+
+
+module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller}

@@ -6,13 +6,13 @@ const TourismGoverner = require('../models/tourismGovernerModel')
 const createTourismGoverner = async (req, res) => {
     try {
       // Destructure the request body to get user details
-      const { name, email, password, mobile, nationality, dob} = req.body;
+      const { username, email, password, mobile, nationality, dob} = req.body;
   
       const newTourismGoverner = new TourismGoverner({
-        name,
+        username,
         email,
         password,
-        mobile,
+        mobile, 
         nationality,
         dob
       });
@@ -24,7 +24,7 @@ const createTourismGoverner = async (req, res) => {
         message: 'Tourism Governer created successfully',
         toursimGoverner: {
           id: newTourismGoverner._id,
-          name: newTourismGoverner.name,
+          username: newTourismGoverner.username,
           email: newTourismGoverner.email,
           mobile: newTourismGoverner.mobile,
           nationality: newTourismGoverner.nationality,

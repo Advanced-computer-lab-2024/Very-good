@@ -99,12 +99,25 @@ const createWorkout = async (req, res) => {
 
 }
 
-// delete a workout
-const deleteWorkout = async (req, res) => {
-    
+// Delete tourist by ID
+const deleteTourist = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the tourist ID from the request parameters
 
-}
+      // Find the tourist and delete them
+      const deletedTourist = await Tourist.findByIdAndDelete(id);
 
+      // Check if the tourist was found and deleted
+      if (!deletedTourist) {
+          return res.status(404).json({ message: 'Tourist not found' });
+      }
+
+      res.status(200).json({ message: 'Tourist deleted successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting tourist', error: error.message });
+  }
+};
 const updateRecords = async (req, res) => {
   try {
     const { email, updatedData } = req.body; // Extract email and updated data from the request body
@@ -141,4 +154,4 @@ const updateRecords = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords }
+module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist}

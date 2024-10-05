@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
-import AdvertiserPage from './Pages/AdvertiserPage'; 
-import TourismGovernerPage from './Pages/TourismGovernerPage'; 
-import TourGuideHomePage from './Pages/tourGuideHomePage'; 
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest } from './RequestSendingMethods';
+import AdvertiserPage from './Pages/AdvertiserPage';
+import TourismGovernerPage from './Pages/TourismGovernerPage';
+import TourGuideHomePage from './Pages/tourGuideHomePage';
+import AdminPage from './Pages/AdminPage'; // Import the AdminPage
+import SellerPage from './Pages/SellerPage';
+import { registerTourist, fetchTouristByEmail, createTourGuideRequest,registerAdvertiser,registerSeller } from './RequestSendingMethods';
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -13,12 +15,16 @@ function App() {
   const [role, setRole] = useState(''); // Tracks the selected role
   const [step, setStep] = useState(1); // Tracks if we're on the initial or detailed form
   const [isTouristPageActive, setIsTouristPageActive] = useState(false); // Should we render tourist page
-  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render tourist page
-  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourist page
+  const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render advertiser page
+  const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourism governor page
   const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
-
+  const [isAdminSignInActive, setIsAdminSignInActive] = useState(false); // State to track Admin Sign In form visibility
+  const [isAdminPageActive, setIsAdminPageActive] = useState(false); 
+  const [isSellerPageActive,setIsSellerPageActive]= useState(false);
+  const[emailofseller,setEmailOfSeller]=useState('');
+  const[emailAdvertiser,setEmailOfAdvertiser]=useState('');
   // Function to handle action selection
   const handleActionSelection = (selectedAction) => {
     setAction(selectedAction);
@@ -38,25 +44,20 @@ function App() {
 
     // Based on the role, set state to render the tourist or tour guide page if applicable
     if (role === 'tourist') {
-      // Collect the form data
       let touristData = {
-        name: event.target.username.value,
-        email: event.target.email.value,
-        password: event.target.password.value,
-        mobile: event.target.mobile.value,
-        dob: event.target.dob.value,
-        nationality: event.target.nationality.value,
-        job: event.target.job.value,
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        mobile: formElements.mobile.value,
+        dob: formElements.dob.value,
+        nationality: formElements.nationality.value,
+        job: formElements.job.value,
       };
-
-      // Pass it to a function
       setIsTouristPageActive(true);
-      // BACKEND CONNECTION - Update the database
       await registerTourist(touristData);
-    } 
-    
+    }
+
     if (role === 'tourGuide') {
-      // Collect the form data
       let tourGuideData = {
         name: formElements.username.value,
         email: formElements.email.value,
@@ -67,72 +68,95 @@ function App() {
         yearsOfExperience: formElements.experience.value,
         previousJob: formElements.previousWork.value,
       };
-
-      // Render the tour guide home page
       setIsTourGuidePageActive(true);
-
-      // BACKEND CONNECTION - Update the database
       await createTourGuideRequest(tourGuideData);
     }
 
-    // Handle other roles or proceed with registration
     if (role === 'tourismGovernor') {
-      // Handle tourism governor registration
+      let tourismGovernorData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        nationality: formElements.nationality.value,
+      };
+      setTourismGovernerPageActive(true);
+      // Add your backend call here
     }
 
     if (role === 'seller') {
-      // Handle seller registration
+      let sellerData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        description: formElements.description.value,
+      };
+      setIsSellerPageActive(true);
+      // Handle seller registration and backend call
+      await registerSeller(sellerData);
     }
 
     if (role === 'advertiser') {
-      // Handle advertiser registration
-    }
-
-    console.log(`Role selected: ${role}`);
-      // BACKEND CONNECTION As in Update The dataBase 
-    
-    if (role === 'advertiser') {
+      let advertiserData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        websiteLink: formElements.website.value,
+        hotline: formElements.hotline.value,
+        companyProfile: formElements.companyProfile.value,
+      };
       setIsAdvertiserPageActive(true);
-      // BACKEND CONNECTION As in Update The dataBase 
+      // Handle advertiser registration and backend call
+      await registerAdvertiser(advertiserData);
     }
-     if (role === 'tourismGovernor') {
-      setTourismGovernerPageActive(true);
-      // BACKEND CONNECTION As in Update The dataBase 
-    }
-    else {
-      // Handle other roles or proceed with registration
-      console.log(`Role selected: ${role}`);
-      // Implement other role redirects here if necessary
-    }
+  };
+
+  // Function to handle Admin Sign In form submission
+  const handleAdminSignIn = (event) => {
+    event.preventDefault();
+    // Add logic to handle admin sign in here
+    setIsAdminPageActive(true);
+    console.log("Admin Sign In submitted");
   };
 
   return (
     <div className="container">
-      {/* Render Tourist Page if active */}
       {isTouristPageActive ? (
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
-      ) :
-      isAdvertiserPageActive ? (
-        <AdvertiserPage />
-      ) :
-      isTourismGovernerPageActive ? (
-        <TourismGovernerPage/>
-      ) :
-      (
+      ) : isAdvertiserPageActive ? (
+        <AdvertiserPage email={emailAdvertiser}/>
+      ) : isTourismGovernerPageActive ? (
+        <TourismGovernerPage />
+      ) : isAdminPageActive ? ( // Render the Admin Page if active
+      <AdminPage />
+    ) : isSellerPageActive ? ( // Check for Seller Page
+    <SellerPage email={emailofseller} /> 
+    ) : isAdminSignInActive ? (
+        <div className="form-container">
+          <h2 className="form-header">Admin Sign In</h2>
+          <form onSubmit={handleAdminSignIn}>
+            <label htmlFor="adminUsername">Username:</label>
+            <input type="text" id="adminUsername" name="adminUsername" required />
+
+            <label htmlFor="adminPassword">Password:</label>
+            <input type="password" id="adminPassword" name="adminPassword" required />
+
+            <button type="submit" className="btn proceed-btn">Proceed</button>
+            <button type="button" className="btn" onClick={() => setIsAdminSignInActive(false)}>Back</button>
+          </form>
+        </div>
+      ) : (
         <>
-          {/* Welcome Message and Action Selection */}
           {action === '' && (
             <div className="welcome-message">
               <h1>Welcome to the Very Good Travel App</h1>
               <p>Please select an action:</p>
               <button onClick={() => handleActionSelection('register')}>Register</button>
-              <button onClick={() => handleActionSelection('signin')}>Sign In</button>
+              <button onClick={() => setIsAdminSignInActive(true)}>Sign In as an Admin</button>
             </div>
           )}
 
-          {/* Registration Type Selection */}
           {action === 'register' && step === 1 && (
             <div className="form-container">
               <h2 className="form-header">Register</h2>
@@ -188,7 +212,6 @@ function App() {
             </div>
           )}
 
-          {/* Detailed Registration Form */}
           {action === 'register' && step === 2 && (
             <div className="form-container">
               <h2 className="form-header">Complete Your {role} Registration</h2>
@@ -204,7 +227,7 @@ function App() {
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
 
-                    <label htmlFor="mobile">Mobile Number:</label>
+                    <label htmlFor="mobile">Mobile:</label>
                     <input type="tel" id="mobile" name="mobile" required />
 
                     <label htmlFor="dob">Date of Birth:</label>
@@ -214,7 +237,9 @@ function App() {
                     <input type="text" id="nationality" name="nationality" required />
 
                     <label htmlFor="job">Job:</label>
-                    <input type="text" id="job" name="job" />
+                    <input type="text" id="job" name="job" required />
+
+                    <button type="submit" className="btn">Register</button>
                   </>
                 )}
 
@@ -229,7 +254,7 @@ function App() {
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
 
-                    <label htmlFor="mobile">Mobile Number:</label>
+                    <label htmlFor="mobile">Mobile:</label>
                     <input type="tel" id="mobile" name="mobile" required />
 
                     <label htmlFor="dob">Date of Birth:</label>
@@ -241,14 +266,77 @@ function App() {
                     <label htmlFor="experience">Years of Experience:</label>
                     <input type="number" id="experience" name="experience" required />
 
-                    <label htmlFor="previousWork">Previous Work (if any):</label>
-                    <input type="text" id="previousWork" name="previousWork" />
+                    <label htmlFor="previousWork">Previous Work:</label>
+                    <input type="text" id="previousWork" name="previousWork" required />
+
+                    <button type="submit" className="btn">Register</button>
                   </>
                 )}
 
-                {/* Add forms for other roles like tourismGovernor, seller, advertiser here */}
+                {role === 'tourismGovernor' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
 
-                <button type="submit" className="btn register-btn">Register</button>
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="nationality">Nationality:</label>
+                    <input type="text" id="nationality" name="nationality" required />
+
+                    <button type="submit" className="btn">Register</button>
+                  </>
+                )}
+
+                {role === 'seller' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required onChange={(e) => setEmailOfSeller(e.target.value)} />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="name">Business Name:</label>
+                    <input type="text" id="name" name="name" required />
+
+                    <label htmlFor="description">Business Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+
+                    <button type="submit" className="btn">Register</button>
+                  </>
+                )}
+
+                {role === 'advertiser' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required onChange={(e)=>setEmailOfAdvertiser(e.target.value)} />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="website">Website:</label>
+                    <input type="url" id="website" name="website" required />
+
+                    <label htmlFor="hotline">Hotline:</label>
+                    <input type="tel" id="hotline" name="hotline" required />
+
+                    <label htmlFor="companyProfile">Company Profile:</label>
+                    <textarea id="companyProfile" name="companyProfile" required></textarea>
+
+                    <button type="submit" className="btn">Register</button>
+                  </>
+                )}
+
+                <button type="button" className="btn" onClick={() => setStep(1)}>Back</button>
               </form>
             </div>
           )}

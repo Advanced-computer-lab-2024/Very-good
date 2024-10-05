@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords} = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist} = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
@@ -11,5 +11,5 @@ router.post('/getByEmail', getTouristByEmail);
 //router.delete('/:id', deleteWorkout)
 router.post('/updateByEmail',updateRecords);
 //router.patch('/:id', updateWorkout)
-
+router.delete('/:id', deleteTourist);
 module.exports = router

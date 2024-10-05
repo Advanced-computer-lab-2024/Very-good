@@ -4,9 +4,10 @@ const schema = mongoose.Schema
 
 const tourismGovernerSchema = new schema({
 
-    name: {
+    username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
       },
       email: {
         type: String,

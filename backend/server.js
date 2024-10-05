@@ -9,6 +9,7 @@ const ItineraryRoutes = require('./routes/itineraries')
 const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
+const adminroutes=require('./routes/admin')
 const tagRoutes = require('./routes/tags')
 const mongoose = require('mongoose')
 const cors = require('cors');
@@ -25,7 +26,7 @@ app.use((req, res, next) => {
 })
 //To send a request that reaches the createTourist method, you'll need to construct your HTTP request URL based on how you've defined your routes in your Express app.
 app.use('/api/tourists', touristRoutes)
-        
+app.use('/api/admins',adminroutes)
 app.use('/api/tourGuides', tourGuideRoutes)
 app.use('/api/tourismGoverners', tourismGovernerRoutes)
 app.use('/api/advertisers', advertiserRoutes)

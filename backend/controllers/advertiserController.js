@@ -57,6 +57,26 @@ const getAdvertisers = async (req, res) => {
     }
 };
 
+const fetchAdvertiserByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const advertiser = await Advertiser.findOne({ email });
+    if (!advertiser) {
+      return res.status(404).json({ message: "Advertiser not found" });
+    }
+
+    res.status(200).json({ advertiser });
+  } catch (error) {
+    console.error('Error fetching advertiser:', error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const getActivitieswithAdvertiserId = async (req, res) => {
   try {
       const activities = await Activity.find({ advertiserId: req.params.id });
@@ -110,11 +130,7 @@ const updateActivityWithId = async (req, res) => {
 };
 
 // get a single workout
-const getWorkout = async (req, res) => {
 
-
-
-}
 
 // create a workout
 const createWorkout = async (req, res) => {
@@ -123,13 +139,29 @@ const createWorkout = async (req, res) => {
 }
 
 // delete a workout
-const deleteWorkout = async (req, res) => {
-    
+const deleteAdvertiser = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the advertiser ID from the request parameters
 
-}
+      // Find the advertiser and delete them
+      const deletedAdvertiser = await Advertiser.findByIdAndDelete(id);
+
+      // Check if the advertiser was found and deleted
+      if (!deletedAdvertiser) {
+          return res.status(404).json({ message: 'Advertiser not found' });
+      }
+
+      res.status(200).json({ message: 'Advertiser deleted successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting advertiser', error: error.message });
+  }
+}; 
 
 const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId}
+
+module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId,
+  fetchAdvertiserByEmail,deleteAdvertiser}

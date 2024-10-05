@@ -1,5 +1,5 @@
 const express = require('express')
-const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId} = require('../controllers/advertiserController')
+const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId,fetchAdvertiserByEmail,deleteAdvertiser} = require('../controllers/advertiserController')
 const router = express.Router()
 
 router.get('/', getAdvertisers)
@@ -9,9 +9,9 @@ router.get('/:id/activities', getActivitieswithAdvertiserId);
 router.delete('/:id/activities', deleteActivityById);
 
 router.put('/:id/activities', updateActivityWithId);
-
+router.delete('/:id', deleteAdvertiser);
 //router.get('/:id', getWorkout)
-
+router.post('/getAdvertiserByEmail', fetchAdvertiserByEmail);
 router.post('/', createAdvertiser)
 
 //router.delete('/:id', deleteWorkout)
