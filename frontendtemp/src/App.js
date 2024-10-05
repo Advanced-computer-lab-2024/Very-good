@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
+import AdminPage from './Pages/adminpage';
 import SellerPage from './Pages/SellerPage';  // Import SellerPage
 import AdvertiserPage from './Pages/AdvertiserPage';
 import TourismGovernerPage from './Pages/TourismGovernerPage';
 import TourGuideHomePage from './Pages/tourGuideHomePage';
-import { registerTourist, fetchTouristByEmail, createTourGuideRequest, registerSeller } from './RequestSendingMethods';  // Assuming registerSeller is added
+import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerSeller, registerAdmin ,registerTourist,} from './RequestSendingMethods';  // Assuming registerSeller is added
+import {LoadScript } from '@react-google-maps/api';
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -17,9 +19,13 @@ function App() {
   const [isAdvertiserPageActive, setIsAdvertiserPageActive] = useState(false); // Should we render advertiser page
   const [isTourismGovernerPageActive, setTourismGovernerPageActive] = useState(false); // Should we render tourism governor page
   const [isTourGuidePageActive, setIsTourGuidePageActive] = useState(false); // Should we render tour guide page
+  const [isAdminPageActive, setIsAdminPageActive] = useState(false); // Should we render tourist page
   const [isSellerPageActive, setIsSellerPageActive] = useState(false); // Should we render seller page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
+
+  //setIsAdminPageActive
+
 
   // Function to handle action selection
   const handleActionSelection = (selectedAction) => {
@@ -70,27 +76,41 @@ function App() {
       setIsTourGuidePageActive(true);
       await createTourGuideRequest(tourGuideData);
     }
-
-    // Handle seller registration
-    else if (role === 'seller') {
-      let sellerData = {
-        name: formElements.username.value,
-        email: formElements.email.value,
-        password: formElements.password.value,
-        mobile: formElements.mobile.value,
-        businessName: formElements.businessName.value,
-        website: formElements.website.value,
+    if (role === 'admin') {
+      // Collect the form data
+      let adminData = {
+        name: event.target.username.value,
+        email: event.target.email.value,
+        password: event.target.password.value,
+        mobile: event.target.mobile.value,
+        
       };
 
-      setIsSellerPageActive(true);
-      await registerSeller(sellerData); // Assuming you have this API endpoint
+      // Pass it to a function
+      setIsAdminPageActive(true);
+      // BACKEND CONNECTION - Update the database
+      await registerAdmin(adminData);
+    } 
+    // Handle other roles or proceed with registration
+    if (role === 'tourismGovernor') {
+      // Handle tourism governor registration
     }
 
-    // Handle other roles (e.g., advertiser, tourism governor)
-    else if (role === 'advertiser') {
+    if (role === 'seller') {
+      // Handle seller registration
+    }
+
+    if (role === 'advertiser') {
+      // Handle advertiser registration
+    }
+
+    console.log(`Role selected: ${role}`);
+      // BACKEND CONNECTION As in Update The dataBase 
+    if (role === 'advertiser') {
       setIsAdvertiserPageActive(true);
-    } 
-    else if (role === 'tourismGovernor') {
+      // BACKEND CONNECTION As in Update The dataBase 
+    }
+    if (role === 'tourismGovernor') {
       setTourismGovernerPageActive(true);
     }
 
@@ -106,11 +126,19 @@ function App() {
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
-      ) : isAdvertiserPageActive ? (
+      ) :
+      isAdvertiserPageActive ? (
+        <LoadScript googleMapsApiKey="AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA">
         <AdvertiserPage />
-      ) : isTourismGovernerPageActive ? (
-        <TourismGovernerPage />
-      ) : (
+        </LoadScript>
+      ) :
+      isTourismGovernerPageActive ? (
+        <TourismGovernerPage/>
+      ) :
+      isAdminPageActive ? (
+        <AdminPage />
+      ) :
+      (
         <>
           {/* Welcome Message and Action Selection */}
           {action === '' && (
@@ -152,6 +180,9 @@ function App() {
                       <option value="tourist">Tourist</option>
                       <option value="tourGuide">Tour Guide</option>
                       <option value="tourismGovernor">Tourism Governor</option>
+                      <option value="admin">Admin</option>
+
+
                     </select>
                   </>
                 )}

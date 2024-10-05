@@ -39,3 +39,15 @@ export const createActivity = async (newActivity) => {
     const response = await axios.post(url, newActivity);
     return response.data;
 };
+
+export const fetchCategories = async() => {
+    const url = `http://localhost:4000/api/categories/`;
+    const response = await axios.get(url);
+    return response.data.data;
+}
+
+export const fetchCategoryById = async(categoryId) => {
+    const url = `http://localhost:4000/api/categories/${categoryId}`;
+    const response = await axios.get(url);
+    return response.data;
+}

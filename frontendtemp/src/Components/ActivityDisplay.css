@@ -59,6 +59,11 @@
     display: inline-flex; /* Display tags inline */
     flex-wrap: wrap; /* Allow wrapping for tags */
   }
+
+  .selected-tag {
+    background-color: green; /* Background color for selected tag */
+    color: white; /* Text color for selected tag */
+}
   
   .activity-tag {
     background-color: #0284c7; /* Blue color for tags to match your theme */

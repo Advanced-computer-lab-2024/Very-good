@@ -99,13 +99,44 @@ const registerTourist = async (touristData) => {
       console.log('registrationOK', data);
       return data;
     } catch (error) {
-      console.error('Error:', error);
-      throw error;
+        console.error('Error:', error);
+        throw error; // propagate the error to be handled where this function is called
+    }
+};
+
+//Admin regest
+const registerAdmin = async (adminData) => {
+    try {
+        const response = await fetch('http://localhost:4000/api/admins', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(adminData),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Admin registered successfully:', data);
+            // Handle success here
+            return data; // You can return data for further processing if needed
+        } else {
+            console.error('Error during registration:', data);
+            // Handle error response here
+            return null; // Return null in case of error
+        }
+    } catch (error) {
+        console.error('Network or server error:', error);
+        // Handle network errors
+        return null; // Return null to signify an error occurred
     }
   };
-  
-  // Function to retrieve a tour guide by email
-  const fetchTourGuideByEmail = async (email) => {
+
+
+// a method that handles reading the info of the tour guide by email 
+
+// Function to send a request to retrieve a tour guide record by email
+const fetchTourGuideByEmail = async (email) => {
     try {
       const response = await fetch('http://localhost:4000/api/tourGuides/getByEmail', {
         method: 'POST',
@@ -154,5 +185,5 @@ const registerTourist = async (touristData) => {
   };
   
   // Export all the methods
-  export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail, registerSeller };
+  export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail, registerSeller,registerAdmin };
   

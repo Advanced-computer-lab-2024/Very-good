@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createMuseum, fetchTags } from '../Services/museumServices'; // Adjust the import path as needed
+import './ActivityDisplay.css';
 
 const CreateMuseumForm = ({ onClose }) => {
     const [newMuseum, setNewMuseum] = useState({
@@ -119,14 +120,62 @@ const CreateMuseumForm = ({ onClose }) => {
     };
 
     const handleSaveClick = async () => {
+        // Check for required fields
+        const { name, location, openingHours, ticketPrices } = newMuseum;
+        const requiredFields = [
+            name,
+            location.city,
+            location.country,
+            openingHours.monday,
+            openingHours.tuesday,
+            openingHours.wednesday,
+            openingHours.thursday,
+            openingHours.friday,
+            openingHours.saturday,
+            openingHours.sunday,
+            ticketPrices.foreigner,
+            ticketPrices.native,
+            ticketPrices.student,
+        ];
+
+        const ticketPricesValues = Object.values(ticketPrices);
+        const allPricesNumeric = ticketPricesValues.every(price => !isNaN(parseFloat(price)) && isFinite(price));
+    
+        // If any ticket price is invalid, alert the user
+        if (!allPricesNumeric) {
+            alert('Please ensure all ticket prices are valid numbers.');
+            return; // Exit the function to prevent saving
+        }
+    
+        // If any required field is empty, alert the user
+        if (requiredFields.some(field => field === '' || field === undefined)) {
+            alert('Please fill in all required fields: Name, City, Country, Opening Hours, and Ticket Prices.');
+            return; // Exit the function to prevent saving
+        }
+    
+        // Validate ticket prices to ensure they are numeric
+    
+        // Parse ticket prices to numbers
+        const parsedTicketPrices = {
+            foreigner: parseFloat(ticketPrices.foreigner) || 0,
+            native: parseFloat(ticketPrices.native) || 0,
+            student: parseFloat(ticketPrices.student) || 0,
+        };
+    
+        const museumData = { ...newMuseum, ticketPrices: parsedTicketPrices };
+    
         try {
-            const createdMuseum = await createMuseum(newMuseum);
+            const createdMuseum = await createMuseum(museumData);
             console.log('Museum created:', createdMuseum);
             onClose(); // Close the form after successful creation
         } catch (err) {
             console.error('Failed to create museum:', err.message);
+            alert(`Failed to create museum: ${err.message}`);
         }
     };
+    
+    
+    
 
     return (
         <div className="museum-card">

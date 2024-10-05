@@ -12,6 +12,7 @@ export const fetchItinerariesNoId = async () => {
     return response.data;
 };
 
+
 export const deleteItinerary = async (itineraryId) => {
     const url = `http://localhost:4000/api/tourGuides/${itineraryId}/itineraries`;
     await axios.delete(url);
