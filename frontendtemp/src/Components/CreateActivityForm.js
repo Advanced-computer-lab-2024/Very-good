@@ -78,6 +78,10 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
 
         const activityWithAdvertiserId = {
             ...newActivity,
+            price:Number(newActivity.price), //convert price to number
+            duration:Number(newActivity.duration),
+            ratings:Number(newActivity.ratings),
+            specialDiscount:Number(newActivity.specialDiscount),
             advertiserId: advertiserId,
             location: {
                 lat: numericFields.locationLat,

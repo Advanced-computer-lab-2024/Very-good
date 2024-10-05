@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function AdminPage() {
-  const [categories, setCategories] = useState([]); // Initialize as an empty array
+  const [categories, setCategories] = useState([]); 
   const [formData, setFormData] = useState({ name: '' });
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null); // Track the category being edited
@@ -67,16 +67,19 @@ function AdminPage() {
   
 
   // Delete a category
-  const handleDelete = async (categoryName) => {
-    console.log('Deleting category with name:', categoryName); // Log the category name
+  const handleDelete = async (categoryId) => {
+    console.log('Deleting category with ID:', categoryId); // Log the category ID
     try {
-      const response = await axios.delete(`http://localhost:4000/api/categories/${categoryName}`); // Use name in the URL
-      console.log('Delete response:', response.data); // Log the response data
-      setCategories(categories.filter((cat) => cat.name !== categoryName)); // Filter out the deleted category by name
+        const response = await axios.delete(`http://localhost:4000/api/categories/${categoryId}`); // Use ID in the URL
+        console.log('Delete response:', response.data); // Log the response data
+        // Update state to remove the deleted category
+        setCategories(categories.filter((cat) => cat._id !== categoryId));
     } catch (error) {
-      console.error('Error deleting category:', error);
+        console.error('Error deleting category:', error);
     }
-  };
+};
+
+
 
   return (
     <div>
@@ -148,11 +151,11 @@ function AdminPage() {
             {categories.map((category) => (
               <li key={category._id}>
                 {category.name}
-                <button onClick={() => {
+                {/* <button onClick={() => {
                   setSelectedOperation('update');
                   setSelectedCategory(category.name);
-                  setFormData({ name: category.name });
-                }}>Update</button>
+                  setFormData({ name: category.name }); */}
+                {/* }}>Update</button> */}
               </li>
             ))}
           </ul>
@@ -162,19 +165,21 @@ function AdminPage() {
 
       {/* Delete Category */}
       {selectedOperation === 'delete' && (
-        <div>
-          <h2>Delete a Category</h2>
-          <ul>
+    <div>
+        <h2>Delete a Category</h2>
+        <ul>
             {categories.map((category) => (
-              <li key={category._id}>
-                {category.name}
-                <button onClick={() => handleDelete(category.name)}>Delete</button> {/* Pass the category name */}
-              </li>
+                <li key={category._id}>
+                    {category.name}
+                    {/* Pass the category ID instead of the name */}
+                    <button onClick={() => handleDelete(category._id)}>Delete</button> 
+                </li>
             ))}
-          </ul>
-          <button onClick={() => setSelectedOperation(null)}>Back</button>
-        </div>
-      )}
+        </ul>
+        <button onClick={() => setSelectedOperation(null)}>Back</button>
+    </div>
+)}
+
     </div>
   );
 }

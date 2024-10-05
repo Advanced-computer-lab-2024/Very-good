@@ -7,7 +7,7 @@ router.get('/:id', getCategoryById);
 router.get('/', getCategories); // Fetch categories
 router.post('/', createCategory); // Create category
 // router.delete('/', deleteCategory); // Delete category
-router.delete('/:name', deleteCategory);
+router.delete('/:id', deleteCategory); // Expecting the ID instead of name
 
 router.patch('/:categoryName', updateCategory); // Update category
 
