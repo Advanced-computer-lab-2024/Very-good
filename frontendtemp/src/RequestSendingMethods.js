@@ -404,8 +404,27 @@ const addTourismGoverner = async (tourismGovernerData) => {
 //---------------------------
 // method that sends a request to get all tourist accounts 
 
+// Function to send a request to filter activities
+const filterActivities = async (filterCriteria) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/activities/filterYassin', filterCriteria);
+      return response.data; // Return the filtered activities
+  } catch (error) {
+      console.error('Error fetching activities:', error);
+      throw error; // Rethrow error for handling in calling code
+  }
+};
+const filterItineraries = async (filterCriteria) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/itineraries/filter', filterCriteria);
+    return response.data; // Return the filtered itineraries
+  } catch (error) {
+    console.error('Error fetching itineraries:', error);
+    throw error; // Rethrow error for handling in calling code
+  }
+};
 
 
 // Export the new method along with others
 export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail};
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries};

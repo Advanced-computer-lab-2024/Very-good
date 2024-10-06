@@ -12,11 +12,11 @@ const itinerarySchema = new schema({
     required: true
   },
   ratings: {
-    type: Number, // Assuming ratings are out of 5
+    type: Number,
     min: 0,
     max: 5,
-    default: 0 // Default rating if not provided
-},
+    default: 0
+  },
   activities: [{
     title: {
       type: String,
@@ -81,16 +81,21 @@ const itinerarySchema = new schema({
     type: String,
     required: true
   },
-  touristIds: [{ // Changed to an array to hold multiple tourist references
+  touristIds: [{ // Hold multiple tourist references
     type: schema.Types.ObjectId,
-    ref: 'tourist', // Reference to the Tourist model
+    ref: 'tourist',
     required: true
-}],
-tourGuideId: {
+  }],
+  tourGuideId: {
     type: schema.Types.ObjectId,
-    ref: 'tourGuide', // Reference to the Tour Guide model
+    ref: 'tourGuide',
     required: true
-}
+  },
+  tags: [{ // New field for storing tag references
+    type: schema.Types.ObjectId,
+    ref: 'Tag', // Reference to the Tag model
+    required: false // Make this optional if you want
+  }]
 }, { timestamps: true });
 
 const Itinerary = mongoose.model('itinerary', itinerarySchema);

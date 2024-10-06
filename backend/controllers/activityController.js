@@ -3,7 +3,7 @@ const Activity = require('../models/activityModel')
 const tourGuide = require('../models/tourGuideModel')
 const advertiser = require('../models/advertiserModel')
 const activity = require('../models/activityModel');
-
+const Category = require('../models/categoryModel');
 // get all workout
 const createActivity = async (req, res) => {
     try {
@@ -151,7 +151,50 @@ const filterActivities = async (req, res) => {
       });
     }
   };
+  const filterActivitiesyassin = async (req, res) => {
+    try {
+        const { price, date, category, ratings } = req.body; // Destructure the input from the request body
+
+        // Prepare an array to hold all filtering conditions
+        const filterConditions = [];
+
+        // Add filters based on the provided parameters
+        if (price !== undefined) {
+            filterConditions.push({ price: price }); // Exact match for price
+        }
+        if (date) {
+            filterConditions.push({ date: new Date(date) }); // Convert string date to Date object
+        }
+        if (ratings !== undefined) {
+            filterConditions.push({ ratings: { $gte: ratings } }); // Filter activities with ratings greater than or equal to provided rating
+        }
+        if (category) {
+            // Find categoryId corresponding to category name
+            const foundCategory = await Category.findOne({ name: category });
+            if (foundCategory) {
+                filterConditions.push({ categoryId: foundCategory._id }); // Use categoryId for filtering
+            } else {
+                return res.status(404).json({ message: 'Category not found' });
+            }
+        }
+
+        // If no filter conditions are provided, return all activities
+        if (filterConditions.length === 0) {
+            const activities = await Activity.find(); // Get all activities
+            return res.status(200).json(activities);
+        }
+
+        // Use the $or operator to combine the filter conditions
+        const activities = await Activity.find({ $or: filterConditions });
+
+        // Return the filtered activities
+        res.status(200).json(activities);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
  
   
 
-module.exports = {createActivity, getActivities,filterActivities}
+module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin}
