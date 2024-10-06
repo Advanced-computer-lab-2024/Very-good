@@ -1,5 +1,5 @@
 const express = require('express')
-const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags} = require('../controllers/historicalPlaceController')
+const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags, searchforHP} = require('../controllers/historicalPlaceController')
 const router = express.Router()
 
 router.get('/', getHistoricalPlaces)
@@ -14,6 +14,7 @@ router.delete('/:id', deleteHistoricalPlace)
 
 router.put('/:id', updateHistoricalPlace)
 
+router.get('/search',searchforHP)
 //router.patch('/:id', updateWorkout)
 
 module.exports = router

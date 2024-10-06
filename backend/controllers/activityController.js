@@ -83,6 +83,41 @@ const getActivities = async (req, res) => {
         });
     }
 };
+const searchactivity = async(req,res) => {
+
+
+    const {name,category, tag } = req.query;
+        let activities = [];
+    
+        try {
+            const query = {};
+            
+            if (name) {
+                query.name = name; // Match the activity name
+            }
+            if (tag) {
+                query['tags.name'] = tag; // Match the activity tags
+            }
+            if (category) {
+                query.category = category; // Match the activity tags
+            }
+            if (!name && !tag && !category)   {
+                return res.status(400).json({ error: 'Search terms are required.' });
+            }
+    
+            activities = await Activity.find(query); 
+            
+    
+    
+            res.status(200).json(activities);
+    
+        }
+        
+        catch(error){
+            res.status(400).json({error :error.message})
+    
+        }
+    }
 
 // create a workout
 const createWorkout = async (req, res) => {
@@ -100,4 +135,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createActivity, getActivities}
+module.exports = {createActivity, getActivities, searchactivity}

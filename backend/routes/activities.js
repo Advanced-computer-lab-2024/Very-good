@@ -1,8 +1,10 @@
 const express = require('express')
-const {createActivity, getActivities} = require('../controllers/activityController')
+const {createActivity, getActivities, searchactivity} = require('../controllers/activityController')
 const router = express.Router()
 
 router.get('/', getActivities)
+router.get('/search', searchactivity)
+
 
 //router.get('/:id', getWorkout)
 

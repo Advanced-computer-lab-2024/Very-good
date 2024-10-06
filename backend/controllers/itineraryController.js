@@ -82,6 +82,23 @@ const getItineraries = async (req, res) => {
     }
 };
 
+const searchforitinerary = async(req,res) => {
+
+    const {title} = req.query;
+
+    try {
+        const itinerary = await Itinerary.find({title : title});
+        if (!title) {
+            return res.status(400).json({ error: 'Search term "title" is required.' });
+        }
+        res.status(200).json(itinerary)
+    }
+    catch(error){
+        res.status(400).json({error :error.message})
+
+    }
+}
+
 // Placeholder for other functionalities like delete, update, etc.
 const createWorkout = async (req, res) => {
     // Implement if needed
@@ -97,5 +114,6 @@ const updateWorkout = async (req, res) => {
 
 module.exports = {
     createItinerary,
-    getItineraries
+    getItineraries,
+    searchforitinerary
 };

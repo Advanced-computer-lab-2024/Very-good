@@ -29,6 +29,10 @@ const productSchema = new schema({
         type: schema.Types.ObjectId,
         ref: 'seller', // Reference to the Seller model
         required: true
+    },
+    pictures: {
+        type: [String], // Array of URLs for pictures
+        required: false
     }
 }, { timestamps: true });
 

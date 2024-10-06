@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import MuseumDisplay from './MuseumDisplay';
-import { fetchMuseums, deleteMuseum, updateMuseum } from '../Services/museumServices'; // Adjust the import path as needed
+import { fetchMuseums, deleteMuseum, updateMuseum,searchforHP } from '../Services/museumServices'; // Adjust the import path as needed
 
 const MuseumList = () => {
     const [museums, setMuseums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm , setSearchTerm] = useState('');
 
     useEffect(() => {
         const getMuseums = async () => {
@@ -47,6 +48,20 @@ const MuseumList = () => {
             console.error('Failed to update museum:', err.message);
         }
     };
+    const handleSearch = async () => {
+        try {
+            if (searchTerm.trim() === '') {
+                const data = await fetchMuseums();
+                setMuseums(data);
+            } else {
+                // Search based on the input
+                const data = await searchforHP( searchTerm);
+                setMuseums(data);
+            }
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
     if (loading) return <p>Loading museums...</p>;
     if (error) return <p>Error occurred: {error}</p>;
@@ -54,6 +69,14 @@ const MuseumList = () => {
     return (
         <div className="container">
             <h1>Museums</h1>
+            {/* Search input */}
+            <input 
+                type="text" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+                placeholder="Search by name or tag" 
+            />
+            <button onClick={handleSearch}>Search</button>
             {museums.length === 0 ? (
                 <p>No museums found.</p>
             ) : (

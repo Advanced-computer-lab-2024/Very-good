@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ActivityDisplay from './ActivityDisplay';
-import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Adjust the import path as needed
+import { fetchActivities, deleteActivity, updateActivity, searchactivity } from '../Services/activityServices'; // Adjust the import path as needed
 
 const ActivityList = ({ advertiserId }) => {
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm , setSearchTerm] = useState('');
 
     useEffect(() => {
         const getActivities = async () => {
@@ -46,12 +47,65 @@ const ActivityList = ({ advertiserId }) => {
         }
     };
 
+    // const handleSearch = async () => {
+    //     setLoading(true);
+    //     setError(null);
+        
+    //     try {
+    //         const queryParams = [];
+            
+    //         if (searchTerm.name) {
+    //             queryParams.push(`name=${encodeURIComponent(searchTerm.name)}`);
+    //         }
+    //         if (searchTerm.category) {
+    //             queryParams.push(`category=${encodeURIComponent(searchTerm.category)}`);
+    //         }
+    //         if (searchTerm.tag) {
+    //             queryParams.push(`tag=${encodeURIComponent(searchTerm.tag)}`);
+    //         }
+    
+    //         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+    //         console.log('Search URL:', `http://localhost:4000/api/activities/search?${queryString}`); // For debugging
+    
+    //         const results = await searchactivity(queryString); // Call the service with the query string
+    //         setActivities(results);
+    //     } catch (err) {
+    //         setError('Failed to fetch activities');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    
+
+    // const handleSearch = async() => {
+    //     setLoading(true);
+    //     setError(null);
+    
+    //     try {
+    //         const results = await searchactivity(searchTerm); // Pass the search term as name for activities
+    //         setActivities(results); // Set the results
+    //     } catch (err) {
+    //         setError('Failed to fetch activities');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
     if (loading) return <p>Loading activities...</p>;
     if (error) return <p>Error neek: {error}</p>;
 
     return (
         <div className="container">
             <h1>Activities</h1>
+            {/* Search input */}
+            {/* <input 
+                type="text" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+                placeholder="Search by name, category, or tag" 
+            /> */}
+            {/* <button onClick={handleSearch}>Search</button> */}
             {activities.length === 0 ? (
                 <p>No activities found.</p>
             ) : (
