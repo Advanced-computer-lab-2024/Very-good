@@ -1,3 +1,4 @@
+const productModel = require('../models/productModel');
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 
@@ -64,6 +65,49 @@ const getProducts = async (req, res) => {
         });
     }
 };
+const getavailableProducts = async (req, res) => {
+    try {
+        
+        const products = await Product.find({ stock: { $gt: 0 } }); 
+
+        if (products.length === 0) {
+            return res.status(200).json({
+                message: 'No products available',
+                data: []
+            });
+        }
+
+        res.status(200).json({
+            message: 'Available products retrieved successfully',
+            data: products
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Error retrieving Available Products',
+            error: error.message
+        });
+    }
+};
+
+const searchbyname = async (req,res) => {
+
+    const {name} = req.query;
+
+    try {
+        const products = await Product.find({name : name});
+        if (!name) {
+            return res.status(400).json({ error: 'Search term "name" is required.' });
+        }
+        res.status(200).json(products)
+    }
+    catch(error){
+        res.status(400).json({error :error.message})
+
+    }
+}
+
+
 // In your productController.js
 const putProducts = async (req, res) => {
     const { sellerId, productId } = req.params;
@@ -94,4 +138,4 @@ const putProducts = async (req, res) => {
 
 
 
-module.exports = {createProduct, getProducts ,putProducts}
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname}

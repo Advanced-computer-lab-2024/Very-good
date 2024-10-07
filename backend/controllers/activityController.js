@@ -3,6 +3,7 @@ const Activity = require('../models/activityModel')
 const tourGuide = require('../models/tourGuideModel')
 const advertiser = require('../models/advertiserModel')
 const activity = require('../models/activityModel');
+const Category = require('../models/categoryModel')
 
 // get all workout
 const createActivity = async (req, res) => {
@@ -85,6 +86,48 @@ const getActivities = async (req, res) => {
         });
     }
 };
+const searchactivity = async(req,res) => {
+
+
+    const {name,category, tag } = req.query;
+        let activities = [];
+    
+        try {
+            const query = {};
+            
+            if (name) {
+                query.name = name; // Match the activity name
+            }
+            if (tag) {
+                query['tags.name'] = tag; // Match the activity tags
+            }
+            if (category) {
+                const catObject = await Category.findOne({ name: category }); // Find tag by name
+                if (catObject) {
+                    query.categoryId = catObject._id; // Query by the ObjectId of the tag
+                } else {
+                    return res.status(404).json({ error: 'Category not found.' });
+                }
+            }
+            if (!name && !tag && !category)   {
+                return res.status(400).json({ error: 'Search terms are required.' });
+            }
+
+            console.log(query)
+    
+            activities = await Activity.find(query); 
+            
+    
+    
+            res.status(200).json(activities);
+    
+        }
+        
+        catch(error){
+            res.status(400).json({error :error.message})
+    
+        }
+    }
 
 // create a workout
 const createWorkout = async (req, res) => {
@@ -154,4 +197,4 @@ const filterActivities = async (req, res) => {
  
   
 
-module.exports = {createActivity, getActivities,filterActivities}
+module.exports = {createActivity, getActivities,filterActivities, searchactivity}

@@ -151,6 +151,44 @@ const getHistoricalPlaceTags = async (req, res) => {
     }
 };
 
+const searchforHP = async (req, res) => {
+    console.log("yarraaaaab")
+    console.log("req.query.name", req.query.name)
+    const { name, tag } = req.query;
+    let historicalPlace = [];
+
+    try {
+        const query = {};
+
+        if (name) {
+            query.name = name; // Match the historical place name
+            console.log("query.name :", query.name)
+        }
+
+        if (tag) {
+            const tagObject = await Tag.findOne({ name: tag }); // Find tag by name
+            if (tagObject) {
+                query.tags = tagObject._id; // Query by the ObjectId of the tag
+            } else {
+                return res.status(404).json({ error: 'Tag not found.' });
+            }
+        }
+
+        if (!name && !tag) {
+            return res.status(400).json({ error: 'Search terms are required.' });
+        }
+
+        historicalPlace = await HistoricalPlace.find(query) // Populate the tag references
+
+        res.status(200).json(historicalPlace);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+
+
 // Placeholder functions
 const getWorkout = async (req, res) => {
     // Function implementation here
@@ -168,4 +206,4 @@ const updateWorkout = async (req, res) => {
     // Function implementation here
 };
 
-module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags};
+module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags , searchforHP};

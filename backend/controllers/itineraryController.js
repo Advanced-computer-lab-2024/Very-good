@@ -130,8 +130,25 @@ const filterItineraries = async (req, res) => {
     }
 };
 
+const searchforitinerary = async (req, res) => {
+    const { title } = req.query;
+
+    if (!title) {
+        return res.status(400).json({ error: 'Search term "title" is required.' });
+    }
+
+    try {
+        const itinerary = await Itinerary.find({ title: title });
+        res.status(200).json(itinerary);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
 module.exports = {
     createItinerary,
     getItineraries,
-    filterItineraries
+    filterItineraries,
+    searchforitinerary
 };

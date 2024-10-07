@@ -4,6 +4,9 @@ import { fetchTouristByEmail,updateTouristByEmail } from '../RequestSendingMetho
 import ActivityHistoricalList from '../Components/UpcomingSort.js'
 import ActivityItinerarySort from  '../Components/SortRatePrice.js'
 import ProductSort from  '../Components/SortProductRate.js'
+import MuseumSearch from './MuseumSearch'
+
+
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -178,8 +181,10 @@ const TouristPage = ({ email }) => {
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
+      <MuseumSearch />
     </div>
   );
 };
 
 export default TouristPage;
+

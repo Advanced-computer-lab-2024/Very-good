@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
 import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethods';
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
+import Search from './Search';
 
 const SellerPage = ({ email }) => {
   const [sellerData, setSellerData] = useState(null);
@@ -128,6 +129,7 @@ const SellerPage = ({ email }) => {
           </>
         )}
       </div>
+      <Search/>
     </div>
   );
 };
