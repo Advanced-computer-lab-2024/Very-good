@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
 import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
-import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import ProductSort from '../Components/SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage'; // Import the new component
 import FilterItenaryPage from './FilterItenaryPage';
+import ActivityItinerarySort from '../Components/SortRatePrice.js';
+import MuseumSearch from './MuseumSearch';
+import FilterHistoricalPage from './FilterHistoricalPage';
+import FilterProductByPrice from './FilterProductByPrice';
+
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,7 +17,10 @@ const TouristPage = ({ email }) => {
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
   const [showFilterPage, setShowFilterPage] = useState(false); // New state to manage page rendering
- const  [ShowItenaryPage,setShowFilterItenaryPage] = useState(false);
+  const [ShowItenaryPage, setShowFilterItenaryPage] = useState(false);
+  const [showHistoricalPlace, setShowFilterHistoricalPage] = useState(false);
+  const [showProductFilterPage, setShowProductFilterPage] = useState(false);
+
   useEffect(() => {
     const getTouristData = async () => {
       const response = await fetchTouristByEmail({ email });
@@ -46,7 +53,7 @@ const TouristPage = ({ email }) => {
       // Update touristData with the new editedData so the frontend reflects the changes
       setTouristData(editedData);
 
-      // Perform your function call to save the changes here
+      // Perform your function call to save the changes here, excluding wallet
       console.log('Changes saved:', editedData, oldEmail);
       updateTouristByEmail(oldEmail, editedData);
     }
@@ -66,14 +73,41 @@ const TouristPage = ({ email }) => {
   if (showFilterPage) {
     return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   }
-  const handleFilterItenariesClick =()=>{
+
+  const handleFilterItenariesClick = () => {
     setShowFilterItenaryPage(true);
   }
-  const handleBackToTouristPageFromItenaryFilterPage = ()=>{
+
+  const handleBackToTouristPageFromItenaryFilterPage = () => {
     setShowFilterItenaryPage(false);
   }
-  if(ShowItenaryPage){
-    return <FilterItenaryPage onBack = {handleBackToTouristPageFromItenaryFilterPage}/>
+  
+  if (ShowItenaryPage) {
+    return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
+  }
+
+  const handleFilterHistoricalPlacesClick = () => {
+    setShowFilterHistoricalPage(true);
+  }
+
+  const handleBackToTouristPageFromFilterHistoricalPlacesPage = () => {
+    setShowFilterHistoricalPage(false);
+  }
+  
+  if (showHistoricalPlace) {
+    return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
+  }
+
+  const handleFilterProductPageClick = () => {
+    setShowProductFilterPage(true);
+  }
+  
+  const handleBackToTouristPageFromFilterProductPage = () => {
+    setShowProductFilterPage(false);
+  }
+
+  if (showProductFilterPage) {
+    return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
   }
 
   return (
@@ -89,8 +123,8 @@ const TouristPage = ({ email }) => {
           <h3>Quick Links</h3>
           <button onClick={handleFilterActivitiesClick}>Filter Activities</button>
           <button onClick={handleFilterItenariesClick}>Filter Itineraries</button>
-          <button onClick={() => { /* Filter Historical Places */ }}>Filter Historical Places</button>
-          <button onClick={() => { /* Filter Products */ }}>Filter Products</button>
+          <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
+          <button onClick={handleFilterProductPageClick}>Filter Products</button>
         </div>
       </div>
 
@@ -173,16 +207,7 @@ const TouristPage = ({ email }) => {
           </div>
           <div className="profile-info">
             <label>Wallet Balance:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="wallet"
-                value={editedData?.wallet || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>${touristData?.wallet || 'NA'}</p>
-            )}
+            <p>${touristData?.wallet || 'NA'}</p> {/* Display wallet balance but do not allow editing */}
           </div>
 
           <button className="btn" onClick={handleUpdateProfile}>
@@ -203,6 +228,7 @@ const TouristPage = ({ email }) => {
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
+      <MuseumSearch />
     </div>
   );
 };

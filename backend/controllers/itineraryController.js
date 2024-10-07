@@ -131,6 +131,22 @@ const filterItineraries = async (req, res) => {
         });
     }
 };
+
+const searchforitinerary = async (req, res) => {
+    const { title } = req.query;
+
+    if (!title) {
+        return res.status(400).json({ error: 'Search term "title" is required.' });
+    }
+
+    try {
+        const itinerary = await Itinerary.find({ title: title });
+        res.status(200).json(itinerary);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 const filterItinerariesYassin = async (req, res) => {
     try {
         const { price, date, tags, language } = req.body; // Include language in destructuring
@@ -192,5 +208,6 @@ const filterItinerariesYassin = async (req, res) => {
 module.exports = {
     createItinerary,
     getItineraries,
-    filterItineraries,filterItinerariesYassin
+    filterItineraries,
+    searchforitinerary,filterItinerariesYassin
 };

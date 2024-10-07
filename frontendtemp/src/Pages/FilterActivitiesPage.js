@@ -56,7 +56,7 @@ const FilterActivitiesPage = ({ onBack }) => { // Receive the onBack prop
         </label>
 
         <label>
-          Minimum Rating:
+           Rating:
           <input 
             type="number" 
             value={minRating} 

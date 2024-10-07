@@ -151,6 +151,68 @@ const getHistoricalPlaceTags = async (req, res) => {
     }
 };
 
+const searchforHP = async (req, res) => {
+    console.log("yarraaaaab")
+    console.log("req.query.name", req.query.name)
+    const { name, tag } = req.query;
+    let historicalPlace = [];
+
+    try {
+        const query = {};
+
+        if (name) {
+            query.name = name; // Match the historical place name
+            console.log("query.name :", query.name)
+        }
+
+        if (tag) {
+            const tagObject = await Tag.findOne({ name: tag }); // Find tag by name
+            if (tagObject) {
+                query.tags = tagObject._id; // Query by the ObjectId of the tag
+            } else {
+                return res.status(404).json({ error: 'Tag not found.' });
+            }
+        }
+
+        if (!name && !tag) {
+            return res.status(400).json({ error: 'Search terms are required.' });
+        }
+
+        historicalPlace = await HistoricalPlace.find(query) // Populate the tag references
+
+        res.status(200).json(historicalPlace);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// Filter museums by tag name
+const FilterMuseumByTagName = async (req, res) => {
+    try {
+      const { tagName } = req.body; // Get the tag name from the request body
+  
+      // Find the tag with the given name
+      const tag = await Tag.findOne({ name: tagName });
+  
+      if (!tag) {
+        return res.status(404).json({ message: 'Tag not found' });
+      }
+  
+      // Find all museums that have this tag ID in their tags array
+      const museums = await HistoricalPlace.find({ tags: tag._id });
+  
+      if (museums.length === 0) {
+        return res.status(404).json({ message: 'No museums found with the given tag' });
+      }
+  
+      // Return the matching museums
+      return res.status(200).json(museums);
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error', error });
+    }
+  };
+
+
 // Placeholder functions
 const getWorkout = async (req, res) => {
     // Function implementation here
@@ -168,4 +230,5 @@ const updateWorkout = async (req, res) => {
     // Function implementation here
 };
 
-module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags};
+module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags , 
+    searchforHP,FilterMuseumByTagName};

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
-import AdminPage from './Pages/adminpage';
+import AdminPage from './Pages/AdminPagee';
 import AdvertiserPage from './Pages/AdvertiserPage'; 
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
 import { registerTourist, fetchTouristByEmail, createTourGuideRequest ,registerSeller,registerAdvertiser} from './RequestSendingMethods';
 import {LoadScript } from '@react-google-maps/api';
 import SellerPage from './Pages/SellerPage';
-
+import GuestPage from './Pages/GuestPage'
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -25,6 +25,7 @@ function App() {
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
   const [isAdminSignInActive, setIsAdminSignInActive] = useState(false); // State to track Admin Sign In form visibility
+  const [isGuestPageActive, setisGuestPageActive] = useState(false);
   const[emailofseller,setEmailOfSeller]=useState('');
   const[emailAdvertiser,setEmailOfAdvertiser]=useState('');
   // Function to handle action selection
@@ -122,7 +123,12 @@ function App() {
     setIsAdminPageActive(true);
     console.log("Admin Sign In submitted");
   };
-
+  const handleGuest = () =>{
+    setisGuestPageActive(true);
+  }
+  if(isGuestPageActive){
+    return <GuestPage/>
+  }
   return (
     <div className="container">
       {isTouristPageActive ? (
@@ -153,6 +159,7 @@ function App() {
               <p>Please select an action:</p>
               <button onClick={() => handleActionSelection('register')}>Register</button>
               <button onClick={() => handleAdminSignIn()}>Sign In as an Admin</button>
+              <button onClick={() => handleGuest()}>Continue as a Guest</button>
             </div>
           )}
 

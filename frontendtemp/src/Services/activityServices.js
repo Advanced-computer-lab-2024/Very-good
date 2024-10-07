@@ -51,3 +51,60 @@ export const fetchCategoryById = async(categoryId) => {
     const response = await axios.get(url);
     return response.data;
 }
+
+// export const searchactivity = async (searchTerm) => {
+//     console.log("serachterm :",searchTerm)
+//     const response = await axios.get(`http://localhost:4000/api/activities/search`,searchTerm );
+//     console.log(response.data)
+//     return response.data;
+// };
+
+
+// export const searchactivity = async (searchTerm) => {
+//     console.log("searchTerm :", searchTerm);
+//     try {
+//         const response = await axios.get(`http://localhost:4000/api/activities/search`, {
+//             params: {
+//                 name: searchTerm.name || undefined, // Pass as undefined if not provided
+//                 category: searchTerm.category || undefined,
+//                 tag: searchTerm.tag || undefined,
+//             }
+//         });
+//         console.log(response.data);
+//         return response.data;
+//     } catch (error) {
+//         console.error("Error fetching activities:", error.response.data); // Log the error response
+//         throw error; // Re-throw the error if needed
+//     }
+// };
+
+
+
+export const searchactivity = async (searchTerm) => {
+    console.log("searchTerm :", searchTerm);
+    
+    // Construct params object
+    const params = {};
+    
+    // Add only the filled parameters
+    if (searchTerm.name) {
+        params.name = searchTerm.name;
+    }
+    else if (searchTerm.category) {
+        params.category = searchTerm.category;
+    }
+    else if (searchTerm.tag) {
+        params.tag = searchTerm.tag;
+    }
+    
+    try {
+        const response = await axios.get(`http://localhost:4000/api/activities/search`, {
+            params // Pass the constructed params object
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching activities:", error.response.data); // Log the error response
+        throw error; // Re-throw the error if needed
+    }
+};

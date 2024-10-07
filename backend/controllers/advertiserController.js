@@ -158,11 +158,32 @@ const deleteAdvertiser = async (req, res) => {
   }
 }; 
 
-const updateWorkout = async (req, res) => {
+const updateAdvertiserByEmailBackend = async (req, res) => {
+  const { email } = req.body; // Extract email from request body
+  const updatedData = req.body.updatedData; // Extract updated data
 
-}
+  try {
+    // Find advertiser by email and update with new data
+    const advertiser = await Advertiser.findOneAndUpdate(
+      { email }, // Search by email
+      updatedData, // New data
+      { new: true } // Return the updated document
+    );
+
+    if (!advertiser) {
+      return res.status(404).json({ message: "Advertiser not found" });
+    }
+
+    return res.status(200).json({ message: "Advertiser updated successfully", advertiser });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error updating advertiser", error });
+  }
+};
+
+
 
 
 
 module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
-  fetchAdvertiserByEmail,deleteAdvertiser}
+  fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend}

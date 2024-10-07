@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchMuseums } from '../Services/museumServices';
-
-
-
+import { fetchItinerariesNoId } from '../Services/itineraryServices';
 
 const ActivityHistoricalList = () => {
     const [activities, setActivities] = useState([]); 
@@ -12,48 +9,52 @@ const ActivityHistoricalList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showMappings, setShowMappings] = useState(false);
+    const [itineraries, setItineraries] = useState([]);  // Note the lowercase 'itineraries'
 
     useEffect(() => {
-        const getActivities = async (req, res) => {
+        const getActivities = async () => {
             try {
-                // Get the current date and time
                 const currentDate = new Date();
-                console.log("Current date:", currentDate);
-        
                 const upcomingActivities = await fetchActivitiesDate();
-        
-                // Collect activities that are upcoming
+
                 const filteredActivities = upcomingActivities.data.filter(activity => {
                     const activityDate = new Date(activity.date);
-                    console.log("Activity date:", activity.date);
-                    console.log("Both dates:", activityDate, "and current date:", currentDate);
-        
-                    // Return true if the activity is upcoming
                     return activityDate >= currentDate; 
                 });
-        
-                // Set state with only the filtered upcoming activities
+
                 if (filteredActivities.length > 0) {
                     setActivities(filteredActivities);
-                    console.log("Number of upcoming activities:", filteredActivities.length);
-                } else {
-                    console.log("No upcoming activities found.");
                 }
             } catch (err) {
-                console.error("Error fetching activities:", err.message);
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
-        
+
+        const getUpcomingItineraries = async () => {
+            try {
+                const currentDate = new Date();
+                const itinerariesResponse = await fetchItinerariesNoId();
+
+                const filteredItineraries = itinerariesResponse.data.filter(itinerary => {
+                    return itinerary.availableDates.some(date => new Date(date) > currentDate);
+                });
+
+                if (filteredItineraries.length > 0) {
+                    setItineraries(filteredItineraries);
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         const getHistoricalPlaces = async () => {
             try {
                 const museumResponse = await fetchMuseums();
-                console.log("raw fetch",museumResponse)
                 setHistoricalPlaces(museumResponse.data);
-                console.log("placesH", historicalPlaces)
-
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -63,19 +64,19 @@ const ActivityHistoricalList = () => {
 
         getActivities();
         getHistoricalPlaces();
+        getUpcomingItineraries();
     }, []);
+
     const toggleMappings = () => {
-        setShowMappings(prevState => !prevState);  // Toggle between true and false
+        setShowMappings(prevState => !prevState);
     };
-    
 
     return (
         <div className="container">
-            <h1>Upcoming Activities and Historical Places/Museums</h1>
+            <h1>Upcoming Activities, Historical Places, and Itineraries</h1>
 
-            {/* Toggle button */}
             <button onClick={toggleMappings}>
-                {showMappings ? "Hide Avaliable to visit" : "Show Avaliable to visit"} {/* Dynamic button text */}
+                {showMappings ? "Hide Available to Visit" : "Show Available to Visit"}
             </button>
 
             {loading && <p>Loading...</p>}
@@ -83,7 +84,8 @@ const ActivityHistoricalList = () => {
 
             {showMappings && (
                 <>
-                  <h2>Activities</h2>
+                    {/* Display upcoming activities */}
+                    <h2>Activities</h2>
                     {activities.length === 0 ? (
                         <p>No activities available for the selected date.</p>
                     ) : (
@@ -97,14 +99,33 @@ const ActivityHistoricalList = () => {
                                 <p>Ticket Price: {activity.price} EGP</p>
                                 <p>Rating: {activity.ratings}</p>
                                 <p>Discounts: {activity.specialDiscount}</p>
-                                <p>Avaliable for Booking: {activity.bookingOpen ? 'Yes': 'No'}</p>
-
-
+                                <p>Available for Booking: {activity.bookingOpen ? 'Yes': 'No'}</p>
                             </div>
                         ))
                     )}
 
-                 <h2>Historical Places / Museums</h2>
+                    {/* Display upcoming itineraries */}
+                    <h2>Upcoming Itineraries</h2>
+                    {itineraries.length === 0 ? (
+                        <p>No upcoming itineraries available.</p>
+                    ) : (
+                        itineraries.map(itinerary => (
+                            <div key={itinerary._id} className="itinerary-card">
+                                <h3>{itinerary.title}</h3>
+                                <p>{itinerary.description}</p>
+                                <p>Price: {itinerary.price} USD</p>
+                                <p>Language: {itinerary.language}</p>
+                                <p>Pick-Up Location: {itinerary.pickUpLocation}</p>
+                                <p>Drop-Off Location: {itinerary.dropOffLocation}</p>
+                                <p>Available Dates: {itinerary.availableDates.join(', ')}</p>
+                                <p>Accessibility: {itinerary.accessibility ? "Yes" : "No"}</p>
+                                <p>Tags: {itinerary.tags.join(', ')}</p>
+                            </div>
+                        ))
+                    )}
+
+                    {/* Display historical places / museums */}
+                    <h2>Historical Places / Museums</h2>
                     {historicalPlaces.length === 0 ? (
                         <p>No historical places or museums available.</p>
                     ) : (
@@ -115,7 +136,6 @@ const ActivityHistoricalList = () => {
                                 <div className="pictures-container">
                                     {place.pictures.map((picture, index) => (
                                        <img key={index} src={picture} alt={`Picture of ${place.name}`} className="museum-image" />
-
                                     ))}
                                 </div>
                                 <p>Location: {place.location.city}, {place.location.country}, {place.location.address}</p>

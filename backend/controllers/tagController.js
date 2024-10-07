@@ -94,5 +94,24 @@ const deleteTag = async (req, res) => {
         });
     }
 };
-
-module.exports = { createTag, getTags, updateTag, deleteTag };
+getAllTagNames = async (req, res) => {
+    try {
+      // Fetch all tag names from the Tag collection
+      const tags = await Tag.find({}, 'name'); // Only fetch the 'name' field from each document
+  
+      // If no tags are found, return an empty array
+      if (!tags || tags.length === 0) {
+        return res.status(200).json([]);
+      }
+  
+      // Map through the tags and extract the names
+      const tagNames = tags.map(tag => tag.name);
+  
+      // Send back the tag names as a response
+      return res.status(200).json(tagNames);
+    } catch (error) {
+      console.error('Error fetching tag names:', error);
+      return res.status(500).json({ message: 'Server error while fetching tag names.' });
+    }
+  };
+module.exports = { createTag, getTags, updateTag, deleteTag,getAllTagNames };

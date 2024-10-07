@@ -1,8 +1,9 @@
 const express = require('express')
-const {createItinerary, getItineraries,filterItineraries,filterItinerariesYassin} = require('../controllers/itineraryController')
+const {createItinerary, getItineraries,searchforitinerary,filterItineraries,filterItinerariesYassin} = require('../controllers/itineraryController')
 const router = express.Router()
 
 router.get('/', getItineraries)
+router.get('/search', searchforitinerary)
 
 //router.get('/:id', getWorkout)
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAdvertiserByEmail } from '../RequestSendingMethods'; // Import the fetching method
+import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods'; // Import the fetching method
 import '../styles/global.css'; // Assuming global styles are shared across components
 
 const AdvertiserInfo = ({ email, onBack }) => {
@@ -31,14 +31,20 @@ const AdvertiserInfo = ({ email, onBack }) => {
   };
 
   const handleUpdateProfile = async () => {
-    setIsEditing(!isEditing);
-    if (isEditing) {
-      setAdvertiserData(editedData);
-
-      // Uncomment when ready to use
-      // updateAdvertiserByEmail(email, editedData);
+  if (isEditing) {
+    try {
+      console.log('Email:', email);
+      console.log('Updated Data:', { updatedData: editedData }); // Log updated data
+      const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
+      if (response) {
+        setAdvertiserData(editedData); // Update state with edited data
+      }
+    } catch (error) {
+      console.error('Error updating advertiser:', error);
     }
-  };
+  }
+  setIsEditing(!isEditing); // Toggle editing state
+};
 
   return (
     <div className="advertiser-page">
@@ -92,7 +98,8 @@ const AdvertiserInfo = ({ email, onBack }) => {
             )}
           </div>
 
-          <div className="profile-info">
+          {/* Removed Wallet Balance field */}
+          {/* <div className="profile-info">
             <label>Wallet Balance:</label>
             {isEditing ? (
               <input
@@ -104,7 +111,7 @@ const AdvertiserInfo = ({ email, onBack }) => {
             ) : (
               <p>${advertiserData?.wallet || 'NA'}</p>
             )}
-          </div>
+          </div> */}
 
           <button className="btn" onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}

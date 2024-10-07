@@ -79,5 +79,23 @@ const deleteWorkout = async (req, res) => {
 const updateWorkout = async (req, res) => {
 
 }
+// Delete Tourism Governer by ID
+const deleteTourismGoverner = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the tourism governor ID from the request parameters
 
-module.exports = {createTourismGoverner, getTourismGoverners}
+      // Find the tourism governor and delete them
+      const deletedTourismGoverner = await TourismGoverner.findByIdAndDelete(id);
+
+      // Check if the tourism governor was found and deleted
+      if (!deletedTourismGoverner) {
+          return res.status(404).json({ message: 'Tourism Governer not found' });
+      }
+
+      res.status(200).json({ message: 'Tourism Governer deleted successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting tourism governer', error: error.message });
+  }
+};
+module.exports = {createTourismGoverner, getTourismGoverners,deleteTourismGoverner}

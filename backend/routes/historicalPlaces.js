@@ -1,5 +1,5 @@
 const express = require('express')
-const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags} = require('../controllers/historicalPlaceController')
+const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags, searchforHP,FilterMuseumByTagName} = require('../controllers/historicalPlaceController')
 const router = express.Router()
 
 router.get('/', getHistoricalPlaces)
@@ -13,7 +13,8 @@ router.post('/', createHistoricalPlace)
 router.delete('/:id', deleteHistoricalPlace)
 
 router.put('/:id', updateHistoricalPlace)
-
+router.post('/filterByTag', FilterMuseumByTagName);
+router.get('/search',searchforHP)
 //router.patch('/:id', updateWorkout)
 
 module.exports = router

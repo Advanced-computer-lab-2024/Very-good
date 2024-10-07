@@ -1,5 +1,6 @@
 import React from 'react';
 import ActivityDisplay from './ActivityDisplay';
+import { fetchActivities, deleteActivity, updateActivity, searchactivity } from '../Services/activityServices'; // Adjust the import path as needed
 
 const ActivityList = ({ activities, onDelete, onUpdate }) => {
     if (activities.length === 0) {
