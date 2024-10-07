@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 //import { useNavigate } from 'react-router-dom'; // For navigation
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
-import AdminPage from './Pages/AdminPage';
+import AdminPage from './Pages/adminpage';
 import AdvertiserPage from './Pages/AdvertiserPage'; 
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
