@@ -11,6 +11,12 @@ const itinerarySchema = new schema({
     type: String,
     required: true
   },
+  ratings: {
+    type: Number, // Assuming ratings are out of 5
+    min: 0,
+    max: 5,
+    default: 0 // Default rating if not provided
+},
   activities: [{
     title: {
       type: String,

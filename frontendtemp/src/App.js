@@ -6,8 +6,8 @@ import AdminPage from './Pages/adminpage';
 import AdvertiserPage from './Pages/AdvertiserPage'; 
 import TourismGovernerPage from './Pages/TourismGovernerPage'; 
 import TourGuideHomePage from './Pages/tourGuideHomePage'; 
-import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerAdmin ,registerTourist,} from './RequestSendingMethods';
-
+import { Tourist, fetchTouristByEmail, createTourGuideRequest, registerAdmin ,registerTourist, registerSeller} from './RequestSendingMethods';
+import SellerPage from './Pages/SellerPage';
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
   const [registrationType, setRegistrationType] = useState(''); // Tracks if user is individual or organization
@@ -20,6 +20,7 @@ function App() {
   const [isAdminPageActive, setIsAdminPageActive] = useState(false); // Should we render tourist page
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
+  const [isSellerPageActive, setIsSellerPageActive] = useState(false);
 
   //setIsAdminPageActive
 
@@ -101,6 +102,17 @@ function App() {
 
     if (role === 'seller') {
       // Handle seller registration
+      let sellerData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        mobile: formElements.mobile.value,
+        businessName: formElements.businessName.value,
+        website: formElements.website.value,
+      };
+
+      setIsSellerPageActive(true);
+      await registerSeller(sellerData);
     }
 
     if (role === 'advertiser') {
@@ -126,20 +138,21 @@ function App() {
 
   return (
     <div className="container">
-      {/* Render Tourist Page if active */}
-      {isTouristPageActive ? (
+      {/* Render SellerPage if active */}
+      {isSellerPageActive ? (
+        <SellerPage />
+      ) : isTouristPageActive ? (
         <TouristPage email={emailagain} />
       ) : isTourGuidePageActive ? (
         <TourGuideHomePage email={emailtourguide} />
-      ) :
-      isAdvertiserPageActive ? (
+      ) : isAdvertiserPageActive ? (
         <AdvertiserPage />
-      ) :
-      isTourismGovernerPageActive ? (
-        <TourismGovernerPage/>
-      ) :
+      ) : isTourismGovernerPageActive ? (
+        <TourismGovernerPage />
+      ) : 
       isAdminPageActive ? (
         <AdminPage />
+        
       ) :
       (
         <>
@@ -267,6 +280,27 @@ function App() {
 
                     <label htmlFor="previousWork">Previous Work (if any):</label>
                     <input type="text" id="previousWork" name="previousWork" />
+                  </>
+                )}
+                {role === 'seller' && (
+                  <>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required />
+
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+
+                    <label htmlFor="mobile">Mobile Number:</label>
+                    <input type="tel" id="mobile" name="mobile" required />
+
+                    <label htmlFor="businessName">Business Name:</label>
+                    <input type="text" id="businessName" name="businessName" required />
+
+                    <label htmlFor="website">Website:</label>
+                    <input type="url" id="website" name="website" />
                   </>
                 )}
                 {role === 'admin' && (

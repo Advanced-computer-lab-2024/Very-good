@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail,updateTouristByEmail } from '../RequestSendingMethods';
-
+import { fetchTouristByEmail,updateTouristByEmail } from '../RequestSendingMethods'
+import ProductSort from  '../Components/SortProductRate.js'
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -49,6 +49,7 @@ const TouristPage = ({ email }) => {
   };
 
   return (
+    
     <div className="tourist-page">
       {/* Sidebar Toggle Button */}
       <button className="toggle-btn" onClick={toggleSidebar}>
@@ -161,7 +162,8 @@ const TouristPage = ({ email }) => {
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
         </div>
-
+       
+        <ProductSort/>
         <div className="itinerary-layout">
           <h2 className="itinerary-header">Your Itinerary</h2>
           <button className="btn" onClick={() => alert('View Full Itinerary')}>

@@ -64,5 +64,34 @@ const getProducts = async (req, res) => {
         });
     }
 };
+// In your productController.js
+const putProducts = async (req, res) => {
+    const { sellerId, productId } = req.params;
+    const { name, price, description, stock, rating } = req.body;
 
-module.exports = {createProduct, getProducts}
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId,
+            { name, price, description, stock, rating },
+            { new: true } // Return the updated product
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        res.status(200).json({
+            message: 'Product updated successfully.',
+            product: updatedProduct
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: 'Error updating product.',
+            error: error.message
+        });
+    }
+};
+
+
+
+module.exports = {createProduct, getProducts ,putProducts}

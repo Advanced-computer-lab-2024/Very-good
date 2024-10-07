@@ -1,86 +1,100 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import ProductSort from  '../Components/SortProductRate.js'
 function AdminPage() {
-  const [categories, setCategories] = useState([]); // Initialize as an empty array
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({ name: '' });
+  const [productFormData, setProductFormData] = useState({ name: '', price: '', details: '' });
   const [selectedOperation, setSelectedOperation] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null); // Track the category being edited
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Fetch categories on page load
   useEffect(() => {
     fetchCategories();
+    fetchProducts();
   }, []);
 
-  // Fetch all categories
   const fetchCategories = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/categories');
-      setCategories(response.data.data || []); // Ensure it's set correctly
+      setCategories(response.data.data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
 
-  // Handle form input change
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/products');
+      setProducts(response.data.data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
   };
 
-  // Create a new category
+  const handleInputChange = (e) => {
+    setProductFormData({ ...productFormData, [e.target.name]: e.target.value });
+  };
+
   const handleCreate = async () => {
-    console.log('Creating category with data:', formData); // Log the form data
     try {
       const response = await axios.post('http://localhost:4000/api/categories', formData);
-      console.log('Category created:', response.data); // Log the response data
-      setCategories([...categories, response.data.category]); // Update state with the new category
-      setFormData({ name: '' }); // Reset form
-      setSelectedOperation(null); // Return to main menu
+      setCategories([...categories, response.data.category]);
+      setFormData({ name: '' });
+      setSelectedOperation(null);
     } catch (error) {
       console.error('Error creating category:', error);
     }
   };
 
-  // Update a category
   const handleUpdate = async () => {
-    if (!selectedCategory) {
-      console.error('No category selected for update');
-      return;
-    }
-
-    console.log('Updating category:', selectedCategory, 'with data:', formData);
+    if (!selectedCategory) return;
     try {
-      const response = await axios.patch(`http://localhost:4000/api/categories/${selectedCategory}`, formData);
-      console.log('Category updated:', response.data);
-      
-      // Optionally, you can refetch categories to update the state
+      await axios.patch(`http://localhost:4000/api/categories/${selectedCategory}`, formData);
       fetchCategories();
-      setFormData({ name: '' }); // Reset form after update
-      setSelectedCategory(null); // Clear the selected category
+      setFormData({ name: '' });
+      setSelectedCategory(null);
     } catch (error) {
       console.error('Error updating category:', error);
-      if (error.response) {
-        console.error('Error response data:', error.response.data);
-      }
     }
   };
-  
 
-  // Delete a category
   const handleDelete = async (categoryName) => {
-    console.log('Deleting category with name:', categoryName); // Log the category name
     try {
-      const response = await axios.delete(`http://localhost:4000/api/categories/${categoryName}`); // Use name in the URL
-      console.log('Delete response:', response.data); // Log the response data
-      setCategories(categories.filter((cat) => cat.name !== categoryName)); // Filter out the deleted category by name
+      await axios.delete(`http://localhost:4000/api/categories/${categoryName}`);
+      setCategories(categories.filter((cat) => cat.name !== categoryName));
     } catch (error) {
       console.error('Error deleting category:', error);
     }
   };
 
+  const handleCreateProduct = async () => {
+    try {
+      const newProduct = await axios.post('http://localhost:4000/api/products', productFormData);
+      setProducts([...products, newProduct.data]);
+      setProductFormData({ name: '', price: '', details: '' });
+      setSelectedOperation(null);
+    } catch (error) {
+      console.error('Error creating product:', error);
+    }
+  };
+
+  const handleUpdateProduct = async () => {
+    if (!selectedProduct) return;
+    try {
+      const updatedProduct = await axios.patch(`http://localhost:4000/api/products/${selectedProduct}`, productFormData);
+      setProducts(products.map((product) => (product._id === updatedProduct.data._id ? updatedProduct.data : product)));
+      setProductFormData({ name: '', price: '', details: '' });
+      setSelectedProduct(null);
+      setSelectedOperation(null);
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
+  };
   return (
     <div>
-      <h1>Admin - Manage Categories</h1>
+      <h1>Admin - Manage Categories and Products</h1>
 
       {/* Operation Selection */}
       {!selectedOperation && (
@@ -89,94 +103,91 @@ function AdminPage() {
           <button onClick={() => setSelectedOperation('read')}>View Categories</button>
           <button onClick={() => setSelectedOperation('delete')}>Delete Category</button>
           <button onClick={() => setSelectedOperation('update')}>Update Category</button>
+          <button onClick={() => setSelectedOperation('createProduct')}>Create Product</button>
+          <button onClick={() => setSelectedOperation('updateProduct')}>Update Product</button>
         </div>
       )}
 
-      {/* Create Category */}
-      {selectedOperation === 'create' && (
+      {/* Category Management */}
+      {/* ... (existing category management UI) ... */}
+
+      {selectedOperation === 'createProduct' && (
         <div>
-          <h2>Create a New Category</h2>
+          <h2>Create a New Product</h2>
           <input
             type="text"
             name="name"
-            placeholder="Category Name"
-            value={formData.name}
+            placeholder="Product Name"
+            value={productFormData.name}
             onChange={handleInputChange}
           />
-          <button onClick={handleCreate}>Create</button>
+          <input
+            type="number"
+            name="price"
+            placeholder="Product Price"
+            value={productFormData.price}
+            onChange={handleInputChange}
+          />
+          <textarea
+            name="details"
+            placeholder="Product Details"
+            value={productFormData.details}
+            onChange={handleInputChange}
+          />
+          <button onClick={handleCreateProduct}>Create</button>
           <button onClick={() => setSelectedOperation(null)}>Back</button>
         </div>
       )}
+      
+      <ProductSort/>
 
-      {/* Update Category */}
-      {selectedOperation === 'update' && (
+      {/* Update Product */}
+      {selectedOperation === 'updateProduct' && (
         <div>
-          <h2>Update a Category</h2>
+          <h2>Update a Product</h2>
           <select
             onChange={(e) => {
-              const categoryName = e.target.value;
-              setSelectedCategory(categoryName);
-              const category = categories.find(cat => cat.name === categoryName);
-              if (category) {
-                setFormData({ name: category.name });
+              const productId = e.target.value;
+              setSelectedProduct(productId);
+              const product = products.find(prod => prod._id === productId);
+              if (product) {
+                setProductFormData({ name: product.name, price: product.price, details: product.details });
               }
             }}
-            value={selectedCategory || ''}
+            value={selectedProduct || ''}
           >
-            <option value="" disabled>Select a category to update</option>
-            {categories.map((category) => (
-              <option key={category._id} value={category.name}>{category.name}</option>
+            <option value="" disabled>Select a product to update</option>
+            {products.map((product) => (
+              <option key={product._id} value={product._id}>{product.name}</option>
             ))}
           </select>
           <input
             type="text"
             name="name"
-            placeholder="New Category Name"
-            value={formData.name}
+            placeholder="New Product Name"
+            value={productFormData.name}
             onChange={handleInputChange}
           />
-          <button onClick={handleUpdate}>Update</button>
+          <input
+            type="number"
+            name="price"
+            placeholder="New Product Price"
+            value={productFormData.price}
+            onChange={handleInputChange}
+          />
+          <textarea
+            name="details"
+            placeholder="New Product Details"
+            value={productFormData.details}
+            onChange={handleInputChange}
+          />
+          <button onClick={handleUpdateProduct}>Update</button>
           <button onClick={() => setSelectedOperation(null)}>Back</button>
         </div>
-      )}
-
-      {/* Read Categories */}
-      {selectedOperation === 'read' && (
-        <div>
-          <h2>Existing Categories</h2>
-          <ul>
-            {categories.map((category) => (
-              <li key={category._id}>
-                {category.name}
-                <button onClick={() => {
-                  setSelectedOperation('update');
-                  setSelectedCategory(category.name);
-                  setFormData({ name: category.name });
-                }}>Update</button>
-              </li>
-            ))}
-          </ul>
-          <button onClick={() => setSelectedOperation(null)}>Back</button>
-        </div>
-      )}
-
-      {/* Delete Category */}
-      {selectedOperation === 'delete' && (
-        <div>
-          <h2>Delete a Category</h2>
-          <ul>
-            {categories.map((category) => (
-              <li key={category._id}>
-                {category.name}
-                <button onClick={() => handleDelete(category.name)}>Delete</button> {/* Pass the category name */}
-              </li>
-            ))}
-          </ul>
-          <button onClick={() => setSelectedOperation(null)}>Back</button>
-        </div>
-      )}
-    </div>
-  );
+        
+  )}
+  </div>
+);
 }
 
 export default AdminPage;
