@@ -89,53 +89,53 @@ const getActivities = async (req, res) => {
 
 // Controller for filtering activities based on budget, date, category, or ratings
 const filterActivities = async (req, res) => {
-  try {
-    // Extract query parameters from the request
-    const { budget, startDate, endDate, category, minRating } = req.query;
+    try {
+      // Determine whether to extract from req.query (GET) or req.body (POST)
+      const { budget, date, category, minRating } = req.method === 'POST' ? req.body : req.query;
+    
+      // Build a filter object dynamically
+      let filter = {};
+    
+      // Apply filters based on query parameters
+      if (budget) {
+        filter.price = { $lte: budget }; // Less than or equal to the specified budget
+      }
+    
+      // Filter by exact date
+      if (date) {
+        const exactDate = new Date(date);
+        // Set the time to the start of the day (00:00:00) and end of the day (23:59:59)
+        filter.date = {
+          $gte: new Date(exactDate.setHours(0, 0, 0, 0)), // Start of the day
+          $lte: new Date(exactDate.setHours(23, 59, 59, 999)) // End of the day
+        };
+      }
+    
+      if (category) {
+        filter.category = category; // Match the category exactly
+      }
+    
+      if (minRating) {
+        filter.ratings = { $gte: minRating }; // Minimum rating
+      }
+    
+      // Find activities that match the filter
+      const filteredActivities = await Activity.find(filter);
+    
+      // Send response with the filtered activities
+      res.status(200).json({
+        message: 'Filtered activities retrieved successfully',
+        data: filteredActivities
+      });
+    } catch (error) {
+      console.error('Error filtering activities:', error);
+      res.status(500).json({
+        message: 'Error filtering activities',
+        error: error.message
+      });
+    }
+  };
 
-    // Build a filter object dynamically
-    let filter = {};
-
-    // Apply filters based on query parameters
-    if (budget) {
-      filter.price = { $lte: budget }; // Less than or equal to the specified budget
-    }
-
-    if (startDate && endDate) {
-      filter.date = {
-        $gte: new Date(startDate), // Greater than or equal to the start date
-        $lte: new Date(endDate) // Less than or equal to the end date
-      };
-    } else if (startDate) {
-      filter.date = { $gte: new Date(startDate) }; // Only apply start date if no end date is provided
-    }
-
-    if (category) {
-      filter.category = category; // Match the category exactly
-    }
-
-    if (minRating) {
-      filter.ratings = { $gte: minRating }; // Minimum rating
-    }
-
-    // Find activities that match the filter
-    const filteredActivities = await Activity.find(filter);
-
-    // Send response with the filtered activities
-    res.status(200).json({
-      message: 'Filtered activities retrieved successfully',
-      data: filteredActivities
-    });
-  } catch (error) {
-    console.error('Error filtering activities:', error);
-    res.status(500).json({
-      message: 'Error filtering activities',
-      error: error.message
-    });
-  }
-};
-
-module.exports = { filterActivities };
 
 
 // create a workout
@@ -157,53 +157,7 @@ const updateWorkout = async (req, res) => {
 //const Activity = require('../models/activityModel');    ((already present))
 
 // Controller for filtering activities based on budget, date, category, or ratings
-const filterActivities = async (req, res) => {
-    try {
-      // Extract query parameters from the request
-      const { budget, startDate, endDate, category, minRating } = req.query;
-  
-      // Build a filter object dynamically
-      let filter = {};
-  
-      // Apply filters based on query parameters
-      if (budget) {
-        filter.price = { $lte: budget }; // Less than or equal to the specified budget
-      }
-  
-      if (startDate && endDate) {
-        filter.date = {
-          $gte: new Date(startDate), // Greater than or equal to the start date
-          $lte: new Date(endDate) // Less than or equal to the end date
-        };
-      } else if (startDate) {
-        filter.date = { $gte: new Date(startDate) }; // Only apply start date if no end date is provided
-      }
-  
-      if (category) {
-        filter.category = category; // Match the category exactly
-      }
-  
-      if (minRating) {
-        filter.ratings = { $gte: minRating }; // Minimum rating
-      }
-  
-      // Find activities that match the filter
-      const filteredActivities = await Activity.find(filter);
-  
-      // Send response with the filtered activities
-      res.status(200).json({
-        message: 'Filtered activities retrieved successfully',
-        data: filteredActivities
-      });
-    } catch (error) {
-      console.error('Error filtering activities:', error);
-      res.status(500).json({
-        message: 'Error filtering activities',
-        error: error.message
-      });
-    }
-  };
-  
+
   
 
-module.exports = {createActivity, getActivities,filterActivities, filterActivities}
+module.exports = {createActivity, getActivities,filterActivities}

@@ -25,18 +25,20 @@ const itinerarySchema = new schema({
         ref: 'tourGuide', // Reference to the Tour Guide model
         required: true
     },
-    startDate: {
+    date: {
         type: Date,
         required: true
     },
-    endDate: {
-        type: Date,
-        required: true
-    },
-    totalPrice: {
+    
+    price: {
         type: Number,
         required: false
-    }
+    },
+    
+    preferences: [{ 
+        type: String 
+    }] // Array of preferences added
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('itinerary', itinerarySchema);

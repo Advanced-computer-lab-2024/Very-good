@@ -14,5 +14,5 @@ router.post('/filter', filterActivities)
 //router.delete('/:id', deleteWorkout)
 
 //router.patch('/:id', updateWorkout)
-router.get('/filter', filterActivities)
+// router.get('/filter', filterActivities)
 module.exports = router

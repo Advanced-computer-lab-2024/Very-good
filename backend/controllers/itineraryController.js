@@ -84,52 +84,6 @@ const getItineraries = async (req, res) => {
 
 //const Itinerary = require('../models/itineraryModel'); // Ensure to import your itinerary model   (((already present))) 
 
-const filterItineraries = async (req, res) => {
-    try {
-        // Destructure filter parameters from the request body
-        const { budget, startDate, endDate, preferences, language } = req.body;
-
-        // Build the query object based on provided filters
-        let query = {}; // No requirement for touristId
-
-        if (budget) {
-            query.totalPrice = { $lte: budget }; // Filter itineraries by budget
-        }
-
-        if (startDate || endDate) {
-            query.startDate = {};
-            if (startDate) {
-                query.startDate.$gte = new Date(startDate); // Filter by start date
-            }
-            if (endDate) {
-                query.startDate.$lte = new Date(endDate); // Filter by end date
-            }
-        }
-
-        if (preferences && preferences.length > 0) {
-            query.preferences = { $in: preferences }; // Assuming you have a 'preferences' field in your itinerary model
-        }
-
-        if (language) {
-            query.language = language; // Assuming you have a 'language' field in your itinerary model
-        }
-
-        // Fetch itineraries based on the query
-        const itineraries = await Itinerary.find(query).populate('activities'); // Populate activities if needed
-
-        // Send the filtered itineraries back as a response
-        res.status(200).json({
-            message: 'Filtered itineraries retrieved successfully',
-            data: itineraries
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Error retrieving itineraries',
-            error: error.message
-        });
-    }
-};
 
 //module.exports = { filterItineraries };
 
@@ -153,24 +107,23 @@ const updateWorkout = async (req, res) => {
 const filterItineraries = async (req, res) => {
     try {
         // Destructure filter parameters from the request body
-        const { budget, startDate, endDate, preferences, language } = req.body;
+        const { budget, date, preferences, language } = req.body;
 
         // Build the query object based on provided filters
         let query = {}; // No requirement for touristId
 
         if (budget) {
-            query.totalPrice = { $lte: budget }; // Filter itineraries by budget
+            query.price = { $lte: budget }; // Filter itineraries by budget
         }
 
-        if (startDate || endDate) {
-            query.startDate = {};
-            if (startDate) {
-                query.startDate.$gte = new Date(startDate); // Filter by start date
-            }
-            if (endDate) {
-                query.startDate.$lte = new Date(endDate); // Filter by end date
-            }
-        }
+        if (date) {
+                  const exactDate = new Date(date);
+                  // Set the time to the start of the day (00:00:00) and end of the day (23:59:59)
+                  filter.date = {
+                    $gte: new Date(exactDate.setHours(0, 0, 0, 0)), // Start of the day
+                    $lte: new Date(exactDate.setHours(23, 59, 59, 999)) // End of the day
+                  };
+                }
 
         if (preferences && preferences.length > 0) {
             query.preferences = { $in: preferences }; // Assuming you have a 'preferences' field in your itinerary model

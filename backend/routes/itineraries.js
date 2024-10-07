@@ -17,5 +17,5 @@ router.post('/filter', filterItineraries) // POST request to filter itineraries
 //router.delete('/:id', deleteWorkout)
 
 //router.patch('/:id', updateWorkout)
-router.post('/filter', filterItineraries) // POST request to filter itineraries
+
 module.exports = router
