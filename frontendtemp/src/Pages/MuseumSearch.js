@@ -5,6 +5,7 @@ import {searchforHP} from '../Services/museumServices';
 import { searchforitinerary } from '../Services/itineraryServices';
 import {searchbyname} from '../Services/productServices';
 import {getavailableProducts} from '../Services/productServices';
+import ItineraryDisplay2 from '../Components/ItineraryDisplay2';
 
 
 const MuseumSearch = () => {
@@ -267,13 +268,7 @@ const MuseumSearch = () => {
                     itineraries.map((itinerary) => (
                         <div key={itinerary._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
                             <h3>{itinerary.title}</h3>
-                            <p><strong>Description:</strong> {itinerary.description}</p>
-                            <p><strong>Start Date:</strong> {new Date(itinerary.startDate).toLocaleDateString()}</p>
-                            <p><strong>End Date:</strong> {new Date(itinerary.endDate).toLocaleDateString()}</p>
-                            <p><strong>Total Price:</strong> ${itinerary.totalPrice}</p>
-                            <p><strong>Tour Guide:</strong> {itinerary.tourGuideId.name}</p>
-                            <p><strong>Tourists:</strong> {itinerary.touristIds.length > 0 ? itinerary.touristIds.map(tourist => tourist.name).join(', ') : 'None'}</p>
-                
+                            <ItineraryDisplay2 itinerary={itinerary}/>
                         </div>
                     ))
                 ) : (

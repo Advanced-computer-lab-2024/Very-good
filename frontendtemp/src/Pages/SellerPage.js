@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethods';
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
 import Search from './Search';
-
+import FilterProductByPrice from './FilterProductByPrice'
 const SellerPage = ({ email }) => {
   const [sellerData, setSellerData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -11,7 +11,7 @@ const SellerPage = ({ email }) => {
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
   const [isViewingManagement, setIsViewingManagement] = useState(false); // State for conditional rendering
-
+  const [isProductFilterActive,setIsProductFilterActive]=useState(false);
   useEffect(() => {
     const getSellerData = async () => {
       const response = await fetchSellerByEmail(email);
@@ -32,6 +32,12 @@ const SellerPage = ({ email }) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
   };
+  const handleProductFilterButtonOnClick =()=>{
+    setIsProductFilterActive(true);
+  }
+  if(isProductFilterActive){
+    return <FilterProductByPrice/>
+  }
 
   const handleUpdateProfile = async () => {
     setIsEditing(!isEditing);
@@ -63,6 +69,9 @@ const SellerPage = ({ email }) => {
         <div className="sidebar-content">
           <h3>Quick Links</h3>
           <button onClick={() => setIsViewingManagement(true)}>SellerProduct</button> {/* New button */}
+          <button onClick={handleProductFilterButtonOnClick}>
+            Filter Product by Price
+          </button> {/* New button with commented action listener */}
         </div>
       </div>
 

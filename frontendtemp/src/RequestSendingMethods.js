@@ -291,7 +291,29 @@ const updateSellerByEmail = async (email, updatedData) => {
     }
   };
 
+  const updateAdvertiserByEmail = async (email, updatedData) => {
+    try {
+        const response = await fetch('http://localhost:4000/api/advertisers/updateAdvertiserByEmail', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, updatedData }), // This is correct
+        });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data; // Handle success
+    } catch (error) {
+        console.error('Error updating advertiser:', error);
+        throw error; // Re-throw error to be handled by calling code
+    }
+};
+  
 
 //-------------------------------------------------------------------------------------------
 // New function to get all tags
@@ -404,8 +426,65 @@ const addTourismGoverner = async (tourismGovernerData) => {
 //---------------------------
 // method that sends a request to get all tourist accounts 
 
+// Function to send a request to filter activities
+const filterActivities = async (filterCriteria) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/activities/filterYassin', filterCriteria);
+      return response.data; // Return the filtered activities
+  } catch (error) {
+      console.error('Error fetching activities:', error);
+      throw error; // Rethrow error for handling in calling code
+  }
+};
+const filterItineraries = async (filterCriteria) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/itineraries/filter', filterCriteria);
+    return response.data; // Return the filtered itineraries
+  } catch (error) {
+    console.error('Error fetching itineraries:', error);
+    throw error; // Rethrow error for handling in calling code
+  }
+};
 
+const getTagNames = async () => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/tags/tags/names');
+    return response.data; // Assuming the data is an array of tag names
+  } catch (error) {
+    throw new Error('Failed to fetch tags');
+  }
+};
+const filterMuseumByTagName = async (tagName) => {
+  try {
+    const response = await fetch('http://localhost:4000/api/historicalPlaces/filterByTag', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tagName }), // Send the selected tag name in the request body
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to filter museums');
+    }
+
+    const museums = await response.json();
+    return museums;
+  } catch (error) {
+    console.error('Error filtering museums:', error);
+    throw error;
+  }
+};
+const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
+  const response = await axios.get(`http://localhost:4000/api/products/filter`, {
+    params: {
+      minPrice,
+      maxPrice,
+    },
+  });
+  return response.data; // Assuming the backend returns the data in this structure
+};
 
 // Export the new method along with others
 export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail};
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail};

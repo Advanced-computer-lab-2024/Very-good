@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail,updateTouristByEmail } from '../RequestSendingMethods';
-import ActivityHistoricalList from '../Components/UpcomingSort.js'
-import ActivityItinerarySort from  '../Components/SortRatePrice.js'
-import ProductSort from  '../Components/SortProductRate.js'
-import MuseumSearch from './MuseumSearch'
-
+import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
+import ActivityHistoricalList from '../Components/UpcomingSort.js';
+import ProductSort from '../Components/SortProductRate.js';
+import FilterActivitiesPage from './FilterActivitiesPage'; // Import the new component
+import FilterItenaryPage from './FilterItenaryPage';
+import ActivityItinerarySort from '../Components/SortRatePrice.js';
+import MuseumSearch from './MuseumSearch';
+import FilterHistoricalPage from './FilterHistoricalPage';
+import FilterProductByPrice from './FilterProductByPrice';
 
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
@@ -13,6 +16,10 @@ const TouristPage = ({ email }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
+  const [showFilterPage, setShowFilterPage] = useState(false); // New state to manage page rendering
+  const [ShowItenaryPage, setShowFilterItenaryPage] = useState(false);
+  const [showHistoricalPlace, setShowFilterHistoricalPage] = useState(false);
+  const [showProductFilterPage, setShowProductFilterPage] = useState(false);
 
   useEffect(() => {
     const getTouristData = async () => {
@@ -46,15 +53,64 @@ const TouristPage = ({ email }) => {
       // Update touristData with the new editedData so the frontend reflects the changes
       setTouristData(editedData);
 
-      // Perform your function call to save the changes here
+      // Perform your function call to save the changes here, excluding wallet
       console.log('Changes saved:', editedData, oldEmail);
-      // here we should send the changed data to the function that would make a request editedData is in Jason Format , object like 
-      updateTouristByEmail(oldEmail,editedData);
+      updateTouristByEmail(oldEmail, editedData);
     }
   };
 
+  // Function to handle rendering the filter activities page
+  const handleFilterActivitiesClick = () => {
+    setShowFilterPage(true);
+  };
+
+  // Function to handle back button click
+  const handleBackToTouristPage = () => {
+    setShowFilterPage(false);
+  };
+
+  // Render the appropriate content based on the state
+  if (showFilterPage) {
+    return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
+  }
+
+  const handleFilterItenariesClick = () => {
+    setShowFilterItenaryPage(true);
+  }
+
+  const handleBackToTouristPageFromItenaryFilterPage = () => {
+    setShowFilterItenaryPage(false);
+  }
+  
+  if (ShowItenaryPage) {
+    return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
+  }
+
+  const handleFilterHistoricalPlacesClick = () => {
+    setShowFilterHistoricalPage(true);
+  }
+
+  const handleBackToTouristPageFromFilterHistoricalPlacesPage = () => {
+    setShowFilterHistoricalPage(false);
+  }
+  
+  if (showHistoricalPlace) {
+    return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
+  }
+
+  const handleFilterProductPageClick = () => {
+    setShowProductFilterPage(true);
+  }
+  
+  const handleBackToTouristPageFromFilterProductPage = () => {
+    setShowProductFilterPage(false);
+  }
+
+  if (showProductFilterPage) {
+    return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
+  }
+
   return (
-    
     <div className="tourist-page">
       {/* Sidebar Toggle Button */}
       <button className="toggle-btn" onClick={toggleSidebar}>
@@ -65,10 +121,10 @@ const TouristPage = ({ email }) => {
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
           <h3>Quick Links</h3>
-          <button onClick={() => alert('Filter Activities')}>Filter Activities</button>
-          <button onClick={() => alert('Filter Itineraries')}>Filter Itineraries</button>
-          <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
-          <button onClick={() => alert('Filter Products')}>Filter Products</button>
+          <button onClick={handleFilterActivitiesClick}>Filter Activities</button>
+          <button onClick={handleFilterItenariesClick}>Filter Itineraries</button>
+          <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
+          <button onClick={handleFilterProductPageClick}>Filter Products</button>
         </div>
       </div>
 
@@ -147,29 +203,20 @@ const TouristPage = ({ email }) => {
           </div>
           <div className="profile-info">
             <label>Date of Birth:</label>
-            <p>{touristData?.p || 'NA'}</p> {/* Static as requested */}
+            <p>{touristData?.dob || 'NA'}</p> {/* Assuming you meant 'dob' here */}
           </div>
           <div className="profile-info">
             <label>Wallet Balance:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="wallet"
-                value={editedData?.wallet || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>${touristData?.wallet || 'NA'}</p>
-            )}
+            <p>${touristData?.wallet || 'NA'}</p> {/* Display wallet balance but do not allow editing */}
           </div>
 
           <button className="btn" onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
         </div>
-        <ActivityHistoricalList/> 
-        <ActivityItinerarySort/>
-        <ProductSort/>
+        <ActivityHistoricalList /> 
+        <ActivityItinerarySort />
+        <ProductSort />
         <div className="itinerary-layout">
           <h2 className="itinerary-header">Your Itinerary</h2>
           <button className="btn" onClick={() => alert('View Full Itinerary')}>
@@ -187,4 +234,3 @@ const TouristPage = ({ email }) => {
 };
 
 export default TouristPage;
-

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createItinerary } from '../Services/itineraryServices'; // Adjust the import path as needed
+import axios from 'axios';
 
 const CreateItineraryForm = ({ onClose, tourGuideId }) => {
     const [newItinerary, setNewItinerary] = useState({
@@ -9,74 +10,58 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
         language: '',
         pickUpLocation: '',
         dropOffLocation: '',
-        activities: [{ title: '', description: '', duration: '', price: '', startTime: '', endTime: '', location: { lat: '', lng: '' } }],
-        locationsToVisit: [{ name: '', lat: '', lng: '', address: '' }],
+        activities: [
+            {
+                title: '',
+                description: '',
+                duration: '',
+                price: '',
+                startTime: '',
+                endTime: '',
+                location: { lat: '', lng: '' }
+            }
+        ],
+        locationsToVisit: [
+            { name: '', lat: '', lng: '', address: '' }
+        ],
         availableDates: [''],
         availableTimes: [''],
         accessibility: false,
+        tags: [], // Tags to be selected
     });
+    
+    const [tags, setTags] = useState([]); // To store tags fetched from API
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // For managing loading state
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewItinerary(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
-    const handleSaveClick = async () => {
-        const requiredFields = {
-            title: newItinerary.title,
-            price: newItinerary.price,
-            activityTitle: newItinerary.activities[0].title,
-            activityDuration: newItinerary.activities[0].duration,
-            activityStartTime: newItinerary.activities[0].startTime,
-            activityEndTime: newItinerary.activities[0].endTime,
-            activityLocationLat: newItinerary.activities[0].location.lat,
-            activityLocationLng: newItinerary.activities[0].location.lng,
-            language: newItinerary.language,
-            pickUpLocation: newItinerary.pickUpLocation,
-            dropOffLocation: newItinerary.dropOffLocation,
-            availableDate: newItinerary.availableDates[0],
-            availableTime: newItinerary.availableTimes[0],
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/api/tags/');
+                console.log('Fetched tags:', response.data); // Log the raw fetched data
+        
+                // Assuming response.data is an object containing 'data' which is an array of tag objects
+                if (response.data && Array.isArray(response.data.data)) {
+                    // Filter tags where category equals 'preference'
+                    const filteredTags = response.data.data.filter(tag => tag.category === 'preference');
+                    console.log('Filtered tags:', filteredTags); // Log filtered tags for debugging
+                    
+                    setTags(filteredTags); // Set only filtered tags
+                } else {
+                    throw new Error('Response data is not in the expected format.');
+                }
+                setIsLoading(false); // Stop loading once fetched
+            } catch (err) {
+                console.error('Failed to fetch tags:', err.message);
+                setError('Failed to load tags.');
+                setIsLoading(false); // Stop loading even if there's an error
+            }
         };
-    
-        const missingFields = Object.entries(requiredFields)
-            .filter(([key, value]) => value === '' || value === undefined)
-            .map(([key]) => key);
-    
-        if (missingFields.length > 0) {
-            alert(`Please fill in the following required fields: ${missingFields.join(', ')}`);
-            return;
-        }
-    
-        try {
-            const itineraryWithTourGuideId = {
-                ...newItinerary,
-                tourGuideId: tourGuideId,
-                activities: newItinerary.activities.map(activity => ({
-                    ...activity,
-                    location: {
-                        lat: parseFloat(activity.location.lat),
-                        lng: parseFloat(activity.location.lng),
-                    },
-                })),
-                locationsToVisit: newItinerary.locationsToVisit.map(location => ({
-                    ...location,
-                    lat: parseFloat(location.lat),
-                    lng: parseFloat(location.lng),
-                })),
-            };
-            console.log(itineraryWithTourGuideId);
-            const createdItinerary = await createItinerary(itineraryWithTourGuideId);
-            console.log('Itinerary created:', createdItinerary);
-            onClose(); // Close the form after successful creation
-        } catch (err) {
-            console.error('Failed to create itinerary:', err.message);
-            alert('Failed to create itinerary:', err.message);
-        }
-    };
-    
+        
+        
+
+        fetchTags();
+    }, []);
 
     const handleAddActivity = () => {
         setNewItinerary(prevState => ({
@@ -99,11 +84,88 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
         }));
     };
 
+
     const handleAddAvailableTime = () => {
         setNewItinerary(prevState => ({
             ...prevState,
             availableTimes: [...prevState.availableTimes, ''],
         }));
+    };
+
+
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        const inputValue = type === 'checkbox' ? checked : value;
+
+        setNewItinerary(prevState => ({
+            ...prevState,
+            [name]: inputValue,
+        }));
+    };
+
+    const handleTagClick = (tagId) => {
+        setNewItinerary(prevState => {
+            const alreadySelected = prevState.tags.includes(tagId);
+            const updatedTags = alreadySelected
+                ? prevState.tags.filter(id => id !== tagId)
+                : [...prevState.tags, tagId];
+            return { ...prevState, tags: updatedTags };
+        });
+    };
+
+    const handleSaveClick = async () => {
+        // Validation logic for all required fields
+        const requiredFields = {
+            title: newItinerary.title,
+            price: newItinerary.price,
+            activityTitle: newItinerary.activities[0].title,
+            activityDuration: newItinerary.activities[0].duration,
+            activityStartTime: newItinerary.activities[0].startTime,
+            activityEndTime: newItinerary.activities[0].endTime,
+            activityLocationLat: newItinerary.activities[0].location.lat,
+            activityLocationLng: newItinerary.activities[0].location.lng,
+            language: newItinerary.language,
+            pickUpLocation: newItinerary.pickUpLocation,
+            dropOffLocation: newItinerary.dropOffLocation,
+            availableDate: newItinerary.availableDates[0],
+            availableTime: newItinerary.availableTimes[0],
+        };
+
+        const missingFields = Object.entries(requiredFields)
+            .filter(([key, value]) => value === '' || value === undefined)
+            .map(([key]) => key);
+
+        if (missingFields.length > 0) {
+            alert(`Please fill in the following required fields: ${missingFields.join(', ')}`);
+            return;
+        }
+
+        try {
+            const itineraryWithTourGuideId = {
+                ...newItinerary,
+                tourGuideId: tourGuideId, // Include the tour guide ID
+                activities: newItinerary.activities.map(activity => ({
+                    ...activity,
+                    location: {
+                        lat: parseFloat(activity.location.lat),
+                        lng: parseFloat(activity.location.lng),
+                    },
+                })),
+                locationsToVisit: newItinerary.locationsToVisit.map(location => ({
+                    ...location,
+                    lat: parseFloat(location.lat),
+                    lng: parseFloat(location.lng),
+                })),
+            };
+
+            const createdItinerary = await createItinerary(itineraryWithTourGuideId);
+            console.log('Itinerary created:', createdItinerary);
+            onClose(); // Close the form after successful creation
+        } catch (err) {
+            console.error('Failed to create itinerary:', err.message);
+            alert('Failed to create itinerary:', err.message);
+        }
     };
 
     return (
@@ -332,8 +394,37 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                 />
             </label>
 
+
+            {/* Tags Section */}
+            <div>
+                <h3>Select Tags</h3>
+                {isLoading ? (
+                    <p>Loading tags...</p>
+                ) : error ? (
+                    <p>{error}</p>
+                ) : (
+                    <div>
+                        {tags.length > 0 ? (
+                            tags.map(tag => (
+                                <button
+                                    key={tag._id}
+                                    onClick={() => handleTagClick(tag._id)}
+                                    style={{
+                                        backgroundColor: newItinerary.tags.includes(tag._id) ? 'green' : 'grey',
+                                    }}
+                                >
+                                    {tag.name}
+                                </button>
+                            ))
+                        ) : (
+                            <p>No tags available</p>
+                        )}
+                    </div>
+                )}
+            </div>
+
             <button onClick={handleSaveClick}>Save Itinerary</button>
-            <button onClick={onClose}>Close</button> 
+            <button onClick={onClose}>Close</button>
         </div>
     );
 };

@@ -4,12 +4,16 @@ import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner } from
 import AdminDelete from './AdminDelete'; // Import the new AdminDelete component
 import AdminCategory from './AdminCategory';
 import Search from './Search'
+import FilterProductByPrice from './FilterProductByPrice'
+import AdminCreateTag from './AdminCreateTag'
 const AdminPage = () => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
         { id: 2, title: 'View Tags' },
         { id: 3, title: 'Add Tourism Governor' }, // New activity for adding tourism governor
         { id: 4, title: 'Delete Admin' }, // New activity for deleting admin
+        {id :5 ,title : 'FilterProductsByPrice' },
+        {id :6,title :'Create_Tag'},
     ]);
 
     const [tags, setTags] = useState([]); // State to hold the tags
@@ -17,24 +21,44 @@ const AdminPage = () => {
     const [formData, setFormData] = useState({ name: '' }); // State for form data
     const [isAddingAdmin, setIsAddingAdmin] = useState(false); // State to manage visibility of the add admin form
     const [isAddingGovernor, setIsAddingGovernor] = useState(false); // State to manage visibility of the add tourism governor form
-    const [adminData, setAdminData] = useState({ name: '', password: '', email: '' }); // State for admin form data including email
+    const [adminData, setAdminData] = useState({ username: '', password: '', email: '' }); // State for admin form data including email
     const [governorData, setGovernorData] = useState({ username: '', email: '', password: '', mobile: '', nationality: '', dob: '' }); // State for governor form data
     const [showAdminDelete, setShowAdminDelete] = useState(false); // State to manage visibility of AdminDelete page
     const [showSearchPage,setShowSearchPage]=useState(false);
+    const [showProductFilterPage,setShowProductFilterPage]=useState(false);
+    const [showCreateTagPage,setshowCreateTagPage]=useState(false);
     // Action listeners
+    const handleCreateTag=()=>{
+        setshowCreateTagPage(true);
+    }
+    if(showCreateTagPage){
+       return <AdminCreateTag/>
+    }
     const handleAddAdmins = () => {
         setIsAddingAdmin(true); // Show the add admin form
     };
+    const handleFilterProductByPrice =() =>{
+        setShowProductFilterPage(true);
+    }
+    if(showProductFilterPage){
+        return <FilterProductByPrice />
+    }
 
     const handleViewTags = async () => {
         const fetchedTags = await fetchAllTags();
         if (fetchedTags) {
             console.log('Retrieved tags:', fetchedTags);
-            setTags(fetchedTags); // Update the state with the retrieved tags
+    
+            // Filter tags to keep only those with category 'preference'
+            const filteredTags = fetchedTags.filter(tag => tag.category === 'preference');
+    
+            // Update the state with the filtered tags
+            setTags(filteredTags);
         } else {
             console.error('Failed to retrieve tags.');
         }
     };
+    
 
     const handleAddGovernor = () => {
         setIsAddingGovernor(true); // Show the add tourism governor form
@@ -71,7 +95,7 @@ const AdminPage = () => {
             alert(result.message || 'Admin created successfully!');
 
             // Reset form and close it after submission
-            setAdminData({ name: '', password: '', email: '' }); // Reset email field
+            setAdminData({ username: '', password: '', email: '' }); // Reset email field
             setIsAddingAdmin(false); // Hide the form
         } catch (error) {
             console.error('Failed to add admin:', error.response ? error.response.data : error.message);
@@ -146,6 +170,14 @@ const AdminPage = () => {
                                 {activity.title === 'Add Admins' && (
                                     <button className="view-button" onClick={handleAddAdmins}>Add Admins</button>
                                 )}
+                                {activity.title==='FilterProductsByPrice' &&(
+                                    < button className="view-button" onClick ={handleFilterProductByPrice}>Filter Products</button>
+                                    )}
+                                    {
+                                        activity.title==='Create_Tag'&&(
+                                            <button className="view-button" onClick={handleCreateTag}>Create Tag</button>
+                                        )
+                                    }
                                 {activity.title === 'View Tags' && (
                                     <button className="view-button" onClick={handleViewTags}>View Tags</button>
                                 )}
@@ -210,8 +242,8 @@ const AdminPage = () => {
                                     Name:
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={adminData.name}
+                                        name="username"
+                                        value={adminData.username}
                                         onChange={handleAdminFormChange}
                                         required
                                     />

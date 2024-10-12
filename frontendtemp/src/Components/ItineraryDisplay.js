@@ -1,9 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
 
 const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and view mode
   const [updatedItinerary, setUpdatedItinerary] = useState(itinerary); // Copy of the itinerary to hold updated values
+  const [tags, setTags] = useState([]); // State to hold fetched tags
+  const [tagNames, setTagNames] = useState([]); // State to hold tag names based on the itinerary's tag IDs
+
+  // Fetch tags on component mount
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/tags/');
+        const data = await response.json();
+        console.log("fetched tags in itinerarydisplay : ", data);
+        setTags(data.data); // Store all tags in state
+      } catch (err) {
+        console.error('Failed to fetch tags:', err.message);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
+  // Map tag IDs to names
+  useEffect(() => {
+    if (tags.length > 0) {
+      const names = updatedItinerary.tags.map(tagId => {
+        const tag = tags.find(t => t._id === tagId);
+        return tag ? tag.name : null; // Get the tag name or null if not found
+      }).filter(Boolean); // Filter out null values
+      setTagNames(names);
+    }
+  }, [tags, updatedItinerary.tags]);
 
   const handleEditClick = () => {
     setIsEditing(true); // Switch to edit mode
@@ -24,6 +53,17 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
       setIsEditing(false); // Exit edit mode
     } catch (err) {
       console.error('Failed to update itinerary:', err.message);
+    }
+  };
+
+  const handleTagClick = (tagId) => {
+    // Check if the tag ID is already in the tags array
+    if (!updatedItinerary.tags.includes(tagId)) {
+      // Add tag ID to the itinerary's tags if not already included
+      setUpdatedItinerary(prevState => ({
+        ...prevState,
+        tags: [...prevState.tags, tagId], // Add new tag ID
+      }));
     }
   };
 
@@ -188,6 +228,20 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
             ))}
           </div>
 
+          {/* Tags Section */}
+          <div className="tags-container">
+            <h3>Select Tags (Category: Preference)</h3>
+            {tags.filter(tag => tag.category === 'preference').map(tag => (
+              <button
+                key={tag._id}
+                onClick={() => handleTagClick(tag._id)}
+                className={`tag-button ${updatedItinerary.tags.includes(tag._id) ? 'selected' : ''}`}
+              >
+                {tag.name}
+              </button>
+            ))}
+          </div>
+
           <button className="save-button" onClick={handleSaveClick}>Save</button>
           <button className="cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
         </>
@@ -200,44 +254,44 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
           <h4 className="itinerary-language">Language:</h4><p> {itinerary.language}</p>
           <h4 className="itinerary-pickup">Pick Up Location:</h4><p> {itinerary.pickUpLocation}</p>
           <h4 className="itinerary-dropoff">Drop Off Location: </h4><p>{itinerary.dropOffLocation}</p>
+          
+          {/* Display tag names */}
+          <h4 className="itinerary-tags">Tags:</h4><p>{tagNames.join(', ')}</p>
+
+          {/* Activities List */}
           <h3>Activities</h3>
-          <div className="activities-list">
+          <ul>
             {itinerary.activities.map((activity, index) => (
-              <div key={index} className="activity-item">
-                <h4>{activity.title} :</h4>
-                <p>Duration: {activity.duration} minutes</p>
-                <p>Price: ${activity.price}</p>
-              </div>
+              <li key={index}>{activity.title} - Duration: {activity.duration} minutes - Price: ${activity.price}</li>
             ))}
-          </div>
-          <h3>Locations to visit :</h3>
-          <div className="activities-list">
+          </ul>
+
+          {/* Locations to Visit List */}
+          <h3>Locations to Visit</h3>
+          <ul>
             {itinerary.locationsToVisit.map((location, index) => (
-              <div key={index} className="activity-item">
-                <p>{index+1}. {location.name}</p>
-              </div>
+              <li key={index}>{location.name}</li>
             ))}
-          </div>
-          <h3>Available Dates :</h3>
-          <div className="activities-list">
+          </ul>
+
+          {/* Available Dates */}
+          <h3>Available Dates</h3>
+          <ul>
             {itinerary.availableDates.map((date, index) => (
-              <div key={index} className="activity-item">
-                <p>{index+1}. {date}</p>
-              </div>
+              <li key={index}>{date}</li>
             ))}
-          </div>
-          <h3>Available Times :</h3>
-          <div className="activities-list">
+          </ul>
+
+          {/* Available Times */}
+          <h3>Available Times</h3>
+          <ul>
             {itinerary.availableTimes.map((time, index) => (
-              <div key={index} className="activity-item">
-                <p>{index+1}. {time}</p>
-              </div>
+              <li key={index}>{time}</li>
             ))}
-          </div>
-          <div className="itinerary-buttons">
-            <button className="edit-button" onClick={handleEditClick}>Edit</button>
-            <button className="delete-button" onClick={() => onDelete(itinerary._id)}>Delete</button>
-          </div>
+          </ul>
+
+          <button onClick={handleEditClick}>Edit Itinerary</button>
+          <button onClick={() => onDelete(itinerary._id)}>Delete Itinerary</button>
         </>
       )}
     </div>

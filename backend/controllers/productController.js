@@ -136,6 +136,34 @@ const putProducts = async (req, res) => {
     }
 };
 
+// Filter Products by Price
+const filterProductsByPrice = async (req, res) => {
+    try {
+        const { minPrice, maxPrice } = req.query; // Get min and max prices from query parameters
 
+        // Validate price inputs
+        if (!minPrice || !maxPrice) {
+            return res.status(400).json({
+                message: 'Please provide both minPrice and maxPrice'
+            });
+        }
 
-module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname}
+        // Fetch products within the price range
+        const products = await Product.find({
+            price: { $gte: minPrice, $lte: maxPrice } // Filtering condition
+        });
+
+        res.status(200).json({
+            message: 'Filtered Products retrieved successfully',
+            data: products
+        });
+    } catch (error) {
+        console.error('Error filtering Products:', error);
+        res.status(500).json({
+            message: 'Error filtering Products',
+            error: error.message
+        });
+    }
+};
+
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice}

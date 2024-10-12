@@ -1,7 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Itinerary = require('../models/itineraryModel'); // Ensure this is the correct path for the Itinerary model
 const TourGuide = require('../models/tourGuideModel'); // Ensure this is the correct path for the TourGuide model
-
+const Tag = require('../models/tagModel'); // Adjust the path if necessary
 // Create an Itinerary
 const createItinerary = async (req, res) => {
     try {
@@ -19,7 +19,8 @@ const createItinerary = async (req, res) => {
             availableTimes,
             accessibility,
             pickUpLocation,
-            dropOffLocation
+            dropOffLocation,
+            tags
         } = req.body;
 
         // Create a new Itinerary object with embedded activities
@@ -36,7 +37,8 @@ const createItinerary = async (req, res) => {
             availableTimes,
             accessibility,
             pickUpLocation,
-            dropOffLocation
+            dropOffLocation,
+            tags
         });
 
         // Save the new itinerary to the database
@@ -145,10 +147,67 @@ const searchforitinerary = async (req, res) => {
     }
 };
 
+const filterItinerariesYassin = async (req, res) => {
+    try {
+        const { price, date, tags, language } = req.body; // Include language in destructuring
+
+        // Array to hold our filtering conditions
+        const filterConditions = [];
+
+        // If price is provided, add it to the conditions
+        if (price) {
+            filterConditions.push({ price: { $eq: price } }); // Exact match for price
+        }
+
+        // If date is provided, add it to the conditions
+        if (date) {
+            const inputDate = new Date(date); // Ensure input date is a Date object
+            if (!isNaN(inputDate)) { // Check if date is valid
+                filterConditions.push({ availableDates: { $elemMatch: { $eq: inputDate } } });
+            } else {
+                console.error('Invalid date format provided:', date);
+                return res.status(400).json({ error: 'Invalid date format' });
+            }
+        }
+
+        // If tags are provided, find the corresponding tag IDs and add to the conditions
+        if (tags) {
+            const tagIds = await Tag.find({ name: tags }).select('_id'); // Find tag IDs by tag name
+            if (tagIds.length > 0) {
+                filterConditions.push({ tags: { $in: tagIds.map(tag => tag._id) } });
+            } else {
+                // If no tags are found, handle accordingly
+                return res.status(404).json({ error: 'No matching tags found' });
+            }
+        }
+
+        // If language is provided, add it to the conditions
+        if (language) {
+            filterConditions.push({ language: { $eq: language } }); // Exact match for language
+        }
+
+        // Check if we have any filter conditions, if not return all itineraries
+        let query = {};
+        if (filterConditions.length > 0) {
+            query = { $and: filterConditions }; // Use $and for all conditions to match all
+        }
+
+        // Perform the filtering query
+        const itineraries = await Itinerary.find(query);
+        res.status(200).json(itineraries);
+    } catch (error) {
+        console.error('Error filtering itineraries:', error.message); // Log the specific error message
+        res.status(500).json({ error: 'Error filtering itineraries' });
+    }
+};
+
+
+
+
 
 module.exports = {
     createItinerary,
     getItineraries,
     filterItineraries,
-    searchforitinerary
+    searchforitinerary,filterItinerariesYassin
 };
