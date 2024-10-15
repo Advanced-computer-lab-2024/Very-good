@@ -13,14 +13,11 @@ const ItineraryRoutes = require('./routes/itineraries')
 const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
-const adminroutes=require('./routes/admin')
 const tagRoutes = require('./routes/tags')
 const adminRoutes = require('./routes/admin')
 const categoryRoutes = require('./routes/category')
 const categoryRouter = require('./routes/category'); // Adjust the path as necessary
-
-
-
+const complaintRoutes = require('./routes/complaints')
 
 
 const mongoose = require('mongoose')
@@ -50,6 +47,7 @@ app.use('/api/historicalPlaces', historicalPlaceRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
+app.use('./routes/complaints', complaintRoutes)
 
 
 // connect to db

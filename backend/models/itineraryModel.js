@@ -95,7 +95,15 @@ const itinerarySchema = new schema({
     type: schema.Types.ObjectId,
     ref: 'Tag', // Reference to the Tag model
     required: false // Make this optional if you want
-  }]
+  }],
+  isActive: {
+    type: Boolean,
+    default : true
+  },
+  isAppropriate : {
+    type : Boolean,
+    deafult : true
+  },
 }, { timestamps: true });
 
 const Itinerary = mongoose.model('itinerary', itinerarySchema);

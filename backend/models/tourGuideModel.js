@@ -29,6 +29,28 @@ const tourGuideSchema = new schema({
         type: Date,  // Add the DOB field as a Date type
         required: true // You can decide if you want it to be required or not
       },
+    isAccepted: {
+        type: String,
+        required: true
+      },
+      photo: {
+        type : String, // url of a photo
+        required : true
+    },
+      IdDocument: {
+        type : String, // url of a photo
+        required : true
+      },
+      certificatesDocument:[ 
+      {
+        type : String,
+        required : true
+      }
+    ],
+    acceptedTermsAndConditions :{
+      type : Boolean,
+      default : false
+    },
     yearsOfExperience: {
         type: Number,  // Add the DOB field as a Date type
         required: true // You can decide if you want it to be required or not
@@ -47,7 +69,7 @@ const tourGuideSchema = new schema({
       {
         type: schema.Types.ObjectId,
         ref: 'activity' 
-      }
+      },
       ]
 
 }, { timestamps : true })

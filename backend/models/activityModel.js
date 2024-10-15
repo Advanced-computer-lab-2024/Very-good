@@ -48,10 +48,14 @@ const activitySchema = new schema({
         required: true
     },
     ratings: {
-        type: Number, // Assuming ratings are out of 5
+        type: Number,
         min: 0,
         max: 5,
-        default: 0 // Default rating if not provided
+        default: 5
+    },
+      numberOfRatings : {
+        type : Number,
+        default : 1
     },
     tags: {
         type: [tagSchema], // Embed array of tags
@@ -76,7 +80,20 @@ const activitySchema = new schema({
     bookingOpen: {
         type: Boolean, // Boolean to indicate if booking is open
         default: true // Default value is true (open)
-    }
+    },
+    commentsArray: [
+        {
+          comment: {
+            type: String,
+            required: true
+          },
+          touristId: {
+            type: schema.Types.ObjectId,
+            ref: 'Tourist',  
+            required: true
+          }
+        }
+      ]
 
 }, { timestamps : true})
 activitySchema.pre('validate', function (next) {
