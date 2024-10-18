@@ -1,6 +1,7 @@
 const express = require('express');
 const { createAdmin ,getAdmins} = require('../controllers/adminController');
 const { createTag, getTags, updateTag, deleteTag }= require('../controllers/tagController');
+const { flagItinerary } = require('../controllers/adminController'); // Import the flagging function
 
 const router = express.Router();
 
@@ -12,6 +13,8 @@ router.get('/getadmintag', getTags); // Get all tags
 router.post('/createadmintag', createTag); // Create a new tag
 router.patch('/updateadmintag/:id', updateTag); // Update an existing tag by ID
 router.delete('/deleteadmintag/:id', deleteTag); // Delete a tag by ID
+
+router.put('/itinerary/:itineraryId/flag', flagItinerary); // Flag/unflag itinerary
 
 
 

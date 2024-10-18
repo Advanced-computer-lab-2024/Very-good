@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import '../styles/global.css'; // Ensure to have your CSS file
-import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner } from '../RequestSendingMethods'; // Import the addAdmin and addTourismGoverner methods
+import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner,fetchAllItineraries } from '../RequestSendingMethods'; // Import the addAdmin and addTourismGoverner methods
 import AdminDelete from './AdminDelete'; // Import the new AdminDelete component
 import AdminCategory from './AdminCategory';
 import Search from './Search'
 import FilterProductByPrice from './FilterProductByPrice'
 import AdminCreateTag from './AdminCreateTag'
+
 const AdminPage = () => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -14,6 +15,8 @@ const AdminPage = () => {
         { id: 4, title: 'Delete Admin' }, // New activity for deleting admin
         {id :5 ,title : 'FilterProductsByPrice' },
         {id :6,title :'Create_Tag'},
+        { id: 7, title: 'View Itineraries' }
+
     ]);
 
     const [tags, setTags] = useState([]); // State to hold the tags
@@ -27,6 +30,8 @@ const AdminPage = () => {
     const [showSearchPage,setShowSearchPage]=useState(false);
     const [showProductFilterPage,setShowProductFilterPage]=useState(false);
     const [showCreateTagPage,setshowCreateTagPage]=useState(false);
+    const [itineraries, setItineraries] = useState([]);
+
     // Action listeners
     const handleCreateTag=()=>{
         setshowCreateTagPage(true);
@@ -151,6 +156,48 @@ const AdminPage = () => {
         // e.g., console.log('New Button Clicked');
         setShowSearchPage(true);
     };
+    const handleViewItineraries = async () => {
+        const fetchedItineraries = await fetchAllItineraries();
+        if (fetchedItineraries) {
+            setItineraries(fetchedItineraries); // Update state
+            console.log('Retrieved itineraries:', fetchedItineraries);
+        } else {
+            console.error('Failed to retrieve itineraries.');
+        }
+    };
+    const handleFlagItinerary = async (id, isFlagged) => {
+        if (isFlagged) {
+            console.log(`Itinerary ${id} is already flagged.`);
+            return; // Prevent re-flagging if already flagged
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:4000/api/itineraries/${id}/flag`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to flag itinerary');
+            }
+    
+            const data = await response.json();
+            console.log('Itinerary flagged:', data);
+    
+            // Update state to reflect that the itinerary is flagged
+            setItineraries(prevItineraries =>
+                prevItineraries.map(itinerary =>
+                    itinerary._id === id ? { ...itinerary, flagged: !itinerary.flagged } : itinerary // Toggle the flag status in the state
+                )
+            );
+        } catch (error) {
+            console.error('Error flagging itinerary:', error);
+        }
+    };
+    
+    
 
     return (
         <div>
@@ -191,6 +238,11 @@ const AdminPage = () => {
                                         <button className="view-button" onClick={handleNewButtonClick}>Search</button>
                                     </>
                                 )}
+                                {activity.title === 'View Itineraries' && (
+                                        <button className="view-button" onClick={handleViewItineraries}>View Itineraries</button>
+                                )}
+
+                                
                             </div>
                         ))}
                     </div>
@@ -211,6 +263,30 @@ const AdminPage = () => {
                             <p>No tags available.</p>
                         )}
                     </div>
+                    // Inside your return statement in AdminPage component
+
+                    <div className="itineraries-container">
+    {itineraries.length > 0 ? (
+        itineraries.map(itinerary => (
+            <div key={itinerary._id} className="itinerary-card">
+                <h4 className="itinerary-title">
+                    {itinerary.title}
+                    {itinerary.flagged && <span style={{ color: 'red', marginLeft: '5px' }}>Flagged</span>}
+                </h4>
+                <button 
+    className="flag-button" 
+    onClick={() => handleFlagItinerary(itinerary._id, itinerary.flagged)}>
+    {itinerary.flagged ? 'Already Flagged' : 'Flag Itinerary'}
+</button>
+
+            </div>
+        ))
+    ) : (
+        <p>No itineraries available.</p>
+    )}
+</div>
+
+
 
                     {/* Editing Form */}
                     {editingTag && (

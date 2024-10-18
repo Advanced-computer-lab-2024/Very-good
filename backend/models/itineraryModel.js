@@ -104,6 +104,10 @@ const itinerarySchema = new schema({
     type : Boolean,
     deafult : true
   },
+  flagged: {
+     type: Boolean, default: false 
+    },
+
 }, { timestamps: true });
 
 const Itinerary = mongoose.model('itinerary', itinerarySchema);

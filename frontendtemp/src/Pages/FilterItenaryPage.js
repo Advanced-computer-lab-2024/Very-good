@@ -11,25 +11,28 @@ const FilterItenaryPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Create the JSON object for the request
     const filterCriteria = { 
-      price: budget ? parseFloat(budget) : null, // Convert to number if entered
-      date: date || null, // Single date
-      tag: tag || null,  // Tag for filtering itineraries
-      language: language || null, // Include the language field
+      price: budget ? parseFloat(budget) : null,
+      date: date || null,
+      tag: tag || null,
+      language: language || null,
     };
-
+  
     console.log("in handle submit");
-
+  
     // Call the request sending method
     const filteredItineraries = await filterItineraries(filterCriteria);
     console.log("filteredItineraries :", filteredItineraries);
-
+  
+    // Filter out flagged itineraries
+    const validItineraries = filteredItineraries.filter(itinerary => !itinerary.flagged);
+    
     // Update the state with the filtered itineraries
-    setItineraries(filteredItineraries || []);
+    setItineraries(validItineraries || []);
   };
-
+  
   return (
     <div className="filter-itinerary-page">
       <h1>Welcome to the Filter Itinerary Page!</h1>

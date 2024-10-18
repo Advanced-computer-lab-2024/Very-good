@@ -211,6 +211,31 @@ const registerAdvertiser = async (advertiserData) => {
 
 
 
+  const fetchAllItineraries = async () => {
+    try {
+        const response = await fetch('http://localhost:4000/api/itineraries', {
+            method: 'GET', // Use GET method to retrieve data
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Itineraries retrieved successfully:', data);
+            return data.data; // Assuming your backend returns an object with a 'data' property containing the itineraries
+        } else {
+            console.error('Error retrieving itineraries:', data.message);
+            return null; // Return null in case of error
+        }
+    } catch (error) {
+        console.error('Network error while fetching itineraries:', error);
+        return null; // Return null in case of a network error
+    }
+};
+
+
 
 
 
@@ -486,5 +511,5 @@ const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
 };
 
 // Export the new method along with others
-export { registerTourist, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail};
+export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail };
