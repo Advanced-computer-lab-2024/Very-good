@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import ProductSort from '../Components/SortProductRate.js';
-import FilterActivitiesPage from './FilterActivitiesPage'; // Import the new component
+import FilterActivitiesPage from './FilterActivitiesPage';
 import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
@@ -16,7 +16,8 @@ const TouristPage = ({ email }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
-  const [showFilterPage, setShowFilterPage] = useState(false); // New state to manage page rendering
+  const [showProfileInfo, setShowProfileInfo] = useState(false); // New state to toggle profile info visibility
+  const [showFilterPage, setShowFilterPage] = useState(false);
   const [ShowItenaryPage, setShowFilterItenaryPage] = useState(false);
   const [showHistoricalPlace, setShowFilterHistoricalPage] = useState(false);
   const [showProductFilterPage, setShowProductFilterPage] = useState(false);
@@ -26,10 +27,9 @@ const TouristPage = ({ email }) => {
       const response = await fetchTouristByEmail({ email });
       if (response) {
         setTouristData(response.data);
-        setEditedData(response.data); // Initialize editable data with fetched data
+        setEditedData(response.data);
       }
     };
-
     getTouristData();
   }, [email]);
 
@@ -44,80 +44,37 @@ const TouristPage = ({ email }) => {
 
   const handleUpdateProfile = () => {
     setIsEditing(!isEditing);
+    setShowProfileInfo(!showProfileInfo); // Toggle profile info
+
     if (isEditing) {
-      // Save a copy of the old email if it was changed
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
       }
-      
-      // Update touristData with the new editedData so the frontend reflects the changes
       setTouristData(editedData);
-
-      // Perform your function call to save the changes here, excluding wallet
-      console.log('Changes saved:', editedData, oldEmail);
       updateTouristByEmail(oldEmail, editedData);
     }
   };
 
-  // Function to handle rendering the filter activities page
-  const handleFilterActivitiesClick = () => {
-    setShowFilterPage(true);
-  };
+  const handleFilterActivitiesClick = () => setShowFilterPage(true);
+  const handleBackToTouristPage = () => setShowFilterPage(false);
+  const handleFilterItenariesClick = () => setShowFilterItenaryPage(true);
+  const handleBackToTouristPageFromItenaryFilterPage = () => setShowFilterItenaryPage(false);
+  const handleFilterHistoricalPlacesClick = () => setShowFilterHistoricalPage(true);
+  const handleBackToTouristPageFromFilterHistoricalPlacesPage = () => setShowFilterHistoricalPage(false);
+  const handleFilterProductPageClick = () => setShowProductFilterPage(true);
+  const handleBackToTouristPageFromFilterProductPage = () => setShowProductFilterPage(false);
 
-  // Function to handle back button click
-  const handleBackToTouristPage = () => {
-    setShowFilterPage(false);
-  };
-
-  // Render the appropriate content based on the state
-  if (showFilterPage) {
-    return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
-  }
-
-  const handleFilterItenariesClick = () => {
-    setShowFilterItenaryPage(true);
-  }
-
-  const handleBackToTouristPageFromItenaryFilterPage = () => {
-    setShowFilterItenaryPage(false);
-  }
-  
-  if (ShowItenaryPage) {
-    return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
-  }
-
-  const handleFilterHistoricalPlacesClick = () => {
-    setShowFilterHistoricalPage(true);
-  }
-
-  const handleBackToTouristPageFromFilterHistoricalPlacesPage = () => {
-    setShowFilterHistoricalPage(false);
-  }
-  
-  if (showHistoricalPlace) {
-    return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
-  }
-
-  const handleFilterProductPageClick = () => {
-    setShowProductFilterPage(true);
-  }
-  
-  const handleBackToTouristPageFromFilterProductPage = () => {
-    setShowProductFilterPage(false);
-  }
-
-  if (showProductFilterPage) {
-    return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
-  }
+  if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
+  if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
+  if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
+  if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
 
   return (
     <div className="tourist-page">
-      {/* Sidebar Toggle Button */}
       <button className="toggle-btn" onClick={toggleSidebar}>
         {isSidebarOpen ? 'Close' : 'Menu'}
       </button>
 
-      {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
           <h3>Quick Links</h3>
@@ -128,93 +85,95 @@ const TouristPage = ({ email }) => {
         </div>
       </div>
 
-      {/* Main Container */}
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
         <header className="header">
           <h1>Welcome, Tourist!</h1>
         </header>
 
-        <div className="profile">
-          <h2 className="form-header">Your Profile</h2>
-          <div className="profile-info">
-            <label>Name:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="name"
-                value={editedData?.name || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{touristData?.name || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label>Email:</label>
-            {isEditing ? (
-              <input
-                type="email"
-                name="email"
-                value={editedData?.email || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{touristData?.email || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label>Mobile:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="mobile"
-                value={editedData?.mobile || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{touristData?.mobile || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label>Nationality:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="nationality"
-                value={editedData?.nationality || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{touristData?.nationality || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label>Job:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="job"
-                value={editedData?.job || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{touristData?.job || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label>Date of Birth:</label>
-            <p>{touristData?.dob || 'NA'}</p> {/* Assuming you meant 'dob' here */}
-          </div>
-          <div className="profile-info">
-            <label>Wallet Balance:</label>
-            <p>${touristData?.wallet || 'NA'}</p> {/* Display wallet balance but do not allow editing */}
-          </div>
+        <button className="btn" onClick={handleUpdateProfile}>
+          {isEditing ? 'Save Changes' : 'Update Profile'}
+        </button>
 
-          <button className="btn" onClick={handleUpdateProfile}>
-            {isEditing ? 'Save Changes' : 'Update Profile'}
-          </button>
-        </div>
-        <ActivityHistoricalList /> 
+        {showProfileInfo && (
+          <div className="profile">
+            <h2 className="form-header">Your Profile</h2>
+            <div className="profile-info">
+              <label>Name:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={editedData?.name || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.name || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
+              <label>Email:</label>
+              {isEditing ? (
+                <input
+                  type="email"
+                  name="email"
+                  value={editedData?.email || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.email || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
+              <label>Mobile:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="mobile"
+                  value={editedData?.mobile || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.mobile || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
+              <label>Nationality:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="nationality"
+                  value={editedData?.nationality || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.nationality || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
+              <label>Job:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="job"
+                  value={editedData?.job || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.job || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
+              <label>Date of Birth:</label>
+              <p>{touristData?.dob || 'NA'}</p>
+            </div>
+            <div className="profile-info">
+              <label>Wallet Balance:</label>
+              <p>${touristData?.wallet || 'NA'}</p>
+            </div>
+          </div>
+        )}
+
+        <ActivityHistoricalList />
         <ActivityItinerarySort />
         <ProductSort />
         <div className="itinerary-layout">
@@ -228,6 +187,7 @@ const TouristPage = ({ email }) => {
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
+
       <MuseumSearch />
     </div>
   );

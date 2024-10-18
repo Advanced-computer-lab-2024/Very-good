@@ -203,11 +203,27 @@ const filterItinerariesYassin = async (req, res) => {
 
 
 
+const flagItinerary = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const itinerary = await Itinerary.findById(id);
+        if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
+
+        itinerary.flagged = !itinerary.flagged; // Toggle flag status
+        await itinerary.save();
+
+        return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 
 
 module.exports = {
     createItinerary,
     getItineraries,
     filterItineraries,
-    searchforitinerary,filterItinerariesYassin
+    searchforitinerary,filterItinerariesYassin,
+    flagItinerary
 };

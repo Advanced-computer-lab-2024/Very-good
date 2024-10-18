@@ -47,7 +47,9 @@ app.use('/api/historicalPlaces', historicalPlaceRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
-app.use('./routes/complaints', complaintRoutes)
+// app.use('./routes/complaints', complaintRoutes)
+app.use('/api/complaints', complaintRoutes)
+
 
 
 // connect to db

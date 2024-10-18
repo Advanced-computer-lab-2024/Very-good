@@ -19,6 +19,22 @@ const ActivityItinerarySort = () => {
     const [showMappings2, setShowMappings2] = useState(false);  // Toggle for activities2
     const [showItineraries, setShowItineraries] = useState(false);  // Toggle for itineraries1
     const [showItineraries2, setShowItineraries2] = useState(false);  // Toggle for itineraries2
+    const [currency, setCurrency] = useState('EGP'); // Default currency
+
+const handleCurrencyChange = (e) => {
+    setCurrency(e.target.value);
+};
+
+const currencyRates = {
+    EGP: 1,    // Base currency
+    USD: 0.032, // Example conversion rate
+    EUR: 0.029, // Example conversion rate
+    // Add more rates as needed
+};
+
+const convertPrice = (price) => {
+    return (price * currencyRates[currency]).toFixed(2); // Convert and format price
+};
 
     useEffect(() => {
         const getActivities = async () => {
@@ -73,13 +89,18 @@ const ActivityItinerarySort = () => {
             try {
                 const it1 = await fetchItinerariesNoId();
                 console.log("raw fetch1:", it1);
-
+        
                 if (it1 && it1.data) {
-                    const sortedIt1 = it1.data.sort((a, b) => {
+                    // Filter out flagged itineraries
+                    const filteredItineraries = it1.data.filter(itinerary => !itinerary.flagged);
+                    
+                    // Sort remaining itineraries by price in ascending order
+                    const sortedIt1 = filteredItineraries.sort((a, b) => {
                         const priceA = a.price;
                         const priceB = b.price;
-                        return priceA - priceB;  // Sort by price in ascending order
+                        return priceA - priceB;  
                     });
+        
                     setItineraries(sortedIt1);  // Update state with sorted itineraries
                     console.log('sorted itineraries by price:', sortedIt1);
                 } else {
@@ -89,33 +110,40 @@ const ActivityItinerarySort = () => {
                 console.error("Error fetching itineraries sorted by price:", err.message);
                 setErrorItineraries(err.message);
             } finally {
-                setLoadingItineraries(false);  // Stop loading for itineraries1
+                setLoadingItineraries(false);  // Stop loading for itineraries
             }
         };
+        
 
         const getItineraries2 = async () => {
             try {
                 const it2 = await fetchItinerariesNoId();
                 console.log("raw fetch2:", it2);
-
+        
                 if (it2 && it2.data) {
-                    const sortedIt2 = it2.data.sort((a, b) => {
+                    // Filter out flagged itineraries
+                    const filteredItineraries = it2.data.filter(itinerary => !itinerary.flagged);
+                    
+                    // Sort remaining itineraries by ratings in ascending order
+                    const sortedIt2 = filteredItineraries.sort((a, b) => {
                         const rateA = a.ratings;
-                        const rateB = a.ratings;
-                        return rateA - rateB;  // Sort by start date in ascending order
+                        const rateB = b.ratings;
+                        return rateA - rateB;  
                     });
+        
                     setItineraries2(sortedIt2);  // Update state with sorted itineraries2
-                    console.log('sorted itineraries by start date:', sortedIt2);
+                    console.log('sorted itineraries by ratings:', sortedIt2);
                 } else {
-                    throw new Error("No data found in the response for itineraries sorted by start date.");
+                    throw new Error("No data found in the response for itineraries sorted by ratings.");
                 }
             } catch (err) {
-                console.error("Error fetching itineraries sorted by start date:", err.message);
+                console.error("Error fetching itineraries sorted by ratings:", err.message);
                 setErrorItineraries2(err.message);
             } finally {
                 setLoadingItineraries2(false);  // Stop loading for itineraries2
             }
         };
+        
 
         getActivities();  // Fetch first set of activities (sorted by price)
         getActivities2();  // Fetch second set of activities (sorted by ratings)
@@ -134,7 +162,7 @@ const ActivityItinerarySort = () => {
                 <h3>{itinerary.title}</h3>
                 <p>{itinerary.description}</p>
                 <p><strong>Language:</strong> {itinerary.language}</p>
-                <p><strong>Price:</strong> {itinerary.price} EGP</p>
+                <p><strong>Price:</strong> {convertPrice(itinerary.price)} {currency}</p>
                 <p><strong>Rating:</strong> {itinerary.ratings}</p>
     
                 <div>
@@ -190,7 +218,16 @@ const ActivityItinerarySort = () => {
     
     return (
         <div className="container">
-            <h1>Sort Activities and Itineraries</h1>
+<h1>Sort Activities and Itineraries</h1>
+<label>
+    Choose Currency:
+    <select value={currency} onChange={handleCurrencyChange}>
+        <option value="EGP">EGP</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        {/* Add more currencies as needed */}
+    </select>
+</label>
             <h2>Activities Sorted by Price</h2>
             {/* First Toggle Button: Sort by Activity Price */}
             <button onClick={toggleMappings}>
@@ -211,8 +248,8 @@ const ActivityItinerarySort = () => {
                                 <h3>{activity.name}</h3>
                                 <p>{activity.description}</p>
                                 <p>Date: {activity.date}</p>
-                                <p>Ticket Price: {activity.price} EGP </p>
-                            </div>
+                                <p>Ticket Price: {convertPrice(activity.price)} {currency}</p>
+                                </div>
                         ))
                     )}
                 </>
