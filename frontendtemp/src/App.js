@@ -8,7 +8,7 @@ import TourismGovernerPage from './Pages/TourismGovernerPage';
 import TourGuideHomePage from './Pages/tourGuideHomePage';
 import SellerPage from './Pages/SellerPage';
 import GuestPage from './Pages/GuestPage';
-import { registerTourist, createTourGuideRequest, registerSeller, registerAdvertiser } from './RequestSendingMethods';
+import { registerTourist, createTourGuideRequest, registerSeller, registerAdvertiser , addTourismGoverner } from './RequestSendingMethods';
 import { LoadScript } from '@react-google-maps/api';
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
   const [emailagain, setEmail] = useState(''); // Holds the tourist email
   const [emailtourguide, setEmailTourGuide] = useState(''); // Holds the tour guide email
   const [emailofseller, setEmailOfSeller] = useState(''); // Holds seller email
+  const [emailoftourism, setEmailTourism] = useState(''); // Holds seller email
   const [emailAdvertiser, setEmailOfAdvertiser] = useState(''); // Holds advertiser email
   const navigate = useNavigate(); // To programmatically navigate
 
@@ -66,15 +67,25 @@ function App() {
     }
 
     if (role === 'tourismGovernor') {
-      navigate('/tourismGovernor');
-    }
-
+      let tourismData = {
+          username: formElements.username.value,  // Capture username from the form
+          name: formElements.username.value, // This may need to be adjusted based on your input structure
+          email: formElements.email.value,
+          password: formElements.password.value,
+          mobile: formElements.mobile.value,
+          nationality: formElements.nationality.value,
+          dob: formElements.dob.value,
+      };
+      await addTourismGoverner(tourismData);
+      navigate('/tourismGoverner');
+  }
+  
     if (role === 'seller') {
       let sellerData = {
         name: formElements.username.value,
         email: formElements.email.value,
         password: formElements.password.value,
-        description: formElements.description.value,
+        dob: formElements.dob.value,
       };
       await registerSeller(sellerData);
       navigate('/seller');
@@ -242,8 +253,14 @@ function App() {
                           <label htmlFor="username">Username:</label>
                           <input type="text" id="username" name="username" required />
 
+                          <label htmlFor="dob">Date of Birth:</label>
+                          <input type="date" id="dob" name="dob" required />
+
                           <label htmlFor="email">Email:</label>
-                          <input type="email" id="email" name="email" required />
+                          <input type="email" id="email" name="email" required onChange={(e) => setEmailTourism(e.target.value)} />
+
+                          <label htmlFor="mobile">Mobile:</label>
+                          <input type="tel" id="mobile" name="mobile" required />
 
                           <label htmlFor="password">Password:</label>
                           <input type="password" id="password" name="password" required />
@@ -305,7 +322,7 @@ function App() {
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/advertiser" element={<LoadScript googleMapsApiKey='AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA'> <AdvertiserPage email={emailAdvertiser}/> </LoadScript>} />
-          <Route path="/tourismGovernor" element={<TourismGovernerPage />} />
+          <Route path="/tourismGoverner" element={<TourismGovernerPage  email={emailoftourism}/>} />
           <Route path="/tourGuide" element={<TourGuideHomePage email={emailtourguide}/>} />
           <Route path="/seller" element={<SellerPage email={emailofseller}/>} />
           <Route path="/guest" element={<GuestPage />} />

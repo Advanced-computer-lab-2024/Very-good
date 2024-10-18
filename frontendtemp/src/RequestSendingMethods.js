@@ -104,6 +104,7 @@ const registerTourist = async (touristData) => {
         console.error('Error:', error);
         throw error; // propagate the error to be handled where this function is called
     }
+    
 };
 
 //Admin regest
@@ -512,4 +513,4 @@ const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
 
 // Export the new method along with others
 export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail };
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,registerGovernor };

@@ -9,6 +9,7 @@ import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
+import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
 
 const TouristPage = ({ email }) => {
   const [touristData, setTouristData] = useState(null);
@@ -16,11 +17,28 @@ const TouristPage = ({ email }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
-  const [showProfileInfo, setShowProfileInfo] = useState(false); // New state to toggle profile info visibility
+  const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [showFilterPage, setShowFilterPage] = useState(false);
   const [ShowItenaryPage, setShowFilterItenaryPage] = useState(false);
   const [showHistoricalPlace, setShowFilterHistoricalPage] = useState(false);
   const [showProductFilterPage, setShowProductFilterPage] = useState(false);
+  const [activities, setActivities] = useState([]); // To store activities for the selected category
+  const [categories, setCategories] = useState([]); // Store all the categories
+  const [loadingActivities, setLoadingActivities] = useState(false);
+  const [activityError, setActivityError] = useState(null);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const fetchedCategories = await fetchCategories(); // Fetch all categories
+        setCategories(fetchedCategories); // Set the categories in state
+      } catch (error) {
+        setActivityError('Error fetching categories');
+      }
+    };
+
+    getCategories();
+  }, []);
 
   useEffect(() => {
     const getTouristData = async () => {
@@ -55,6 +73,20 @@ const TouristPage = ({ email }) => {
     }
   };
 
+  const handleCategoryClick = async (categoryName) => {
+    setLoadingActivities(true); // Show loading indicator
+    setActivityError(null); // Reset error
+
+    try {
+      const activityResults = await searchactivity({ category: categoryName }); // Fetch activities by category
+      setActivities(activityResults); // Set the activities to display
+    } catch (error) {
+      setActivityError('Error fetching activities for this category');
+    } finally {
+      setLoadingActivities(false); // Stop loading
+    }
+  };
+
   const handleFilterActivitiesClick = () => setShowFilterPage(true);
   const handleBackToTouristPage = () => setShowFilterPage(false);
   const handleFilterItenariesClick = () => setShowFilterItenaryPage(true);
@@ -74,7 +106,7 @@ const TouristPage = ({ email }) => {
       <button className="toggle-btn" onClick={toggleSidebar}>
         {isSidebarOpen ? 'Close' : 'Menu'}
       </button>
-
+  
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
           <h3>Quick Links</h3>
@@ -84,16 +116,52 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
         </div>
       </div>
-
+  
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
         <header className="header">
           <h1>Welcome, Tourist!</h1>
         </header>
-
+  
         <button className="btn" onClick={handleUpdateProfile}>
           {isEditing ? 'Save Changes' : 'Update Profile'}
         </button>
 
+        {/* Display Categories as Buttons */}
+        <div className="category-buttons">
+          <h2>Choose a Category:</h2>
+          {categories.length > 0 ? (
+            categories.map((category, index) => (
+              <button
+                key={index}
+                onClick={() => handleCategoryClick(category.name)} // Use category name here
+                className="category-btn"
+              >
+                {category.name}
+              </button>
+            ))
+          ) : (
+            <p>No categories available.</p>
+          )}
+        </div>
+  
+        {/* Loading Indicator */}
+        {loadingActivities && <p>Loading activities...</p>}
+  
+        {/* Error Message */}
+        {activityError && <p className="error">{activityError}</p>}
+  
+        {/* Display Selected Activities */}
+        {activities.length > 0 && (
+          <div className="activities-list">
+            <h2>Available Activities:</h2>
+            <ul>
+              {activities.map((activity, index) => (
+                <li key={index}>{activity.name}</li> // Assuming activity has a 'name' field
+              ))}
+            </ul>
+          </div>
+        )}
+  
         {showProfileInfo && (
           <div className="profile">
             <h2 className="form-header">Your Profile</h2>
@@ -172,7 +240,7 @@ const TouristPage = ({ email }) => {
             </div>
           </div>
         )}
-
+  
         <ActivityHistoricalList />
         <ActivityItinerarySort />
         <ProductSort />
@@ -182,12 +250,12 @@ const TouristPage = ({ email }) => {
             View Full Itinerary
           </button>
         </div>
-
+  
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
-
+  
       <MuseumSearch />
     </div>
   );
