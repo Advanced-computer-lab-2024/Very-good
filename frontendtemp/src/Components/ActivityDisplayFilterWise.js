@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
 import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
+import ShareComponent from './shareComponent';
 
 const ActivityDisplayFilterWise = ({ activity }) => {
   const [categoryName, setCategoryName] = useState('');
@@ -48,6 +49,7 @@ const ActivityDisplayFilterWise = ({ activity }) => {
           <span key={index} className="activity-tag">{tag.name}</span>
         ))}
       </div>
+      <ShareComponent type="activity" id={activity._id} />
     </div>
   );
 };

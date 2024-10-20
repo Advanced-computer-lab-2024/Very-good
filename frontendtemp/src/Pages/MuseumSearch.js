@@ -6,6 +6,8 @@ import { searchforitinerary } from '../Services/itineraryServices';
 import {searchbyname} from '../Services/productServices';
 import {getavailableProducts} from '../Services/productServices';
 import ItineraryDisplay2 from '../Components/ItineraryDisplay2';
+import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise';
+import ItineraryDisplayFilterWise from '../Components/ItineraryDisplayFilterWise';
 
 
 const MuseumSearch = () => {
@@ -163,22 +165,7 @@ const MuseumSearch = () => {
             <div>
                 {activities.length > 0 ? (
                     activities.map((activity) => (
-                        <div key={activity._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                            <h3>{activity.name}</h3>
-                            <p><strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}</p>
-                            <p><strong>Duration:</strong> {activity.duration} hours</p>
-                            <p><strong>Location:</strong> Lat {activity.location.lat}, Lng {activity.location.lng}</p>
-                            <p><strong>Price:</strong> ${activity.price}</p>
-                            <p><strong>Time:</strong> {activity.time.hours}:{activity.time.minutes} (24-hour format)</p>
-                            <p><strong>Category:</strong> {activity.category}</p>
-                            <p><strong>Ratings:</strong> {activity.ratings}/5</p>
-                            <p><strong>Tags:</strong> {activity.tags.map(tag => tag.name).join(', ')}</p>
-                            <p><strong>Special Discount:</strong> {activity.specialDiscount}%</p>
-                            <p><strong>Booking Open:</strong> {activity.bookingOpen ? 'Yes' : 'No'}</p>
-                            {activity.tourGuideId && <p><strong>Tour Guide:</strong> {activity.tourGuideId.name}</p>}
-                            {activity.advertiserId && <p><strong>Advertiser:</strong> {activity.advertiserId.name}</p>}
-                            <p><strong>Tourists:</strong> {activity.touristIds.length > 0 ? activity.touristIds.map(tourist => tourist.name).join(', ') : 'None'}</p>
-                        </div>
+                        <ActivityDisplayFilterWise activity={activity}/>
                     ))
                 ) : (
                     !loadingActivities && <p>No activities found.</p>
@@ -268,7 +255,7 @@ const MuseumSearch = () => {
                     itineraries.map((itinerary) => (
                         <div key={itinerary._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
                             <h3>{itinerary.title}</h3>
-                            <ItineraryDisplay2 itinerary={itinerary}/>
+                            <ItineraryDisplayFilterWise itinerary={itinerary}/>
                         </div>
                     ))
                 ) : (

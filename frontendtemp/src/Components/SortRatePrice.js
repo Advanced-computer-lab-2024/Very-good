@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
+import ShareComponent from './shareComponent';
+import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
+import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
 
 const ActivityItinerarySort = () => {
     const [activities, setActivities] = useState([]); 
@@ -156,64 +159,84 @@ const convertPrice = (price) => {
     const toggleMappings2 = () => setShowMappings2(prevState => !prevState);
     const toggleItineraries = () => setShowItineraries(prevState => !prevState);
     const toggleItineraries2 = () => setShowItineraries2(prevState => !prevState);
+
+    const ActivityCard = ({ activity }) => {
+        
+        return (
+          <div className="activity-card">
+            <h2 className="activity-title">{activity.name}</h2>
+            <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
+            <p className="activity-price">Price: {convertPrice(activity.price)} {currency}</p>
+            <p className="activity-duration">Duration: {activity.duration} minutes</p>
+            <p className="activity-ratings">Ratings: {activity.ratings}/5</p>
+            <p className="activity-special-discount">Special Discount: {activity.specialDiscount}%</p>
+            <p className="activity-booking-status">Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+      
+            <div className="tags-container">
+              {activity.tags.map((tag, index) => (
+                <span key={index} className="activity-tag">{tag.name}</span>
+              ))}
+            </div>
+            <ShareComponent type="activity" id={activity._id} />
+          </div>
+        );
+      };
+      
+      
+
     const ItineraryCard = ({ itinerary }) => {
         return (
-            <div className="itinerary-card">
-                <h3>{itinerary.title}</h3>
-                <p>{itinerary.description}</p>
-                <p><strong>Language:</strong> {itinerary.language}</p>
-                <p><strong>Price:</strong> {convertPrice(itinerary.price)} {currency}</p>
-                <p><strong>Rating:</strong> {itinerary.ratings}</p>
-    
-                <div>
-                    <strong>Locations to Visit:</strong>
-                    {itinerary.locationsToVisit?.length > 0 ? (
-                        itinerary.locationsToVisit.map(location => (
-                            <div key={location._id}>
-                                <p><strong>Location Name:</strong> {location.name}</p>
-                                <p><strong>Address:</strong> {location.address}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No locations to visit listed.</p>
-                    )}
-                </div>
-    
-                <div>
-                    <strong>Available Dates:</strong>
-                    {itinerary.availableDates?.length > 0 ? (
-                        itinerary.availableDates.map(date => (
-                            <p key={date}>{new Date(date).toLocaleDateString()}</p>
-                        ))
-                    ) : (
-                        <p>No available dates listed.</p>
-                    )}
-                </div>
-    
-                <div>
-                    <strong>Available Times:</strong>
-                    {itinerary.availableTimes?.length > 0 ? (
-                        itinerary.availableTimes.map(time => (
-                            <p key={time}>{time}</p>
-                        ))
-                    ) : (
-                        <p>No available times listed.</p>
-                    )}
-                </div>
-    
-                <p><strong>Accessibility:</strong> {itinerary.accessibility ? "Yes" : "No"}</p>
-                <p><strong>Pick-up Location:</strong> {itinerary.pickUpLocation}</p>
-                <p><strong>Drop-off Location:</strong> {itinerary.dropOffLocation}</p>
-    
-                <div>
-                    <strong>Tour Guide Information:</strong>
-                    <p><strong>Name:</strong> {itinerary.tourGuideId?.name}</p>
-                    <p><strong>Email:</strong> {itinerary.tourGuideId?.email}</p>
-                    {/* <p><strong>Years of Experience:</strong> {itinerary.tourGuideId?.yearsOfExperience}</p>
-                    <p><strong>Previous Job:</strong> {itinerary.tourGuideId?.previousJob}</p> */}
-                </div>
-            </div>
-        );
+            <div className="activity-card">
+              <h2 className="itinerary-title">{itinerary.title}</h2>
+              <h4 className="itinerary-description">Description: </h4><p>{itinerary.description}</p>
+              <h4 className="itinerary-price">Total Price:</h4><p> Price: {convertPrice(itinerary.price)} {currency}</p>
+              <h4 className="itinerary-language">Language:</h4><p> {itinerary.language}</p>
+              <h4 className="itinerary-pickup">Pick Up Location:</h4><p> {itinerary.pickUpLocation}</p>
+              <h4 className="itinerary-dropoff">Drop Off Location: </h4><p>{itinerary.dropOffLocation}</p>
+        
+              <h3>Activities</h3>
+              <div className="activities-list">
+                {itinerary.activities.map((activity, index) => (
+                  <div key={index} className="activity-item">
+                    <h4>{activity.title} :</h4>
+                    <p>Duration: {activity.duration} minutes</p>
+                    <p>Price: ${activity.price}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Locations to visit :</h3>
+              <div className="activities-list">
+                {itinerary.locationsToVisit.map((location, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {location.name}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Available Dates :</h3>
+              <div className="activities-list">
+                {itinerary.availableDates.map((date, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {date}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Available Times :</h3>
+              <div className="activities-list">
+                {itinerary.availableTimes.map((time, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {time}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <div className="itinerary-buttons">
+              </div>
+              <ShareComponent type="itinerary" id={itinerary._id} />
+              </div>
+          );
     };
     
     return (
@@ -244,12 +267,7 @@ const convertPrice = (price) => {
                         <p>No activities available sorted by price.</p>
                     ) : (
                         activities.map(activity => (
-                            <div key={activity._id} className="activity-card">
-                                <h3>{activity.name}</h3>
-                                <p>{activity.description}</p>
-                                <p>Date: {activity.date}</p>
-                                <p>Ticket Price: {convertPrice(activity.price)} {currency}</p>
-                                </div>
+                            <ActivityCard activity = {activity}/> 
                         ))
                     )}
                 </>
@@ -270,12 +288,7 @@ const convertPrice = (price) => {
                         <p>No activities available sorted by ratings.</p>
                     ) : (
                         activities2.map(activity => (
-                            <div key={activity._id} className="activity-card">
-                                <h3>{activity.name}</h3>
-                                <p>{activity.description}</p>
-                                <p>Date: {activity.date}</p>
-                                <p>Ratings: {activity.ratings}</p>
-                            </div>
+                          <ActivityCard activity = {activity}/> 
                         ))
                     )}
                 </>

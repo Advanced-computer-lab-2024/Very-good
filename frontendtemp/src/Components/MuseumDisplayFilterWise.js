@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMuseumTags } from '../Services/museumServices'; 
 import './ActivityDisplay.css'; // Reuse the same CSS for consistency
+import ShareComponent from './shareComponent';
+
 
 const MuseumDisplayFilterWise = ({ museum }) => {
   const [tags, setTags] = useState([]); // State to store fetched tags
@@ -59,6 +61,7 @@ const MuseumDisplayFilterWise = ({ museum }) => {
           ))}
         </div>
       )}
+        <ShareComponent type="museum" id={museum._id} />
     </div>
   );
 };

@@ -10,6 +10,13 @@ import SellerPage from './Pages/SellerPage';
 import GuestPage from './Pages/GuestPage';
 import { registerTourist, createTourGuideRequest, registerSeller, registerAdvertiser , addTourismGoverner } from './RequestSendingMethods';
 import { LoadScript } from '@react-google-maps/api';
+import ActivityItinerarySort from './Components/SortRatePrice'
+import ActivityHistoricalList from './Components/UpcomingSort'
+import MuseumSearch from './Pages/MuseumSearch'
+import ActivityDetail from './Components/ActivityDetail';
+import ItineraryDetail from './Components/ItineraryDetail'
+import MuseumDetail from './Components/MuseumDetail';
+//require('dotenv').config();
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -320,6 +327,12 @@ function App() {
             }
           />
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/tourist/activities" element={<ActivityItinerarySort />} />
+          <Route path="/tourist/activity/:id" element={<ActivityDetail />} />
+          <Route path="/tourist/itinerary/:id" element={<ItineraryDetail />} />
+          <Route path="/tourist/museum/:id" element={<MuseumDetail />} />
+          <Route path="/tourist/upcoming" element={<ActivityHistoricalList />} />
+          <Route path="/tourist/search" element={<MuseumSearch />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/advertiser" element={<LoadScript googleMapsApiKey='AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA'> <AdvertiserPage email={emailAdvertiser}/> </LoadScript>} />
           <Route path="/tourismGoverner" element={<TourismGovernerPage  email={emailoftourism}/>} />

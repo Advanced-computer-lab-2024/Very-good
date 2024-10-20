@@ -9,9 +9,13 @@ import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
+import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
+import { useNavigate } from 'react-router-dom';
+import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
 
 const TouristPage = ({ email }) => {
+  const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -26,6 +30,7 @@ const TouristPage = ({ email }) => {
   const [categories, setCategories] = useState([]); // Store all the categories
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activityError, setActivityError] = useState(null);
+  const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -73,6 +78,18 @@ const TouristPage = ({ email }) => {
     }
   };
 
+  const navigateToActivitySorted = () => {
+    navigate('/tourist/activities');
+  }
+
+  const navigateToupcoming = () => {
+    navigate('/tourist/upcoming');
+  }
+
+  const navigateToSearch = () => {
+    navigate('/tourist/search');
+  }
+
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -95,11 +112,15 @@ const TouristPage = ({ email }) => {
   const handleBackToTouristPageFromFilterHistoricalPlacesPage = () => setShowFilterHistoricalPage(false);
   const handleFilterProductPageClick = () => setShowProductFilterPage(true);
   const handleBackToTouristPageFromFilterProductPage = () => setShowProductFilterPage(false);
+  const handleBookFlightPageClick = () => setShowBookFlightPage(true);
+  const handleBackToTouristPageFromBookFlightPage = () => setShowBookFlightPage(false);
+
 
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
+  if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage}/>
 
   return (
     <div className="tourist-page">
@@ -114,6 +135,7 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterItenariesClick}>Filter Itineraries</button>
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
+          <button onClick={handleBookFlightPageClick}>Book a Flight</button>
         </div>
       </div>
   
@@ -156,7 +178,7 @@ const TouristPage = ({ email }) => {
             <h2>Available Activities:</h2>
             <ul>
               {activities.map((activity, index) => (
-                <li key={index}>{activity.name}</li> // Assuming activity has a 'name' field
+                <ActivityDisplayFilterWise activity={activity}/> // Assuming activity has a 'name' field
               ))}
             </ul>
           </div>
@@ -241,22 +263,20 @@ const TouristPage = ({ email }) => {
           </div>
         )}
   
-        <ActivityHistoricalList />
-        <ActivityItinerarySort />
+        <button onClick={navigateToupcoming}>show upcoming activities / itineraries</button>
+
+        <button onClick={navigateToActivitySorted}>show activity sorted</button>
+
+        <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
+
+
         <ProductSort />
-        <div className="itinerary-layout">
-          <h2 className="itinerary-header">Your Itinerary</h2>
-          <button className="btn" onClick={() => alert('View Full Itinerary')}>
-            View Full Itinerary
-          </button>
-        </div>
   
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
   
-      <MuseumSearch />
     </div>
   );
 };
