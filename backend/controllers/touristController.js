@@ -1,6 +1,39 @@
 const { default: mongoose } = require('mongoose')
 const Tourist = require('../models/touristModel')
 
+const bookTransportation = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the tourist ID from the request parameters
+    const { transportationId } = req.body; // Get the transportation ID from the request body
+
+    // Find the tourist by ID
+    const tourist = await Tourist.findById(id);
+
+    // Check if the tourist was found
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Add the transportation ID to the bookedTransportations array
+    tourist.bookedTransportations.push(transportationId);
+    
+    // Save the updated tourist record back to the database
+    await tourist.save();
+
+    // Send a success response
+    res.status(200).json({
+      message: 'Transportation booked successfully',
+      tourist: {
+        id: tourist._id,
+        bookedTransportations: tourist.bookedTransportations // Optionally return the updated array
+      }
+    });
+  } catch (error) {
+    console.error('Error booking transportation:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
 
 // get all workout
 const createTourist = async (req, res) => {
@@ -154,4 +187,4 @@ const updateRecords = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist}
+module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation}

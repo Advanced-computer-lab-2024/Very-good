@@ -18,7 +18,7 @@ const adminRoutes = require('./routes/admin')
 const categoryRoutes = require('./routes/category')
 const categoryRouter = require('./routes/category'); // Adjust the path as necessary
 const complaintRoutes = require('./routes/complaints')
-
+const transportationRoutes = require('./routes/transportations')
 
 const mongoose = require('mongoose')
 const cors = require('cors');
@@ -49,6 +49,7 @@ app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
 // app.use('./routes/complaints', complaintRoutes)
 app.use('/api/complaints', complaintRoutes)
+app.use('/api/transportations', transportationRoutes)
 
 
 
