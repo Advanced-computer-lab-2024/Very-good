@@ -3,6 +3,31 @@ const Itinerary = require('../models/itineraryModel'); // Ensure this is the cor
 const TourGuide = require('../models/tourGuideModel'); // Ensure this is the correct path for the TourGuide model
 const Tag = require('../models/tagModel'); // Adjust the path if necessary
 // Create an Itinerary
+
+const getItineraryByID = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from the URL parameters
+        const itinerary = await Itinerary.findById(id); // Find the activity by ID
+
+        if (!itinerary) {
+            return res.status(404).json({ message: 'Itinerary not found' }); // Handle case where activity is not found
+        }
+
+        // Send success response with the activity data
+        res.status(200).json({
+            message: 'Itinerary retrieved successfully',
+            data: itinerary
+        });
+    } catch (error) {
+        console.error('Error retrieving itinerary:', error);
+        res.status(500).json({
+            message: 'Error retrieving itinerary',
+            error: error.message
+        });
+    }
+};
+
+
 const createItinerary = async (req, res) => {
     try {
         // Destructure the request body to get itinerary details
@@ -225,5 +250,6 @@ module.exports = {
     getItineraries,
     filterItineraries,
     searchforitinerary,filterItinerariesYassin,
-    flagItinerary
+    flagItinerary,
+    getItineraryByID
 };

@@ -6,6 +6,31 @@ const activity = require('../models/activityModel');
 const Category = require('../models/categoryModel')
 
 // get all workout
+
+
+const getActivityById = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from the URL parameters
+        const activity = await Activity.findById(id); // Find the activity by ID
+
+        if (!activity) {
+            return res.status(404).json({ message: 'Activity not found' }); // Handle case where activity is not found
+        }
+
+        // Send success response with the activity data
+        res.status(200).json({
+            message: 'Activity retrieved successfully',
+            data: activity
+        });
+    } catch (error) {
+        console.error('Error retrieving activity:', error);
+        res.status(500).json({
+            message: 'Error retrieving activity',
+            error: error.message
+        });
+    }
+};
+
 const createActivity = async (req, res) => {
     try {
         // Destructure the request body to get activity details
@@ -240,4 +265,4 @@ const filterActivities = async (req, res) => {
  
   
 
-module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity}
+module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity, getActivityById}

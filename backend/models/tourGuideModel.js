@@ -70,8 +70,30 @@ const tourGuideSchema = new schema({
         type: schema.Types.ObjectId,
         ref: 'activity' 
       },
+      ],
+      rating : {
+        type : Number,
+        min : 0,
+        max : 5,
+        default : 5
+      },
+      numberOfRatings : {
+        type : Number,
+        default : 1
+      },
+      commentsArray: [
+        {
+          comment: {
+            type: String,
+            required: true
+          },
+          touristId: {
+            type: schema.Types.ObjectId,
+            ref: 'Tourist',  
+            required: true
+          }
+        }
       ]
-
 }, { timestamps : true })
 
 module.exports = mongoose.model('tourGuide' ,tourGuideSchema)
