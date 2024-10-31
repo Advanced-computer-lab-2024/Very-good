@@ -25,6 +25,26 @@ const advertiserSchema = new schema({
         type: Number,
         required: true
       },
+    logo: {
+        type : String, // url of a photo
+        required : true
+    },
+    acceptedTermsAndConditions :{
+      type : Boolean,
+      default : false
+    },
+    IdDocument: {
+        type : String, // url of a photo
+        required : true
+    },
+    taxationRegistryCard: {
+      type : String, // url of a photo
+      required : true
+    },
+    isAccepted: {
+        type: String,
+        required: true
+      },
       createdActivities: [ //only for tourist
         {
           type: schema.Types.ObjectId,

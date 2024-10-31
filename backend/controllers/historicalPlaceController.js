@@ -3,6 +3,31 @@ const HistoricalPlace = require('../models/historicalPlaceModel');
 const Tag = require('../models/tagModel');
 
 // Create a new Historical Place
+
+const getMuseumByID = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from the URL parameters
+        const museum = await HistoricalPlace.findById(id); // Find the activity by ID
+
+        if (!museum) {
+            return res.status(404).json({ message: 'Museum not found' }); // Handle case where activity is not found
+        }
+
+        // Send success response with the activity data
+        res.status(200).json({
+            message: 'Museum retrieved successfully',
+            data: museum
+        });
+    } catch (error) {
+        console.error('Error retrieving Museum:', error);
+        res.status(500).json({
+            message: 'Error retrieving Museum',
+            error: error.message
+        });
+    }
+};
+
+
 const createHistoricalPlace = async (req, res) => {
     try {
         // Destructure the request body to get historical place details
@@ -152,7 +177,6 @@ const getHistoricalPlaceTags = async (req, res) => {
 };
 
 const searchforHP = async (req, res) => {
-    console.log("yarraaaaab")
     console.log("req.query.name", req.query.name)
     const { name, tag } = req.query;
     let historicalPlace = [];
@@ -231,4 +255,4 @@ const updateWorkout = async (req, res) => {
 };
 
 module.exports = { createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags , 
-    searchforHP,FilterMuseumByTagName};
+    searchforHP, FilterMuseumByTagName, getMuseumByID};

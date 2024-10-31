@@ -1,5 +1,6 @@
 import React from 'react';
 import './ActivityDisplay.css';
+import ShareComponent from './shareComponent';
 
 const ItineraryDisplayFilterWise = ({ itinerary, onDelete }) => {
   return (
@@ -51,7 +52,8 @@ const ItineraryDisplayFilterWise = ({ itinerary, onDelete }) => {
 
       <div className="itinerary-buttons">
       </div>
-    </div>
+      <ShareComponent type="itinerary" id={itinerary._id} />
+      </div>
   );
 };
 

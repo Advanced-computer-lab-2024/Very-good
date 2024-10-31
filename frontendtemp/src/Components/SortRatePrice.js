@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
+import ShareComponent from './shareComponent';
+import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
+import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
 
 const ActivityItinerarySort = () => {
     const [activities, setActivities] = useState([]); 
@@ -19,6 +22,22 @@ const ActivityItinerarySort = () => {
     const [showMappings2, setShowMappings2] = useState(false);  // Toggle for activities2
     const [showItineraries, setShowItineraries] = useState(false);  // Toggle for itineraries1
     const [showItineraries2, setShowItineraries2] = useState(false);  // Toggle for itineraries2
+    const [currency, setCurrency] = useState('EGP'); // Default currency
+
+const handleCurrencyChange = (e) => {
+    setCurrency(e.target.value);
+};
+
+const currencyRates = {
+    EGP: 1,    // Base currency
+    USD: 0.032, // Example conversion rate
+    EUR: 0.029, // Example conversion rate
+    // Add more rates as needed
+};
+
+const convertPrice = (price) => {
+    return (price * currencyRates[currency]).toFixed(2); // Convert and format price
+};
 
     useEffect(() => {
         const getActivities = async () => {
@@ -73,13 +92,18 @@ const ActivityItinerarySort = () => {
             try {
                 const it1 = await fetchItinerariesNoId();
                 console.log("raw fetch1:", it1);
-
+        
                 if (it1 && it1.data) {
-                    const sortedIt1 = it1.data.sort((a, b) => {
+                    // Filter out flagged itineraries
+                    const filteredItineraries = it1.data.filter(itinerary => !itinerary.flagged);
+                    
+                    // Sort remaining itineraries by price in ascending order
+                    const sortedIt1 = filteredItineraries.sort((a, b) => {
                         const priceA = a.price;
                         const priceB = b.price;
-                        return priceA - priceB;  // Sort by price in ascending order
+                        return priceA - priceB;  
                     });
+        
                     setItineraries(sortedIt1);  // Update state with sorted itineraries
                     console.log('sorted itineraries by price:', sortedIt1);
                 } else {
@@ -89,33 +113,40 @@ const ActivityItinerarySort = () => {
                 console.error("Error fetching itineraries sorted by price:", err.message);
                 setErrorItineraries(err.message);
             } finally {
-                setLoadingItineraries(false);  // Stop loading for itineraries1
+                setLoadingItineraries(false);  // Stop loading for itineraries
             }
         };
+        
 
         const getItineraries2 = async () => {
             try {
                 const it2 = await fetchItinerariesNoId();
                 console.log("raw fetch2:", it2);
-
+        
                 if (it2 && it2.data) {
-                    const sortedIt2 = it2.data.sort((a, b) => {
+                    // Filter out flagged itineraries
+                    const filteredItineraries = it2.data.filter(itinerary => !itinerary.flagged);
+                    
+                    // Sort remaining itineraries by ratings in ascending order
+                    const sortedIt2 = filteredItineraries.sort((a, b) => {
                         const rateA = a.ratings;
-                        const rateB = a.ratings;
-                        return rateA - rateB;  // Sort by start date in ascending order
+                        const rateB = b.ratings;
+                        return rateA - rateB;  
                     });
+        
                     setItineraries2(sortedIt2);  // Update state with sorted itineraries2
-                    console.log('sorted itineraries by start date:', sortedIt2);
+                    console.log('sorted itineraries by ratings:', sortedIt2);
                 } else {
-                    throw new Error("No data found in the response for itineraries sorted by start date.");
+                    throw new Error("No data found in the response for itineraries sorted by ratings.");
                 }
             } catch (err) {
-                console.error("Error fetching itineraries sorted by start date:", err.message);
+                console.error("Error fetching itineraries sorted by ratings:", err.message);
                 setErrorItineraries2(err.message);
             } finally {
                 setLoadingItineraries2(false);  // Stop loading for itineraries2
             }
         };
+        
 
         getActivities();  // Fetch first set of activities (sorted by price)
         getActivities2();  // Fetch second set of activities (sorted by ratings)
@@ -128,69 +159,98 @@ const ActivityItinerarySort = () => {
     const toggleMappings2 = () => setShowMappings2(prevState => !prevState);
     const toggleItineraries = () => setShowItineraries(prevState => !prevState);
     const toggleItineraries2 = () => setShowItineraries2(prevState => !prevState);
+
+    const ActivityCard = ({ activity }) => {
+        
+        return (
+          <div className="activity-card">
+            <h2 className="activity-title">{activity.name}</h2>
+            <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
+            <p className="activity-price">Price: {convertPrice(activity.price)} {currency}</p>
+            <p className="activity-duration">Duration: {activity.duration} minutes</p>
+            <p className="activity-ratings">Ratings: {activity.ratings}/5</p>
+            <p className="activity-special-discount">Special Discount: {activity.specialDiscount}%</p>
+            <p className="activity-booking-status">Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+      
+            <div className="tags-container">
+              {activity.tags.map((tag, index) => (
+                <span key={index} className="activity-tag">{tag.name}</span>
+              ))}
+            </div>
+            <ShareComponent type="activity" id={activity._id} />
+          </div>
+        );
+      };
+      
+      
+
     const ItineraryCard = ({ itinerary }) => {
         return (
-            <div className="itinerary-card">
-                <h3>{itinerary.title}</h3>
-                <p>{itinerary.description}</p>
-                <p><strong>Language:</strong> {itinerary.language}</p>
-                <p><strong>Price:</strong> {itinerary.price} EGP</p>
-                <p><strong>Rating:</strong> {itinerary.ratings}</p>
-    
-                <div>
-                    <strong>Locations to Visit:</strong>
-                    {itinerary.locationsToVisit?.length > 0 ? (
-                        itinerary.locationsToVisit.map(location => (
-                            <div key={location._id}>
-                                <p><strong>Location Name:</strong> {location.name}</p>
-                                <p><strong>Address:</strong> {location.address}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No locations to visit listed.</p>
-                    )}
-                </div>
-    
-                <div>
-                    <strong>Available Dates:</strong>
-                    {itinerary.availableDates?.length > 0 ? (
-                        itinerary.availableDates.map(date => (
-                            <p key={date}>{new Date(date).toLocaleDateString()}</p>
-                        ))
-                    ) : (
-                        <p>No available dates listed.</p>
-                    )}
-                </div>
-    
-                <div>
-                    <strong>Available Times:</strong>
-                    {itinerary.availableTimes?.length > 0 ? (
-                        itinerary.availableTimes.map(time => (
-                            <p key={time}>{time}</p>
-                        ))
-                    ) : (
-                        <p>No available times listed.</p>
-                    )}
-                </div>
-    
-                <p><strong>Accessibility:</strong> {itinerary.accessibility ? "Yes" : "No"}</p>
-                <p><strong>Pick-up Location:</strong> {itinerary.pickUpLocation}</p>
-                <p><strong>Drop-off Location:</strong> {itinerary.dropOffLocation}</p>
-    
-                <div>
-                    <strong>Tour Guide Information:</strong>
-                    <p><strong>Name:</strong> {itinerary.tourGuideId?.name}</p>
-                    <p><strong>Email:</strong> {itinerary.tourGuideId?.email}</p>
-                    {/* <p><strong>Years of Experience:</strong> {itinerary.tourGuideId?.yearsOfExperience}</p>
-                    <p><strong>Previous Job:</strong> {itinerary.tourGuideId?.previousJob}</p> */}
-                </div>
-            </div>
-        );
+            <div className="activity-card">
+              <h2 className="itinerary-title">{itinerary.title}</h2>
+              <h4 className="itinerary-description">Description: </h4><p>{itinerary.description}</p>
+              <h4 className="itinerary-price">Total Price:</h4><p> Price: {convertPrice(itinerary.price)} {currency}</p>
+              <h4 className="itinerary-language">Language:</h4><p> {itinerary.language}</p>
+              <h4 className="itinerary-pickup">Pick Up Location:</h4><p> {itinerary.pickUpLocation}</p>
+              <h4 className="itinerary-dropoff">Drop Off Location: </h4><p>{itinerary.dropOffLocation}</p>
+        
+              <h3>Activities</h3>
+              <div className="activities-list">
+                {itinerary.activities.map((activity, index) => (
+                  <div key={index} className="activity-item">
+                    <h4>{activity.title} :</h4>
+                    <p>Duration: {activity.duration} minutes</p>
+                    <p>Price: ${activity.price}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Locations to visit :</h3>
+              <div className="activities-list">
+                {itinerary.locationsToVisit.map((location, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {location.name}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Available Dates :</h3>
+              <div className="activities-list">
+                {itinerary.availableDates.map((date, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {date}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <h3>Available Times :</h3>
+              <div className="activities-list">
+                {itinerary.availableTimes.map((time, index) => (
+                  <div key={index} className="activity-item">
+                    <p>{index + 1}. {time}</p>
+                  </div>
+                ))}
+              </div>
+        
+              <div className="itinerary-buttons">
+              </div>
+              <ShareComponent type="itinerary" id={itinerary._id} />
+              </div>
+          );
     };
     
     return (
         <div className="container">
-            <h1>Sort Activities and Itineraries</h1>
+<h1>Sort Activities and Itineraries</h1>
+<label>
+    Choose Currency:
+    <select value={currency} onChange={handleCurrencyChange}>
+        <option value="EGP">EGP</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        {/* Add more currencies as needed */}
+    </select>
+</label>
             <h2>Activities Sorted by Price</h2>
             {/* First Toggle Button: Sort by Activity Price */}
             <button onClick={toggleMappings}>
@@ -207,12 +267,7 @@ const ActivityItinerarySort = () => {
                         <p>No activities available sorted by price.</p>
                     ) : (
                         activities.map(activity => (
-                            <div key={activity._id} className="activity-card">
-                                <h3>{activity.name}</h3>
-                                <p>{activity.description}</p>
-                                <p>Date: {activity.date}</p>
-                                <p>Ticket Price: {activity.price} EGP </p>
-                            </div>
+                            <ActivityCard activity = {activity}/> 
                         ))
                     )}
                 </>
@@ -233,12 +288,7 @@ const ActivityItinerarySort = () => {
                         <p>No activities available sorted by ratings.</p>
                     ) : (
                         activities2.map(activity => (
-                            <div key={activity._id} className="activity-card">
-                                <h3>{activity.name}</h3>
-                                <p>{activity.description}</p>
-                                <p>Date: {activity.date}</p>
-                                <p>Ratings: {activity.ratings}</p>
-                            </div>
+                          <ActivityCard activity = {activity}/> 
                         ))
                     )}
                 </>

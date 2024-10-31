@@ -1,8 +1,10 @@
 const express = require('express')
-const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags, searchforHP,FilterMuseumByTagName} = require('../controllers/historicalPlaceController')
+const {createHistoricalPlace, getHistoricalPlaces, deleteHistoricalPlace, updateHistoricalPlace, getHistoricalPlaceTags, searchforHP, FilterMuseumByTagName, getMuseumByID} = require('../controllers/historicalPlaceController')
 const router = express.Router()
 
 router.get('/', getHistoricalPlaces)
+router.get('/:id', getMuseumByID)
+
 
 router.get('/:id/tags', getHistoricalPlaceTags)
 
