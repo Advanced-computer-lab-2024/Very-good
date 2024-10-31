@@ -45,7 +45,7 @@ const advertiserSchema = new schema({
         type: String,
         required: true
       },
-      createdActivities: [ //only for tourist
+    createdActivities: [ //only for tourist
         {
           type: schema.Types.ObjectId,
           ref: 'activity' 

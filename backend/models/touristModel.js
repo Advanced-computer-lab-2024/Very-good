@@ -52,7 +52,12 @@ const touristSchema = new schema({
       wallet: { // only for tourist
         type: Number,
         default: 0 
+      },
+      bookedTransportations : [{
+        type: schema.Types.ObjectId,
+        ref : 'transportation'
       }
+    ]
     
 }, { timestamps : true })
 
