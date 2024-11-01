@@ -8,7 +8,7 @@ const FlightOffersDisplay = ({ flightOffers, onBookFlight }) => {
 
   return (
     <div>
-      <h2 className="activity-title" style={{ color: '#003366' }}>Flight Offers</h2>
+      <h2 className="activity-title" style={{ color: '#003366'}}>Flight Offers</h2>
       {flightOffers.length === 0 ? (
         <p>No flight offers available.</p>
       ) : (
