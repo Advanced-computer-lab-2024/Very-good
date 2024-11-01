@@ -1,7 +1,11 @@
 import React from 'react';
 import './ActivityList'; // Ensure you import the same CSS file
+import { useNavigate } from 'react-router-dom';
+
 
 const FlightOffersDisplay = ({ flightOffers, onBookFlight }) => {
+  const navigate = useNavigate();  // Define navigate
+
   return (
     <div>
       <h2 className="activity-title" style={{ color: '#003366' }}>Flight Offers</h2>
@@ -61,7 +65,7 @@ const FlightOffersDisplay = ({ flightOffers, onBookFlight }) => {
               {/* Add the "Book this flight" button here */}
               <button 
                 className="book-flight-button" 
-                onClick={() => onBookFlight(offer)}
+                onClick={() => navigate('/booking', { state: { offer } })}
                 style={{ 
                   backgroundColor: '#003366', 
                   color: '#fff', 

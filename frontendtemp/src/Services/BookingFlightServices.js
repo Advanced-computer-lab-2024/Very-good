@@ -1,12 +1,10 @@
 import axios from 'axios';
 
 export const fetchAccessToken = async () => {
-    console.error('key :');
-  console.error('secret :');
-  const clientId = 'a';
-  const clientSecret = 'a';
-  console.error('key :', clientId);
-  console.error('secret :', clientSecret);
+
+  const clientId = 'vouIZLXjsA0kJKJpQcCGXmEGFInZOADS';
+  const clientSecret = 't81xfIvqByEgzv50';
+
 
   try {
     const response = await axios.post(

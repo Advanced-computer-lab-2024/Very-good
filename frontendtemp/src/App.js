@@ -16,6 +16,10 @@ import MuseumSearch from './Pages/MuseumSearch'
 import ActivityDetail from './Components/ActivityDetail';
 import ItineraryDetail from './Components/ItineraryDetail'
 import MuseumDetail from './Components/MuseumDetail';
+import BookingForm from './Components/BookingForm';
+import Ticket from './Components/Ticket';
+import BookTransportationPage from './Pages/BookTransportationPage';
+import ViewBookedTransportationPage from './Pages/viewBookedTransportationPage';
 //require('dotenv').config();
 
 function App() {
@@ -333,12 +337,16 @@ function App() {
           <Route path="/tourist/museum/:id" element={<MuseumDetail />} />
           <Route path="/tourist/upcoming" element={<ActivityHistoricalList />} />
           <Route path="/tourist/search" element={<MuseumSearch />} />
+          <Route path="/tourist/viewBookedTransportation" element={<ViewBookedTransportationPage />} />
+          <Route path="/tourist/bookTransportation" element={<BookTransportationPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/advertiser" element={<LoadScript googleMapsApiKey='AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA'> <AdvertiserPage email={emailAdvertiser}/> </LoadScript>} />
           <Route path="/tourismGoverner" element={<TourismGovernerPage  email={emailoftourism}/>} />
           <Route path="/tourGuide" element={<TourGuideHomePage email={emailtourguide}/>} />
           <Route path="/seller" element={<SellerPage email={emailofseller}/>} />
           <Route path="/guest" element={<GuestPage />} />
+          <Route path="/booking" element={<BookingForm />} />
+          <Route path="/ticket" element={<Ticket />} />
         </Routes>
       </div>
   );

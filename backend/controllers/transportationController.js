@@ -42,6 +42,7 @@ const createTransportation = async (req, res) => {
   try {
     // Destructure the request body to extract the necessary fields
     const {
+      advertiserId,
       type,
       provider,
       departureLocation,
@@ -53,12 +54,13 @@ const createTransportation = async (req, res) => {
     } = req.body;
 
     // Ensure all required fields are provided
-    if (!type || !provider || !departureLocation || !arrivalLocation || !departureTime || !arrivalTime || !price) {
+    if (!type || !provider || !departureLocation || !arrivalLocation || !departureTime || !arrivalTime || !price || !advertiserId) {
       return res.status(400).json({ message: 'All required fields must be provided.' });
     }
 
     // Create a new transportation document using the model
     const newTransportation = new Transportation({
+      advertiserId,
       type,
       provider,
       departureLocation,
@@ -82,11 +84,6 @@ const createTransportation = async (req, res) => {
 
 module.exports = {
   createTransportation,
-};
-
-  
-
-module.exports = {
   getAllTransportations,
   createTransportation,
   getTransportationById
