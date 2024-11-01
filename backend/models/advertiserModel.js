@@ -45,12 +45,6 @@ const advertiserSchema = new schema({
         type: String,
         required: true
       },
-    createdActivities: [ //only for tourist
-        {
-          type: schema.Types.ObjectId,
-          ref: 'activity' 
-        }
-      ]
 }, { timestamps : true })
 
 module.exports = mongoose.model('advertiser' ,advertiserSchema)

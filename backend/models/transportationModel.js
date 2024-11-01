@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TransportationSchema = new Schema({
+  adertiserId: {
+    type: Schema.Types.ObjectId,
+    ref: 'advertiser'
+  },
   type: {
     type: String,
     enum: ['Bus', 'Train', 'Taxi', 'Rental Car', 'Flight'], // Enum for transportation types

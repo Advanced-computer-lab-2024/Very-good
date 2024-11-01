@@ -90,6 +90,15 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/search');
   }
 
+  const handleBookTransportationPageClick = (touristEmail) => {
+    navigate('/tourist/bookTransportation', { state: { email: touristEmail } });
+  };
+
+  const handleViewTransportation = (touristEmail) => {
+    navigate('/tourist/viewBookedTransportation', { state: { email: touristEmail } });
+  };
+
+
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -136,6 +145,8 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
+          <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
+          <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
         </div>
       </div>
   

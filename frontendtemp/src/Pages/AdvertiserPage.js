@@ -4,11 +4,13 @@ import CreateActivityForm from '../Components/CreateActivityForm';
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
 import './AdvertiserPage.css'; 
+import CreateTransportationForm from '../Components/createTransportationForm';
 
 const advertiserId = "66f826b0e184e2faa3ea510b";
 
 const AdvertiserPage = ({email}) => {
-      const [isCreating, setIsCreating] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
+    const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -42,6 +44,10 @@ const AdvertiserPage = ({email}) => {
         fetchAndSetActivities(); // Refetch activities after closing the form
     };
 
+    const closeTransportationForm = () => {
+        setIsCreatingTransportation(false);
+    }
+
     const handleDeleteActivity = async (activityId) => {
         try {
             await deleteActivity(activityId); // Call the delete function
@@ -74,6 +80,10 @@ const AdvertiserPage = ({email}) => {
         setIsViewingProfile(false); // Go back to the main AdvertiserPage and hide AdvertiserInfo
     };
 
+    const handleCreateTransportationButtonClick = () => {
+        setIsCreatingTransportation(true);
+    }
+
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
@@ -90,6 +100,10 @@ const AdvertiserPage = ({email}) => {
                 Create Activity
             </button>
 
+            <button className="create-transportation-button" onClick={handleCreateTransportationButtonClick} >
+                Create Transportation
+            </button>
+
             {/* View Profile Information button */}
             <button className="view-profile-button" onClick={handleViewProfileClick}>
                 View Profile Information
@@ -97,6 +111,8 @@ const AdvertiserPage = ({email}) => {
 
             {/* Render the CreateActivityForm if isCreating is true */}
             {isCreating && <CreateActivityForm onClose={closeForm} advertiserId={advertiserId} setActivities={setActivities} />}
+
+            {isCreatingTransportation && <CreateTransportationForm onClose={closeTransportationForm} advertiserId={advertiserId} />}
 
             {/* Call the ActivityList component and pass activities and handlers */}
             <ActivityList 

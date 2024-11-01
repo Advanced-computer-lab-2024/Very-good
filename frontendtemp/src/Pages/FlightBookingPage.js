@@ -62,19 +62,7 @@ const FlightBookingPage = ({ onBack }) => {
     };
 
     const onBookFlight = async (offer) => {
-        try {
-            setLoading(true);
-            const bookingResponse = await createFlightOrder(offer); // Call the createFlightOrder function
-
-            // Handle success or failure of the booking
-            console.log("response", bookingResponse );
-                setBookingStatus(bookingResponse);
-            
-        } catch (err) {
-            setError('Booking error: ' + err.message);
-        } finally {
-            setLoading(false);
-        }
+        
     };
 
     // Function to update form data from FlightSearchForm
