@@ -67,6 +67,60 @@ export const fetchFlightoffers = async (data) => {
     }
   };
 
+  export const createFlightOffer = async (flightOfferData) => {
+    try {
+      // Define the API endpoint for creating a flight offer
+      const apiUrl = 'http://localhost:4000/api/flightOffers/'; // Change this URL based on your server configuration
+  
+      // Send a POST request to create the flight offer
+      const response = await axios.post(apiUrl, flightOfferData);
+  
+      // Handle the response and return the created flight offer
+      console.log('Flight Offer Created:', response.data);
+      return response.data;
+    } catch (error) {
+      // Handle errors, logging them for troubleshooting
+      console.error('Error creating flight offer:', error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  export const fetchFlightWithId = async (id) => {
+    try {
+      // Define the API endpoint for fetching a flight offer by ID
+      const apiUrl = `http://localhost:4000/api/flightOffers/${id}`; // Change this URL based on your server configuration
+  
+      // Send a GET request to fetch the flight offer
+      const response = await axios.get(apiUrl);
+  
+      // Handle the response and return the fetched flight offer
+      console.log('Flight Offer Retrieved:', response.data);
+      return response.data.data;
+    } catch (error) {
+      // Handle errors, logging them for troubleshooting
+      console.error('Error retrieving flight offer:', error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  export const addFlightOfferToTourist = async (userId, offerId) => {
+    try {
+      // Define the API endpoint for adding a flight offer to the tourist
+      const apiUrl = `http://localhost:4000/api/tourists/${userId}/book-flight-offer/${offerId}`; // Adjust the URL according to your server configuration
+  
+      // Send a PUT request to add the flight offer to the tourist
+      const response = await axios.put(apiUrl);
+  
+      // Handle the response and return the result
+      console.log('Flight offer added to tourist:', response.data);
+      return response.data;
+    } catch (error) {
+      // Handle errors, logging them for troubleshooting
+      console.error('Error adding flight offer to tourist:', error.response?.data || error.message);
+      throw error; // You can also handle the error in the UI as needed
+    }
+  };
+
   export const createFlightOrder = async (flightOrderData) => {
     const token = await fetchAccessToken(); // Fetch the access token
   
@@ -103,6 +157,39 @@ export const fetchFlightoffers = async (data) => {
       return null;
     }
   };
+
+  export const createFlightInfo = async (data) => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/flightInfos', data);
+      console.log('Flight information created successfully:', response.data);
+      return response.data; // Return the response data if needed
+    } catch (error) {
+      console.error('Error creating flight information:', error);
+      throw error; // Re-throw the error for further handling if needed
+    }
+  };
   
+  export const getAllFlightInfos = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/flightInfos');
+      console.log('All flight information retrieved successfully:', response.data);
+      return response.data; // Return the response data if needed
+    } catch (error) {
+      console.error('Error retrieving all flight information:', error);
+      throw error; // Re-throw the error for further handling if needed
+    }
+  };
+  
+  // Function to get specific flight information by ID
+  export const getFlightInfoById = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/api/flightInfos/${id}`);
+      console.log('Flight information retrieved successfully:', response.data);
+      return response.data; // Return the response data if needed
+    } catch (error) {
+      console.error(`Error retrieving flight information with ID ${id}:`, error);
+      throw error; // Re-throw the error for further handling if needed
+    }
+  };
 
   

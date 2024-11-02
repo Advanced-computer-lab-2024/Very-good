@@ -30,6 +30,7 @@ const TouristPage = ({ email }) => {
   const [categories, setCategories] = useState([]); // Store all the categories
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activityError, setActivityError] = useState(null);
+  const [touristId, setTouristId] = useState(null);
   const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
 
   useEffect(() => {
@@ -51,10 +52,11 @@ const TouristPage = ({ email }) => {
       if (response) {
         setTouristData(response.data);
         setEditedData(response.data);
+        setTouristId(response.data._id);
       }
     };
     getTouristData();
-  }, [email]);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -89,6 +91,11 @@ const TouristPage = ({ email }) => {
   const navigateToSearch = () => {
     navigate('/tourist/search');
   }
+
+  const handleViewBookedFlightsPageClick = (touristId) => {
+    console.log("touristdata ahe :", touristData.bookedFlightOffers);
+    navigate('/tourist/viewBookedFlights', { state: { bookedFlightsIds : touristData.bookedFlightOffers } });
+  };
 
   const handleBookTransportationPageClick = (touristEmail) => {
     navigate('/tourist/bookTransportation', { state: { email: touristEmail } });
@@ -129,7 +136,7 @@ const TouristPage = ({ email }) => {
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
-  if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage}/>
+  if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage} touristId={touristId}/>
 
   return (
     <div className="tourist-page">
@@ -145,6 +152,7 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
+          <button onClick={handleViewBookedFlightsPageClick}>View my Booked Flights</button>
           <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
         </div>

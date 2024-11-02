@@ -24,7 +24,7 @@ const CreateTransportationForm = ({ advertiserId, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const dataToSend = { ...formData, advertiserId };
+    const dataToSend = { ...formData, advertiserId : advertiserId };
 
     try {
       const result = await createTransportation(dataToSend);

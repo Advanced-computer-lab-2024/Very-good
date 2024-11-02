@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TransportationSchema = new Schema({
-  adertiserId: {
+  advertiserId: {
     type: Schema.Types.ObjectId,
     ref: 'advertiser'
   },
