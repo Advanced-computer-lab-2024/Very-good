@@ -47,7 +47,6 @@ const ViewBookedFlightOffers = () => {
                         <TicketViewForTourist
                             key={index}
                             offer={bookedFlight} // Pass bookedFlight as offer
-                             // Pass flightInfo as formData
                         />
                     ))}
                 </>

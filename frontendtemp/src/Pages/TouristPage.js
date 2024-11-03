@@ -92,7 +92,7 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/search');
   }
 
-  const handleViewBookedFlightsPageClick = (touristId) => {
+  const handleViewBookedFlightsPageClick = () => {
     console.log("touristdata ahe :", touristData.bookedFlightOffers);
     navigate('/tourist/viewBookedFlights', { state: { bookedFlightsIds : touristData.bookedFlightOffers } });
   };
@@ -104,6 +104,14 @@ const TouristPage = ({ email }) => {
   const handleViewTransportation = (touristEmail) => {
     navigate('/tourist/viewBookedTransportation', { state: { email: touristEmail } });
   };
+
+  const handleViewBookedHotels = () => {
+    navigate('/tourist/viewBookedHotels', { state: { bookedHotelsIds : touristData.bookedHotelOffers } });
+  };
+
+  const handleHotelFlightPageClick = (touristId) =>{
+    navigate('/tourist/SearchHotel', {state : {touristId : touristId}})
+  }
 
 
   const handleCategoryClick = async (categoryName) => {
@@ -153,6 +161,8 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
           <button onClick={handleViewBookedFlightsPageClick}>View my Booked Flights</button>
+          <button onClick={() => handleHotelFlightPageClick(touristId)}>Book a Hotel</button>
+          <button onClick={() => handleViewBookedHotels(touristId)}>View my Booked Hotels</button>
           <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
         </div>

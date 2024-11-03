@@ -20,6 +20,9 @@ const complaintRoutes = require('./routes/complaints')
 const transportationRoutes = require('./routes/transportations')
 const flightOfferRoutes = require('./routes/flightOffers')
 const flightInfoRoutes = require('./routes/flightInfos')
+const hotelOfferRoutes = require('./routes/hotelOffers')
+const hotelInfoRoutes = require('./routes/hotelInfos')
+
 
 const mongoose = require('mongoose')
 const cors = require('cors');
@@ -53,7 +56,8 @@ app.use('/api/complaints', complaintRoutes)
 app.use('/api/transportations', transportationRoutes)
 app.use('/api/flightOffers', flightOfferRoutes)
 app.use('/api/flightInfos', flightInfoRoutes)
-
+app.use('/api/hotelOffers', hotelOfferRoutes)
+app.use('/api/hotelInfos', hotelInfoRoutes)
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)
