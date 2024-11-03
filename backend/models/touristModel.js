@@ -57,6 +57,24 @@ const touristSchema = new schema({
         type: schema.Types.ObjectId,
         ref : 'transportation'
       }
+    ],
+    bookedFlightOffers : [
+      {
+        type : schema.Types.ObjectId,
+        ref: 'flightOffer'
+      }
+    ],
+    bookedHotelOffers : [
+      {
+        type : schema.Types.ObjectId,
+        ref: 'hotelOffer'
+      }
+    ],
+    flightInfos : [
+      {
+        type : schema.Types.ObjectId,
+        ref: 'flightInfo'
+      }
     ]
     
 }, { timestamps : true })

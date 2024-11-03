@@ -1,15 +1,14 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist, bookTransportation} = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist} = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
 
-//router.get('/:id', getWorkout)
 router.patch('/:id/bookTransportation', bookTransportation);
 router.post('/', createTourist)
 router.post('/getByEmail', getTouristByEmail);
-//router.delete('/:id', deleteWorkout)
 router.post('/updateByEmail',updateRecords);
-//router.patch('/:id', updateWorkout)
 router.delete('/:id', deleteTourist);
+router.put('/:userId/book-flight-offer/:offerId', addFlightOfferToTourist);
+router.put('/:userId/book-hotel-offer/:offerId', addHotelOfferToTourist);
 module.exports = router

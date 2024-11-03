@@ -88,27 +88,37 @@
     right: 20px; /* Distance from the right */
 }
   
-  .edit-button,
-  .delete-button {
-    background-color: green; /* Initial color for edit button */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px; /* Rounded corners */
-    white-space: nowrap; /* Ensure buttons don't wrap text */
-  }
-  
-  .delete-button {
-    background-color: red; /* Red background */
-  }
+.transportation-buttons {
+  display: flex; /* Use flexbox for layout */
+  justify-content: flex-end; /* Align items to the right */
+  margin-top: 10px; /* Add space above the buttons */
+}
+
+.edit-button,
+.delete-button {
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+  white-space: nowrap; /* Ensure buttons don't wrap text */
+  margin-left: 10px; /* Space between buttons */
+}
+
+.edit-button {
+  background-color: green; /* Green background for edit button */
+}
+
+.delete-button {
+  background-color: red; /* Red background for delete button */
+}
   
   /* Optional: Add hover effects */
-  .edit-button:hover {
+.edit-button:hover {
     background-color: darkgreen; /* Darker green on hover */
   }
   
-  .delete-button:hover {
+.delete-button:hover {
     background-color: darkred; /* Darker red on hover */
   }
   

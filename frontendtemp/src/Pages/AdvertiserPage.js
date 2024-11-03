@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ActivityList from '../Components/ActivityList';
 import CreateActivityForm from '../Components/CreateActivityForm';
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
+import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
 import './AdvertiserPage.css'; 
 import CreateTransportationForm from '../Components/createTransportationForm';
+import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
+import {editTransportation, deleteTransportation} from '../Services/bookingTransportationServices'
 
 const advertiserId = "66f826b0e184e2faa3ea510b";
 
@@ -12,8 +15,11 @@ const AdvertiserPage = ({email}) => {
     const [isCreating, setIsCreating] = useState(false);
     const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
     const [activities, setActivities] = useState([]);
+    const [transportations, setTransportations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [transportationerror, setTransportationError] = useState(null);
+    const [transportationLoading, setTransportationLoading] = useState(null);
 
     const fetchAndSetActivities = async () => {
         try {
@@ -26,8 +32,49 @@ const AdvertiserPage = ({email}) => {
         }
     };
 
+    const handleEditTransportation = async (transportationId, updatedData) => {
+        try {
+            const updatedTransportation = await editTransportation(transportationId, updatedData); // Make sure to implement this function in your service
+            setTransportations((prevTransportations) => 
+                prevTransportations.map(transportation => 
+                    transportation._id === updatedTransportation._id ? updatedTransportation : transportation
+                )
+            );
+            await fetchAndSetTransportations();
+            return updatedTransportation;
+        } catch (err) {
+            console.error('Failed to update transportation:', err.message);
+        }
+    };
+    
+    const handleDeleteTransportation = async (transportationId) => {
+        try {
+            await deleteTransportation(transportationId); // Call the delete function
+            setTransportations((prevTransportations) => 
+                prevTransportations.filter(transportation => transportation._id !== transportationId)
+            ); // Update the transportations state
+            await fetchAndSetTransportations();
+        } catch (err) {
+            console.error('Failed to delete transportation:', err.message);
+        }
+    };
+
+    const fetchAndSetTransportations = async () => {
+        try {
+            const data = await fetchTransportationsByAdvertiserId(advertiserId);
+            setTransportations(data);
+        }
+        catch (err){
+            setTransportationError(err.message);
+        }
+        finally {
+            setTransportationLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchAndSetActivities(); // Fetch activities on mount
+        fetchAndSetTransportations();
     }, []);
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
 
@@ -46,6 +93,7 @@ const AdvertiserPage = ({email}) => {
 
     const closeTransportationForm = () => {
         setIsCreatingTransportation(false);
+        fetchAndSetTransportations();
     }
 
     const handleDeleteActivity = async (activityId) => {
@@ -76,6 +124,9 @@ const AdvertiserPage = ({email}) => {
     if (loading) return <p>Loading activities...</p>;
     if (error) return <p>Error fetching activities: {error}</p>;
 
+    if (transportationLoading) return <p>Loading transportations...</p>;
+    //if (transportationerror) return <p>Error fetching transportations: {error}</p>;
+
     const handleBackButtonClick = () => {
         setIsViewingProfile(false); // Go back to the main AdvertiserPage and hide AdvertiserInfo
     };
@@ -93,7 +144,6 @@ const AdvertiserPage = ({email}) => {
     return (
         <div>
             <h1>Advertiser Page</h1>
-            <p>Welcome to the Advertiser page!</p>
             
             {/* Create Activity button */}
             <button className="create-activity-button" onClick={handleCreateButtonClick}>
@@ -120,6 +170,17 @@ const AdvertiserPage = ({email}) => {
                 onDelete={handleDeleteActivity} 
                 onUpdate={handleUpdateActivity} 
             />
+
+            <div>
+                <h1>Transportations</h1>
+                {transportations.map((transportation) => (
+                    <TransportationDisplayForAdvertiser key={transportation._id} 
+                    transportation={transportation} 
+                    onEdit={handleEditTransportation} 
+                    onDelete={handleDeleteTransportation}  />
+                ))}
+            </div>
+
         </div>
     );
 };

@@ -20,6 +20,69 @@ const getAllTransportations = async (req, res) => {
   }
 };
 
+const editTransportation = async (req, res) => {
+  const { id } = req.params; // Get the ID from the request parameters
+  
+  try {
+    // Find the transportation by ID and update it with the request body
+    const updatedTransportation = await Transportation.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
+    // If the transportation was not found, return a 404 error
+    if (!updatedTransportation) {
+      return res.status(404).json({ message: 'Transportation not found' });
+    }
+
+    // Return the updated transportation record
+    res.status(200).json(updatedTransportation);
+  } catch (error) {
+    // Handle errors and return an appropriate response
+    res.status(500).json({ message: 'Error updating transportation record', error: error.message });
+  }
+};
+
+const deleteTransportation = async (req, res) => {
+  const { id } = req.params; // Get the ID from the request parameters
+
+  try {
+    // Find the transportation by ID and remove it
+    const deletedTransportation = await Transportation.findByIdAndDelete(id);
+
+    // If the transportation was not found, return a 404 error
+    if (!deletedTransportation) {
+      return res.status(404).json({ message: 'Transportation not found' });
+    }
+
+    // Return a success message
+    res.status(200).json({ message: 'Transportation deleted successfully' });
+  } catch (error) {
+    // Handle errors and return an appropriate response
+    res.status(500).json({ message: 'Error deleting transportation record', error: error.message });
+  }
+};
+
+
+const getTransportationsByAdvertiserId = async (req, res) => {
+  try {
+    // Get advertiserId from the request parameters
+    const { advertiserId } = req.params;
+
+    // Fetch all transportation documents that match the given advertiserId
+    const transportations = await Transportation.find({ advertiserId });
+
+    // If no transportations are found for the given advertiserId, return a message
+    if (!transportations.length) {
+      return res.status(404).json({ message: 'No transportation records found for this advertiser.' });
+    }
+
+    // Return the transportations in the response
+    res.status(200).json(transportations);
+  } catch (error) {
+    // Handle errors and return an appropriate response
+    res.status(500).json({ message: 'Error fetching transportation records', error: error.message });
+  }
+};
+
+
 const getTransportationById = async (req, res) => {
     const { id } = req.params; // Get the ID from the request parameters
   
@@ -86,5 +149,8 @@ module.exports = {
   createTransportation,
   getAllTransportations,
   createTransportation,
-  getTransportationById
+  getTransportationById,
+  getTransportationsByAdvertiserId,
+  editTransportation,
+  deleteTransportation
 };

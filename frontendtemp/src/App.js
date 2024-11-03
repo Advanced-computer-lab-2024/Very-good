@@ -20,6 +20,11 @@ import BookingForm from './Components/BookingForm';
 import Ticket from './Components/Ticket';
 import BookTransportationPage from './Pages/BookTransportationPage';
 import ViewBookedTransportationPage from './Pages/viewBookedTransportationPage';
+import ViewBookedFlightOffers from './Components/viewBookedFlightOffers';
+import SearchHotel from './Components/SearchHotel';
+import HotelBookingForm from './Components/HotelBookingForm';
+import HotelTicket from './Components/HotelTicket';
+import ViewBookedHotelOffers from './Components/ViewBookedHotelOffers';
 //require('dotenv').config();
 
 function App() {
@@ -331,6 +336,11 @@ function App() {
             }
           />
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
+          <Route path="/hotelConfirmation" element={<HotelTicket/>} />
+          <Route path="/tourist/viewBookedHotels" element={<ViewBookedHotelOffers />} />
+          <Route path="/tourist/viewBookedFlights" element={<ViewBookedFlightOffers />} />
+          <Route path="/tourist/SearchHotel" element={<SearchHotel />} />
           <Route path="/tourist/activities" element={<ActivityItinerarySort />} />
           <Route path="/tourist/activity/:id" element={<ActivityDetail />} />
           <Route path="/tourist/itinerary/:id" element={<ItineraryDetail />} />

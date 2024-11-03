@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { fetchFlightoffers, createFlightOrder } from '../Services/BookingFlightServices';  
+import { fetchFlightoffers, createFlightOffer, addFlightOfferToTourist } from '../Services/BookingFlightServices';  
 import FlightSearchForm from '../Components/FlightSearchForm';
 import FlightOffersDisplay from '../Components/FlightOffersDisplay';
 
-const FlightBookingPage = ({ onBack }) => {
+const FlightBookingPage = ({ onBack, touristId }) => {
     const [flightoffers, setFlightoffers] = useState([]); // Start as an empty array
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -62,7 +62,11 @@ const FlightBookingPage = ({ onBack }) => {
     };
 
     const onBookFlight = async (offer) => {
-        
+        console.log("el offer aho",offer);
+        const newOffer = await createFlightOffer(offer);
+        const offerId = newOffer.data._id;
+        await addFlightOfferToTourist(touristId, offerId);
+        return offerId;
     };
 
     // Function to update form data from FlightSearchForm

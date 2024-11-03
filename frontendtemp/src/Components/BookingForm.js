@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {createFlightInfo} from '../Services/BookingFlightServices'
 
 const BookingForm = () => {
   const { state } = useLocation(); // Access the offer from the location state
-  const { offer } = state;
+  const { offer, offerId } = state;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -19,7 +20,10 @@ const BookingForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Proceed to ticket display after submission
+    const updatedFormData = { ...formData, offerId };
+    console.log('updatedFormData : ', updatedFormData);
+    const flightInfo = createFlightInfo(updatedFormData);
+    console.log('created flight info : ', flightInfo);
     navigate('/ticket', { state: { offer, formData } });
   };
 

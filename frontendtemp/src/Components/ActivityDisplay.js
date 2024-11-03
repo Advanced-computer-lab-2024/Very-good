@@ -4,7 +4,7 @@ import { fetchCategoryById, fetchCategories } from '../Services/activityServices
 import MapComponent from './MapComponent';
 import SimpleMapComponent from './SimpleMapComponent'; // Import your MapComponent
 
-const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
+const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedActivity, setUpdatedActivity] = useState(activity);
   const [categoryName, setCategoryName] = useState('');
