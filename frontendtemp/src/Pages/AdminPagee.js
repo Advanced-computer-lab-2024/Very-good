@@ -7,7 +7,7 @@ import Search from './Search'
 import FilterProductByPrice from './FilterProductByPrice'
 import AdminCreateTag from './AdminCreateTag'
 
-const AdminPage = () => {
+const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
         { id: 2, title: 'View Tags' },
@@ -31,6 +31,40 @@ const AdminPage = () => {
     const [showProductFilterPage,setShowProductFilterPage]=useState(false);
     const [showCreateTagPage,setshowCreateTagPage]=useState(false);
     const [itineraries, setItineraries] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({});
+    const [oldEmail, setOldEmail] = useState(email);
+    const [isChangingPassword, setIsChangingPassword] = useState(false); // State for showing password change form
+    const [newPassword, setNewPassword] = useState(''); // State for the new password
+    const [confirmPassword, setConfirmPassword] = useState(''); // State for confirming the new password
+  
+
+    const handleChangePassword = () => {
+        setIsChangingPassword(!isChangingPassword); // Toggle the password change form
+    };
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match!'); // Ensure passwords match
+            return;
+        }
+
+        try {
+            // Here you would call a function to update the password, e.g., updatePassword(oldEmail, newPassword)
+            // For demonstration purposes, we'll log the new password
+            console.log('Changing password for:', oldEmail, 'to:', newPassword);
+
+            // Reset form after submission
+            setNewPassword('');
+            setConfirmPassword('');
+            setIsChangingPassword(false);
+            alert('Password changed successfully!'); // Notify the user of success
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('Failed to change password.'); // Notify the user of failure
+        }
+    };
 
     // Action listeners
     const handleCreateTag=()=>{
@@ -149,7 +183,7 @@ const AdminPage = () => {
             }
         }
     };
-
+    
     const handleNewButtonClick = () => {
         // Action listener for the new button
         // Add your functionality here
@@ -196,11 +230,61 @@ const AdminPage = () => {
             console.error('Error flagging itinerary:', error);
         }
     };
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditedData({ ...editedData, [name]: value });
+      };
+    
+      const handleUpdateProfile = () => {
+        setIsEditing(!isEditing);
+        if (isEditing) {
+          if (editedData.email !== oldEmail) {
+            setOldEmail(editedData.email);
+          }
+          setAdminData(editedData);
+        //   updateTouristByEmailT(oldEmail, editedData);
+        }
+      };
     
     
 
     return (
         <div>
+          
+           
+        {/* ... existing JSX */}
+        <button className="btn" onClick={handleChangePassword}>
+                {isChangingPassword ? 'Cancel' : 'Change Password'}
+            </button>
+
+            {isChangingPassword && (
+                <div className="change-password-form">
+                    <h3>Change Password</h3>
+                    <form onSubmit={handlePasswordChange}>
+                        <label>
+                            New Password:
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                        <label>
+                            Confirm Password:
+                            <input
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            )}
+      
+    
        <AdminCategory />
         {showSearchPage ? ( // Conditional rendering for Search page
             <Search /> // Render the Search component

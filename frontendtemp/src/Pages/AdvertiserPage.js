@@ -11,6 +11,18 @@ import {editTransportation, deleteTransportation} from '../Services/bookingTrans
 
 const advertiserId = "66f826b0e184e2faa3ea510b";
 
+const TermsAndConditionsModal = ({ onAccept }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h2>Terms and Conditions</h2>
+                <p>Please Accept The Terms and Conditions to proceed.</p>
+                <button onClick={onAccept}>Accept</button>
+            </div>
+        </div>
+    );
+  };
+
 const AdvertiserPage = ({email}) => {
     const [isCreating, setIsCreating] = useState(false);
     const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
@@ -20,6 +32,8 @@ const AdvertiserPage = ({email}) => {
     const [error, setError] = useState(null);
     const [transportationerror, setTransportationError] = useState(null);
     const [transportationLoading, setTransportationLoading] = useState(null);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+
 
     const fetchAndSetActivities = async () => {
         try {
@@ -76,8 +90,14 @@ const AdvertiserPage = ({email}) => {
         fetchAndSetActivities(); // Fetch activities on mount
         fetchAndSetTransportations();
     }, []);
+    const handleAcceptTerms = () => {
+        setTermsAccepted(true); // Set terms as accepted
+    };
+    
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
-
+    if (!termsAccepted) {
+        return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    }
     const handleCreateButtonClick = () => {
         setIsCreating(true); // Show the form when the button is clicked
     };

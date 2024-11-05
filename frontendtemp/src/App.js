@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
+import PerfrencePage from './Pages/perfrencePage';
 import AdminPage from './Pages/AdminPagee';
 import AdvertiserPage from './Pages/AdvertiserPage';
 import TourismGovernerPage from './Pages/TourismGovernerPage';
@@ -25,6 +26,7 @@ import SearchHotel from './Components/SearchHotel';
 import HotelBookingForm from './Components/HotelBookingForm';
 import HotelTicket from './Components/HotelTicket';
 import ViewBookedHotelOffers from './Components/ViewBookedHotelOffers';
+
 //require('dotenv').config();
 
 function App() {
@@ -101,7 +103,7 @@ function App() {
         name: formElements.username.value,
         email: formElements.email.value,
         password: formElements.password.value,
-        dob: formElements.dob.value,
+        // dob: formElements.dob.value,
       };
       await registerSeller(sellerData);
       navigate('/seller');
@@ -336,6 +338,7 @@ function App() {
             }
           />
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/tourist/preference" element={<PerfrencePage/>} /> 
           <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
           <Route path="/hotelConfirmation" element={<HotelTicket/>} />
           <Route path="/tourist/viewBookedHotels" element={<ViewBookedHotelOffers />} />

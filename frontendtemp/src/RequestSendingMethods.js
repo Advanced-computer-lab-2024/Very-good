@@ -2,6 +2,7 @@
 
 import axios from "axios";
 
+
 // Function for the registration of a tourist
 const registerTourist = async (touristData) => {
     try {
@@ -75,10 +76,38 @@ const registerTourist = async (touristData) => {
       console.log('Tourist updated successfully:', result);
       return result;
     } catch (error) {
-      console.error('Error updating tourist:', error.message);
+      console.error('Error updating tourism:', error.message);
       throw error;
     }
   }
+  async function updateTouristByEmailT(email, updatedData) {
+    const url = 'http://localhost:4000/api/tourismGoverners/updateByEmailTourism'; // Fixed the URL typo
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json', // Corrected header
+            },
+            body: JSON.stringify({ email, updatedData }), // Pass email and updated data
+        });
+
+        if (!response.ok) {
+            // Check for non-JSON error responses (like HTML error pages)
+            const text = await response.text(); // Get raw text response
+            throw new Error(text || 'Error updating tourist');
+        }
+
+        const result = await response.json();
+        console.log('Tourist updated successfully:', result);
+        return result;
+    } catch (error) {
+        console.error('Error updating tourism:', error.message);
+        throw error; // Rethrow the error for further handling if needed
+    }
+}
+
+  
   
   // Tour guide request methods
   
@@ -319,13 +348,14 @@ const updateSellerByEmail = async (email, updatedData) => {
 
   const updateAdvertiserByEmail = async (email, updatedData) => {
     try {
-        const response = await fetch('http://localhost:4000/api/advertisers/updateAdvertiserByEmail', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, updatedData }), // This is correct
-        });
+      const response = await fetch(`http://localhost:4000/api/advertisers/updateAdvertiserByEmail`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, ...updatedData }), 
+    });
+    
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -333,6 +363,9 @@ const updateSellerByEmail = async (email, updatedData) => {
         }
 
         const data = await response.json();
+        console.log("DATA", data)
+        console.log("EMAIL",email)
+        console.log("updtated data", updatedData)
         return data; // Handle success
     } catch (error) {
         console.error('Error updating advertiser:', error);
@@ -340,6 +373,31 @@ const updateSellerByEmail = async (email, updatedData) => {
     }
 };
   
+
+const updateTourGuideByEmail = async (email, updatedData) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/tourGuides/updateTourGuideByEmail`, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, ...updatedData }), 
+  });
+  
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data; // Handle success
+  } catch (error) {
+      console.error('Error updating tourGuide:', error);
+      throw error; // Re-throw error to be handled by calling code
+  }
+};
+
 
 //-------------------------------------------------------------------------------------------
 // New function to get all tags
@@ -513,4 +571,4 @@ const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
 
 // Export the new method along with others
 export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail };
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,updateTourGuideByEmail ,updateTouristByEmailT };

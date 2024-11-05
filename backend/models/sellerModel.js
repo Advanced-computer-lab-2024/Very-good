@@ -9,7 +9,8 @@ const sellerSchema = new schema({
     },
     email: {
         type: String,
-        required: true,
+        required
+        : true,
         unique: true
     },
     password: {
@@ -22,19 +23,19 @@ const sellerSchema = new schema({
     },
     IdDocument: {
         type : String, // url of a photo
-        required : true
+        required : false //changed from true
     },
     taxationRegistryCard: {
       type : String, // url of a photo
-      required : true
+      required : false //changed from true
     },
     logo: {
         type : String, // url of a photo
-        required : true
+        required : false //changed from true
     },
     isAccepted: {
         type: String,
-        required: true
+        required : false //changed from true
       },
     acceptedTermsAndConditions :{
         type : Boolean,

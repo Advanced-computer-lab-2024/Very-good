@@ -36,8 +36,10 @@ const AdvertiserInfo = ({ email, onBack }) => {
       console.log('Email:', email);
       console.log('Updated Data:', { updatedData: editedData }); // Log updated data
       const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
+      console.log("RESPONSE" , response)
       if (response) {
         setAdvertiserData(editedData); // Update state with edited data
+        console.log("response", response)
       }
     } catch (error) {
       console.error('Error updating advertiser:', error);
@@ -67,6 +69,19 @@ const AdvertiserInfo = ({ email, onBack }) => {
               />
             ) : (
               <p>{advertiserData?.name || 'NA'}</p>
+            )}
+          </div>
+          <div className="profile-info">
+            <label>Password:</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="password"
+                value={editedData?.password || ''}
+                onChange={handleEditChange}
+              />
+            ) : (
+              <p>{"Not Visible"|| 'NA'}</p>
             )}
           </div>
 

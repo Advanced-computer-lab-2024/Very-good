@@ -27,7 +27,7 @@ const advertiserSchema = new schema({
       },
     logo: {
         type : String, // url of a photo
-        required : true
+        required : false //was true
     },
     acceptedTermsAndConditions :{
       type : Boolean,
@@ -35,15 +35,15 @@ const advertiserSchema = new schema({
     },
     IdDocument: {
         type : String, // url of a photo
-        required : true
+        required : false // was true
     },
     taxationRegistryCard: {
       type : String, // url of a photo
-      required : true
+      required : false //was true
     },
     isAccepted: {
         type: String,
-        required: true
+        required: false //was true
       },
 }, { timestamps : true })
 

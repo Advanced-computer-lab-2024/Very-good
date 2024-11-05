@@ -4,6 +4,19 @@ import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethod
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
 import Search from './Search';
 import FilterProductByPrice from './FilterProductByPrice'
+
+const TermsAndConditionsModal = ({ onAccept }) => {
+  return (
+      <div className="modal-overlay">
+          <div className="modal-content">
+              <h2>Terms and Conditions</h2>
+              <p>Please Accept The Terms and Conditions to proceed.</p>
+              <button onClick={onAccept}>Accept</button>
+          </div>
+      </div>
+  );
+};
+
 const SellerPage = ({ email }) => {
   const [sellerData, setSellerData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,6 +25,7 @@ const SellerPage = ({ email }) => {
   const [oldEmail, setOldEmail] = useState(email);
   const [isViewingManagement, setIsViewingManagement] = useState(false); // State for conditional rendering
   const [isProductFilterActive,setIsProductFilterActive]=useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   useEffect(() => {
     const getSellerData = async () => {
       const response = await fetchSellerByEmail(email);
@@ -27,7 +41,12 @@ const SellerPage = ({ email }) => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
+  const handleAcceptTerms = () => {
+    setTermsAccepted(true); // Set terms as accepted
+};
+if (!termsAccepted) {
+    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+}
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
@@ -98,6 +117,19 @@ const SellerPage = ({ email }) => {
                   />
                 ) : (
                   <p>{sellerData?.name || 'NA'}</p>
+                )}
+              </div>
+              <div className="profile-info">
+                <label>Password:</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="password"
+                    value={editedData?.password || ''}
+                    onChange={handleEditChange}
+                  />
+                ) : (
+                  <p>{"Not Visible" || 'NA'}</p>
                 )}
               </div>
               <div className="profile-info">

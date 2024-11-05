@@ -158,26 +158,35 @@ const deleteAdvertiser = async (req, res) => {
   }
 }; 
 
-const updateAdvertiserByEmailBackend = async (req, res) => {
-  const { email } = req.body; // Extract email from request body
-  const updatedData = req.body.updatedData; // Extract updated data
+const updateAdvertiserByEmail = async (req, res) => {
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log("Received a request to update advertiser");
+  const { email, updatedData } = req.body;
+  console.log("Updating advertiser with emailYY:", email);
+  console.log("Updated DataYY:", updatedData);
+  console.log("BODY",req.body)
 
   try {
-    // Find advertiser by email and update with new data
     const advertiser = await Advertiser.findOneAndUpdate(
-      { email }, // Search by email
-      updatedData, // New data
+      { email }, // Find by email
+      { $set: updatedData }, // Update only the fields in updatedData
       { new: true } // Return the updated document
-    );
+      );
 
-    if (!advertiser) {
-      return res.status(404).json({ message: "Advertiser not found" });
-    }
+      if (!advertiser) {
+          console.log("No advertiser found with this email", advertiser);
+          return res.status(404).json({ message: "Advertiser not found" });
+      }
+      
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+      console.log("Advertiser updated successfully:", advertiser);
+      console.log("Updating advertiser with emailYY:", email);
+      console.log("Updated DataYY:", updatedData);
 
-    return res.status(200).json({ message: "Advertiser updated successfully", advertiser });
+      res.status(200).json(advertiser); // Send back the updated advertiser
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Error updating advertiser", error });
+      console.error("Error updating advertiser:", error);
+      res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -186,4 +195,4 @@ const updateAdvertiserByEmailBackend = async (req, res) => {
 
 
 module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
-  fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend}
+  fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmail}

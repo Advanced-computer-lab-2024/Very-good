@@ -1,15 +1,30 @@
-const express = require('express')
-const {createTourismGoverner, getTourismGoverners,deleteTourismGoverner} = require('../controllers/tourismGovernerController')
-const router = express.Router()
+const express = require('express');
+const {
+    createTourismGoverner,
+    getTourismGoverners,
+    deleteTourismGoverner,
+    updateRecordsTourism
+} = require('../controllers/tourismGovernerController');
 
-router.get('/', getTourismGoverners)
+const router = express.Router();
 
-//router.get('/:id', getWorkout)
+// Get all tourism governors
+router.get('/', getTourismGoverners);
 
-router.post('/', createTourismGoverner)
+// Create a new tourism governor
+router.post('/', createTourismGoverner);
 
-//router.delete('/:id', deleteWorkout)
+// Get a tourism governor by email
 
-//router.patch('/:id', updateWorkout)
+// In your tourism governor router file (tourismGovernerRoutes.js)
+
+// Define the route for updating tourism governor by email
+router.put('/updateByEmailTourism', updateRecordsTourism);
+
+
+
+
+// Delete a tourism governor by ID
 router.delete('/:id', deleteTourismGoverner); // Add delete route
-module.exports = router
+
+module.exports = router;

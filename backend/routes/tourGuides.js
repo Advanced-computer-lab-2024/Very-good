@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourGuide, getTourGuides, getTourGuideByEmail, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,deleteTourGuide} = require('../controllers/tourGuideController')
+const {createTourGuide, getTourGuides, getTourGuideByEmail, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,deleteTourGuide,updateTourGuideByEmail} = require('../controllers/tourGuideController')
 const router = express.Router()
 
 router.get('/', getTourGuides)
@@ -18,4 +18,7 @@ router.post('/getByEmail',getTourGuideByEmail)
 
 //router.patch('/:id', updateWorkout)
 router.delete('/:id', deleteTourGuide);
+
+router.put('/updateTourGuideByEmail', updateTourGuideByEmail);
+
 module.exports = router

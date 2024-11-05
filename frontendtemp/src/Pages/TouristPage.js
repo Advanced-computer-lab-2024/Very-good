@@ -13,6 +13,8 @@ import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
 import { useNavigate } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
+import PreferenceChoose from '../Components/Preference.js';
+import { Link } from 'react-router-dom';
 
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
@@ -230,6 +232,19 @@ const TouristPage = ({ email }) => {
               )}
             </div>
             <div className="profile-info">
+              <label>Password:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="password"
+                  value={editedData?.password || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.password || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
               <label>Email:</label>
               {isEditing ? (
                 <input
@@ -300,12 +315,20 @@ const TouristPage = ({ email }) => {
 
 
         <ProductSort />
-  
+        {/* <PreferenceChoose/> */}
+        <button onClick={() => navigate('/tourist/preference')}>
+                Choose Preferences
+            </button>
+        <div>
+            <h1>Welcome to the Activity Planner</h1>
+           
+        </div>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
+         
       </div>
-  
+      
     </div>
   );
 };
