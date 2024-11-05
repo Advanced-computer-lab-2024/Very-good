@@ -1,6 +1,8 @@
 const { default: mongoose } = require('mongoose')
-const Tourist = require('../models/touristModel')
-
+const Tourist = require('../models/touristModel');
+const Itinerary = require('../models/itineraryModel'); // Import your Itinerary model
+const TourGuide = require('../models/tourGuideModel')
+const Activity = require ('../models/activityModel')
 const bookTransportation = async (req, res) => {
   try {
     const { id } = req.params; // Get the tourist ID from the request parameters
@@ -187,4 +189,173 @@ const updateRecords = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation}
+// comments methods 
+// first we want to fetch all the tourguides a tourist completed a tour with , tour being an actual itnerary 
+// to know if a tourist completed the tour or not we will assume that any booked itenaray with the date past , then it must have been attended 
+// so what we need here is a method that extracts the email from the request body , seraches the database for that specific instance of the tourist 
+// get all booked itneraries where their dates has passed , for each of these itneraries we want to extract their equivalent tour guide responsible for it 
+
+const getPastItinerariesWithTourGuides = async (req, res) => {
+  try {
+      const { email } = req.body; // Extract email from the request body
+
+      // Find the tourist by email
+      const tourist = await Tourist.findOne({ email: email });
+      
+      if (!tourist) {
+          return res.status(404).json({ message: 'Tourist not found' });
+      }
+
+      // Get the current date
+      const currentDate = new Date();
+
+      // Fetch itineraries based on the IDs in the bookedItineraries array
+      const pastItineraries = await Itinerary.find({
+          _id: { $in: tourist.bookedItineraries }, // Match itinerary IDs in the bookedItineraries array
+          availableDates: { $exists: true, $ne: [] } // Ensure availableDates field exists and is not empty
+      });
+
+      // Filter past itineraries based on the last available date
+      const filteredPastItineraries = pastItineraries.filter(itinerary => {
+          const lastAvailableDate = new Date(Math.max(...itinerary.availableDates)); // Get the latest available date
+          return lastAvailableDate < currentDate; // Check if it's in the past
+      });
+
+      // Extract tour guide emails from the filtered itineraries
+      const tourGuideEmails = await Promise.all(pastItineraries.map(async (itinerary) => {
+          const tourGuide = await TourGuide.findById(itinerary.tourGuideId); // Get the tour guide by ID
+          return tourGuide ? tourGuide.email : null; // Return the email or null if not found
+      }));
+
+      // Filter out any null values in case a tour guide was not found
+      const uniqueTourGuideEmails = [...new Set(tourGuideEmails.filter(email => email))];
+
+      // Send the response with the tour guide emails
+      res.status(200).json({
+          message: 'Past tour guide emails retrieved successfully',
+          data: uniqueTourGuideEmails // Send only the unique tour guide emails
+      });
+  } catch (error) {
+      console.error('Error retrieving past itineraries:', error);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+
+const getPastItinerariesWithTourGuidesForCommentOnItenrary = async (req, res) => {
+  try {
+    const { email } = req.body; // Extract email from the request body
+
+    // Find the tourist by email
+    const tourist = await Tourist.findOne({ email: email });
+    
+    if (!tourist) {
+        return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Fetch itineraries based on the IDs in the bookedItineraries array
+    const pastItineraries = await Itinerary.find({
+        _id: { $in: tourist.bookedItineraries }, // Match itinerary IDs in the bookedItineraries array
+        availableDates: { $exists: true, $ne: [] } // Ensure availableDates field exists and is not empty
+    });
+
+    // Filter past itineraries based on the last available date
+    const filteredPastItineraries = pastItineraries.filter(itinerary => {
+        const lastAvailableDate = new Date(Math.max(...itinerary.availableDates)); // Get the latest available date
+        return lastAvailableDate < currentDate; // Check if it's in the past
+    });
+
+    // Extract itinerary titles and tour guide names from the filtered itineraries
+    const itineraryDetails = await Promise.all(filteredPastItineraries.map(async (itinerary) => {
+        const tourGuide = await TourGuide.findById(itinerary.tourGuideId); // Get the tour guide by ID
+        return {
+            itineraryTitle: itinerary.title, // Return the title of the itinerary
+            tourGuideName: tourGuide ? tourGuide.name : null // Return the tour guide's name or null if not found
+        };
+    }));
+
+    // Filter out any itineraries where the tour guide was not found
+    const validItineraryDetails = itineraryDetails.filter(detail => detail.tourGuideName !== null);
+
+    // Send the response with the itinerary titles and tour guide names
+    res.status(200).json({
+        message: 'Past itineraries retrieved successfully',
+        data: validItineraryDetails // Send only the itinerary titles and tour guide names
+    });
+} catch (error) {
+    console.error('Error retrieving past itineraries:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+}
+};
+
+
+const addItineraryToTourist = async (req, res) => {
+  try {
+    const { email, itineraryId } = req.body; // Extract email and itineraryId from the request body
+
+    // Find the tourist by email
+    const tourist = await Tourist.findOne({ email: email });
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Check if the itinerary already exists in the tourist's booked itineraries
+    if (tourist.bookedItineraries.includes(itineraryId)) {
+      return res.status(400).json({ message: 'Itinerary is already booked by this tourist' });
+    }
+
+    // Add the itinerary ID to the booked itineraries
+    tourist.bookedItineraries.push(itineraryId);
+    
+    // Save the updated tourist document
+    await tourist.save();
+
+    // Send a success response
+    res.status(200).json({ message: 'Itinerary added to tourist successfully', data: tourist.bookedItineraries });
+  } catch (error) {
+    console.error('Error adding itinerary to tourist:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+const getPastActivitiesForTourist = async (req, res) => {
+  try {
+    const { email } = req.body; // Extract email from the request body
+
+    // Find the tourist by email
+    const tourist = await Tourist.findOne({ email: email });
+    
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Fetch activities based on the IDs in the bookedActivities array
+    const pastActivities = await Activity.find({
+      _id: { $in: tourist.bookedActivities }, // Match activity IDs in the bookedActivities array
+      date: { $lt: currentDate } // Ensure the activity date is in the past
+    });
+
+    // Extract activity names from the filtered activities
+    const activityNames = pastActivities.map(activity => activity.name);
+
+    // Send the response with the activity names
+    res.status(200).json({
+      message: 'Past activities retrieved successfully',
+      data: activityNames // Send only the activity names
+    });
+  } catch (error) {
+    console.error('Error retrieving past activities:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+
+
+
+module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation,getPastItinerariesWithTourGuides,
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist}

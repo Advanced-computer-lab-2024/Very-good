@@ -6,7 +6,8 @@ import AdminCategory from './AdminCategory';
 import Search from './Search'
 import FilterProductByPrice from './FilterProductByPrice'
 import AdminCreateTag from './AdminCreateTag'
-
+import AdminDocumentManagementPage from './AdminDocumentManagementPage'
+import ComplaintsList from './ComplaintsList'
 const AdminPage = () => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -15,7 +16,9 @@ const AdminPage = () => {
         { id: 4, title: 'Delete Admin' }, // New activity for deleting admin
         {id :5 ,title : 'FilterProductsByPrice' },
         {id :6,title :'Create_Tag'},
-        { id: 7, title: 'View Itineraries' }
+        { id: 7, title: 'View Itineraries' },
+        { id: 8,title : 'View Documents'},
+        { id:9,title :'View Complaints'}
 
     ]);
 
@@ -31,7 +34,14 @@ const AdminPage = () => {
     const [showProductFilterPage,setShowProductFilterPage]=useState(false);
     const [showCreateTagPage,setshowCreateTagPage]=useState(false);
     const [itineraries, setItineraries] = useState([]);
-
+    const [showDocumentManagmentPage,setshowDocumentPage]=useState(false);
+    const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
+   const handleViewDocmunets=()=>{
+    setshowDocumentPage(true);
+   }
+   const handleViewComplaints = () => {
+    setShowViewComplaintsPage(true);
+};
     // Action listeners
     const handleCreateTag=()=>{
         setshowCreateTagPage(true);
@@ -156,6 +166,7 @@ const AdminPage = () => {
         // e.g., console.log('New Button Clicked');
         setShowSearchPage(true);
     };
+
     const handleViewItineraries = async () => {
         const fetchedItineraries = await fetchAllItineraries();
         if (fetchedItineraries) {
@@ -196,8 +207,15 @@ const AdminPage = () => {
             console.error('Error flagging itinerary:', error);
         }
     };
+
     
-    
+    // render the document managment page 
+    if(showDocumentManagmentPage){
+        return <AdminDocumentManagementPage/>
+    }
+    if(ShowViewComplaintsPage){
+        return<ComplaintsList/>
+    }
 
     return (
         <div>
@@ -240,6 +258,12 @@ const AdminPage = () => {
                                 )}
                                 {activity.title === 'View Itineraries' && (
                                         <button className="view-button" onClick={handleViewItineraries}>View Itineraries</button>
+                                )}
+                                {activity.title==='View Documents'&&(
+                                    <button className="view-button" onClick={handleViewDocmunets}>View Documents</button>
+                                )}
+                                {activity.title==='View Complaints'&&(
+                                   <button className="view-button" onClick={handleViewComplaints}>View Complaints</button>
                                 )}
 
                                 

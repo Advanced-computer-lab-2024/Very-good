@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist} = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist} = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
@@ -12,4 +12,8 @@ router.post('/getByEmail', getTouristByEmail);
 router.post('/updateByEmail',updateRecords);
 //router.patch('/:id', updateWorkout)
 router.delete('/:id', deleteTourist);
+router.post('/past-itineraries', getPastItinerariesWithTourGuides);
+router.post('/past-itineraries2', getPastItinerariesWithTourGuidesForCommentOnItenrary);
+router.post('/test',addItineraryToTourist);
+router.post('/past-activities',getPastActivitiesForTourist)
 module.exports = router

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-
+const path = require('path'); // Ensure this line is included
 const app = express()
 
 
@@ -17,11 +17,13 @@ const tagRoutes = require('./routes/tags')
 const adminRoutes = require('./routes/admin')
 const categoryRoutes = require('./routes/category')
 const categoryRouter = require('./routes/category'); // Adjust the path as necessary
-const complaintRoutes = require('./routes/complaints')
-const transportationRoutes = require('./routes/transportations')
+const complaintRoutes = require('./routes/complaints');
+const bookingRoutes = require('./routes/booking')
+//const transportationRoutes = require('./routes/transportations')
 
 const mongoose = require('mongoose')
 const cors = require('cors');
+
 
 
 app.use(cors());
@@ -49,7 +51,10 @@ app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
 // app.use('./routes/complaints', complaintRoutes)
 app.use('/api/complaints', complaintRoutes)
-app.use('/api/transportations', transportationRoutes)
+//app.use('/api/transportations', transportationRoutes)
+//This means you tell your server to make the files in D:/UploadAcl accessible over the web.
+app.use('/uploads', express.static(path.join(__dirname, 'middlewares/UploadAcl')));
+app.use('/api/bookings',bookingRoutes)
 
 
 

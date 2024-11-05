@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate,useLocation  } from 'react-router-dom';
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
 import AdminPage from './Pages/AdminPagee';
@@ -28,8 +28,19 @@ function App() {
   const [emailofseller, setEmailOfSeller] = useState(''); // Holds seller email
   const [emailoftourism, setEmailTourism] = useState(''); // Holds seller email
   const [emailAdvertiser, setEmailOfAdvertiser] = useState(''); // Holds advertiser email
+  const [isComingFromGuest, setIsComingFromGuest] = useState(false);
   const navigate = useNavigate(); // To programmatically navigate
-
+  const location = useLocation(); 
+  // Check if a role was passed from GuestPage
+  React.useEffect(() => {
+    if (location.state?.role) {
+      setRole(location.state.role);
+      setStep(2); // Skip to the registration form step
+      setIsComingFromGuest(true);
+      setAction('register');
+    }
+  }, [location.state]);
+  
   const handleActionSelection = (selectedAction) => {
     setAction(selectedAction);
   };
@@ -92,7 +103,7 @@ function App() {
         name: formElements.username.value,
         email: formElements.email.value,
         password: formElements.password.value,
-        dob: formElements.dob.value,
+      //  dob: formElements.dob.value,
       };
       await registerSeller(sellerData);
       navigate('/seller');
@@ -129,7 +140,7 @@ function App() {
             element={
               <>
                 {/* Welcome Message and Action Selection */}
-                {action === '' && (
+                {!isComingFromGuest && action === ''  && (
                   <div className="welcome-message">
                     <h1>Welcome to the Very Good Travel App</h1>
                     <p>Please select an action:</p>
@@ -326,6 +337,9 @@ function App() {
               </>
             }
           />
+          {/*what we do here is that we choose the type of user from the drop down menu then according to the choice we render the form specific 
+          we should also according to the choice render the upload page then we render the registration forum 
+          look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
           <Route path="/tourist/activities" element={<ActivityItinerarySort />} />
           <Route path="/tourist/activity/:id" element={<ActivityDetail />} />

@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css'; // Keep your existing global styles
 import FilterActivitiesPage from './FilterActivitiesPage';
+import UploadDocumentsTourGuide from './UploadDocumentsTourGuide'
 import FilterItenaryPage from './FilterItenaryPage';
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import { fetchCategories } from '../Services/activityServices'; // Import fetchCategories service
 import { searchactivity } from '../Services/activityServices'; // Import searchactivity service
-
+import { useNavigate } from 'react-router-dom';
 const GuestPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showFilterPage, setShowFilterPage] = useState(false);
   const [showItenaryPage, setShowItenaryPage] = useState(false); // Corrected variable name
   const [showHistoricalPlace, setShowFilterHistoricalPage] = useState(false);
   const [showProductFilterPage, setShowProductFilterPage] = useState(false);
-  const [ShowViewPage, setShowViewPage] = useState(false);
+  const [showViewPage, setShowViewPage] = useState(false);
   const [categories, setCategories] = useState([]); // Store all categories
   const [selectedActivities, setSelectedActivities] = useState([]); // To store activities for the selected category
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activityError, setActivityError] = useState(null);
+  const [showSignInDropdown, setShowSignInDropdown] = useState(false); // Control dropdown visibility
+  const [UploadTourGuide, setShowUploadTourGuide] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -56,7 +60,7 @@ const GuestPage = () => {
     setShowProductFilterPage(false);
   };
 
-  const handleViewUpcomingActivitiesitenarieshistroicalplaces = () => {
+  const handleViewUpcomingActivitiesItenariesHistoricalPlaces = () => {
     setShowViewPage(true);
   };
 
@@ -74,6 +78,45 @@ const GuestPage = () => {
     }
   };
 
+  const handleSignInClick = () => {
+    setShowSignInDropdown(!showSignInDropdown); // Toggle dropdown visibility
+  };
+
+
+  const handleSignInonClickTourist=()=>{
+    setShowSignInDropdown(false);
+    // should go to the tourist page 
+    // should we open the form of uploading documents right away ? 
+    // A7sn 3lshan nb3d 3n el form registration el fl app .js 
+    // so here we should transform to the registration page , take the email from the data sent , somehow connect it to the other page we 
+    // will do called uploading documents 
+  };
+
+  const handleSignInonClickTourguide=()=>{
+    setShowSignInDropdown(false);
+    // should head to the tourguide page 
+    // we should go to the registration first then we should from there go to the uploadPage and from the Uploadpage to the tourguide home page  
+    //setShowUploadTourGuide(true);
+    // this gets us to the registration 
+   navigate("/", { state: { role: "tourGuide" } });
+  };
+  const handleSignInonClickAdvertiser=()=>{
+    setShowSignInDropdown(false);
+    // should head over to the advertisers page 
+    navigate("/", { state: { role: "advertiser" } });
+  };
+  const handleSignInonClickSeller=()=>{
+    setShowSignInDropdown(false);
+    // should head over to the seller page , 
+    navigate("/", { state: { role: "seller" } });
+    
+  };
+
+
+
+
+
+
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -87,7 +130,7 @@ const GuestPage = () => {
     getCategories();
   }, []);
 
-  if (ShowViewPage) {
+  if (showViewPage) {
     return <ActivityHistoricalList />;
   }
 
@@ -106,6 +149,9 @@ const GuestPage = () => {
   if (showProductFilterPage) {
     return <FilterProductByPrice onBack={handleBackToGuestPageFromFilterProductPage} />;
   }
+  if(UploadTourGuide){
+    return <UploadDocumentsTourGuide/>;
+  }
 
   return (
     <div className="guest-page">
@@ -121,9 +167,21 @@ const GuestPage = () => {
           <button onClick={handleFilterActivitiesClick}>Filter Activities</button>
           <button onClick={handleFilterItenariesClick}>Filter Itineraries</button>
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
-          <button onClick={handleViewUpcomingActivitiesitenarieshistroicalplaces}>
+          <button onClick={handleViewUpcomingActivitiesItenariesHistoricalPlaces}>
             View Upcoming Activities/Itineraries/Historical Places
           </button>
+          
+          <button onClick={handleSignInClick}>Sign In</button>
+
+          {/* Sign In Dropdown */}
+          {showSignInDropdown && (
+            <div className="sign-in-dropdown">
+              <button onClick={handleSignInonClickTourist}>Tourist</button>
+              <button onClick={handleSignInonClickTourguide}>Tour Guide</button>
+              <button onClick={handleSignInonClickAdvertiser}>Advertiser</button>
+              <button onClick={handleSignInonClickSeller}>Seller</button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -165,8 +223,6 @@ const GuestPage = () => {
             ))}
           </div>
         )}
-
-        
       </div>
     </div>
   );

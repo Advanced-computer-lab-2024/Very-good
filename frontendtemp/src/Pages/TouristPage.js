@@ -13,7 +13,10 @@ import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
 import { useNavigate } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
-
+import CommentPageForTourist from './CommentPageForTourist';
+import TouristComplaint from './TouristComplaint';
+import ViewMyComplaint  from './ViewMyComplaint';
+import Booking from './Booking';
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
@@ -31,7 +34,10 @@ const TouristPage = ({ email }) => {
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activityError, setActivityError] = useState(null);
   const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
-
+  const [showCommentPage,setShowCommentPage]=useState(false);
+  const [showComplaintPage,setShowComplaintPage]=useState(false);
+  const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
+  const [ShowBookingPage,SetShowBookingPage]=useState(false);
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -114,14 +120,20 @@ const TouristPage = ({ email }) => {
   const handleBackToTouristPageFromFilterProductPage = () => setShowProductFilterPage(false);
   const handleBookFlightPageClick = () => setShowBookFlightPage(true);
   const handleBackToTouristPageFromBookFlightPage = () => setShowBookFlightPage(false);
-
-
+  const handleCommentClick =()=>setShowCommentPage(true);
+  const handleBackToTouristPageFromCommentPage =()=>setShowCommentPage(false);
+ const handleComplaintpageClick =()=>setShowComplaintPage(true);
+ const handleComplaintViewPageClick =()=>SetshowviewComplaintsPage(true);
+ const handleBookingPageClick =()=>SetShowBookingPage(true);
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
   if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage}/>
-
+  if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email}/>
+  if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
+  if(showComplaintPage)return <TouristComplaint email ={email}/>;
+  if(ShowBookingPage)return <Booking email ={email}/>;
   return (
     <div className="tourist-page">
       <button className="toggle-btn" onClick={toggleSidebar}>
@@ -136,6 +148,10 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
+          <button onClick={handleCommentClick}>Comment</button>
+          <button onClick={handleComplaintpageClick}>Complaint</button>
+          <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
+          <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
         </div>
       </div>
   

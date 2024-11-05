@@ -3,15 +3,21 @@ import ActivityList from '../Components/ActivityList';
 import CreateActivityForm from '../Components/CreateActivityForm';
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
+import UploadDocumentsAdvertiser from './UploadDocumentsAdvertiser'
 import './AdvertiserPage.css'; 
 
 const advertiserId = "66f826b0e184e2faa3ea510b";
 
 const AdvertiserPage = ({email}) => {
-      const [isCreating, setIsCreating] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [uploadPage, setUploadPage]=useState(true); // default with true 
+
+    const handleBackfromUploadPage = () => {
+        setUploadPage(false);
+      };
 
     const fetchAndSetActivities = async () => {
         try {
@@ -74,10 +80,16 @@ const AdvertiserPage = ({email}) => {
         setIsViewingProfile(false); // Go back to the main AdvertiserPage and hide AdvertiserInfo
     };
 
+
+
+    if (uploadPage){
+        return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
+      }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
     }
+
 
     // Otherwise, render the main AdvertiserPage
     return (
