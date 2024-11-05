@@ -1,7 +1,19 @@
 import React from 'react';
 import './ActivityList'; // Ensure you import the same CSS file
+import { useNavigate } from 'react-router-dom';
 
 const FlightOffersDisplay = ({ flightOffers, onBookFlight }) => {
+  const navigate = useNavigate(); // Define navigate
+
+  const handleBookFlight = async (offer) => {
+    try {
+      const offerId = await onBookFlight(offer); // Call the asynchronous booking function
+      navigate('/booking', { state: { offer, offerId } }); // Navigate after booking
+    } catch (error) {
+      console.error('Error booking flight:', error); // Handle any errors
+    }
+  };
+
   return (
     <div>
       <h2 className="activity-title" style={{ color: '#003366' }}>Flight Offers</h2>
@@ -59,17 +71,17 @@ const FlightOffersDisplay = ({ flightOffers, onBookFlight }) => {
               ))}
 
               {/* Add the "Book this flight" button here */}
-              <button 
-                className="book-flight-button" 
-                onClick={() => onBookFlight(offer)}
-                style={{ 
-                  backgroundColor: '#003366', 
-                  color: '#fff', 
-                  padding: '10px 20px', 
-                  marginTop: '10px', 
-                  cursor: 'pointer', 
-                  border: 'none', 
-                  borderRadius: '5px' 
+              <button
+                className="book-flight-button"
+                onClick={() => handleBookFlight(offer)} // Call handleBookFlight with the current offer
+                style={{
+                  backgroundColor: '#003366',
+                  color: '#fff',
+                  padding: '10px 20px',
+                  marginTop: '10px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  borderRadius: '5px'
                 }}
               >
                 Book this flight

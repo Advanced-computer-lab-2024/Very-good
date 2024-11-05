@@ -36,6 +36,53 @@ const bookTransportation = async (req, res) => {
   }
 };
 
+const addFlightOfferToTourist = async (req, res) => {
+  const { userId, offerId } = req.params; // Assuming userId and offerId are passed as URL parameters
+
+  try {
+    // Find the tourist by userId
+    const tourist = await Tourist.findById(userId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Add the offerId to the bookedFlightOffers array
+    tourist.bookedFlightOffers.push(offerId);
+
+    // Save the updated tourist document
+    await tourist.save();
+
+    return res.status(200).json({ message: 'Flight offer added successfully', bookedFlightOffers: tourist.bookedFlightOffers });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const addHotelOfferToTourist = async (req, res) => {
+  const { userId, offerId } = req.params; // Assuming userId and offerId are passed as URL parameters
+
+  try {
+    // Find the tourist by userId
+    const tourist = await Tourist.findById(userId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Add the offerId to the bookedFlightOffers array
+    tourist.bookedHotelOffers.push(offerId);
+
+    // Save the updated tourist document
+    await tourist.save();
+
+    return res.status(200).json({ message: 'Hotel offer added successfully', bookedHotelOffers: tourist.bookedHotelOffers });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // get all workout
 const createTourist = async (req, res) => {
@@ -357,5 +404,5 @@ const getPastActivitiesForTourist = async (req, res) => {
 
 
 
-module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation,getPastItinerariesWithTourGuides,
+module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
   getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist}

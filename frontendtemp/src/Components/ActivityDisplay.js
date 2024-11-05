@@ -4,7 +4,7 @@ import { fetchCategoryById, fetchCategories } from '../Services/activityServices
 import MapComponent from './MapComponent';
 import SimpleMapComponent from './SimpleMapComponent'; // Import your MapComponent
 
-const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
+const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedActivity, setUpdatedActivity] = useState(activity);
   const [categoryName, setCategoryName] = useState('');
@@ -56,8 +56,8 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
       specialDiscount: parseFloat(updatedActivity.specialDiscount) || 0,
       location: {
         ...updatedActivity.location,
-        //lat: parseFloat(updatedActivity.location.lat) || 0,
-        //lng: parseFloat(updatedActivity.location.lng) || 0,
+        lat: parseFloat(updatedActivity.location.lat) || 0,
+        lng: parseFloat(updatedActivity.location.lng) || 0,
       },
     };
 
@@ -74,8 +74,8 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
     setUpdatedActivity({
       ...updatedActivity,
       location: {
-        //lat: location.lat,
-        //lng: location.lng,
+        lat: location.lat,
+        lng: location.lng,
       },
     });
   };
@@ -204,6 +204,7 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate }) => {
           
           {/* Displaying location coordinates */}
           <p className="activity-location">
+          Location: {activity.location.lat}, {activity.location.lng}
           </p>
 
           {/* Render the MapComponent */}

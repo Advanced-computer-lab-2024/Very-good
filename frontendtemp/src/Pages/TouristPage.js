@@ -33,6 +33,7 @@ const TouristPage = ({ email }) => {
   const [categories, setCategories] = useState([]); // Store all the categories
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activityError, setActivityError] = useState(null);
+  const [touristId, setTouristId] = useState(null);
   const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
   const [showCommentPage,setShowCommentPage]=useState(false);
   const [showComplaintPage,setShowComplaintPage]=useState(false);
@@ -57,10 +58,11 @@ const TouristPage = ({ email }) => {
       if (response) {
         setTouristData(response.data);
         setEditedData(response.data);
+        setTouristId(response.data._id);
       }
     };
     getTouristData();
-  }, [email]);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -96,6 +98,28 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/search');
   }
 
+  const handleViewBookedFlightsPageClick = () => {
+    console.log("touristdata ahe :", touristData.bookedFlightOffers);
+    navigate('/tourist/viewBookedFlights', { state: { bookedFlightsIds : touristData.bookedFlightOffers } });
+  };
+
+  const handleBookTransportationPageClick = (touristEmail) => {
+    navigate('/tourist/bookTransportation', { state: { email: touristEmail } });
+  };
+
+  const handleViewTransportation = (touristEmail) => {
+    navigate('/tourist/viewBookedTransportation', { state: { email: touristEmail } });
+  };
+
+  const handleViewBookedHotels = () => {
+    navigate('/tourist/viewBookedHotels', { state: { bookedHotelsIds : touristData.bookedHotelOffers } });
+  };
+
+  const handleHotelFlightPageClick = (touristId) =>{
+    navigate('/tourist/SearchHotel', {state : {touristId : touristId}})
+  }
+
+
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -129,7 +153,7 @@ const TouristPage = ({ email }) => {
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
-  if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage}/>
+  if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage} touristId={touristId}/>
   if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email}/>
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
@@ -152,6 +176,11 @@ const TouristPage = ({ email }) => {
           <button onClick={handleComplaintpageClick}>Complaint</button>
           <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
           <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
+          <button onClick={handleViewBookedFlightsPageClick}>View my Booked Flights</button>
+          <button onClick={() => handleHotelFlightPageClick(touristId)}>Book a Hotel</button>
+          <button onClick={() => handleViewBookedHotels(touristId)}>View my Booked Hotels</button>
+          <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
+          <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
         </div>
       </div>
   

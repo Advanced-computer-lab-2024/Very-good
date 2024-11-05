@@ -3,7 +3,6 @@ const express = require('express')
 const path = require('path'); // Ensure this line is included
 const app = express()
 
-
 const touristRoutes = require('./routes/tourists')
 const tourGuideRoutes = require('./routes/tourGuides')
 const tourismGovernerRoutes = require('./routes/tourismGoverners')
@@ -19,7 +18,12 @@ const categoryRoutes = require('./routes/category')
 const categoryRouter = require('./routes/category'); // Adjust the path as necessary
 const complaintRoutes = require('./routes/complaints');
 const bookingRoutes = require('./routes/booking')
-//const transportationRoutes = require('./routes/transportations')
+const transportationRoutes = require('./routes/transportations')
+const flightOfferRoutes = require('./routes/flightOffers')
+const flightInfoRoutes = require('./routes/flightInfos')
+const hotelOfferRoutes = require('./routes/hotelOffers')
+const hotelInfoRoutes = require('./routes/hotelInfos')
+
 
 const mongoose = require('mongoose')
 const cors = require('cors');
@@ -51,12 +55,14 @@ app.use('/api/sellers', sellerRoutes)
 app.use('/api/tags', tagRoutes)
 // app.use('./routes/complaints', complaintRoutes)
 app.use('/api/complaints', complaintRoutes)
-//app.use('/api/transportations', transportationRoutes)
+app.use('/api/transportations', transportationRoutes)
 //This means you tell your server to make the files in D:/UploadAcl accessible over the web.
 app.use('/uploads', express.static(path.join(__dirname, 'middlewares/UploadAcl')));
 app.use('/api/bookings',bookingRoutes)
-
-
+app.use('/api/flightOffers', flightOfferRoutes)
+app.use('/api/flightInfos', flightInfoRoutes)
+app.use('/api/hotelOffers', hotelOfferRoutes)
+app.use('/api/hotelInfos', hotelInfoRoutes)
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)

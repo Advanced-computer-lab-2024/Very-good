@@ -16,6 +16,15 @@ import MuseumSearch from './Pages/MuseumSearch'
 import ActivityDetail from './Components/ActivityDetail';
 import ItineraryDetail from './Components/ItineraryDetail'
 import MuseumDetail from './Components/MuseumDetail';
+import BookingForm from './Components/BookingForm';
+import Ticket from './Components/Ticket';
+import BookTransportationPage from './Pages/BookTransportationPage';
+import ViewBookedTransportationPage from './Pages/viewBookedTransportationPage';
+import ViewBookedFlightOffers from './Components/viewBookedFlightOffers';
+import SearchHotel from './Components/SearchHotel';
+import HotelBookingForm from './Components/HotelBookingForm';
+import HotelTicket from './Components/HotelTicket';
+import ViewBookedHotelOffers from './Components/ViewBookedHotelOffers';
 //require('dotenv').config();
 
 function App() {
@@ -341,18 +350,27 @@ function App() {
           we should also according to the choice render the upload page then we render the registration forum 
           look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
+          <Route path="/hotelConfirmation" element={<HotelTicket/>} />
+          <Route path="/tourist/viewBookedHotels" element={<ViewBookedHotelOffers />} />
+          <Route path="/tourist/viewBookedFlights" element={<ViewBookedFlightOffers />} />
+          <Route path="/tourist/SearchHotel" element={<SearchHotel />} />
           <Route path="/tourist/activities" element={<ActivityItinerarySort />} />
           <Route path="/tourist/activity/:id" element={<ActivityDetail />} />
           <Route path="/tourist/itinerary/:id" element={<ItineraryDetail />} />
           <Route path="/tourist/museum/:id" element={<MuseumDetail />} />
           <Route path="/tourist/upcoming" element={<ActivityHistoricalList />} />
           <Route path="/tourist/search" element={<MuseumSearch />} />
+          <Route path="/tourist/viewBookedTransportation" element={<ViewBookedTransportationPage />} />
+          <Route path="/tourist/bookTransportation" element={<BookTransportationPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/advertiser" element={<LoadScript googleMapsApiKey='AIzaSyAbrhlteb_a1DkS0Jp1tU9fLD5Hi-j2CrA'> <AdvertiserPage email={emailAdvertiser}/> </LoadScript>} />
           <Route path="/tourismGoverner" element={<TourismGovernerPage  email={emailoftourism}/>} />
           <Route path="/tourGuide" element={<TourGuideHomePage email={emailtourguide}/>} />
           <Route path="/seller" element={<SellerPage email={emailofseller}/>} />
           <Route path="/guest" element={<GuestPage />} />
+          <Route path="/booking" element={<BookingForm />} />
+          <Route path="/ticket" element={<Ticket />} />
         </Routes>
       </div>
   );
