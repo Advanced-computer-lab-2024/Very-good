@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist} = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary } = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
@@ -15,4 +15,11 @@ router.post('/test',addItineraryToTourist);
 router.post('/past-activities',getPastActivitiesForTourist)
 router.put('/:userId/book-flight-offer/:offerId', addFlightOfferToTourist);
 router.put('/:userId/book-hotel-offer/:offerId', addHotelOfferToTourist);
+router.post('/purchase', purchaseProductbck);
+router.get('/purchased', getPurchasedProducts);
+router.patch('/rate/:productId', rateProduct);
+router.patch('/rate-tour-guide', rateTourGuide);
+router.patch('/rate-itinerary', rateItinerary);
+
+
 module.exports = router

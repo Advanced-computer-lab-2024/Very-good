@@ -3,6 +3,7 @@ const Tourist = require('../models/touristModel');
 const Itinerary = require('../models/itineraryModel'); // Import your Itinerary model
 const TourGuide = require('../models/tourGuideModel')
 const Activity = require ('../models/activityModel')
+const Product = require ('../models/productModel')
 const bookTransportation = async (req, res) => {
   try {
     const { id } = req.params; // Get the tourist ID from the request parameters
@@ -401,8 +402,194 @@ const getPastActivitiesForTourist = async (req, res) => {
   }
 };
 
+const rateTourGuide = async (req, res) => {
+  try {
+    const { touristId, tourGuideId, rating } = req.body; // Extract IDs and rating from the request body
+
+    // Find the tourist and tour guide by their IDs
+    const tourist = await Tourist.findById(touristId);
+    const tourGuide = await TourGuide.findById(tourGuideId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+    if (!tourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    // Ensure rating is between 1 and 5
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    }
+
+    // Update the tour guide's rating
+    tourGuide.rating = ((tourGuide.rating * tourGuide.numberOfRatings) + rating) / (tourGuide.numberOfRatings + 1);
+    tourGuide.numberOfRatings += 1;
+    
+    await tourGuide.save();
+
+    res.status(200).json({
+      message: 'Tour guide rated successfully',
+      tourGuideRating: tourGuide.rating
+    });
+  } catch (error) {
+    console.error('Error rating tour guide:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const rateItinerary = async (req, res) => {
+  try {
+    const { touristId, itineraryId, rating } = req.body; // Extract IDs and rating from the request body
+
+    // Find the tourist and itinerary by their IDs
+    const tourist = await Tourist.findById(touristId);
+    const itinerary = await Itinerary.findById(itineraryId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+    if (!itinerary) {
+      return res.status(404).json({ message: 'Itinerary not found' });
+    }
+
+    // Ensure rating is between 1 and 5
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    }
+
+    // Update the itinerary's rating
+    itinerary.ratings = ((itinerary.ratings * itinerary.numberOfRatings) + rating) / (itinerary.numberOfRatings + 1);
+    itinerary.numberOfRatings += 1;
+    
+    await itinerary.save();
+
+    res.status(200).json({
+      message: 'Itinerary rated successfully',
+      itineraryRating: itinerary.ratings
+    });
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const purchaseProductbck = async (req, res) => {
+  try {
+      const { email, productId } = req.body;
+
+      // Find the tourist by email
+      const tourist = await Tourist.findOne({ email: email });
+
+      if (!tourist) {
+          return res.status(404).json({ message: 'Tourist not found' });
+      }
+
+      // Find the product by ID
+      const product = await Product.findById(productId);
+
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      // Check if the product is in stock
+      if (product.stock <= 0) {
+          return res.status(400).json({ message: 'Product is out of stock' });
+      }
+
+      // Check if the tourist has enough money in their wallet
+      if (tourist.wallet < product.price) {
+          return res.status(400).json({ message: 'Insufficient funds in wallet' });
+      }
+
+      // Deduct the product price from the tourist's wallet
+      tourist.wallet -= product.price;
+
+      // Add the product ID to the tourist's purchasedProducts array (if not already purchased)
+      if (!tourist.purchasedProducts.includes(productId)) {
+          tourist.purchasedProducts.push(productId);
+      }
+      
+      // Decrement the product stock by 1 (ensure it doesn't go below 0)
+      product.stock = Math.max(0, product.stock - 1);
+
+      // Save the updated tourist and product documents
+      await tourist.save();
+      await product.save();
+
+      res.status(200).json({ message: 'Product purchased successfully' ,data: tourist.purchasedProducts});
+  } catch (error) {
+      console.error('Error purchasing product:', error.stack);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const getPurchasedProducts = async (req, res) => {
+  try {
+      const { email } = req.body; // Extract the tourist email
+
+      // Find the tourist by email
+      const tourist = await Tourist.findOne({ email: email });
+
+      if (!tourist) {
+          return res.status(404).json({ message: 'Tourist not found' });
+      }
+
+      // Fetch the products that the tourist has purchased
+      const purchasedProducts = await Product.find({
+          _id: { $in: tourist.purchasedProducts } // Match product IDs in the purchasedProducts array
+      });
+
+      res.status(200).json({
+          message: 'Purchased products retrieved successfully',
+          data: purchasedProducts
+      });
+  } catch (error) {
+      console.error('Error fetching purchased products:', error);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const rateProduct = async (req, res) => {
+  try {
+    const { productId, rating } = req.body; // Get product ID and rating from the request body
+
+    if (rating < 0 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 0 and 5' });
+    }
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Calculate new rating and update the product's numberOfRatings
+    const newRating = (product.ratings * product.numberOfRatings + rating) / (product.numberOfRatings + 1);
+
+    // Update product's ratings and numberOfRatings
+    product.ratings = newRating;
+    product.numberOfRatings += 1;
+
+    // Save the updated product
+    await product.save();
+
+    res.status(200).json({
+      message: 'Product rated successfully',
+      data: {
+        ratings: product.ratings,
+        numberOfRatings: product.numberOfRatings
+      }
+    });
+  } catch (error) {
+    console.error('Error rating product:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
 
 
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct }
