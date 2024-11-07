@@ -47,7 +47,7 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
 
     getTourGuideData();
   }, [email]);
-
+  const { _id: tourGuideId } = tourGuideData || {};
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -214,9 +214,9 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
           </button>
         </div>
 
-        {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={id}/>}
+        {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={tourGuideId}/>}
 
-        {showItineraryDisplay && <ItineraryList tourGuideId={id} />}
+        {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

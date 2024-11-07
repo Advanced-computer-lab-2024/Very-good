@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPurchasedProducts, rateTourGuide, rateItinerary, rateProduct } from '../RequestSendingMethods';
+import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPurchasedProducts, rateTourGuide, rateItinerary, rateProduct, fetchPastActivities ,rateactivity} from '../RequestSendingMethods';
 import '../styles/global.css';
 
 const RatePageForTourist = ({ onBackClick, email }) => {
     const [tourGuides, setTourGuides] = useState([]);
     const [itineraries, setItineraries] = useState([]);
+    const [activities, setActivities] = useState([]);
     const [products, setProducts] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [ratetype, setratetype] = useState(null);
@@ -17,6 +18,8 @@ const RatePageForTourist = ({ onBackClick, email }) => {
             loaditinerariesWithTourGuideName();
         } else if (ratetype === 'product') {
             loadPurchasedProducts();
+        } else if (ratetype === 'activity') {
+            loadActivities();
         }
     }, [ratetype]);
 
@@ -53,28 +56,53 @@ const RatePageForTourist = ({ onBackClick, email }) => {
         }
     };
 
+    const loadActivities = async () => {
+        try {
+            const response = await fetchPastActivities(email); 
+            console.log("Response from fetchPastActivities:", response);
+            
+            // Check if pastActivities exists in the response and is an array
+            if (response && Array.isArray(response.pastActivities)) {
+                setActivities(response.pastActivities);  // Set the activities state
+                console.log("Activities set:", response.pastActivities);  // Log the data
+            } else {
+                console.log("No past activities found or incorrect response format");
+            }
+        } catch (error) {
+            console.error('Error fetching purchased activities:', error);
+        }
+    };
+    
+
     const handleTourGuideSelection = () => setratetype('tourGuide');
     const handleProductSelection = () => setratetype('product');
     const handleItinerarySelection = () => setratetype('itinerary');
+    const handleActivitySelection = () => setratetype('activity');
 
     const handleItemClick = (item) => {
+        console.log("Item selected:", item);
         setSelectedItem(item);
-        setratetype('rateItem');
     };
 
-    const handleStarClick = (star) => setrate(star);
+    const handleStarClick = (star) => {
+        setrate(star);
+    };
 
     const handleDoneClick = async () => {
         try {
-            if (ratetype === 'tourGuide' && selectedItem.email) {
+            if (ratetype === 'tourGuide') {
                 await rateTourGuide(selectedItem.email, rate);
                 console.log(`Tour guide ${selectedItem.email} rated with ${rate} stars.`);
-            } else if (ratetype === 'itinerary' && selectedItem.itineraryId) {
-                await rateItinerary(selectedItem.itineraryId, rate);
+            } else if (ratetype === 'itinerary') {
+                await rateItinerary(selectedItem.id, rate);
                 console.log(`Itinerary ${selectedItem.itineraryTitle} rated with ${rate} stars.`);
-            } else if (ratetype === 'product' && selectedItem.productId) {
-                await rateProduct(selectedItem.productId, rate); // Rating product
-                console.log(`Product ${selectedItem.productTitle} rated with ${rate} stars.`);
+            } else if (ratetype === 'product' && selectedItem._id) {
+                await rateProduct(selectedItem._id, rate);
+                console.log(`Product ${selectedItem.name} rated with ${rate} stars.`);
+            } else if (ratetype === 'activity') {
+                console.log(selectedItem.name);
+                // Implement activity rating logic here if needed
+                await rateactivity(selectedItem.name,rate);
             }
 
             setrate(0);
@@ -99,6 +127,9 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                     <button onClick={handleItinerarySelection} className="button">
                         Itinerary
                     </button>
+                    <button onClick={handleActivitySelection} className="button">
+                        Activity
+                    </button>
                 </div>
             ) : ratetype === 'tourGuide' && !selectedItem ? (
                 <div>
@@ -107,15 +138,17 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                         <thead>
                             <tr>
                                 <th>Email</th>
+                                <th>Rating</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {tourGuides.map((email, index) => (
+                            {tourGuides.map((guide, index) => (
                                 <tr key={index}>
-                                    <td>{email}</td>
+                                    <td>{guide.email}</td>
+                                    <td>{guide.rating}</td>
                                     <td>
-                                        <button onClick={() => handleItemClick(email)}>Select</button>
+                                        <button onClick={() => handleItemClick(guide)}>Select</button>
                                     </td>
                                 </tr>
                             ))}
@@ -130,6 +163,8 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                             <tr>
                                 <th>Itinerary Title</th>
                                 <th>Tour Guide Name</th>
+                                <th>Rating</th>
+                                <th>ID</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
@@ -138,6 +173,8 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                                 <tr key={index}>
                                     <td>{itinerary.itineraryTitle}</td>
                                     <td>{itinerary.tourGuideName}</td>
+                                    <td>{itinerary.ratings}</td>
+                                    <td>{itinerary.id}</td>
                                     <td>
                                         <button onClick={() => handleItemClick(itinerary)}>Select</button>
                                     </td>
@@ -160,7 +197,7 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                         <tbody>
                             {products.map((product, index) => (
                                 <tr key={index}>
-                                    <td>{product.title}</td>
+                                    <td>{product.name}</td>
                                     <td>${product.price}</td>
                                     <td>
                                         <button onClick={() => handleItemClick(product)}>Select</button>
@@ -168,6 +205,34 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                                 </tr>
                             ))}
                         </tbody>
+                    </table>
+                </div>
+            ) : ratetype === 'activity' && !selectedItem ? (
+                <div>
+                    <h3>Select an Activity to Rate</h3>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Activity Title</th>
+                                <th>Rating</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                {activities.length > 0 ? (
+                    activities.map((activity, index) => (
+                        <tr key={index}>
+                            <td>{activity.name}</td>
+                            <td>{activity.ratings}</td>
+                            <td><button onClick={() => handleItemClick(activity)}>Select</button></td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="3">No activities found</td>
+                    </tr>
+                )}
+            </tbody>
                     </table>
                 </div>
             ) : (

@@ -58,12 +58,7 @@ const productSchema = new schema({
           }
         }
       ],
-      ratings: {
-        type: Number,
-        min: 0,
-        max: 5,
-        default: 5
-      },
+
       numberOfRatings : {
         type : Number,
         default : 1

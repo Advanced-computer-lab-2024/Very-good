@@ -107,6 +107,7 @@ const CommentPageForTourist = ({ onBackClick, email }) => {
               <tr>
                 <th>Itinerary Title</th>
                 <th>Tour Guide Name</th>
+                <th>Rating</th>
                 <th>Select</th>
               </tr>
             </thead>
@@ -115,6 +116,7 @@ const CommentPageForTourist = ({ onBackClick, email }) => {
                 <tr key={index}>
                   <td>{itinerary.itineraryTitle}</td>
                   <td>{itinerary.tourGuideName}</td>
+                  <td>{itinerary.ratings}</td>
                   <td>
                     <button onClick={() => handleItemClick(itinerary)}>Select</button>
                   </td>

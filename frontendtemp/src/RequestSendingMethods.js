@@ -672,9 +672,99 @@ const fetchComplaintsByEmail = async (email) => {
     throw error; // Rethrow error for handling in calling function
   }
 };
+const fetchPurchasedProducts = async (email) => {
+  try {
+    console.log(email);
+    const response = await axios.get(`http://localhost:4000/api/tourists/purchased`, {
+      params: { email } // Send the tourist's email as a query parameter
+    });
+    return response.data; // Handle the response as needed
+  } catch (error) {
+    console.error('Error fetching purchased products:', error);
+    throw error; // Rethrow or handle it further up
+  }
+};
+const fetchPastActivities = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/tourists/past-activities', { email });
+    return response.data;  // Returning the list of past activities
+  } catch (error) {
+    console.error('Error fetching past activities:', error);
+    throw new Error('Could not fetch past activities');
+  }
+};
+const rateProduct = async (productId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate/', {
+      productId: productId,  // Send the product's ID
+      rating: rating          // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating product:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const rateItinerary = async (itineraryId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-itinerary', {    // Send the tourist's ID
+      itineraryId: itineraryId, // Send the itinerary's ID
+      rating: rating            // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const rateactivity = async (activityname, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-activity', {    // Send the tourist's ID
+    activityname: activityname, // Send the itinerary's ID
+      rating: rating            // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+
+const rateTourGuide = async (email, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-tour-guide', {      // Send the tourist's ID
+      email: email,  
+      rating: rating             // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating tour guide:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const purchaseProduct = async (email, productId) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/tourists/purchase', {
+          email: email,          // Send the tourist's email
+          productId: productId   // Send the product's ID
+      });
+
+      if (response.status === 200) {
+          console.log('Product purchased successfully:', response.data.message);
+          return response.data; // Handle the success response as needed
+      } else {
+          console.error('Error purchasing product: haa', response.data.message);
+          throw new Error(response.data.message); // Handle error responses from the server
+      }
+  } catch (error) {
+      console.error('Error purchasing product: ooo', error.message);
+      throw error; // Rethrow or handle it further up
+  }
+};
 
 // Export the new method along with others
 export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
     registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
     fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
-    fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail };
+    fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
+    rateactivity};

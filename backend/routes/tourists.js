@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastActivitiesForTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary } = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity} = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
@@ -12,14 +12,16 @@ router.delete('/:id', deleteTourist);
 router.post('/past-itineraries', getPastItinerariesWithTourGuides);
 router.post('/past-itineraries2', getPastItinerariesWithTourGuidesForCommentOnItenrary);
 router.post('/test',addItineraryToTourist);
-router.post('/past-activities',getPastActivitiesForTourist)
+router.post('/past-activities',getPastBookedActivities)
 router.put('/:userId/book-flight-offer/:offerId', addFlightOfferToTourist);
 router.put('/:userId/book-hotel-offer/:offerId', addHotelOfferToTourist);
 router.post('/purchase', purchaseProductbck);
 router.get('/purchased', getPurchasedProducts);
-router.patch('/rate/:productId', rateProduct);
+router.patch('/rate/', rateProduct);
 router.patch('/rate-tour-guide', rateTourGuide);
 router.patch('/rate-itinerary', rateItinerary);
-
+router.patch('/rate-activity', rateActivity);
+router.post('/:id/make-payment', makePayment);
+router.post('/:id/redeem-points', redeemPoints);
 
 module.exports = router

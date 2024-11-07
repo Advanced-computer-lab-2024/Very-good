@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
 import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
-import ProductSort from '../Components/SortProductRate.js';
+import ProductSort from './SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage';
 import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
+
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
 import FlightBookingPage from './FlightBookingPage';
@@ -17,6 +18,7 @@ import CommentPageForTourist from './CommentPageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
 import Booking from './Booking';
+import RatePageForTourist from './RatePageForTourist';
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
@@ -39,6 +41,7 @@ const TouristPage = ({ email }) => {
   const [showComplaintPage,setShowComplaintPage]=useState(false);
   const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
   const [ShowBookingPage,SetShowBookingPage]=useState(false);
+  const [showRatePage, setShowRatePage] = useState(false);
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -119,7 +122,20 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/SearchHotel', {state : {touristId : touristId}})
   }
 
-
+  const handleViewMyBalance = async (email) => {
+    try {
+      
+      const response = await fetchTouristByEmail({ email });
+      if (response) {
+        setTouristData(response.data);  // Update the state with the response data
+        setEditedData(response.data);    // Update the edited data
+        setTouristId(response.data._id); // Update the tourist ID
+        navigate('/tourist/viewBalance', { state: { touristData: response.data } }); // Pass the updated data directly
+      }
+    } catch (error) {
+      console.error('Error fetching tourist data:', error);
+    }
+  };
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -149,6 +165,8 @@ const TouristPage = ({ email }) => {
  const handleComplaintpageClick =()=>setShowComplaintPage(true);
  const handleComplaintViewPageClick =()=>SetshowviewComplaintsPage(true);
  const handleBookingPageClick =()=>SetShowBookingPage(true);
+ const handleRateClick =()=>setShowRatePage(true);
+ const handleBackToTouristPageFromRatePage =()=>setShowRatePage(false);
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
@@ -158,6 +176,7 @@ const TouristPage = ({ email }) => {
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
   if(ShowBookingPage)return <Booking email ={email}/>;
+  if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email}/>
   return (
     <div className="tourist-page">
       <button className="toggle-btn" onClick={toggleSidebar}>
@@ -173,6 +192,7 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
           <button onClick={handleCommentClick}>Comment</button>
+          <button onClick={handleRateClick}>Rate</button>
           <button onClick={handleComplaintpageClick}>Complaint</button>
           <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
           <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
@@ -181,6 +201,7 @@ const TouristPage = ({ email }) => {
           <button onClick={() => handleViewBookedHotels(touristId)}>View my Booked Hotels</button>
           <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
+          <button onClick={() => handleViewMyBalance(email)}>View my Balance</button>
         </div>
       </div>
   
@@ -315,7 +336,7 @@ const TouristPage = ({ email }) => {
         <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
 
 
-        <ProductSort />
+        <ProductSort email ={email} touristId = {touristId} />
   
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

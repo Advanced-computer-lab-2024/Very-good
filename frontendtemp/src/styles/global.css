@@ -564,3 +564,17 @@ h2 {
 .submit-button:hover {
   background-color: #0056b3;
 }
+.star-rating {
+  display: flex;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.star {
+  color: gray;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: gold;
+}

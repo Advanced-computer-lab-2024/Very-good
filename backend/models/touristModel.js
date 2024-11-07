@@ -79,7 +79,16 @@ const touristSchema = new schema({
     purchasedProducts: [{
       type: schema.Types.ObjectId,
       ref: 'Product'
-    }]
+    }],
+    loyaltyPoints :{
+      type: Number,
+      default : 0
+    },
+    badge: {
+      type: String,
+      enum: ["Gold", "Silver", "Bronze"],
+      default: "Bronze"
+    }
 
     
 }, { timestamps : true })
