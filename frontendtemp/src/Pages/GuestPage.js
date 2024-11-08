@@ -9,6 +9,8 @@ import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import { fetchCategories } from '../Services/activityServices'; // Import fetchCategories service
 import { searchactivity } from '../Services/activityServices'; // Import searchactivity service
 import { useNavigate } from 'react-router-dom';
+import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
+
 const GuestPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showFilterPage, setShowFilterPage] = useState(false);
@@ -22,6 +24,8 @@ const GuestPage = () => {
   const [activityError, setActivityError] = useState(null);
   const [showSignInDropdown, setShowSignInDropdown] = useState(false); // Control dropdown visibility
   const [UploadTourGuide, setShowUploadTourGuide] = useState(false);
+  const [activities, setActivities] = useState([]); // To store activities for the selected category
+
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -65,16 +69,16 @@ const GuestPage = () => {
   };
 
   const handleCategoryClick = async (categoryName) => {
-    setLoadingActivities(true);
-    setActivityError(null);
+    setLoadingActivities(true); // Show loading indicator
+    setActivityError(null); // Reset error
 
     try {
       const activityResults = await searchactivity({ category: categoryName }); // Fetch activities by category
-      setSelectedActivities(activityResults); // Set the activities to display
+      setActivities(activityResults); // Set the activities to display
     } catch (error) {
       setActivityError('Error fetching activities for this category');
     } finally {
-      setLoadingActivities(false);
+      setLoadingActivities(false); // Stop loading
     }
   };
 
@@ -192,24 +196,39 @@ const GuestPage = () => {
 
         {/* Category Buttons */}
         <div className="category-buttons">
-          <h2>Available Categories:</h2>
-          {categories.map((category, index) => (
-            <button
-              key={index}
-              onClick={() => handleCategoryClick(category.name)} // Fetch activities for the selected category
-              style={{ margin: '5px', padding: '10px', cursor: 'pointer' }} // Inline styles for button
-            >
-              {category.name}
-            </button>
-          ))}
+          <h2>Choose a Category:</h2>
+          {categories.length > 0 ? (
+            categories.map((category, index) => (
+              <button
+                key={index}
+                onClick={() => handleCategoryClick(category.name)} // Use category name here
+                className="category-btn"
+              >
+                {category.name}
+              </button>
+            ))
+          ) : (
+            <p>No categories available.</p>
+          )}
         </div>
 
         {/* Loading Indicator */}
         {loadingActivities && <p>Loading activities...</p>}
-
+  
         {/* Error Message */}
         {activityError && <p className="error">{activityError}</p>}
-
+  
+        {/* Display Selected Activities */}
+        {activities.length > 0 && (
+          <div className="activities-list">
+            <h2>Available Activities:</h2>
+            <ul>
+              {activities.map((activity, index) => (
+                <ActivityDisplayFilterWise activity={activity}/> // Assuming activity has a 'name' field
+              ))}
+            </ul>
+          </div>
+        )}
         {/* Display Activities */}
         {selectedActivities.length > 0 && (
           <div className="activities-list">
