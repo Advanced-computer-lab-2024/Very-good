@@ -23,6 +23,7 @@ const flightOfferRoutes = require('./routes/flightOffers')
 const flightInfoRoutes = require('./routes/flightInfos')
 const hotelOfferRoutes = require('./routes/hotelOffers')
 const hotelInfoRoutes = require('./routes/hotelInfos')
+const loginRoutes = require('./routes/login'); // Adjust the path accordingly
 
 
 const mongoose = require('mongoose')
@@ -63,6 +64,7 @@ app.use('/api/flightOffers', flightOfferRoutes)
 app.use('/api/flightInfos', flightInfoRoutes)
 app.use('/api/hotelOffers', hotelOfferRoutes)
 app.use('/api/hotelInfos', hotelInfoRoutes)
+app.use('/api/login', loginRoutes);
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)
