@@ -200,7 +200,7 @@ const AdvertiserPage = ({email}) => {
                     onDelete={handleDeleteTransportation}  />
                 ))}
             </div>
-
+            
         </div>
     );
 };

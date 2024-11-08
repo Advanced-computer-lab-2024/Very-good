@@ -160,27 +160,6 @@ const PreferenceChoose = () => {
         }
     };
 
-    const filterResults = () => {
-        const filteredActivities = activities.filter(activity =>
-            activity.tags.some(tag => savedPre.includes(tag.name))
-        );
-
-        return {
-            filteredActivities,
-            filteredHistoricalPlaces: historic,
-            filteredArtsyActivites: artsy,
-            filteredArtsyPlaces: artsy,
-            filteredFamilyActivites: family,
-            filteredNightActivites: nightsOut,
-            filteredMusicalActivites: musical,
-            filteredSportsActivites: sports,
-            filteredBeachesActivites: beaches,
-            filteredNaturalActivites: nature,
-            filteredShoppingActivites: shopping,
-            filteredBudgetActivites: budgetFriendly,
-            filteredLuxuryActivites: luxury,
-        };
-    };
 
     const filterResult2 = (value) => {
         const results = {};
@@ -191,7 +170,7 @@ const PreferenceChoose = () => {
                 results.filteredActivities = historic; // Assuming historic activities are in the historic array
                 break;
             case "artsy-places":
-                results.filteredArtsyPlaces = artsy; // Artsy activities
+                // results.filteredArtsyPlaces = artsy; // Artsy activities
                 results.filteredActivities = artsy; // Assuming artsy activities are also in artsy array
                 break;
             case "family-friendly":
@@ -234,7 +213,7 @@ const PreferenceChoose = () => {
             <div>
                 {savedPre.length > 0 ? (
                     <div>
-                        <h4>Selected Preferences:</h4>
+                        <h4>We suggest you look into those based on your preference:</h4>
                         <ul>
                             {savedPre.map((preference, index) => {
                                 const results = filterResult2(preference); // Get filtered results based on preference

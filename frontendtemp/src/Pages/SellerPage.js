@@ -4,6 +4,7 @@ import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethod
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
 import Search from './Search';
 import FilterProductByPrice from './FilterProductByPrice'
+import DeleteSeller from '../Components/DeleteSellerAcc';
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -163,7 +164,7 @@ if (!termsAccepted) {
                 {isEditing ? 'Save Changes' : 'Update Profile'}
               </button>
             </div>
-
+             < DeleteSeller email={sellerData?.email} />
             <footer className="footer">
               <p>&copy; 2024 TravelApp. All rights reserved.</p>
             </footer>

@@ -3,10 +3,10 @@ import '../styles/global.css';
 import { fetchTourGuideByEmail , updateTourGuideByEmail} from '../RequestSendingMethods';
 import ItineraryList from '../Components/ItineraryList';
 import CreateItineraryForm from '../Components/CreateItineraryForm';
-
+import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 
 const id = "66fc1fbc46fa6d1f6fb6295a"
-
+let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
       <div className="modal-overlay">
@@ -233,7 +233,8 @@ if (!termsAccepted) {
         {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={id}/>}
 
         {showItineraryDisplay && <ItineraryList tourGuideId={id} />}
-
+         
+         <DeleteTA dataTA={tourGuideData?.email} isTourGuideA = {flag}/>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>

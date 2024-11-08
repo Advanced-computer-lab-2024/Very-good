@@ -15,6 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
 import PreferenceChoose from '../Components/Preference.js';
 import { Link } from 'react-router-dom';
+import DeleteTourist from '../Components/DeleteTouristAcc.js';
+import TouristService from '../Services/TouristService';
+
+
 
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
@@ -312,13 +316,18 @@ const TouristPage = ({ email }) => {
         <button onClick={navigateToActivitySorted}>show activity sorted</button>
 
         <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
-
-
-        <ProductSort />
+        
+        <br></br> <br>
+        </br>
         {/* <PreferenceChoose/> */}
-        <button onClick={() => navigate('/tourist/preference')}>
+           <button onClick={() => navigate('/tourist/preference')}>
                 Choose Preferences
             </button>
+
+        <ProductSort />
+      
+
+        <DeleteTourist email={touristData?.email }/>
         <div>
             <h1>Welcome to the Activity Planner</h1>
            

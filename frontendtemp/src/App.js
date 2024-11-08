@@ -29,6 +29,7 @@ import ViewBookedHotelOffers from './Components/ViewBookedHotelOffers';
 
 //require('dotenv').config();
 
+
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
   const [registrationType, setRegistrationType] = useState(''); // Tracks if user is individual or organization
@@ -337,6 +338,7 @@ function App() {
               </>
             }
           />
+        
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
           <Route path="/tourist/preference" element={<PerfrencePage/>} /> 
           <Route path="/Hotelbooking" element={<HotelBookingForm/>} />

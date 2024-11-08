@@ -569,6 +569,67 @@ const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
   return response.data; // Assuming the backend returns the data in this structure
 };
 
+const deletAdvertiser = async (userId) => {
+  try {
+      const response = await axios.delete(`http://localhost:4000/api/advertisers/${userId}`);
+      console.log("true")
+      return response.data;
+  } catch (error) {
+      throw error;
+  }
+};
+const deleteTourGuide = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:4000/api/tourGuides/${userId}`);
+    console.log("true")
+    return response.data;
+} catch (error) {
+    throw error;
+} 
+}
+const deleteSeller = async (userId) => {
+  try {
+      console.log("Making DELETE request for user ID:", userId);  // Debugging log
+      const response = await axios.delete(`http://localhost:4000/api/sellers/${userId}`);
+      console.log("Seller successfully deleted:", response.data);
+      return response.data;
+  } catch (error) {
+      console.error("Error deleting seller:", error.response || error.message || error);
+      throw new Error('Failed to delete seller account. Please try again later.');
+  }
+};
+
+
+const getActivitieswithAdvertiserId = async (userId) => {
+  try {
+      const response = await axios.post(`http://localhost:4000/api/advertisers/${userId}/advertisers`, {
+        userId  
+
+          
+      });
+      console.log("trial Advertiser",userId)
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching touriadvertiderst by id:" ,userId, error);
+      throw new Error("Failed to fetch advertider data");  // Re-throw the error
+  }
+};
+ const getTourGuideByEmail = async(email) => {
+  try {
+    const response = await axios.post(`http://localhost:4000/api/tourGuides/getByEmail`, {
+      email  
+
+        
+    });
+    console.log("trial TourGuide",email)
+    return response.data;
+} catch (error) {
+    console.error("Error fetching tour Guide by email:" ,email, error);
+    throw new Error("Failed to fetch tour guide data");  // Re-throw the error
+}
+ }
+
+
 // Export the new method along with others
-export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,updateTourGuideByEmail ,updateTouristByEmailT };
+export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest,deleteSeller, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
+    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail};

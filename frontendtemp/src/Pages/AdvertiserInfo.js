@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods'; // Import the fetching method
 import '../styles/global.css'; // Assuming global styles are shared across components
-
+import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 const AdvertiserInfo = ({ email, onBack }) => {
   const [advertiserData, setAdvertiserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
-
+  let flag= false ;
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
@@ -137,6 +137,8 @@ const AdvertiserInfo = ({ email, onBack }) => {
             &larr; Back
           </button>
         </div>
+        
+        <DeleteTA dataTA={advertiserData?.email} isTourGuideA={flag}/>
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

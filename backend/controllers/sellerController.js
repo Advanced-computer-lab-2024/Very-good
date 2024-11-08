@@ -107,14 +107,14 @@ const updateSeller = async (req, res) => {
   };
 
 // Delete seller by ID
+
 const deleteSeller = async (req, res) => {
     try {
-        const { id } = req.params; // Get the seller ID from the request parameters
-
-        // Find the seller and delete them
+        const { id } = req.params; // Get seller ID from URL params
+        
+        // Try to delete the seller from DB
         const deletedSeller = await Seller.findByIdAndDelete(id);
 
-        // Check if the seller was found and deleted
         if (!deletedSeller) {
             return res.status(404).json({ message: 'Seller not found' });
         }
@@ -125,6 +125,5 @@ const deleteSeller = async (req, res) => {
         res.status(500).json({ message: 'Error deleting seller', error: error.message });
     }
 };
-
 
 module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller}
