@@ -242,6 +242,31 @@ const flagItinerary = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error });
     }
 };
+const itinerary_status = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const itinerary = await Itinerary.findById(id);
+
+        if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
+
+        // Check if there are existing bookings (touristIds list)
+        if (itinerary.touristIds && itinerary.touristIds.length > 0) {
+            // If there are bookings, the itinerary can be deactivated for new users but remains visible for those who booked
+            itinerary.isActive = false; // You can also add a flag for showing this to existing tourists
+        } else {
+            // Toggle active status if no bookings are present
+            itinerary.isActive = !itinerary.isActive;
+        }
+
+        await itinerary.save();
+
+        return res.status(200).json({ message: 'Itinerary status updated', itinerary });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+
 
 
 
@@ -251,5 +276,7 @@ module.exports = {
     filterItineraries,
     searchforitinerary,filterItinerariesYassin,
     flagItinerary,
-    getItineraryByID
+    getItineraryByID,
+    itinerary_status
+    
 };
