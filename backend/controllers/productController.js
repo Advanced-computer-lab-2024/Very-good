@@ -165,5 +165,23 @@ const filterProductsByPrice = async (req, res) => {
         });
     }
 };
+const deleteProductsBySeller = async (req, res) => {
+    try {
+        const { sellerId } = req.params; // Get sellerId from URL parameters
 
-module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice}
+      //  console.log(Attempting to delete products for sellerId: ${sellerId});
+        
+        // Delete all products with the specified sellerId
+        const result = await Product.deleteMany({ sellerId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'No products found for this seller' });
+        }
+
+        res.status(200).json({ message: 'Products deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting products Controller:", error);
+        res.status(500).json({ message: 'Error deleting products', error: error.message });
+    }
+};
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller}

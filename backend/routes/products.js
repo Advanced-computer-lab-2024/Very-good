@@ -1,5 +1,5 @@
 const express = require('express')
-const {createProduct, getProducts, searchbyname,getavailableProducts , putProducts,filterProductsByPrice} = require('../controllers/productController')
+const {createProduct, getProducts, searchbyname,getavailableProducts , putProducts,filterProductsByPrice,deleteProductsBySeller} = require('../controllers/productController')
 const router = express.Router()
 
 router.get('/', getProducts)
@@ -11,8 +11,8 @@ router.post('/', createProduct)
 router.get('/search', searchbyname)
 
 router.patch('/:sellerId/products/:productId', putProducts);
-router.get('/filter', filterProductsByPrice)
-
+router.get('/filter', filterProductsByPrice),
+router.delete('/:sellerId/products', deleteProductsBySeller);
 //router.delete('/:id', deleteWorkout)
 
 //router.patch('/:id', updateWorkout)
