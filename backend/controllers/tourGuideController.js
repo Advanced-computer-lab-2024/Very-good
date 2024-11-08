@@ -168,6 +168,141 @@ const deleteTourGuide = async (req, res) => {
   }
 };
 
+
+
+
+
+const uploadDocuments = async (req, res) => {
+  try {
+      const { email } = req.params;
+      console.log("Received email:", email);
+
+      const idDocumentFile = req.files['IdDocument'] ? req.files['IdDocument'][0] : null;
+      const certificatesFiles = req.files['certificatesDocument'] || [];
+
+      console.log("ID Document File:", idDocumentFile);
+      console.log("Certificates Files:", certificatesFiles);
+
+      if (!email || !idDocumentFile || certificatesFiles.length === 0) {
+          console.error("Missing required documents or email");
+          return res.status(400).json({ message: 'Missing required documents or email' });
+      }
+
+      const idDocumentUrl = `http://localhost:4000/uploads/${idDocumentFile.filename}`;
+      const certificatesUrls = certificatesFiles.map(file => `http://localhost:4000/uploads/${file.filename}`);
+
+      // Attempt to update the database
+      const updatedTourGuide = await TourGuide.findOneAndUpdate(
+          { email },
+          {
+              IdDocument: idDocumentUrl,
+              certificatesDocument: certificatesUrls,
+          },
+          { new: true }
+      );
+
+      if (!updatedTourGuide) {
+          console.error("Tour Guide not found with email:", email);
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      console.log("Documents uploaded successfully:", updatedTourGuide);
+      res.status(200).json({ message: 'Documents uploaded successfully', tourGuide: updatedTourGuide });
+  } catch (error) {
+      console.error("Error in uploadDocuments function:", error);
+      res.status(500).json({ message: 'An error occurred while uploading documents', error });
+  }
+};
+const uploadPhoto = async (req, res) => {
+  try {
+      const { email } = req.params;
+
+      // Check if the 'photo' file exists in the request
+      const photoFile = req.file; // Access the single uploaded file
+
+      if (!email || !photoFile) {
+        return res.status(400).json({ message: 'Missing required photo or email' });
+    }
+
+      // Construct the photo URL (adjust path as necessary)
+      const photoUrl = `http://localhost:4000/uploads/${photoFile.filename}`;
+
+      // Update the TourGuide document with the photo URL
+      const updatedTourGuide = await TourGuide.findOneAndUpdate(
+          { email },
+          { photo: photoUrl },
+          { new: true }
+      );
+
+      if (!updatedTourGuide) {
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      res.status(200).json({
+          message: 'Photo uploaded successfully',
+          tourGuide: updatedTourGuide
+      });
+  } catch (error) {
+      console.error("Error uploading photo:", error);
+      res.status(500).json({ message: 'An error occurred while uploading photo', error });
+  }
+};
+
+// we want a method that sets the attribute isAccepted to true , 
+
+const acceptTourGuide = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const tourGuide = await TourGuide.findOne({ email });
+    
+    if (!tourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    tourGuide.isAccepted = "true";
+    await tourGuide.save();
+
+    // Send success response
+    res.status(200).json({ message: 'Tour guide accepted successfully', tourGuide });
+  } catch (error) {
+    console.error('Error accepting tour guide:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const rejectTourGuide = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const tourGuide = await TourGuide.findOne({ email });
+    
+    if (!tourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    tourGuide.isAccepted = "false";
+    await tourGuide.save();
+
+    // Send success response
+    res.status(200).json({ message: 'Tour guide accepted successfully', tourGuide });
+  } catch (error) {
+    console.error('Error accepting tour guide:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+
+
+module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide}
 const updateTourGuideByEmail = async (req, res) => {
   const { email, updatedData } = req.body;
 

@@ -16,15 +16,19 @@ const complaintSchema = new schema({
         type: Date,
         required: true
     },
-    touristId: {
-        type: schema.Types.ObjectId,
-        ref: 'tourist' 
+    email: {
+        type: String,
+        required: true, // Ensure email is included
     },
     isResolved: {
         type: Boolean,
         default: false
+    },
+    adminReply: {
+        type: String,
+        default: null  // Field to store the admin's reply
     }
 
 }, { timestamps : true })
 
-module.exports = mongoose.model('tourist' ,complaintSchema)
+module.exports = mongoose.model('Complaint' ,complaintSchema)

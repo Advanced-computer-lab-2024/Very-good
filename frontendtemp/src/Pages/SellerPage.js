@@ -5,6 +5,8 @@ import SellerManagementPage from './SellerManagementPage'; // Import the new pag
 import Search from './Search';
 import FilterProductByPrice from './FilterProductByPrice'
 import DeleteSeller from '../Components/DeleteSellerAcc';
+import UploadDocumentsSeller from './UploadDocumentsSeller'
+import UploadingAlogoSeller from './UploadingAlogoSeller'
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -18,6 +20,7 @@ const TermsAndConditionsModal = ({ onAccept }) => {
   );
 };
 
+
 const SellerPage = ({ email }) => {
   const [sellerData, setSellerData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -27,6 +30,11 @@ const SellerPage = ({ email }) => {
   const [isViewingManagement, setIsViewingManagement] = useState(false); // State for conditional rendering
   const [isProductFilterActive,setIsProductFilterActive]=useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [uploadPage, setUploadPage]=useState(true); // default with true
+  const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
+  const handleBackfromUploadPage = () => {
+    setUploadPage(false);
+  }; 
   useEffect(() => {
     const getSellerData = async () => {
       const response = await fetchSellerByEmail(email);
@@ -55,6 +63,12 @@ if (!termsAccepted) {
   const handleProductFilterButtonOnClick =()=>{
     setIsProductFilterActive(true);
   }
+  const handleUploadPhoto =()=>{
+    setIsUploadingAphoto(true);
+  }
+  const handleBackToSeller =()=>{
+    setIsUploadingAphoto(false);
+  }
   if(isProductFilterActive){
     return <FilterProductByPrice/>
   }
@@ -76,7 +90,12 @@ if (!termsAccepted) {
       }
     }
   };
-
+  if (uploadPage){
+    return <UploadDocumentsSeller onBack={handleBackfromUploadPage} email={email} />
+  }
+  if(isUploadingAlogo){
+    return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
+  }
   return (
     <div className="seller-page">
       {/* Sidebar Toggle Button */}
@@ -92,6 +111,7 @@ if (!termsAccepted) {
           <button onClick={handleProductFilterButtonOnClick}>
             Filter Product by Price
           </button> {/* New button with commented action listener */}
+          <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
         </div>
       </div>
 

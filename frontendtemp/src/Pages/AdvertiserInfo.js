@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods'; // Import the fetching method
+import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods';
+import UploadingALogoAdvertiser from './UploadingALogoAdvertiser'
 import '../styles/global.css'; // Assuming global styles are shared across components
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 const AdvertiserInfo = ({ email, onBack }) => {
   const [advertiserData, setAdvertiserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
-  let flag= false ;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
+  const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
-        const response = await fetchAdvertiserByEmail({ email }); // Call fetch method with email as JSON object
+        const response = await fetchAdvertiserByEmail({ email });
         if (response) {
           setAdvertiserData(response.advertiser);
           setEditedData(response.advertiser);
@@ -31,25 +33,45 @@ const AdvertiserInfo = ({ email, onBack }) => {
   };
 
   const handleUpdateProfile = async () => {
-  if (isEditing) {
-    try {
-      console.log('Email:', email);
-      console.log('Updated Data:', { updatedData: editedData }); // Log updated data
-      const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
-      console.log("RESPONSE" , response)
+    if (isEditing) {
+      try {
+        const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
+        console.log("RESPONSE" , response)
       if (response) {
-        setAdvertiserData(editedData); // Update state with edited data
-        console.log("response", response)
+          setAdvertiserData(editedData);
+          console.log("response", response)
       }
-    } catch (error) {
-      console.error('Error updating advertiser:', error);
+      } catch (error) {
+        console.error('Error updating advertiser:', error);
+      }
     }
-  }
-  setIsEditing(!isEditing); // Toggle editing state
-};
+    setIsEditing(!isEditing);
+  };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const handleUploadLogo = ()=>{
+   setISuploadLogoAdvertiserOpen(true);
+  };
+  const handleBackToAdvertiserInfo =()=>{
+    setISuploadLogoAdvertiserOpen(false);
+  }
+  if(ISuploadLogoAdvertiserOpen){
+    return <UploadingALogoAdvertiser onBack={handleBackToAdvertiserInfo} email={email} />;
+  }
   return (
-    <div className="advertiser-page">
+    <div className={`advertiser-page ${isSidebarOpen ? 'shifted' : ''}`}>
+      <button className="toggle-btn" onClick={toggleSidebar}>
+        {isSidebarOpen ? 'Close' : 'Menu'}
+      </button>
+
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-content">
+          <button onClick={handleUploadLogo}>Upload Logo</button>
+        </div>
+      </div>
+
       <div className="container">
         <header className="header">
           <h1>Welcome, Advertiser!</h1>
@@ -113,26 +135,10 @@ const AdvertiserInfo = ({ email, onBack }) => {
             )}
           </div>
 
-          {/* Removed Wallet Balance field */}
-          {/* <div className="profile-info">
-            <label>Wallet Balance:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="wallet"
-                value={editedData?.wallet || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>${advertiserData?.wallet || 'NA'}</p>
-            )}
-          </div> */}
-
           <button className="btn" onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
 
-          {/* Back Button in Bottom Right */}
           <button className="back-button bottom-right" onClick={onBack}>
             &larr; Back
           </button>

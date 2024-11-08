@@ -4,6 +4,7 @@ import CreateActivityForm from '../Components/CreateActivityForm';
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
+import UploadDocumentsAdvertiser from './UploadDocumentsAdvertiser'
 import './AdvertiserPage.css'; 
 import CreateTransportationForm from '../Components/createTransportationForm';
 import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
@@ -32,6 +33,11 @@ const AdvertiserPage = ({email}) => {
     const [error, setError] = useState(null);
     const [transportationerror, setTransportationError] = useState(null);
     const [transportationLoading, setTransportationLoading] = useState(null);
+    const [uploadPage, setUploadPage]=useState(true); // default with true 
+
+    const handleBackfromUploadPage = () => {
+        setUploadPage(false);
+      };
     const [termsAccepted, setTermsAccepted] = useState(false);
 
 
@@ -155,10 +161,17 @@ const AdvertiserPage = ({email}) => {
         setIsCreatingTransportation(true);
     }
 
+
+
+
+    if (uploadPage){
+        return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
+      }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
     }
+
 
     // Otherwise, render the main AdvertiserPage
     return (

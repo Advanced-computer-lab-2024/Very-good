@@ -31,20 +31,20 @@ const tourGuideSchema = new schema({
       },
     isAccepted: {
         type: String,
-        required : false // changed from true 
+        required: false
       },
       photo: {
         type : String, // url of a photo
-        required : false // changed from true 
+        required : false
     },
       IdDocument: {
         type : String, // url of a photo
-        required : false // changed from true 
+        required : false
       },
       certificatesDocument:[ 
       {
         type : String,
-        required : false // changed from true 
+        required : false
       }
     ],
     acceptedTermsAndConditions :{

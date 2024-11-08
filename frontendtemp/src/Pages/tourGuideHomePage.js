@@ -3,6 +3,8 @@ import '../styles/global.css';
 import { fetchTourGuideByEmail , updateTourGuideByEmail} from '../RequestSendingMethods';
 import ItineraryList from '../Components/ItineraryList';
 import CreateItineraryForm from '../Components/CreateItineraryForm';
+import UploadDocumentsTourGuide from './UploadDocumentsTourGuide'
+import UploadingPhotoTourGuide from './UploadingApictureTourGuide'
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 
 const id = "66fc1fbc46fa6d1f6fb6295a"
@@ -27,8 +29,15 @@ const TourGuideHomePage = ({ email }) => {
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
   const [termsAccepted, setTermsAccepted] = useState(false);
-
+  const [uploadPage, setUploadPage]=useState(true); // default with true 
   const [isCreating, setIsCreating] = useState(false); // State to manage the visibility of the form
+// what i added here is that after the registration is done we would render this page but initially the upload then after pressing back 
+// we get here normally to the tour guide home page 
+const [isUploadingApicture,setisUploadingApicture]=useState(false);
+
+  const handleBackfromUploadPage = () => {
+    setUploadPage(false);
+  };
 
  
 
@@ -55,7 +64,7 @@ const TourGuideHomePage = ({ email }) => {
 
     getTourGuideData();
   }, [email]);
-
+  const { _id: tourGuideId } = tourGuideData || {};
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -96,6 +105,22 @@ if (!termsAccepted) {
     setIsEditing(!isEditing); // Toggle editing state
   };
 
+  const handleUploadAphoto = () => {
+   // this function should take me to a new page called TourGuideUploadPhoto, this page would have a structure quite similar 
+   // to the uploadDocumentsTourGuide , and we will be using the same backend with minor adjustments 
+   setisUploadingApicture(true);
+  };
+  const handleBackfromUploadPicPage =() =>{
+    setisUploadingApicture(false);
+  }
+
+
+  if (uploadPage){
+    return <UploadDocumentsTourGuide onBack={handleBackfromUploadPage} email={email} />
+  }
+  if(isUploadingApicture){
+  return <UploadingPhotoTourGuide onBack={handleBackfromUploadPicPage} email={email} />
+  }
   return (
     <div className="tour-guide-page">
      
@@ -108,10 +133,10 @@ if (!termsAccepted) {
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
           <h3>Quick Links</h3>
-          <button onClick={() => alert('Filter Activities')}>Filter Activities</button>
-          <button onClick={() => alert('Filter Itineraries')}>Filter Itineraries</button>
-          <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
-          <button onClick={() => alert('Filter Products')}>Filter Products</button>
+          <button onClick={handleUploadAphoto}>Upload A photo</button>
+        {/*  <button onClick={() => alert('Filter Itineraries')}>Filter Itineraries</button>
+             <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
+             <button onClick={() => alert('Filter Products')}>Filter Products</button>*/}
         </div>
       </div>
 
@@ -230,9 +255,9 @@ if (!termsAccepted) {
           </button>
         </div>
 
-        {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={id}/>}
+        {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={tourGuideId}/>}
 
-        {showItineraryDisplay && <ItineraryList tourGuideId={id} />}
+        {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
          
          <DeleteTA dataTA={tourGuideData?.email} isTourGuideA = {flag}/>
         <footer className="footer">

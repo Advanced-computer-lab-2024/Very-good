@@ -51,7 +51,7 @@ const touristSchema = new schema({
       ],
       wallet: { // only for tourist
         type: Number,
-        default: 0 
+        default: 10000 
       },
       bookedTransportations : [{
         type: schema.Types.ObjectId,
@@ -75,7 +75,21 @@ const touristSchema = new schema({
         type : schema.Types.ObjectId,
         ref: 'flightInfo'
       }
-    ]
+    ],
+    purchasedProducts: [{
+      type: schema.Types.ObjectId,
+      ref: 'Product'
+    }],
+    loyaltyPoints :{
+      type: Number,
+      default : 0
+    },
+    badge: {
+      type: String,
+      enum: ["Gold", "Silver", "Bronze"],
+      default: "Bronze"
+    }
+
     
 }, { timestamps : true })
 

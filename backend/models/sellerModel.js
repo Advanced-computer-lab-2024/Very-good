@@ -23,19 +23,19 @@ const sellerSchema = new schema({
     },
     IdDocument: {
         type : String, // url of a photo
-        required : false //changed from true
+        required : true
     },
     taxationRegistryCard: {
-      type : String, // url of a photo
-      required : false //changed from true
+        type: [String], // Change from String to an array of strings
+        required: false
     },
     logo: {
         type : String, // url of a photo
-        required : false //changed from true
+        required : false
     },
     isAccepted: {
         type: String,
-        required : false //changed from true
+        required: false
       },
     acceptedTermsAndConditions :{
         type : Boolean,

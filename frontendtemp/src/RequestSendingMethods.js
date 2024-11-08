@@ -108,6 +108,32 @@ const registerTourist = async (touristData) => {
 }
 
   
+
+  const fetchPastbookedbytouristItineraries = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/tourists/past-itineraries', {
+          email: email // Make sure this is a string
+      });
+      return response.data; // Handle the response as needed
+  } catch (error) {
+      console.error('Error fetching past itineraries:', error);
+      throw error; // Rethrow or handle it further up
+  }
+};
+const fetchPastbookedbytouristItinerariesItneraryComment = async (email) => {
+  try {
+    // Sending a POST request with email in the body
+    const response = await axios.post('http://localhost:4000/api/tourists/past-itineraries2', {
+      email: email
+    });
+    return response.data; // Expecting response.data to be the relevant data structure
+  } catch (error) {
+    console.error('Error fetching past itineraries:', error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+};
+
+
   
   // Tour guide request methods
   
@@ -190,6 +216,41 @@ const fetchTourGuideByEmail = async (email) => {
         throw error; // Propagate error for further handling
     }
 };
+// a method that sends a request using axios , to fetch all the tour guides 
+
+const fetchTourGuides = async () => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/tourGuides/');
+    return response.data; // Assuming the response data is in JSON format
+  } catch (error) {
+    console.error('Error fetching tour guides:', error);
+    throw error; // You can choose to handle the error further
+  }
+};
+
+
+const acceptTourGuide = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/tourGuides/accept-tour-guide', { email });
+    console.log("Tour guide accepted:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to accept tour guide:", error);
+    throw error;
+  }
+};
+
+const rejectTourGuide = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/tourGuides/reject-tour-guide', { email });
+    console.log("Tour guide accepted:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to accept tour guide:", error);
+    throw error;
+  }
+};
+
 //-------------------------
 // function to create an advertiser and place in database 
 const registerAdvertiser = async (advertiserData) => {
@@ -236,8 +297,38 @@ const registerAdvertiser = async (advertiserData) => {
       throw error;
     }
   };
+  const fetchAdvertisers = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/advertisers/');
+      return response.data; // Assuming the response data is in JSON format
+    } catch (error) {
+      console.error('Error fetching advertisers:', error);
+      throw error; // You can choose to handle the error further
+    }
+  };
+  const acceptAdvertiser = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/advertisers/acceptadvertisers', { email });
+      console.log("Tour guide accepted:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to accept tour guide:", error);
+      throw error;
+    }
+  };
+  const rejectAdvertiser = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/advertisers/rejectadvertisers', { email });
+      console.log("Tour guide accepted:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to accept tour guide:", error);
+      throw error;
+    }
+  };
 
 
+//
 
 
 
@@ -345,6 +436,40 @@ const updateSellerByEmail = async (email, updatedData) => {
       throw error; // Handle error
     }
   };
+
+// fetchSellers all sellers 
+const fetchSellers = async () => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/sellers/');
+    return response.data; // Assuming the response data is in JSON format
+  } catch (error) {
+    console.error('Error fetching advertisers:', error);
+    throw error; // You can choose to handle the error further
+  }
+};
+// acceptSeller , accepting seller based on documents , 
+
+const acceptSeller = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/sellers/acceptsellers', { email });
+    console.log("Tour guide accepted:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to accept tour guide:", error);
+    throw error;
+  }
+};
+// rejectSeller , rejecting sellers based on the documents 
+const rejectSeller = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/sellers/rejectsellers', { email });
+    console.log("Tour guide accepted:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to accept tour guide:", error);
+    throw error;
+  }
+};
 
   const updateAdvertiserByEmail = async (email, updatedData) => {
     try {
@@ -569,6 +694,132 @@ const filterProductsByPrice = async ({ minPrice, maxPrice }) => {
   return response.data; // Assuming the backend returns the data in this structure
 };
 
+
+/// 
+export const sendComplaint = async (complaintData) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/complaints/submit', complaintData);
+      console.log('Response data:', response.data); // Log the response data
+      return response.data;
+  } catch (error) {
+      console.error('Error response:', error.response); // Log the error response
+      if (error.response) {
+          throw new Error(error.response.data.error || 'Something went wrong');
+      }
+      throw error;
+  }
+};
+const fetchComplaintsByEmail = async (email) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/complaints/my-complaints?email=${email}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any necessary headers, e.g., authentication tokens
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); // Attempt to get error details
+      throw new Error(`Failed to fetch complaints: ${errorData.message || response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in fetchComplaintsByEmail:", error);
+    throw error; // Rethrow error for handling in calling function
+  }
+};
+const fetchPurchasedProducts = async (email) => {
+  try {
+    console.log(email);
+    const response = await axios.get(`http://localhost:4000/api/tourists/purchased`, {
+      params: { email } // Send the tourist's email as a query parameter
+    });
+    return response.data; // Handle the response as needed
+  } catch (error) {
+    console.error('Error fetching purchased products:', error);
+    throw error; // Rethrow or handle it further up
+  }
+};
+const fetchPastActivities = async (email) => {
+  try {
+    const response = await axios.post('http://localhost:4000/api/tourists/past-activities', { email });
+    return response.data;  // Returning the list of past activities
+  } catch (error) {
+    console.error('Error fetching past activities:', error);
+    throw new Error('Could not fetch past activities');
+  }
+};
+const rateProduct = async (productId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate/', {
+      productId: productId,  // Send the product's ID
+      rating: rating          // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating product:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const rateItinerary = async (itineraryId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-itinerary', {    // Send the tourist's ID
+      itineraryId: itineraryId, // Send the itinerary's ID
+      rating: rating            // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const rateactivity = async (activityname, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-activity', {    // Send the tourist's ID
+    activityname: activityname, // Send the itinerary's ID
+      rating: rating            // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+
+const rateTourGuide = async (email, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-tour-guide', {      // Send the tourist's ID
+      email: email,  
+      rating: rating             // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating tour guide:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+const purchaseProduct = async (email, productId) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/tourists/purchase', {
+          email: email,          // Send the tourist's email
+          productId: productId   // Send the product's ID
+      });
+
+      if (response.status === 200) {
+          console.log('Product purchased successfully:', response.data.message);
+          return response.data; // Handle the success response as needed
+      } else {
+          console.error('Error purchasing product: haa', response.data.message);
+          throw new Error(response.data.message); // Handle error responses from the server
+      }
+  } catch (error) {
+      console.error('Error purchasing product: ooo', error.message);
+      throw error; // Rethrow or handle it further up
+  }
+};
+
 const deletAdvertiser = async (userId) => {
   try {
       const response = await axios.delete(`http://localhost:4000/api/advertisers/${userId}`);
@@ -631,5 +882,8 @@ const getActivitieswithAdvertiserId = async (userId) => {
 
 
 // Export the new method along with others
-export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest,deleteSeller, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail};
+export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
+  registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
+  fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
+  fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
+  rateactivity ,deleteSeller,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail};

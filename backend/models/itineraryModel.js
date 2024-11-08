@@ -17,6 +17,10 @@ const itinerarySchema = new schema({
     max: 5,
     default: 0
   },
+  numberOfRatings : {
+    type : Number,
+    default : 1
+  },
   activities: [{
     title: {
       type: String,
