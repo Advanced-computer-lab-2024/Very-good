@@ -16,8 +16,27 @@ const Booking = ({email}) => {
             try {
                 const activitiesResponse = await fetchActivitiesDate();
                 const itinerariesResponse = await fetchItinerariesNoId();
-                setActivities(activitiesResponse.data);
-                setItineraries(itinerariesResponse.data);
+                const currentDate = new Date();
+    
+                // Filter activities to only include upcoming ones
+                const upcomingActivities = activitiesResponse.data.filter(activity => {
+                    const activityDate = new Date(activity.date);
+                    return activityDate >= currentDate;
+                });
+                console.log("ablha: ", itinerariesResponse.data)
+    
+                // Filter itineraries to only include upcoming, active, appropriate, and unflagged ones
+                const upcomingItineraries = itinerariesResponse.data.filter(itinerary => {
+                    const hasUpcomingDate = itinerary.availableDates.some(date => new Date(date) >= currentDate);
+                    return hasUpcomingDate && itinerary.isActive && !itinerary.flagged;
+                });
+
+                console.log("b3dha: ", upcomingItineraries)
+
+
+
+                setActivities(upcomingActivities);
+                setItineraries(upcomingItineraries);
             } catch (error) {
                 console.error('Error fetching activities or itineraries:', error);
                 setMessage('Failed to load activities or itineraries.');

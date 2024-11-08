@@ -234,7 +234,7 @@ const flagItinerary = async (req, res) => {
         const itinerary = await Itinerary.findById(id);
         if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
 
-        itinerary.flagged = !itinerary.flagged; // Toggle flag status
+        itinerary.flagged = true; // Toggle flag status
         await itinerary.save();
 
         return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });

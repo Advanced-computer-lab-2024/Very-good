@@ -1,7 +1,8 @@
 const express = require('express')
-const {createTourGuide, getTourGuides, getTourGuideByEmail, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,deleteTourGuide,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide} = require('../controllers/tourGuideController')
+const {createTourGuide, getTourGuides, getTourGuideByEmail, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,deleteTourGuide,uploadDocuments,acceptTourGuide,rejectTourGuide,uploadPhoto,updateTourGuideByEmail} = require('../controllers/tourGuideController')
 const router = express.Router()
 const uploadTourGuide = require('../middlewares/uploadMiddlewareTourGuide'); // middleware is different from the controller, something the controller uses
+
 router.get('/', getTourGuides)
 
 router.get('/:id/itineraries', getItinerarieswithTourGuideId)
@@ -36,6 +37,10 @@ router.post('/uploadPhoto/:email',
 );
 router.post('/accept-tour-guide', acceptTourGuide);
 router.post('/reject-tour-guide',rejectTourGuide);
-module.exports = router;
+
+
+
+router.put('/updateTourGuideByEmail', updateTourGuideByEmail);
+
 
 module.exports = router

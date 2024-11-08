@@ -158,6 +158,37 @@ const deleteAdvertiser = async (req, res) => {
   }
 }; 
 
+const updateAdvertiserByEmail = async (req, res) => {
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log("Received a request to update advertiser");
+  const { email, updatedData } = req.body;
+  console.log("Updating advertiser with emailYY:", email);
+  console.log("Updated DataYY:", updatedData);
+  console.log("BODY",req.body)
+
+  try {
+    const advertiser = await Advertiser.findOneAndUpdate(
+      { email }, // Find by email
+      { $set: updatedData }, // Update only the fields in updatedData
+      { new: true } // Return the updated document
+      );
+
+      if (!advertiser) {
+          console.log("No advertiser found with this email", advertiser);
+          return res.status(404).json({ message: "Advertiser not found" });
+      }
+      
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+      console.log("Advertiser updated successfully:", advertiser);
+      console.log("Updating advertiser with emailYY:", email);
+      console.log("Updated DataYY:", updatedData);
+
+      res.status(200).json(advertiser); // Send back the updated advertiser
+  } catch (error) {
+      console.error("Error updating advertiser:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
 const updateAdvertiserByEmailBackend = async (req, res) => {
   const { email } = req.body; // Extract email from request body
   const updatedData = req.body.updatedData; // Extract updated data
@@ -180,6 +211,7 @@ const updateAdvertiserByEmailBackend = async (req, res) => {
     return res.status(500).json({ message: "Error updating advertiser", error });
   }
 };
+
 
 
 const uploadDocuments = async (req, res) => {
@@ -307,5 +339,6 @@ const rejectadvertiser = async (req, res) => {
 
 
 
+
 module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
-  fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser}
+fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser ,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser} 

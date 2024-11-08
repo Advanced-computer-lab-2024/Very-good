@@ -3,6 +3,7 @@ import axios from 'axios';
 export const fetchProducts = async (sellerId) => {
     const url = `http://localhost:4000/api//${sellerId}/products`; 
     const response = await axios.get(url);
+    console.log("FETCH")
     return response.data;
 };
 
@@ -15,9 +16,16 @@ export const fetchProductsNoID = async () => {
 };
 
 
-export const deleteProduct = async (sellerId) => {
-    const url = `http://localhost:4000/api/sellers/${sellerId}/products`;
-    await axios.delete(url);
+export const deleteProductsBySeller = async (sellerId) => {
+    try {
+        const url = `http://localhost:4000/api/products/${sellerId}/products`;
+        const response = await axios.delete(url);
+        console.log("Products deleted successfully for seller:", sellerId, response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting products for seller:", error.response || error.message || error);
+        throw new Error('Failed to delete products. Please try again later.');
+    }
 };
 
 export const updateProduct = async (sellerId, productId, updatedData) => {

@@ -297,9 +297,30 @@ const rejectTourGuide = async (req, res) => {
   }
 };
 
+const updateTourGuideByEmail = async (req, res) => {
+  const { email, updatedData } = req.body;
+
+  try {
+    const tourGuide = await TourGuide.findOneAndUpdate(
+      { email }, // Find by email
+      { $set: updatedData }, // Update only the fields in updatedData
+      { new: true } // Return the updated document
+      );
+
+      if (!tourGuide) {
+          console.log("No TourGuide found with this email", tourGuide);
+          return res.status(404).json({ message: "TourGuide not found" });
+      }
+      
+      res.status(200).json(tourGuide); // Send back the updated advertiser
+  } catch (error) {
+      console.error("Error updating TourGuide:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
 
+module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide}
 
-module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide}

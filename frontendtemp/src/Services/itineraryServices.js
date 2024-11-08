@@ -32,6 +32,7 @@ export const fetchItineraries = async (tourGuideId) => {
     const url = `http://localhost:4000/api/tourGuides/${tourGuideId}/itineraries`; 
     console.log(tourGuideId)
     const response = await axios.get(url);
+    console.log("fetch iten response",response)
     return response.data;
 };
 export const fetchItinerariesNoId = async () => {

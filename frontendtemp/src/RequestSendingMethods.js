@@ -2,6 +2,7 @@
 
 import axios from "axios";
 
+
 // Function for the registration of a tourist
 const registerTourist = async (touristData) => {
     try {
@@ -52,6 +53,7 @@ const registerTourist = async (touristData) => {
       return null;
     }
   };
+
   
   // Function to send a request for updating a tourist by email
   async function updateTouristByEmail(email, updatedData) {
@@ -75,10 +77,38 @@ const registerTourist = async (touristData) => {
       console.log('Tourist updated successfully:', result);
       return result;
     } catch (error) {
-      console.error('Error updating tourist:', error.message);
+      console.error('Error updating tourism:', error.message);
       throw error;
     }
   }
+  async function updateTouristByEmailT(email, updatedData) {
+    const url = 'http://localhost:4000/api/tourismGoverners/updateByEmailTourism'; // Fixed the URL typo
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json', // Corrected header
+            },
+            body: JSON.stringify({ email, updatedData }), // Pass email and updated data
+        });
+
+        if (!response.ok) {
+            // Check for non-JSON error responses (like HTML error pages)
+            const text = await response.text(); // Get raw text response
+            throw new Error(text || 'Error updating tourist');
+        }
+
+        const result = await response.json();
+        console.log('Tourist updated successfully:', result);
+        return result;
+    } catch (error) {
+        console.error('Error updating tourism:', error.message);
+        throw error; // Rethrow the error for further handling if needed
+    }
+}
+
+  
 
   const fetchPastbookedbytouristItineraries = async (email) => {
     try {
@@ -444,13 +474,14 @@ const rejectSeller = async (email) => {
 
   const updateAdvertiserByEmail = async (email, updatedData) => {
     try {
-        const response = await fetch('http://localhost:4000/api/advertisers/updateAdvertiserByEmail', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, updatedData }), // This is correct
-        });
+      const response = await fetch(`http://localhost:4000/api/advertisers/updateAdvertiserByEmail`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, ...updatedData }), 
+    });
+    
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -458,6 +489,9 @@ const rejectSeller = async (email) => {
         }
 
         const data = await response.json();
+        console.log("DATA", data)
+        console.log("EMAIL",email)
+        console.log("updtated data", updatedData)
         return data; // Handle success
     } catch (error) {
         console.error('Error updating advertiser:', error);
@@ -465,6 +499,31 @@ const rejectSeller = async (email) => {
     }
 };
   
+
+const updateTourGuideByEmail = async (email, updatedData) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/tourGuides/updateTourGuideByEmail`, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, ...updatedData }), 
+  });
+  
+
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data; // Handle success
+  } catch (error) {
+      console.error('Error updating tourGuide:', error);
+      throw error; // Re-throw error to be handled by calling code
+  }
+};
+
 
 //-------------------------------------------------------------------------------------------
 // New function to get all tags
@@ -762,9 +821,70 @@ const purchaseProduct = async (email, productId) => {
   }
 };
 
+const deletAdvertiser = async (userId) => {
+  try {
+      const response = await axios.delete(`http://localhost:4000/api/advertisers/${userId}`);
+      console.log("true")
+      return response.data;
+  } catch (error) {
+      throw error;
+  }
+};
+const deleteTourGuide = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:4000/api/tourGuides/${userId}`);
+    console.log("true")
+    return response.data;
+} catch (error) {
+    throw error;
+} 
+}
+const deleteSeller = async (userId) => {
+  try {
+      console.log("Making DELETE request for user ID:", userId);  // Debugging log
+      const response = await axios.delete(`http://localhost:4000/api/sellers/${userId}`);
+      console.log("Seller successfully deleted:", response.data);
+      return response.data;
+  } catch (error) {
+      console.error("Error deleting seller:", error.response || error.message || error);
+      throw new Error('Failed to delete seller account. Please try again later.');
+  }
+};
+
+
+const getActivitieswithAdvertiserId = async (userId) => {
+  try {
+      const response = await axios.post(`http://localhost:4000/api/advertisers/${userId}/advertisers`, {
+        userId  
+
+          
+      });
+      console.log("trial Advertiser",userId)
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching touriadvertiderst by id:" ,userId, error);
+      throw new Error("Failed to fetch advertider data");  // Re-throw the error
+  }
+};
+ const getTourGuideByEmail = async(email) => {
+  try {
+    const response = await axios.post(`http://localhost:4000/api/tourGuides/getByEmail`, {
+      email  
+
+        
+    });
+    console.log("trial TourGuide",email)
+    return response.data;
+} catch (error) {
+    console.error("Error fetching tour Guide by email:" ,email, error);
+    throw new Error("Failed to fetch tour guide data");  // Re-throw the error
+}
+ }
+
+
 // Export the new method along with others
 export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
-    registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
-    fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
-    fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
-    rateactivity};
+  registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
+  fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
+  fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
+  rateactivity ,deleteSeller,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail};

@@ -3,7 +3,9 @@ import axios from 'axios';
 export const fetchActivities = async (advertiserId) => {
     const url = `http://localhost:4000/api/advertisers/${advertiserId}/activities`; 
     const response = await axios.get(url);
+    console.log("response fetch activites",response)
     return response.data;
+
 };
 
 
@@ -24,8 +26,10 @@ export const fetchActivitiesDate = async () => {
 
 
 export const deleteActivity = async (activityId) => {
+    console.log("DELETE")
     const url = `http://localhost:4000/api/advertisers/${activityId}/activities`;
     await axios.delete(url);
+    
 };
 
 export const updateActivity = async (activityId, updatedActivity) => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate,useLocation  } from 'react-router-dom';
 import './styles/global.css';
 import TouristPage from './Pages/TouristPage';
+import PerfrencePage from './Pages/perfrencePage';
 import AdminPage from './Pages/AdminPagee';
 import AdvertiserPage from './Pages/AdvertiserPage';
 import TourismGovernerPage from './Pages/TourismGovernerPage';
@@ -27,6 +28,7 @@ import HotelTicket from './Components/HotelTicket';
 import ViewBookedHotelOffers from './Components/ViewBookedHotelOffers';
 import ViewBalance from './Components/ViewBalance'
 //require('dotenv').config();
+
 
 function App() {
   const [action, setAction] = useState(''); // Tracks the user's action (register or sign in)
@@ -351,6 +353,7 @@ function App() {
           we should also according to the choice render the upload page then we render the registration forum 
           look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/tourist/preference" element={<PerfrencePage/>} /> 
           <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
           <Route path="/hotelConfirmation" element={<HotelTicket/>} />
           <Route path="/tourist/viewBalance" element={<ViewBalance/>} />

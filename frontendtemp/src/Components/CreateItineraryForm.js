@@ -157,6 +157,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                     lat: parseFloat(location.lat),
                     lng: parseFloat(location.lng),
                 })),
+                isAppropriate:true,
             };
 
             const createdItinerary = await createItinerary(itineraryWithTourGuideId);

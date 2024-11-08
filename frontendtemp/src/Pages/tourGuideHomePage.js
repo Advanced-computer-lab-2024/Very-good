@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTourGuideByEmail } from '../RequestSendingMethods';
+import { fetchTourGuideByEmail , updateTourGuideByEmail} from '../RequestSendingMethods';
 import ItineraryList from '../Components/ItineraryList';
 import CreateItineraryForm from '../Components/CreateItineraryForm';
 import UploadDocumentsTourGuide from './UploadDocumentsTourGuide'
 import UploadingPhotoTourGuide from './UploadingApictureTourGuide'
+import DeleteTA from '../Components/DeleteTourGuideAndAdver';
+
 const id = "66fc1fbc46fa6d1f6fb6295a"
+let flag= true ;
+const TermsAndConditionsModal = ({ onAccept }) => {
+  return (
+      <div className="modal-overlay">
+          <div className="modal-content">
+              <h2>Terms and Conditions</h2>
+              <p>Your terms and conditions content goes here.</p>
+              <button onClick={onAccept}>Accept</button>
+          </div>
+      </div>
+  );
+};
 
 const TourGuideHomePage = ({ email }) => {
   const [showItineraryDisplay, setShowItineraryDisplay] = useState(false);
@@ -14,6 +28,7 @@ const TourGuideHomePage = ({ email }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [uploadPage, setUploadPage]=useState(true); // default with true 
   const [isCreating, setIsCreating] = useState(false); // State to manage the visibility of the form
 // what i added here is that after the registration is done we would render this page but initially the upload then after pressing back 
@@ -55,29 +70,48 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
   const handleViewItineraryDisplay = () => {
     setShowItineraryDisplay(prevState => !prevState); // Set state to true to show the ItineraryDisplay
   };
+  const handleAcceptTerms = () => {
+    setTermsAccepted(true); // Set terms as accepted
+};
+
+// Render the terms and conditions modal if not accepted
+if (!termsAccepted) {
+    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+}
+
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
   };
 
-  const handleUpdateProfile = () => {
-    setIsEditing(!isEditing);
+  const handleUpdateProfile = async () => {
     if (isEditing) {
-      // Save a copy of the old email if it was changed
-      if (editedData.email !== oldEmail) {
-        setOldEmail(editedData.email);
+      try {
+        console.log('Email:', email);
+        console.log('Updated Data:', { updatedData: editedData }); // Log updated data
+        const response = await updateTourGuideByEmail(email, { updatedData: editedData });
+        console.log("RESPONSE" , response)
+        if (response) {
+          setTourGuideData(editedData); // Update state with edited data
+          console.log("response", response)
+        }
+      } catch (error) {
+        console.error('Error updating advertiser:', error);
       }
-
-      // Update tourGuideData with the new editedData so the frontend reflects the changes
-      setTourGuideData(editedData);
-
-      // Placeholder for updating the tour guide profile
-      // updateTourGuideByEmail(oldEmail, editedData);
-      console.log('Changes saved:', editedData, oldEmail);
     }
+    setIsEditing(!isEditing); // Toggle editing state
   };
 
+
+
+
+  if (uploadPage){
+    return <UploadDocumentsTourGuide onBack={handleBackfromUploadPage} email={email} />
+  }
+  if(isUploadingApicture){
+  return <UploadingPhotoTourGuide onBack={handleBackfromUploadPicPage} email={email} />
+  }
   const handleUploadAphoto = () => {
    // this function should take me to a new page called TourGuideUploadPhoto, this page would have a structure quite similar 
    // to the uploadDocumentsTourGuide , and we will be using the same backend with minor adjustments 
@@ -96,6 +130,7 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
   }
   return (
     <div className="tour-guide-page">
+     
       {/* Sidebar Toggle Button */}
       <button className="toggle-btn" onClick={toggleSidebar}>
         {isSidebarOpen ? 'Close' : 'Menu'}
@@ -131,6 +166,19 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
               />
             ) : (
               <p>{tourGuideData?.name || 'NA'}</p>
+            )}
+          </div>
+          <div className="profile-info">
+            <label>Password:</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="password"
+                value={editedData?.password || ''}
+                onChange={handleEditChange}
+              />
+            ) : (
+              <p>{"Not Visible" || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
@@ -217,7 +265,8 @@ const [isUploadingApicture,setisUploadingApicture]=useState(false);
         {isCreating && <CreateItineraryForm onClose={closeForm} tourGuideId={tourGuideId}/>}
 
         {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
-
+         
+         <DeleteTA dataTA={tourGuideData?.email} isTourGuideA = {flag}/>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>

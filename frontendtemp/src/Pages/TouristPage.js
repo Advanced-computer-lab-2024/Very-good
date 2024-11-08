@@ -8,12 +8,19 @@ import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
 
+
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
 import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
 import { useNavigate } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
+import PreferenceChoose from '../Components/Preference.js';
+import { Link } from 'react-router-dom';
+import DeleteTourist from '../Components/DeleteTouristAcc.js';
+import TouristService from '../Services/TouristService';
+
+
 import CommentPageForTourist from './CommentPageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
@@ -66,6 +73,7 @@ const TouristPage = ({ email }) => {
     };
     getTouristData();
   }, []);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -267,6 +275,19 @@ const TouristPage = ({ email }) => {
               )}
             </div>
             <div className="profile-info">
+              <label>Password:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="password"
+                  value={editedData?.password || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.password || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
               <label>Email:</label>
               {isEditing ? (
                 <input
@@ -334,15 +355,28 @@ const TouristPage = ({ email }) => {
         <button onClick={navigateToActivitySorted}>show activity sorted</button>
 
         <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
-
+        
+        <br></br> <br>
+        </br>
+        {/* <PreferenceChoose/> */}
+           <button onClick={() => navigate('/tourist/preference')}>
+                Choose Preferences
+            </button>
 
         <ProductSort email ={email} touristId = {touristId} />
-  
+      
+
+        <DeleteTourist email={email }/>
+        <div>
+            <h1>Welcome to the Activity Planner</h1>
+           
+        </div>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
+         
       </div>
-  
+      
     </div>
   );
 };

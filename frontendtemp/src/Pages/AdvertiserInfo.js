@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods';
 import UploadingALogoAdvertiser from './UploadingALogoAdvertiser'
 import '../styles/global.css'; // Assuming global styles are shared across components
-
+import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 const AdvertiserInfo = ({ email, onBack }) => {
   const [advertiserData, setAdvertiserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
-  const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);
+  const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
@@ -36,9 +36,11 @@ const AdvertiserInfo = ({ email, onBack }) => {
     if (isEditing) {
       try {
         const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
-        if (response) {
+        console.log("RESPONSE" , response)
+      if (response) {
           setAdvertiserData(editedData);
-        }
+          console.log("response", response)
+      }
       } catch (error) {
         console.error('Error updating advertiser:', error);
       }
@@ -91,6 +93,19 @@ const AdvertiserInfo = ({ email, onBack }) => {
               <p>{advertiserData?.name || 'NA'}</p>
             )}
           </div>
+          <div className="profile-info">
+            <label>Password:</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="password"
+                value={editedData?.password || ''}
+                onChange={handleEditChange}
+              />
+            ) : (
+              <p>{"Not Visible"|| 'NA'}</p>
+            )}
+          </div>
 
           <div className="profile-info">
             <label>Email:</label>
@@ -128,6 +143,8 @@ const AdvertiserInfo = ({ email, onBack }) => {
             &larr; Back
           </button>
         </div>
+        
+        <DeleteTA dataTA={advertiserData?.email} isTourGuideA={flag}/>
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
