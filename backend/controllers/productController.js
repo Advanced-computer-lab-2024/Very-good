@@ -1,4 +1,4 @@
-const productModel = require('../models/productModel');
+//const mongoose = require('mongoose');
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 
@@ -90,49 +90,68 @@ const getavailableProducts = async (req, res) => {
     }
 };
 
-const searchbyname = async (req,res) => {
+const searchbyname = async (req, res) => {
+    const { name } = req.query;
 
-    const {name} = req.query;
+    // Validate that the name query parameter is provided
+    if (!name) {
+        return res.status(400).json({ error: 'Search term "name" is required.' });
+    }
 
     try {
-        const products = await Product.find({name : name});
-        if (!name) {
-            return res.status(400).json({ error: 'Search term "name" is required.' });
-        }
-        res.status(200).json(products)
-    }
-    catch(error){
-        res.status(400).json({error :error.message})
+        // Find products with the specified name that are also unarchived
+        const products = await Product.find({
+            name: name,
+            isArchived: false // Only fetch unarchived products
+        });
 
+        res.status(200).json(products);
+    } catch (error) {
+        console.error('Error searching by name:', error);
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
+// In your productController.js or a similar controller
+/*const updateProductSales = async (req, res) => {
+    const { productId } = req.params;
+
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        product.sales += 1; // Increment the sales count
+        await product.save();
+
+        res.json({ message: "Product sales incremented successfully", product });
+    } catch (err) {
+        res.status(500).json({ message: "Error updating sales", error: err.message });
+    }
+};*/
+
 
 
 // In your productController.js
 const putProducts = async (req, res) => {
     const { sellerId, productId } = req.params;
-    const { name, price, description, stock, rating } = req.body;
+    const updatedData = req.body;
 
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(
-            productId,
-            { name, price, description, stock, rating },
-            { new: true } // Return the updated product
+        const updatedProduct = await Product.findOneAndUpdate(
+            { _id: productId, sellerId: sellerId }, // Find by both product ID and seller ID
+            { $set: updatedData }, // Apply the updates
+            { new: true } // Return the updated document
         );
 
         if (!updatedProduct) {
-            return res.status(404).json({ message: 'Product not found.' });
+            return res.status(404).json({ message: 'Product not found' });
         }
 
-        res.status(200).json({
-            message: 'Product updated successfully.',
-            product: updatedProduct
-        });
+        res.status(200).json(updatedProduct); // Send back updated product data
     } catch (error) {
-        res.status(400).json({
-            message: 'Error updating product.',
-            error: error.message
-        });
+        res.status(500).json({ message: 'Error updating product', error });
     }
 };
 
@@ -150,7 +169,9 @@ const filterProductsByPrice = async (req, res) => {
 
         // Fetch products within the price range
         const products = await Product.find({
-            price: { $gte: minPrice, $lte: maxPrice } // Filtering condition
+            price: { $gte: minPrice, $lte: maxPrice } , // Filtering condition
+            isArchived: false // Only fetch unarchived products
+
         });
 
         res.status(200).json({
@@ -165,5 +186,52 @@ const filterProductsByPrice = async (req, res) => {
         });
     }
 };
+// Archive a product
+// Archive a product
+// Archive a product
+const archiveProduct = async (req, res) => {
+    try {
+        const productId = req.params.id; // Updated to match the route parameter
+        const product = await Product.findByIdAndUpdate(
+            productId,
+            { isArchived: true },
+            { new: true }
+        );
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json({
+            message: 'Product archived successfully',
+            product
+        });
+    } catch (err) {
+        console.error('Error archiving product:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
 
-module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice}
+// Unarchive a product
+const unarchiveProduct = async (req, res) => {
+    try {
+        const productId = req.params.id; // Updated to match the route parameter
+        const product = await Product.findByIdAndUpdate(
+            productId,
+            { isArchived: false },
+            { new: true }
+        );
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json({
+            message: 'Product unarchived successfully',
+            product
+        });
+    } catch (err) {
+        console.error('Error unarchiving product:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+
+
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,archiveProduct,unarchiveProduct}

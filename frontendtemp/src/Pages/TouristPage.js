@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
+import { fetchTouristByEmail, updateTouristByEmail ,bookItem} from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import ProductSort from './SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage';
@@ -17,7 +17,7 @@ import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.j
 import CommentPageForTourist from './CommentPageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
-import Booking from './Booking';
+import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();

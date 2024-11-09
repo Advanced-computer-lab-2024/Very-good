@@ -13,6 +13,21 @@ export const fetchProductsNoID = async () => {
 
     return response.data; 
 };
+// Archive a product
+export const archiveProduct = async (productId) => {
+    const url = `http://localhost:4000/api/products/${productId}/archive`;
+    const response = await axios.patch(url); // Use PATCH method
+    return response.data; // Return the response data
+};
+
+// Unarchive a product
+export const unarchiveProduct = async (productId) => {
+    const url = `http://localhost:4000/api/products/${productId}/unarchive`;
+    const response = await axios.patch(url); // Use PATCH method
+    return response.data; // Return the response data
+};
+
+  
 
 
 export const deleteProduct = async (sellerId) => {

@@ -672,6 +672,31 @@ const fetchComplaintsByEmail = async (email) => {
     throw error; // Rethrow error for handling in calling function
   }
 };
+const bookItem = async (bookingData) => {
+  try {
+    const response = await fetch('http://localhost:4000/api/bookings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookingData), // Send booking details in the request body
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Booking successful:', data);
+      return data; // Return the booking data if successful
+    } else {
+      console.error('Booking failed:', data.message);
+      return null; // Return null in case of an error response
+    }
+  } catch (error) {
+    console.error('Network error while booking:', error);
+    return null; // Return null in case of a network error
+  }
+};
+
 const fetchPurchasedProducts = async (email) => {
   try {
     console.log(email);
@@ -767,4 +792,4 @@ export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTourist
     registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
     fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
     fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
-    rateactivity};
+    rateactivity,bookItem};
