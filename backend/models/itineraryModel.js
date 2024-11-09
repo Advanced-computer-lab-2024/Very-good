@@ -111,6 +111,19 @@ const itinerarySchema = new schema({
   flagged: {
      type: Boolean, default: false 
     },
+    commentsArray: [
+      {
+        comment: {
+          type: String,
+          required: true
+        },
+        touristId: {
+          type: schema.Types.ObjectId,
+          ref: 'Tourist',  
+          required: true
+        }
+      }
+    ]
 
 }, { timestamps: true });
 

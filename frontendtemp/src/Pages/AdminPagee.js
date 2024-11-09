@@ -211,11 +211,6 @@ const AdminPage = ({email}) => {
         }
     };
     const handleFlagItinerary = async (id, isFlagged) => {
-        if (isFlagged) {
-            console.log(`Itinerary ${id} is already flagged.`);
-            return; // Prevent re-flagging if already flagged
-        }
-    
         try {
             const response = await fetch(`http://localhost:4000/api/itineraries/${id}/flag`, {
                 method: 'PATCH',
@@ -225,20 +220,20 @@ const AdminPage = ({email}) => {
             });
     
             if (!response.ok) {
-                throw new Error('Failed to flag itinerary');
+                throw new Error('Failed to toggle flag status');
             }
     
             const data = await response.json();
-            console.log('Itinerary flagged:', data);
+            console.log(`Itinerary ${id} ${isFlagged ? 'unflagged' : 'flagged'}:`, data);
     
-            // Update state to reflect that the itinerary is flagged
+            // Update state to reflect the new flag status
             setItineraries(prevItineraries =>
                 prevItineraries.map(itinerary =>
                     itinerary._id === id ? { ...itinerary, flagged: !itinerary.flagged } : itinerary // Toggle the flag status in the state
                 )
             );
         } catch (error) {
-            console.error('Error flagging itinerary:', error);
+            console.error('Error toggling flag status for itinerary:', error);
         }
     };
     const handleEditChange = (e) => {

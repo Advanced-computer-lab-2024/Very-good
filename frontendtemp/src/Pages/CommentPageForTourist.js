@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment } from '../RequestSendingMethods';
+import {addCommentToItinerary} from '../Services/commentServices'
 import '../styles/global.css';
-const CommentPageForTourist = ({ onBackClick, email }) => {
+const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
   const [commentType, setCommentType] = useState(null);
   const [tourGuides, setTourGuides] = useState([]);
   const [itineraries, setItineraries] = useState([]);
@@ -59,6 +60,9 @@ const CommentPageForTourist = ({ onBackClick, email }) => {
     setComment('');
     setSelectedItem(null);
     setCommentType(null);
+    // 
+    console.log("selectedItemId : ", selectedItem.id)
+    addCommentToItinerary(selectedItem.id, touristId, comment)
   };
 
 
@@ -108,6 +112,7 @@ const CommentPageForTourist = ({ onBackClick, email }) => {
                 <th>Itinerary Title</th>
                 <th>Tour Guide Name</th>
                 <th>Rating</th>
+                <th>Id</th>
                 <th>Select</th>
               </tr>
             </thead>
@@ -117,6 +122,7 @@ const CommentPageForTourist = ({ onBackClick, email }) => {
                   <td>{itinerary.itineraryTitle}</td>
                   <td>{itinerary.tourGuideName}</td>
                   <td>{itinerary.ratings}</td>
+                  <td>{itinerary.id}</td>
                   <td>
                     <button onClick={() => handleItemClick(itinerary)}>Select</button>
                   </td>

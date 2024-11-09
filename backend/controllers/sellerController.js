@@ -216,6 +216,7 @@ const uploadDocuments = async (req, res) => {
   
       // Update the isAccepted attribute to "true"
       seller.isAccepted = "true";
+      seller.isPendingAcceptance = false;
       await seller.save();
   
       // Send success response
@@ -239,6 +240,7 @@ const uploadDocuments = async (req, res) => {
   
       // Update the isAccepted attribute to "true"
       seller.isAccepted = "false";
+      seller.isPendingAcceptance = false;
       await seller.save();
   
       // Send success response

@@ -42,7 +42,7 @@ const ActivityHistoricalList = () => {
                 console.log("Itineraries Response:", itinerariesResponse); // Log response
                 
                 const filteredItineraries = itinerariesResponse.data.filter(itinerary => {
-                    return itinerary.availableDates.some(date => new Date(date) > currentDate) && !itinerary.flagged;
+                    return itinerary.availableDates.some(date => new Date(date) > currentDate) && !itinerary.flagged && itinerary.isActive;
                 });
 
                 if (filteredItineraries.length > 0) {

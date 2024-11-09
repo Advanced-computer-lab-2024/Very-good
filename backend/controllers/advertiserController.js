@@ -304,6 +304,7 @@ const acceptAdvertiser = async (req, res) => {
 
     // Update the isAccepted attribute to "true"
     advertiser.isAccepted = "true";
+    advertiser.isPendingAcceptance = false;
     await advertiser.save();
 
     // Send success response
@@ -327,6 +328,7 @@ const rejectadvertiser = async (req, res) => {
 
     // Update the isAccepted attribute to "true"
     advertiser.isAccepted = "false";
+    advertiser.isPendingAcceptance = false;
     await advertiser.save();
 
     // Send success response

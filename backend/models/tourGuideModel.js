@@ -93,7 +93,12 @@ const tourGuideSchema = new schema({
             required: true
           }
         }
-      ]
+      ],
+      isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      }
+      ,
 }, { timestamps : true })
 
 module.exports = mongoose.model('tourGuide' ,tourGuideSchema)

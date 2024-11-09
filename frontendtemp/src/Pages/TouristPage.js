@@ -180,7 +180,7 @@ const TouristPage = ({ email }) => {
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
   if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage} touristId={touristId}/>
-  if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email}/>
+  if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email} touristId={touristId}/>
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
   if(ShowBookingPage)return <Booking email ={email}/>;

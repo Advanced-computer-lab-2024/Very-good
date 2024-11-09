@@ -30,7 +30,10 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
         setTableData([]);
         return;
       }
-      const filteredData = response.data.map(({ email, IdDocument, certificatesDocument }) => ({
+      const filteredTourGuides = response.data.filter(tourguide => {
+        return tourguide.isPendingAcceptance;
+    });
+      const filteredData = filteredTourGuides.map(({ email, IdDocument, certificatesDocument }) => ({
         email,
         IdDocument,
         certificates: Array.isArray(certificatesDocument) ? certificatesDocument : [],
@@ -48,7 +51,10 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
         setTableData([]);
         return;
       }
-      const sellerData = response.data.map(({ email, IdDocument, taxCardDocument }) => ({
+      const filteredseller = response.data.filter(seller => {
+        return seller.isPendingAcceptance;
+    });
+      const sellerData = filteredseller.map(({ email, IdDocument, taxCardDocument }) => ({
         email,
         IdDocument,
         taxCardDocument,
@@ -66,7 +72,10 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
         setTableData([]);
         return;
       }
-      const advertiserData = response.data.map(({ email, IdDocument, taxCardDocument }) => ({
+      const filteredAdvertiser = response.data.filter(advertiser => {
+        return advertiser.isPendingAcceptance;
+    });
+      const advertiserData = filteredAdvertiser.map(({ email, IdDocument, taxCardDocument }) => ({
         email,
         IdDocument,
         taxCardDocument,

@@ -45,6 +45,10 @@ const advertiserSchema = new schema({
         type: String,
         required: false
       },
+      isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      },
 }, { timestamps : true })
 
 module.exports = mongoose.model('advertiser' ,advertiserSchema)

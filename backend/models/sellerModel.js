@@ -44,7 +44,11 @@ const sellerSchema = new schema({
     createdProducts: [{
         type: schema.Types.ObjectId,
         ref: 'product' // Reference to the Product model
-    }]
+    }],
+    isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      }
 }, { timestamps: true });
 
 module.exports = mongoose.model('seller' ,sellerSchema)

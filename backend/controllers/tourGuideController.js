@@ -33,7 +33,8 @@ const createTourGuide = async (req, res) => {
           nationality: newTourGuide.nationality,
           dob: newTourGuide.dob,
           yearsOfExperience : newTourGuide.yearsOfExperience,
-          previousJob : newTourGuide.previousJob
+          previousJob : newTourGuide.previousJob,
+          isAccepted : "false",
         }
       });
     } catch (error) {
@@ -264,6 +265,7 @@ const acceptTourGuide = async (req, res) => {
 
     // Update the isAccepted attribute to "true"
     tourGuide.isAccepted = "true";
+    tourGuide.isPendingAcceptance = false;
     await tourGuide.save();
 
     // Send success response
@@ -287,6 +289,7 @@ const rejectTourGuide = async (req, res) => {
 
     // Update the isAccepted attribute to "true"
     tourGuide.isAccepted = "false";
+    tourGuide.isPendingAcceptance = false;
     await tourGuide.save();
 
     // Send success response

@@ -45,7 +45,34 @@ const ItineraryList = ({ tourGuideId }) => {
             console.error('Failed to update itinerary:', err.message);
         }
     };
-
+    const handleStatusItinerary = async (id, isActive) => {
+        try {
+            // Send the PATCH request to update itinerary status
+            const response = await fetch(`http://localhost:4000/api/itineraries/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to toggle status');
+            }
+    
+            const data = await response.json();
+            console.log(`Itinerary ${id} ${isActive ? 'Activated' : 'Deactivated'}:`, data);
+    
+            // Update state to reflect the new flag status
+            setItineraries(prevItineraries =>
+                prevItineraries.map(itinerary =>
+                    itinerary._id === id ? { ...itinerary, isActive: !itinerary.isActive } : itinerary // Toggle isActive status
+                )
+            );
+        } catch (error) {
+            console.error('Error toggling status for itinerary:', error);
+        }
+    };
+    
     if (loading) return <p>Loading itineraries...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -61,6 +88,7 @@ const ItineraryList = ({ tourGuideId }) => {
                         itinerary={itinerary} 
                         onDelete={handleDeleteItinerary} 
                         onUpdate={handleUpdateItinerary} 
+                        onStatus={handleStatusItinerary}
                     />
                 ))
             )}

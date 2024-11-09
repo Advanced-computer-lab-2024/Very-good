@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
 
-const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
+const ItineraryDisplay = ({ itinerary, onDelete, onUpdate,onStatus }) => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and view mode
   const [updatedItinerary, setUpdatedItinerary] = useState(itinerary); // Copy of the itinerary to hold updated values
   const [tags, setTags] = useState([]); // State to hold fetched tags
@@ -65,6 +65,14 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
         tags: [...prevState.tags, tagId], // Add new tag ID
       }));
     }
+  };
+  const handleStatusClick = () => {
+    // Toggle the status when button is clicked
+    onStatus(itinerary._id, updatedItinerary.isActive);
+    setUpdatedItinerary(prevState => ({
+      ...prevState,
+      isActive: !prevState.isActive, // Toggle the isActive status
+    }));
   };
 
   return (
@@ -292,6 +300,9 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate }) => {
 
           <button onClick={handleEditClick}>Edit Itinerary</button>
           <button onClick={() => onDelete(itinerary._id)}>Delete Itinerary</button>
+          <button className="status-button" onClick={handleStatusClick}>
+            {updatedItinerary.isActive ? 'Deactivate' : 'Activate'}
+          </button>
         </>
       )}
     </div>
