@@ -747,10 +747,12 @@ const fetchPastActivities = async (email) => {
   try {
     const response = await axios.post('http://localhost:4000/api/tourists/past-activities', { email });
     return response.data;  // Returning the list of past activities
+   
   } catch (error) {
     console.error('Error fetching past activities:', error);
     throw new Error('Could not fetch past activities');
   }
+  
 };
 const rateProduct = async (productId, rating) => {
   try {

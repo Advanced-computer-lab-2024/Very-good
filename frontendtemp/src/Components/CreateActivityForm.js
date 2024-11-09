@@ -15,6 +15,7 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
         bookingOpen: false,
         location: { lat: '', lng: '' },
         time: { hours: '', minutes: '' },
+        
     });
 
     const [availableCategories, setAvailableCategories] = useState([]);

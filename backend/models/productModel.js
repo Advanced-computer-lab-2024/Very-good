@@ -49,12 +49,12 @@ const productSchema = new schema({
         {
           comment: {
             type: String,
-            required: true
+            required: false
           },
           touristId: {
             type: schema.Types.ObjectId,
             ref: 'Tourist',  
-            required: true
+            required: false
           }
         }
       ],

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPurchasedProducts, rateTourGuide, rateItinerary, rateProduct, fetchPastActivities ,rateactivity} from '../RequestSendingMethods';
+import {addReviewToProduct} from '../Services/commentServices'
 import '../styles/global.css';
 
-const RatePageForTourist = ({ onBackClick, email }) => {
+const RatePageForTourist = ({ onBackClick, email, touristId }) => {
     const [tourGuides, setTourGuides] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [activities, setActivities] = useState([]);
     const [products, setProducts] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [ratetype, setratetype] = useState(null);
+    const [comment, setComment] = useState('');
     const [rate, setrate] = useState(0);
 
     useEffect(() => {
@@ -22,6 +24,21 @@ const RatePageForTourist = ({ onBackClick, email }) => {
             loadActivities();
         }
     }, [ratetype]);
+
+    const handleCommentChange = (e) => setComment(e.target.value);
+
+    const handleReviewClick = async () => {
+        console.log("s:",selectedItem._id)
+        console.log("t:",touristId)
+        console.log("c:",comment)
+
+          try {
+            await addReviewToProduct(selectedItem._id, touristId, comment);
+          } catch (error) {
+            console.error('Error adding review:', error);
+          }
+        };
+    
 
     const loadTourGuides = async () => {
         try {
@@ -206,6 +223,7 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                             ))}
                         </tbody>
                     </table>
+
                 </div>
             ) : ratetype === 'activity' && !selectedItem ? (
                 <div>
@@ -250,7 +268,18 @@ const RatePageForTourist = ({ onBackClick, email }) => {
                         ))}
                     </div>
                     <button onClick={handleDoneClick} className="done-button">Done</button>
+                    <div>
+          <h3>Leave a Review</h3>
+          <textarea
+            value={comment}
+            onChange={handleCommentChange}
+            placeholder="Write your Review here..."
+            className="comment-textarea"
+          />
+          <button onClick={handleReviewClick} className="done-button">Done</button>
+        </div>
                 </div>
+
             )}
             <button onClick={onBackClick} className="back-button">Back</button>
         </div>

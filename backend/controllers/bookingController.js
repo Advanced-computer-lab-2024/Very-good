@@ -16,7 +16,7 @@ const createBooking = async (req, res) => {
 
         if (activityId) {
             const activity = await Activity.findById(activityId);
-            if (!activity || !activity.bookingOpen) {
+            if (!activity ) {
                 return res.status(400).json({ message: 'Activity not available for booking' });
             }
             booking = new Booking({

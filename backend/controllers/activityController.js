@@ -31,6 +31,37 @@ const getActivityById = async (req, res) => {
     }
 };
 
+const addCommentToActivity = async (req, res) => {
+    try {
+        const { activityId, touristId, comment } = req.body;
+
+        // Find the itinerary by ID
+        const activity = await Activity.findById(activityId);
+        
+        if (!activity) {
+            return res.status(404).json({ message: 'activity not found' });
+        }
+
+        // Add the comment and tourist ID to the comments array
+        activity.commentsArray.push({ comment, touristId });
+
+        // Save the updated itinerary
+        await activity.save();
+
+        res.status(200).json({
+            message: 'Comment added successfully',
+            activity
+        });
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).json({
+            message: 'Error adding comment',
+            error: error.message
+        });
+    }
+};
+
+
 const createActivity = async (req, res) => {
     try {
         // Destructure the request body to get activity details
@@ -49,7 +80,7 @@ const createActivity = async (req, res) => {
             tourGuideId,
             advertiserId,
             specialDiscount,
-            bookingOpen
+            bookingOpen : true
         });
 
         await newActivity.save();
@@ -83,7 +114,7 @@ const createActivity = async (req, res) => {
                 tourGuideId: newActivity.tourGuideId,
                 advertiserId: newActivity.advertiserId,
                 bookingOpen: newActivity.bookingOpen,
-                specialDiscount: newActivity.specialDiscount
+                specialDiscount: newActivity.specialDiscount,
             }
         });
     } catch (error) {
@@ -265,4 +296,4 @@ const filterActivities = async (req, res) => {
  
   
 
-module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity, getActivityById}
+module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity, getActivityById, addCommentToActivity}

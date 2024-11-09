@@ -275,7 +275,9 @@ const getPastItinerariesWithTourGuides = async (req, res) => {
           const tourGuide = await TourGuide.findById(itinerary.tourGuideId); // Get the tour guide by ID
           return {
             email: tourGuide ? tourGuide.email : null, // Return the email or null if not found
-            rating: tourGuide ? tourGuide.rating : null // Return the rating or null if not found
+            rating: tourGuide ? tourGuide.rating : null ,// Return the rating or null if not found
+            id : tourGuide ? tourGuide._id : null
+
         };
     }));
 
@@ -407,7 +409,8 @@ const getPastBookedActivities = async (req, res) => {
       .filter(activity => toDateOnly(new Date(activity.date)) < today)
       .map(activity => ({
         name: activity.name,
-        ratings: activity.ratings
+        ratings: activity.ratings,
+        id : activity._id
       }));
 
     res.status(200).json({

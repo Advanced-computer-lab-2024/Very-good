@@ -48,6 +48,35 @@ const createProduct = async (req, res) => {
         });
     }
 };
+const addReviewToProduct = async (req, res) => {
+    try {
+        const { productId, touristId, comment } = req.body;
+
+        // Find the itinerary by ID
+        const product = await Product.findById(productId);
+        
+        if (!product) {
+            return res.status(404).json({ message: 'product not found' });
+        }
+
+        // Add the comment and tourist ID to the comments array
+        product.reviewsArray.push({ comment, touristId });
+
+        // Save the updated itinerary
+        await product.save();
+
+        res.status(200).json({
+            message: 'review added successfully',
+            product
+        });
+    } catch (error) {
+        console.error('Error adding review:', error);
+        res.status(500).json({
+            message: 'Error adding review',
+            error: error.message
+        });
+    }
+};
 
 // Get all Products
 const getProducts = async (req, res) => {
@@ -184,4 +213,4 @@ const deleteProductsBySeller = async (req, res) => {
         res.status(500).json({ message: 'Error deleting products', error: error.message });
     }
 };
-module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller}
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller,addReviewToProduct}

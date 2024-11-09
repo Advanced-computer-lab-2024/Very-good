@@ -184,7 +184,7 @@ const TouristPage = ({ email }) => {
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
   if(ShowBookingPage)return <Booking email ={email}/>;
-  if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email}/>
+  if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email} touristId={touristId}/>
   return (
     <div className="tourist-page">
       <button className="toggle-btn" onClick={toggleSidebar}>

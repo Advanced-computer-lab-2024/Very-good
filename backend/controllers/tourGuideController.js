@@ -47,6 +47,37 @@ const createTourGuide = async (req, res) => {
     }
 };
 
+const addCommentToTourGuide = async (req, res) => {
+  try {
+      const { tourGuideId, touristId, comment } = req.body;
+
+      // Find the itinerary by ID
+      const tourGuide = await TourGuide.findById(tourGuideId);
+      
+      if (!tourGuide) {
+          return res.status(404).json({ message: 'tourGuide not found' });
+      }
+
+      // Add the comment and tourist ID to the comments array
+      tourGuide.commentsArray.push({ comment, touristId });
+
+      // Save the updated itinerary
+      await tourGuide.save();
+
+      res.status(200).json({
+          message: 'Comment added successfully',
+          tourGuide
+      });
+  } catch (error) {
+      console.error('Error adding comment:', error);
+      res.status(500).json({
+          message: 'Error adding comment',
+          error: error.message
+      });
+  }
+};
+
+
 const getItinerarieswithTourGuideId = async (req, res) => {
   try {
       const itineraries = await Itinerary.find({ tourGuideId: req.params.id });
@@ -325,5 +356,5 @@ const updateTourGuideByEmail = async (req, res) => {
 
 
 
-module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide}
+module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide}
 
