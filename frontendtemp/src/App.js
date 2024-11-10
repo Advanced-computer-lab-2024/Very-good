@@ -142,6 +142,7 @@ function App() {
         dob: formElements.dob.value,
         nationality: formElements.nationality.value,
         job: formElements.job.value,
+        
       };
       await registerTourist(touristData);
       navigate("/tourist");

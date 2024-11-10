@@ -2,7 +2,8 @@ const express = require('express')
 const {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers} = require('../controllers/sellerController')
 const uploadSeller = require('../middlewares/uploadMiddlewareSeller');
 const router = express.Router()
-
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); 
 router.get('/', getSellers)
 
 //router.get('/:id', getWorkout)

@@ -89,7 +89,11 @@ const touristSchema = new schema({
       enum: ["Gold", "Silver", "Bronze"],
       default: "Bronze"
     }
-
+   ,
+   delete: {
+    type: Boolean, // Change from String to an array of strings
+    required: false
+},
     
 }, { timestamps : true })
 

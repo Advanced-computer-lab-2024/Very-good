@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProductsNoID } from '../Services/productServices';
+import { fetchProductsNoID , updateProduct} from '../Services/productServices';
 import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported
 import {makePayment} from '../Services/payementServices'
 const ProductSort = ({ email, touristId }) => {
@@ -68,10 +68,40 @@ const ProductSort = ({ email, touristId }) => {
                 
                 makePayment(touristId, product.price);
             }
-        } catch (err) {
-            setPurchaseError("Error purchasing product: " + err.message);
-        }
-    };
+
+            let sellerId = product.sellerId;          
+            let productId = product._id;  
+            let salesN =  product.sales +1 
+            let stockN = product.stock  -1   
+            let updatedData = {  
+                sales: salesN ,
+                stock: stockN       // Replace with the data you want to update
+            };
+
+// Using the function to update the product
+            updateProduct(sellerId, productId, updatedData)
+                .then(updatedProduct => {
+                    console.log("Product updated successfully:", updatedProduct);
+                    console.log("seller id" , sellerId)
+                    console.log("product id" , productId)
+                    console.log("stock old" , product.stock , "stock new", stockN)
+                    console.log("sales  " , product.sales , "sales new", salesN)
+                    console.log("seller id updates" , updatedProduct.sellerId)
+                    console.log("product id updates " , updatedProduct.id)
+                    console.log("stock old" , product.stock , "stock new U", updatedProduct.stock)
+                    console.log("sales old " ,  salesN, "sales new U",salesN)
+                    
+                })
+                .catch(error => {
+                    console.error("Error updating product:", error);
+                });
+
+                    } catch (err) {
+                        setPurchaseError("Error purchasing product: " + err.message);
+                    }
+
+
+                };
 
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);

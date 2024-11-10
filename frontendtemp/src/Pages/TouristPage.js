@@ -96,6 +96,29 @@ const TouristPage = ({ email }) => {
       updateTouristByEmail(oldEmail, editedData);
     }
   };
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete: true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateTouristByEmail(touristData.email,{editedData} );  // or sellerData._id if you're using ID instead of email
+       
+        // Check if the update was successful
+        if (response.success) {
+            console.log("Seller marked for deletion:", response);
+            alert("Seller has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark seller for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+        console.log("resp" ,response)
+    } catch (error) {
+        console.error("Error updating seller:", error);
+        // Handle error (e.g., show error message)
+    }
+};
 
   const navigateToActivitySorted = () => {
     navigate('/tourist/activities');
@@ -144,6 +167,7 @@ const TouristPage = ({ email }) => {
       console.error('Error fetching tourist data:', error);
     }
   };
+
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -367,6 +391,7 @@ const TouristPage = ({ email }) => {
       
 
         <DeleteTourist email={email }/>
+        <button onClick={()=>handleDeleteReq()}> send delete request</button>
         <div>
             <h1>Welcome to the Activity Planner</h1>
            

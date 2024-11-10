@@ -70,9 +70,18 @@ const DeleteTourist = ({ email }) => {
                         });
                 });
 
+                if(user.bookedItineraries.length === 0 && user.bookedActivities === 0){
+                    setFlag(false);
+                    console.log("len ac",user.bookedItineraries.length)
+                    console.log("len aiten",user.bookedItineraries.length)
+                }
+                else{
+                    setFlag(true);
+                }
+
                 setTouristAct(userActivities);
                 setTouristIten(userItineraries);
-                setFlag(userActivities.length > 0 || userItineraries.length > 0);
+               
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -106,21 +115,26 @@ const DeleteTourist = ({ email }) => {
         if (user) {
             console.log("User ID:", user._id);
             console.log("User Email:", user.email);
-            activities.forEach(element => {
-                console.log("Activity:", element);
-            });
-            itineraries.forEach(element1 => {
-                console.log("Itinerary:", element1);
-            });
-            touristAct.forEach(element2 => {
-                console.log("User Activity:", element2);
-            });
-            if (touristIten.length === 0) console.log("No matching activities found for the user.");
-            touristAct.forEach(element2 => {
-                console.log("User Iten:", element2);
-            });
-            if (touristIten.length === 0) console.log("No matching Iten found for the user.");
-        }
+            console.log("flag",flag)
+            console.log("len ac",user.bookedActivities.length)
+            console.log("len aiten",user.bookedItineraries.length)
+            console.log("len ac2",user.bookedActivities)
+            console.log("len aiten2",user.bookedItineraries)
+        //     activities.forEach(element => {
+        //         console.log("Activity:", element);
+        //     });
+        //     itineraries.forEach(element1 => {
+        //         console.log("Itinerary:", element1);
+        //     });
+        //     touristAct.forEach(element2 => {
+        //         console.log("User Activity:", element2);
+        //     });
+        //     if (touristIten.length === 0) console.log("No matching activities found for the user.");
+        //     touristAct.forEach(element2 => {
+        //         console.log("User Iten:", element2);
+        //     });
+        //     if (touristIten.length === 0) console.log("No matching Iten found for the user.");
+         }
     };
 
     // if (error) return <p>Error: {error}</p>;

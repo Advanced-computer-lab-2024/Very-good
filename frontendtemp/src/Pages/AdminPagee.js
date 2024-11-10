@@ -8,6 +8,7 @@ import FilterProductByPrice from './FilterProductByPrice'
 import AdminCreateTag from './AdminCreateTag'
 import AdminDocumentManagementPage from './AdminDocumentManagementPage'
 import ComplaintsList from './ComplaintsList'
+import Deletion from '../Components/DeleteAdmin';
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -48,7 +49,7 @@ const AdminPage = ({email}) => {
     const [newPassword, setNewPassword] = useState(''); // State for the new password
     const [confirmPassword, setConfirmPassword] = useState(''); // State for confirming the new password
   
-
+    
     const handleChangePassword = () => {
         setIsChangingPassword(!isChangingPassword); // Toggle the password change form
     };
@@ -75,7 +76,7 @@ const AdminPage = ({email}) => {
             alert('Failed to change password.'); // Notify the user of failure
         }
     };
-
+    
     // Action listeners
     const handleCreateTag=()=>{
         setshowCreateTagPage(true);
@@ -525,6 +526,7 @@ const AdminPage = ({email}) => {
                     )}
                 </>
             )}
+            <Deletion/>
         </div>
     );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ActivityList from '../Components/ActivityList';
 import CreateActivityForm from '../Components/CreateActivityForm';
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
@@ -23,6 +24,16 @@ const TermsAndConditionsModal = ({ onAccept }) => {
         </div>
     );
   };
+  const NotAccepted = ({ onAccept }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <p>Not Accepted.</p>
+                <button onClick={onAccept}>back</button>
+            </div>
+        </div>
+    );
+  };
 
 const AdvertiserPage = ({email}) => {
     const [isCreating, setIsCreating] = useState(false);
@@ -34,6 +45,7 @@ const AdvertiserPage = ({email}) => {
     const [transportationerror, setTransportationError] = useState(null);
     const [transportationLoading, setTransportationLoading] = useState(null);
     const [uploadPage, setUploadPage]=useState(true); // default with true 
+    const navigate = useNavigate();
 
     const handleBackfromUploadPage = () => {
         setUploadPage(false);
@@ -101,9 +113,7 @@ const AdvertiserPage = ({email}) => {
     };
     
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
-    if (!termsAccepted) {
-        return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-    }
+   
     const handleCreateButtonClick = () => {
         setIsCreating(true); // Show the form when the button is clicked
     };
@@ -167,11 +177,25 @@ const AdvertiserPage = ({email}) => {
     if (uploadPage){
         return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
       }
+      if (!termsAccepted) {
+        return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
     }
-
+    
+//   const r1 =()=>{
+//     console.log("00000000000")
+//     navigate("/");
+    
+//   }
+    // if(!AdvertiserInfo.isAccepted){
+    //     return <NotAccepted onAccept={()=>r1()} />
+    // }
+    // if (AdvertiserInfo.isAccepted &&!termsAccepted) {
+    //   return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    // }
 
     // Otherwise, render the main AdvertiserPage
     return (

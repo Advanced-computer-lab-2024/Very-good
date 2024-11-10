@@ -6,6 +6,7 @@ import CreateItineraryForm from '../Components/CreateItineraryForm';
 import UploadDocumentsTourGuide from './UploadDocumentsTourGuide'
 import UploadingPhotoTourGuide from './UploadingApictureTourGuide'
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 const id = "66fc1fbc46fa6d1f6fb6295a"
 let flag= true ;
@@ -16,6 +17,16 @@ const TermsAndConditionsModal = ({ onAccept }) => {
               <h2>Terms and Conditions</h2>
               <p>Your terms and conditions content goes here.</p>
               <button onClick={onAccept}>Accept</button>
+          </div>
+      </div>
+  );
+};
+const NotAccepted = ({ onAccept }) => {
+  return (
+      <div className="modal-overlay">
+          <div className="modal-content">
+              <p>Not Accepted.</p>
+              <button onClick={onAccept}>back</button>
           </div>
       </div>
   );
@@ -34,6 +45,7 @@ const TourGuideHomePage = ({ email }) => {
   // what i added here is that after the registration is done we would render this page but initially the upload then after pressing back
   // we get here normally to the tour guide home page
   const [isUploadingApicture, setisUploadingApicture] = useState(false);
+  const navigate = useNavigate();
 
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
@@ -75,9 +87,7 @@ const TourGuideHomePage = ({ email }) => {
 };
 
 // Render the terms and conditions modal if not accepted
-if (!termsAccepted) {
-    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-}
+
 
 
   const handleEditChange = (e) => {
@@ -102,13 +112,35 @@ if (!termsAccepted) {
     }
     setIsEditing(!isEditing); // Toggle editing state
   };
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete: true };
 
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateTourGuideByEmail(tourGuideData.email,  { updatedData: editedData });  // or sellerData._id if you're using ID instead of email
+        
+        // Check if the update was successful
+        if (response.success) {
+            console.log("Seller marked for deletion:", response);
+            alert("Seller has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark seller for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+    } catch (error) {
+        console.error("Error updating seller:", error);
+        // Handle error (e.g., show error message)
+    }
+};
 
-
+  
 
   if (uploadPage){
     return <UploadDocumentsTourGuide onBack={handleBackfromUploadPage} email={email} />
   }
+
   if(isUploadingApicture){
   return <UploadingPhotoTourGuide onBack={handleBackfromUploadPicPage} email={email} />
   }
@@ -137,6 +169,17 @@ if (!termsAccepted) {
       />
     );
   }
+  const r1 =()=>{
+    console.log("00000000000")
+    navigate("/");
+    
+  }
+  if(tourGuideData.certificatesDocument ===0){
+    return <NotAccepted onAccept={()=>r1()} />
+}
+if (tourGuideData.certificatesDocument !==0&&!termsAccepted) {
+  return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+}
   return (
     <div className="tour-guide-page">
      
@@ -293,6 +336,7 @@ if (!termsAccepted) {
         {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
          
          <DeleteTA dataTA={tourGuideData?.email} isTourGuideA = {flag}/>
+         <button onClick={()=>handleDeleteReq()}> send delete request</button>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>

@@ -48,7 +48,11 @@ const sellerSchema = new schema({
     isPendingAcceptance : {
         type : Boolean,
         default : true,
-      }
+      },
+      delete: {
+        type: Boolean, // Change from String to an array of strings
+        required: false
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('seller' ,sellerSchema)

@@ -57,6 +57,28 @@ const AdvertiserInfo = ({ email, onBack }) => {
   const handleBackToAdvertiserInfo =()=>{
     setISuploadLogoAdvertiserOpen(false);
   }
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete: true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateAdvertiserByEmail(advertiserData.email,  { updatedData: editedData });  // or sellerData._id if you're using ID instead of email
+        
+        // Check if the update was successful
+        if (response.success) {
+            console.log("Seller marked for deletion:", response);
+            alert("Seller has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark seller for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+    } catch (error) {
+        console.error("Error updating seller:", error);
+        // Handle error (e.g., show error message)
+    }
+};
   if(ISuploadLogoAdvertiserOpen){
     return <UploadingALogoAdvertiser onBack={handleBackToAdvertiserInfo} email={email} />;
   }
@@ -145,6 +167,7 @@ const AdvertiserInfo = ({ email, onBack }) => {
         </div>
         
         <DeleteTA dataTA={advertiserData?.email} isTourGuideA={flag}/>
+        <button onClick={()=>handleDeleteReq()}> send delete request</button>
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
