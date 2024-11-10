@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID } from '../Services/productServices';
+import { purchaseProduct , fetchwallet } from '../RequestSendingMethods';  // Assuming the function for purchase is imported
 
-
-const ProductSort = () => {
+const ProductSort = ({email}) => {
     const [products, setProducts] = useState([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showMappings, setShowMappings] = useState(false);  // Toggle for activities
-
+    const [touristWallet, setTouristWallet] = useState(0);  // To store the tourist's wallet balance
+    const [purchaseError, setPurchaseError] = useState(""); // To handle errors when purchasing
+    console.log('Passing email:', email);  
     useEffect(() => {
         const getProducts = async () => {
             try {
@@ -36,6 +38,42 @@ const ProductSort = () => {
         getProducts();  // Fetch first set of products (sorted by rating)
     }, []);
 
+    // Assuming the wallet balance is fetched here (replace with your logic)
+    useEffect(() => {
+        const handlegetwallet = async () => {
+            try {
+                const balance = await fetchwallet(email);
+                setTouristWallet(balance);
+                console.log(touristWallet);  // Update state with wallet balance
+                setError('');
+            } catch (err) {
+                setError('Failed to fetch wallet balance');
+            }
+            
+        };
+
+        handlegetwallet();
+    }, []);
+
+    const handlePurchase = async (product) => {
+        if (touristWallet < product.price) {
+            setPurchaseError("Insufficient funds in your wallet.");
+            return;
+        }
+
+        try {
+            const response = await purchaseProduct(email, product._id.toString());
+            console.log('product id' , product._id )  ;// Assuming touristEmail is available
+            if (response && response.message === "Product purchased successfully") {
+                setTouristWallet(prevBalance => prevBalance - product.price); // Deduct product price from wallet
+                setPurchaseError("");  // Clear any previous errors
+                alert('Product purchased successfully');
+            }
+        } catch (err) {
+            setPurchaseError("Error purchasing product: " + err.message);
+        }
+    };
+
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);
 
@@ -45,10 +83,16 @@ const ProductSort = () => {
                 <h3>{product.name}</h3>
                 <p><strong>Description:</strong> {product.description || "No description available"}</p>
                 <p><strong>Price:</strong> {product.price} EGP</p>
-                <p><strong>Rating:</strong> {product.rating} </p>
+                <p><strong>Rating:</strong> {product.rating}</p>
                 <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
 
-                
+                {/* Purchase Button */}
+                <button onClick={() => handlePurchase(product)} disabled={product.stock <= 0}>
+                    {product.stock > 0 ? "Purchase" : "Out of Stock"}
+                </button>
+
+                {/* Show error if wallet balance is insufficient */}
+                {purchaseError && <p style={{ color: 'red' }}>{purchaseError}</p>}
             </div>
         );
     };

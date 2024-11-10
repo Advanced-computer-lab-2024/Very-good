@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
+import { fetchTouristByEmail, updateTouristByEmail, purchaseProduct } from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import ProductSort from '../Components/SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage';
@@ -14,6 +14,7 @@ import { fetchCategories, searchactivity } from '../Services/activityServices'; 
 import { useNavigate } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
 import CommentPageForTourist from './CommentPageForTourist';
+import RatePageForTourist from './RatePageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
 import Booking from './Booking';
@@ -36,6 +37,7 @@ const TouristPage = ({ email }) => {
   const [touristId, setTouristId] = useState(null);
   const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
   const [showCommentPage,setShowCommentPage]=useState(false);
+  const [showRatePage, setShowRatePage] = useState(false);
   const [showComplaintPage,setShowComplaintPage]=useState(false);
   const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
   const [ShowBookingPage,SetShowBookingPage]=useState(false);
@@ -146,6 +148,8 @@ const TouristPage = ({ email }) => {
   const handleBackToTouristPageFromBookFlightPage = () => setShowBookFlightPage(false);
   const handleCommentClick =()=>setShowCommentPage(true);
   const handleBackToTouristPageFromCommentPage =()=>setShowCommentPage(false);
+  const handleRateClick =()=>setShowRatePage(true);
+  const handleBackToTouristPageFromRatePage =()=>setShowRatePage(false);
  const handleComplaintpageClick =()=>setShowComplaintPage(true);
  const handleComplaintViewPageClick =()=>SetshowviewComplaintsPage(true);
  const handleBookingPageClick =()=>SetShowBookingPage(true);
@@ -155,6 +159,7 @@ const TouristPage = ({ email }) => {
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
   if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage} touristId={touristId}/>
   if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email}/>
+  if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email}/>
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
   if(ShowBookingPage)return <Booking email ={email}/>;
@@ -173,6 +178,7 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
           <button onClick={handleCommentClick}>Comment</button>
+          <button onClick={handleRateClick}>Rate</button>
           <button onClick={handleComplaintpageClick}>Complaint</button>
           <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
           <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
@@ -314,8 +320,9 @@ const TouristPage = ({ email }) => {
 
         <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
 
+        
 
-        <ProductSort />
+        <ProductSort email={email} />
   
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

@@ -104,6 +104,96 @@ const fetchPastbookedbytouristItinerariesItneraryComment = async (email) => {
   }
 };
 
+const fetchPurchasedProducts = async (email) => {
+  try {
+      const response = await axios.get('http://localhost:4000/api/tourists/purchased', {
+          email: email // Send the tourist's email in the request body
+      });
+      return response.data; // Handle the response as needed
+  } catch (error) {
+      console.error('Error fetching purchased products:', error);
+      throw error; // Rethrow or handle it further up
+  }
+};
+
+
+const purchaseProduct = async (email, productId) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/tourists/purchase', {
+          email: email,          // Send the tourist's email
+          productId: productId   // Send the product's ID
+      });
+
+      if (response.status === 200) {
+          console.log('Product purchased successfully:', response.data.message);
+          return response.data; // Handle the success response as needed
+      } else {
+          console.error('Error purchasing product: haa', response.data.message);
+          throw new Error(response.data.message); // Handle error responses from the server
+      }
+  } catch (error) {
+      console.error('Error purchasing product: ooo', error.message);
+      throw error; // Rethrow or handle it further up
+  }
+};
+
+
+const fetchwallet = async (email) => {
+  try {
+      const response = await axios.post('http://localhost:4000/api/tourists/getwallet', {
+          email: email // Send the tourist's email in the request body
+      });
+      console.log(response);
+      return response.data; // Handle the response as needed
+  } catch (error) {
+      console.error('Error fetching wallet:', error);
+      throw error; // Rethrow or handle it further up
+  }
+};
+
+
+const rateTourGuide = async (touristId, tourGuideId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-tour-guide', {
+      touristId: touristId,      // Send the tourist's ID
+      tourGuideId: tourGuideId,  // Send the tour guide's ID
+      rating: rating             // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating tour guide:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+
+const rateItinerary = async (touristId, itineraryId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-itinerary', {
+      touristId: touristId,     // Send the tourist's ID
+      itineraryId: itineraryId, // Send the itinerary's ID
+      rating: rating            // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating itinerary:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+
+const rateProduct = async (productId, rating) => {
+  try {
+    const response = await axios.patch('http://localhost:4000/api/tourists/rate-product', {
+      productId: productId,  // Send the product's ID
+      rating: rating          // Send the rating
+    });
+    return response.data;  // Handle the response as needed
+  } catch (error) {
+    console.error('Error rating product:', error);
+    throw error;  // Rethrow or handle it further up
+  }
+};
+
+
 
   
   // Tour guide request methods
@@ -677,4 +767,5 @@ const fetchComplaintsByEmail = async (email) => {
 export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTouristByEmail, createTourGuideRequest, fetchTourGuideByEmail,fetchAllTags,updateTag,deleteTag,addAdmin,addTourismGoverner,
     registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
     fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
-    fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail };
+    fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,purchaseProduct,rateTourGuide,rateItinerary,rateProduct, fetchwallet
+  };
