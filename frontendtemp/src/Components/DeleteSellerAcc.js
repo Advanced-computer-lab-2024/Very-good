@@ -72,13 +72,13 @@ const DeleteSeller = ({ email }) => {
     // Poll every 5 seconds based on the email prop
     useEffect(() => {
         fetchData(); // Initial fetch on mount
-        const interval = setInterval(() => {
-            if (isPolling) {
-                fetchData(); // Fetch data every 5 seconds if polling is active
-            }
-        }, 5000); // Poll every 5 seconds
-        // Cleanup polling on unmount
-        return () => clearInterval(interval);
+        // const interval = setInterval(() => {
+        //     if (isPolling) {
+        //         fetchData(); // Fetch data every 5 seconds if polling is active
+        //     }
+        // }, 5000); // Poll every 5 seconds
+        // // Cleanup polling on unmount
+       // return () => clearInterval(interval);
     }, [email]); // Use `email` as the dependency for polling
 
     // Handle deletion of the user and their products

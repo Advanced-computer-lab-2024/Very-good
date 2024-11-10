@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
+import { fetchTouristByEmail, updateTouristByEmail ,bookItem} from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import ProductSort from './SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage';
@@ -24,7 +24,7 @@ import TouristService from '../Services/TouristService';
 import CommentPageForTourist from './CommentPageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
-import Booking from './Booking';
+import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
@@ -183,7 +183,7 @@ const TouristPage = ({ email }) => {
   if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email} touristId={touristId}/>
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
-  if(ShowBookingPage)return <Booking email ={email}/>;
+  if(ShowBookingPage)return <Booking touristId ={touristId}/>;
   if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email} touristId={touristId}/>
   return (
     <div className="tourist-page">

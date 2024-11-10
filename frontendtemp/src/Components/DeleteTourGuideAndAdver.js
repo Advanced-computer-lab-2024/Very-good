@@ -199,8 +199,8 @@ useEffect(() => {
         } else {
             alert('Delete Account Request Rejected: Bookings were found.');
         }
-        const interval = setInterval(handleDeletion, 0);
-        return () => clearInterval(interval);
+        //const interval = setInterval(handleDeletion, 0);
+        //return () => clearInterval(interval);
     }; 
 
     const debugInfo = () => {

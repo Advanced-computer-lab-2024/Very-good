@@ -83,10 +83,10 @@ const DeleteTourist = ({ email }) => {
       
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
+        //const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
 
         // Cleanup polling when component unmounts
-        return () => clearInterval(interval);
+        //return () => clearInterval(interval);
     }, [email]);
 
     const handleDeletion = async () => {

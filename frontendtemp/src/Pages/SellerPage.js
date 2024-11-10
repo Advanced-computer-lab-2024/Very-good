@@ -191,7 +191,7 @@ if (!termsAccepted) {
           </>
         )}
       </div>
-      <Search/>
+      <Search sellerId={sellerData._id}/>
     </div>
   );
 };

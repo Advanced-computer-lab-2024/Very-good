@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProductsNoID } from '../Services/productServices';
+import { fetchProductsNoID ,updateProduct} from '../Services/productServices';
 import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported
 import {makePayment} from '../Services/payementServices'
 const ProductSort = ({ email, touristId }) => {
@@ -22,7 +22,10 @@ const ProductSort = ({ email, touristId }) => {
                         const rateB = b.rating;
                         return rateB - rateA;  // Sort by rating in ascending order
                     });
-                    setProducts(sortedProducts);  // Update state with sorted products
+                    const filteredProducts = sortedProducts.filter(product => {
+                        return !product.isArchived;
+                    });
+                    setProducts(filteredProducts);  // Update state with sorted products
                     console.log('sorted list by rate:', sortedProducts);
                 } else {
                     throw new Error("No data found in the response for products sorted by rating.");
@@ -36,7 +39,7 @@ const ProductSort = ({ email, touristId }) => {
         };
 
         getProducts();  // Fetch first set of products (sorted by rating)
-    }, []);
+    });
 
     // Assuming the wallet balance is fetched here (replace with your logic)
     useEffect(() => {
@@ -68,10 +71,55 @@ const ProductSort = ({ email, touristId }) => {
                 
                 makePayment(touristId, product.price);
             }
+
+            let sellerId = product.sellerId;          
+            let productId = product._id;  
+            let salesN =  product.sales +1 
+            let stockN = product.stock  -1   
+            let updatedData = {  
+                sales: salesN ,
+                stock: stockN       // Replace with the data you want to update
+            };
+
+// Using the function to update the product
+            updateProduct(sellerId, productId, updatedData)
+                .then(updatedProduct => {
+                    console.log("Product updated successfully:", updatedProduct);
+                    console.log("seller id" , sellerId)
+                    console.log("product id" , productId)
+                    console.log("stock old" , product.stock , "stock new", stockN)
+                    console.log("sales  " , product.sales , "sales new", salesN)
+                    console.log("seller id updates" , updatedProduct.sellerId)
+                    console.log("product id updates " , updatedProduct.id)
+                    console.log("stock old" , product.stock , "stock new U", updatedProduct.stock)
+                    console.log("sales old " ,  salesN, "sales new U",salesN)
+                    
+                })
+                .catch(error => {
+                    console.error("Error updating product:", error);
+                });
+
+                    } catch (err) {
+                        setPurchaseError("Error purchasing product: " + err.message);
+                    }
+
+
+                };
+
+    /* const updateProductSales = async (productId) => {
+        try {
+            const response = await fetch(`/api/products/${productId}/increment-sales`, {
+                method: 'PATCH', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId })
+            });
+            const data = await response.json();
+            console.log("Sales incremented:", data);
+            return data;
         } catch (err) {
-            setPurchaseError("Error purchasing product: " + err.message);
+            console.error("Error updating sales count:", err);
         }
-    };
+    };*/
 
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);
