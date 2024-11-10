@@ -77,16 +77,29 @@ const TourismGovernerPage = ({ email }) => {
   };
 
   const handleUpdateProfile = () => {
+    
     setIsEditing(!isEditing);
     setShowProfileInfo(!showProfileInfo); // Toggle profile info
-
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== tourismData.password){
+        return
+      }
+      
+    }
     if (isEditing) {
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
       }
       setTourismData(editedData);
       updateTouristByEmailT(oldEmail, editedData);
+     
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== tourismData.password && isEditing){
+        return
+      }
     }
+
   };
 
   return (

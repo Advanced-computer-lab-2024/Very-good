@@ -33,6 +33,12 @@ const AdvertiserInfo = ({ email, onBack }) => {
   };
 
   const handleUpdateProfile = async () => {
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== advertiserData.password){
+        return
+      }
+    }
     if (isEditing) {
       try {
         const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
@@ -40,6 +46,10 @@ const AdvertiserInfo = ({ email, onBack }) => {
       if (response) {
           setAdvertiserData(editedData);
           console.log("response", response)
+      }
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== advertiserData.password && isEditing){
+        return
       }
       } catch (error) {
         console.error('Error updating advertiser:', error);

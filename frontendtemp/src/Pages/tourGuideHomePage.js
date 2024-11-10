@@ -96,6 +96,13 @@ const TourGuideHomePage = ({ email }) => {
   };
 
   const handleUpdateProfile = async () => {
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== tourGuideData.password){
+        return
+      }
+      
+    }
     if (isEditing) {
       try {
         console.log('Email:', email);
@@ -105,6 +112,10 @@ const TourGuideHomePage = ({ email }) => {
         if (response) {
           setTourGuideData(editedData); // Update state with edited data
           console.log("response", response)
+        }
+        const userInput2 = prompt("Please confirm password:");
+        if( userInput2 !== tourGuideData.password && isEditing){
+          return
         }
       } catch (error) {
         console.error('Error updating advertiser:', error);

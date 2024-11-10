@@ -33,6 +33,7 @@ const NotAccepted = ({ onAccept }) => {
 };
 
 
+
 const SellerPage = ({ email }) => {
   const [sellerData, setSellerData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -107,17 +108,28 @@ const SellerPage = ({ email }) => {
 };
 
   const handleUpdateProfile = async () => {
+    if(!isEditing){
+    const userInput = prompt("Please enter your password:");
+    if( userInput !== sellerData.password){
+      return
+    }
+  }
     setIsEditing(!isEditing);
     if (isEditing) {
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
       }
-      setSellerData(editedData);
+      
       try {
         const response = await updateSellerByEmail(oldEmail, editedData);
         if (response) {
           console.log('Seller updated successfully:', response);
         }
+        setSellerData(editedData);
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== sellerData.password && isEditing){
+        return
+      }
       } catch (error) {
         console.error('Error updating seller:', error);
       }
@@ -141,6 +153,7 @@ if (sellerData.taxationRegistryCard.length > 0 &&!termsAccepted) {
   if(isUploadingAlogo){
     return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
   }
+  
   return (
     <div className="seller-page">
       {/* Sidebar Toggle Button */}
