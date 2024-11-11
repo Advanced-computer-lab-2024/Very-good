@@ -44,7 +44,7 @@ const submitComplaint = async (req, res) => {
             }
     
            // console.log(Fetching complaints for email: ${email});
-            const complaints = await Complaint.find({ email: email.toLowerCase() }).select('title body date isResolved');
+            const complaints = await Complaint.find({ email: email.toLowerCase() });
           //  console.log(Complaints fetched: ${complaints.length}); // Log number of complaints fetched
             // Provide a message if no complaints are found
             if (complaints.length === 0) {
