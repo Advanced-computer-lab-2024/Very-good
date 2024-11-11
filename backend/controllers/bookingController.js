@@ -75,9 +75,9 @@ const getBookings = async (req, res) => {
     try {
         const { touristId } = req.params; // Extract the touristId from the request params
         const bookings = await Booking.find({ touristId }) // Fetch bookings for the given touristId
-            .populate('touristId', 'name email')
-            .populate('activityId', 'name date location')
-            .populate('itineraryId', 'title duration location');
+            .populate('touristId')
+            .populate('activityId')
+            .populate('itineraryId');
         
         if (!bookings || bookings.length === 0) {
             return res.status(404).json({ message: 'No bookings found for this tourist' });
