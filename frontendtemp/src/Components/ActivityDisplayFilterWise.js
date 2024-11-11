@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
 import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
 import ShareComponent from './shareComponent';
+import ViewComments from './viewComments';  // Import the new ViewComments component
 
-const ActivityDisplayFilterWise = ({ activity }) => {
+const ActivityDisplayFilterWise = ({ activity, comments = false }) => {
+  console.log("comments : ", comments);
+
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
+  const [showComments, setShowComments] = useState(false); // State to toggle comments visibility
 
   useEffect(() => {
     const getCategoryName = async () => {
@@ -33,6 +37,11 @@ const ActivityDisplayFilterWise = ({ activity }) => {
     getCategories();
   }, []);
 
+  // Function to handle toggle of comments visibility
+  const toggleComments = () => {
+    setShowComments(prevState => !prevState);
+  };
+
   return (
     <div className="activity-card">
       <h2 className="activity-title">{activity.name}</h2>
@@ -49,7 +58,19 @@ const ActivityDisplayFilterWise = ({ activity }) => {
           <span key={index} className="activity-tag">{tag.name}</span>
         ))}
       </div>
+
+      {/* Share Component */}
       <ShareComponent type="activity" id={activity._id} />
+
+      {/* View Comments Button */}
+      {comments && (
+        <button onClick={toggleComments} className="view-comments-button">
+          {showComments ? 'Hide Comments' : 'View Comments'}
+        </button>
+      )}
+
+      {/* Conditionally render ViewComments Component */}
+      {showComments && <ViewComments comments={activity.commentsArray} />}
     </div>
   );
 };

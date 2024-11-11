@@ -7,7 +7,7 @@ const {
     putProducts,
     filterProductsByPrice,deleteProductsBySeller,addReviewToProduct ,
     archiveProduct,
-    unarchiveProduct,uploadPhoto,getProductNameById
+    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid
 } = require('../controllers/productController');
 const uploadProduct = require('../middlewares/uploadMiddlewareProduct'); // middleware is different from the controller, something the controller uses
 
@@ -19,7 +19,7 @@ router.post('/uploadPhoto/:id',
 router.get('/fetchproductNameandIDbyID/:productId',getProductNameById)
 router.get('/', getProducts);
 router.get('/available', getavailableProducts);
-
+router.get('/FetchTheEntireProductById/:productId',getfullproductbyid);
 // Distinct paths for archive and unarchive
 router.patch('/:id/archive', archiveProduct);
 router.patch('/:id/unarchive', unarchiveProduct);

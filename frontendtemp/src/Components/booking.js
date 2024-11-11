@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
-import {makePayment2} from '../Services/payementServices'
+import { makePayment2 } from '../Services/payementServices';
+import ItineraryDisplayFilterWise from './ItineraryDisplayFilterWise';
+import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
+
 const Booking = ({ touristId, wallet }) => {
-    //touristId = touristId.touristId
     const [activities, setActivities] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState('');
@@ -14,8 +16,8 @@ const Booking = ({ touristId, wallet }) => {
     const [bookings, setBookings] = useState([]);
     const [selectedItineraryDate, setSelectedItineraryDate] = useState('');
     const [selectedItineraryTime, setSelectedItineraryTime] = useState('');
-    const[itin, setItin] = useState(null);
-    const[activ, setActiv] = useState(null);
+    const [itin, setItin] = useState(null);
+    const [activ, setActiv] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,23 +25,18 @@ const Booking = ({ touristId, wallet }) => {
                 const activitiesResponse = await fetchActivitiesDate();
                 const itinerariesResponse = await fetchItinerariesNoId();
                 const currentDate = new Date();
-    
+
                 // Filter activities to only include upcoming ones
                 const upcomingActivities = activitiesResponse.data.filter(activity => {
                     const activityDate = new Date(activity.date);
                     return activityDate >= currentDate;
                 });
-                console.log("ablha: ", itinerariesResponse.data)
-    
+
                 // Filter itineraries to only include upcoming, active, appropriate, and unflagged ones
                 const upcomingItineraries = itinerariesResponse.data.filter(itinerary => {
                     const hasUpcomingDate = itinerary.availableDates.some(date => new Date(date) >= currentDate);
                     return hasUpcomingDate && itinerary.isActive && !itinerary.flagged;
                 });
-
-                console.log("b3dha: ", upcomingItineraries)
-
-
 
                 setActivities(upcomingActivities);
                 setItineraries(upcomingItineraries);
@@ -48,18 +45,16 @@ const Booking = ({ touristId, wallet }) => {
                 setMessage('Failed to load activities or itineraries.');
             }
         };
-        
+
         fetchData();
     }, []);
 
-
     const fetchBookings = async () => {
         try {
-            console.log("touristId in fetch booking : ", touristId)
             const response = await axios.get(`http://localhost:4000/api/bookings/${touristId}`);
             return response.data;
         } catch (error) {
-            console.error("Failed to fetch bookings:", error);
+            console.error('Failed to fetch bookings:', error);
         }
     };
 
@@ -68,18 +63,15 @@ const Booking = ({ touristId, wallet }) => {
         if (selectedItineraryData) {
             setSelectedItinerary(itineraryId);
             setItin(selectedItineraryData);
-            console.log("selectedItineraryData :",selectedItineraryData)
-            console.log("itin :",itin)
-            setSelectedItineraryDate(selectedItineraryData.availableDates[0] || '');
-            setSelectedItineraryTime(selectedItineraryData.availableTimes[0] || '');
+            //setSelectedItineraryDate(selectedItineraryData.availableDates[0] || '');
+            //setSelectedItineraryTime(selectedItineraryData.availableTimes[0] || '');
         }
         setSelectedActivity(''); // Clear activity selection
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("itenraries",itineraries)
-    
+
         if (!selectedActivity && !selectedItinerary) {
             setMessage('Please select either an activity or an itinerary.');
             return;
@@ -92,7 +84,7 @@ const Booking = ({ touristId, wallet }) => {
                 ? new Date().toISOString() 
                 : `${selectedItineraryDate}T${selectedItineraryTime}:00.000Z`,
         };
-        
+
         let data;
 
         if (selectedItinerary) {
@@ -105,18 +97,16 @@ const Booking = ({ touristId, wallet }) => {
         }
 
         try {
-            console.log("wallet : ", wallet);
-            console.log("data.price : ", data.price)
-            if(wallet < data.price){
-                alert("elly m3hosh mylzmosh");
+            if (wallet < data.price) {
+                alert('ely m3hosh mylzmosh');
                 return;
             }
+
             wallet -= data.price;
-            console.log("touristId : ", touristId)
             const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
             setMessage(response.data.message);
-            const bookingsResponse = await fetchBookings(touristId, data.price);
-            await makePayment2(touristId,data.price)
+            const bookingsResponse = await fetchBookings();
+            await makePayment2(touristId, data.price);
             setBookings(bookingsResponse || []);
             setSelectedActivity('');
             setSelectedItinerary('');
@@ -136,15 +126,16 @@ const Booking = ({ touristId, wallet }) => {
         const hoursDiff = timeDiff / (1000 * 60 * 60);
 
         if (hoursDiff < 48) {
-            setMessage('Booking cannot be cancelled less than 48 hours before start time.');
+            alert('Booking cannot be cancelled less than 48 hours before start time.');
             return;
         }
 
         try {
             const response = await axios.patch(`http://localhost:4000/api/bookings/cancel/${bookingId}`);
             setMessage(response.data.message);
-            const bookingsResponse = await fetchBookings(touristId);
+            const bookingsResponse = await fetchBookings();
             setBookings(bookingsResponse || []);
+            setBookings(prevBookings => prevBookings.filter(booking => booking._id !== bookingId));
         } catch (error) {
             setMessage('Error cancelling booking.');
         }
@@ -191,12 +182,14 @@ const Booking = ({ touristId, wallet }) => {
                         ))}
                     </select>
                 </div>
+
                 {selectedItinerary && selectedItineraryDate && selectedItineraryTime && (
                     <div>
                         <p>Selected Date: {selectedItineraryDate}</p>
                         <p>Selected Time: {selectedItineraryTime}</p>
                     </div>
                 )}
+
                 <div>
                     <label htmlFor="participants">Number of Participants:</label>
                     <input
@@ -215,16 +208,47 @@ const Booking = ({ touristId, wallet }) => {
             {bookings.length > 0 ? (
                 bookings.map((booking) => (
                     <div key={booking._id}>
-                        <p>{booking.activityId?.name || booking.itineraryId?.title}</p>
-                        <p>Start Time: {new Date(booking.startDateTime).toLocaleString()}</p>
-                        <p>Status: {booking.status}</p>
+                        {booking.activityId ? (
+                            <ActivityDisplayFilterWise activity={booking.activityId} />
+                        ) : (
+                            <ItineraryDisplayFilterWise itinerary={booking.itineraryId} />
+                        )}
+<p>
+    Start Date: {(() => {
+        const upcomingDate = booking.itineraryId
+            ? booking.itineraryId.availableDates
+                .map(date => new Date(date))  // Convert each date to Date object
+                .filter(date => date >= new Date())  // Filter only upcoming dates
+                .sort((a, b) => a - b)[0]  // Sort the dates and get the first upcoming one
+            : new Date(booking.activityId?.date); // Fallback to activity date if no itinerary
+        return new Date(upcomingDate).toLocaleString(); // Format and display the date
+    })()}
+</p>                        <p>Status: {booking.status}</p>
                         {booking.status !== 'Cancelled' && (
-                            <button onClick={() => handleCancel(booking._id, booking.startDateTime)}>Cancel Booking</button>
+                            <button
+                            onClick={() => {
+                                const upcomingDate = booking.itineraryId
+                                    ? booking.itineraryId.availableDates
+                                        .map(date => new Date(date))  // Convert each date to Date object
+                                        .filter(date => date >= new Date())  // Filter only upcoming dates
+                                        .sort((a, b) => a - b)[0]  // Sort the dates and get the first upcoming one
+                                    : null;
+                        
+                                handleCancel(
+                                    booking._id,
+                                    booking.activityId
+                                        ? booking.activityId?.date
+                                        : upcomingDate || ''  // If no upcoming date, send an empty string or fallback date
+                                );
+                            }}
+                        >
+                            Cancel Booking
+                        </button>
                         )}
                     </div>
                 ))
             ) : (
-                <p>No bookings found.</p>
+                <p>No bookings yet.</p>
             )}
         </div>
     );
