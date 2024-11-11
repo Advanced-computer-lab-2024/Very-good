@@ -283,6 +283,81 @@ const deleteProductsBySeller = async (req, res) => {
         res.status(500).json({ message: 'Error deleting products', error: error.message });
     }
 };
+
+const uploadPhoto = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const trimmedId = id.trim(); // Remove any extra spaces or newline characters
+
+        const photoFile = req.file;
+
+        if (!trimmedId || !photoFile) {
+            return res.status(400).json({ message: 'Missing required photo or id' });
+        }
+
+        const photoUrl = `http://localhost:4000/uploads/${photoFile.filename}`;
+
+        const updatedProduct = await Product.findOneAndUpdate(
+            { _id: trimmedId },
+            { $push: { pictures: photoUrl } },
+            { new: true }
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json({
+            message: 'Photo uploaded successfully',
+            Product: updatedProduct
+        });
+    } catch (error) {
+        console.error("Error uploading photo:", error);
+        res.status(500).json({ message: 'An error occurred while uploading photo', error });
+    }
+};
+
+// Method to fetch product name by ID
+const getProductNameById = async (req, res) => {
+    try {
+        const { productId } = req.params; // Extract the product ID from URL parameters
+
+        // Validate if productId is provided
+        if (!productId) {
+            return res.status(400).json({ message: 'Product ID is required' });
+        }
+
+        // Find the product by ID
+        const product = await Product.findById(productId);
+
+        // Check if product exists
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Send success response with product name and ID
+        res.status(200).json({
+            message: 'Product fetched successfully',
+            product: {
+                productId: product._id,   // Returning product ID
+                productName: product.name, // Returning product name
+                pic : product.pictures
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Error fetching product details',
+            error: error.message
+        });
+    }
+};
+
+
+
+
+
+
 module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller,addReviewToProduct,    
     archiveProduct,
-    unarchiveProduct}
+    unarchiveProduct,uploadPhoto,getProductNameById}

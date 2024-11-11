@@ -3,6 +3,7 @@ import {searchbyname} from '../Services/productServices';
 import {getavailableProducts} from '../Services/productServices';
 
 const Search = () => {
+    console.log("aywa hya deh el page el bt3ml el bali balak");
     const [productSearchTerm, setProductSearchTerm] = useState('');
     const [loadingProducts, setLoadingProducts] = useState(false);
     const [productError, setProductError] = useState(null);
@@ -14,6 +15,7 @@ const Search = () => {
 
 
     const handleSearchProductbyname = async () => {
+        
         setLoadingProducts(true);
         setProductError(null);
         try {

@@ -36,7 +36,7 @@ const productSchema = new schema({
     pictures: {
         type: [String], // Array of URLs for pictures
         required: false
-    },
+    }, // uploaded by the admin , and seller 
     sales: {
         type: Number, // how many times this product was sold
         default : 0

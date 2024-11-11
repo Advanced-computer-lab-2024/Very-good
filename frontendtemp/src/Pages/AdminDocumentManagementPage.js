@@ -44,26 +44,32 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
     }
   };
 
- const handleSellerSelection = async () => {
+  const handleSellerSelection = async () => {
     try {
       const response = await fetchSellers();
       if (!response || !response.data || !Array.isArray(response.data)) {
         setTableData([]);
         return;
       }
-      const filteredseller = response.data.filter(seller => {
+      const filteredSeller = response.data.filter(seller => {
         return seller.isPendingAcceptance;
-    });
-      const sellerData = filteredseller.map(({ email, IdDocument, taxCardDocument }) => ({
+      });
+  
+      // Make sure taxCardDocument exists in the filtered data
+      const sellerData = filteredSeller.map(({ email, IdDocument, taxationRegistryCard }) => ({
         email,
         IdDocument,
-        taxCardDocument,
+        taxationRegistryCard: taxationRegistryCard || [],
+        // Ensure it's always a string or empty if not available
       }));
+  
       setTableData(sellerData);
     } catch (error) {
       setTableData([]);
+      console.error('Error fetching sellers:', error);
     }
   };
+  
 
   const handleAdvertiserSelection = async () => {
     try {
@@ -75,10 +81,10 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
       const filteredAdvertiser = response.data.filter(advertiser => {
         return advertiser.isPendingAcceptance;
     });
-      const advertiserData = filteredAdvertiser.map(({ email, IdDocument, taxCardDocument }) => ({
+      const advertiserData = filteredAdvertiser.map(({ email, IdDocument, taxationRegistryCard }) => ({
         email,
         IdDocument,
-        taxCardDocument,
+        taxationRegistryCard: taxationRegistryCard || [],
       }));
       setTableData(advertiserData);
     } catch (error) {
@@ -139,35 +145,43 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.email}</td>
-                <td>
-                  <a href={row.IdDocument} target="_blank" rel="noopener noreferrer">
-                    {row.IdDocument}
-                  </a>
-                </td>
-                {selectedOption === 'tour-guide' ? (
-                  <td>
-                    {Array.isArray(row.certificates) && row.certificates.length > 0 ? (
-                      row.certificates.map((cert, certIndex) => (
-                        <div key={certIndex}>
-                          <a href={cert} target="_blank" rel="noopener noreferrer">
-                            {cert}
-                          </a>
-                        </div>
-                      ))
-                    ) : (
-                      <span>No certificates available</span>
-                    )}
-                  </td>
-                ) : (
-                  <td>
-                    <a href={row.taxCardDocument} target="_blank" rel="noopener noreferrer">
-                      {row.taxCardDocument}
-                    </a>
-                  </td>
-                )}
+  {tableData.map((row, index) => (
+    <tr key={index}>
+      <td>{row.email}</td>
+      <td>
+        <a href={row.IdDocument} target="_blank" rel="noopener noreferrer">
+          {row.IdDocument}
+        </a>
+      </td>
+      {selectedOption === 'tour-guide' ? (
+        <td>
+          {Array.isArray(row.certificates) && row.certificates.length > 0 ? (
+            row.certificates.map((cert, certIndex) => (
+              <div key={certIndex}>
+                <a href={cert} target="_blank" rel="noopener noreferrer">
+                  {cert}
+                </a>
+              </div>
+            ))
+          ) : (
+            <span>No certificates available</span>
+          )}
+        </td>
+      ) : (
+<td>
+{Array.isArray(row.taxationRegistryCard) && row.taxationRegistryCard.length > 0 ? (
+  row.taxationRegistryCard.map((taxCard, taxIndex) => (
+    <div key={taxIndex}>
+      <a href={taxCard} target="_blank" rel="noopener noreferrer">
+        {taxCard}
+      </a>
+    </div>
+  ))
+) : (
+  <span>No tax card available</span>
+)}
+</td>
+      )}
                 <td>
                   <button onClick={() => handleAccept(row.email)}>Accept</button>
                   <button onClick={() => handleReject(row.email)}>Reject</button>

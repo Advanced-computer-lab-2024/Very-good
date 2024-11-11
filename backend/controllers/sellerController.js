@@ -251,6 +251,34 @@ const uploadDocuments = async (req, res) => {
     }
   };
 
+// Fetch all product IDs for a seller by email
+const fetchProductsBySellerEmail = async (req, res) => {
+    try {
+        const { email } = req.params; // Extract email from URL params
+        
+        // Find the seller by email
+        const seller = await Seller.findOne({ email }); // Populate only the _id field from the Product model
+        
+        if (!seller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        // Extract the product IDs from the populated 'createdProducts' array
+        const productIds = seller.createdProducts;
+        
+        // Send success response with the list of product IDs
+        res.status(200).json({
+            message: 'Products fetched successfully',
+            productIds: productIds
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Error fetching products for seller',
+            error: error.message
+        });
+    }
+};
 
 
-module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers}
+module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail}

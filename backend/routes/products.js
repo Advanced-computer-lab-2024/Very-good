@@ -7,10 +7,16 @@ const {
     putProducts,
     filterProductsByPrice,deleteProductsBySeller,addReviewToProduct ,
     archiveProduct,
-    unarchiveProduct
+    unarchiveProduct,uploadPhoto,getProductNameById
 } = require('../controllers/productController');
-const router = express.Router();
+const uploadProduct = require('../middlewares/uploadMiddlewareProduct'); // middleware is different from the controller, something the controller uses
 
+const router = express.Router();
+router.post('/uploadPhoto/:id', 
+    uploadProduct.single('photo'), // Only one file named 'photo'
+    uploadPhoto // Controller function to handle storing the photo URL in the database
+);
+router.get('/fetchproductNameandIDbyID/:productId',getProductNameById)
 router.get('/', getProducts);
 router.get('/available', getavailableProducts);
 

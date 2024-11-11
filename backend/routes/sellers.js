@@ -1,5 +1,5 @@
 const express = require('express')
-const {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers} = require('../controllers/sellerController')
+const {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail} = require('../controllers/sellerController')
 const uploadSeller = require('../middlewares/uploadMiddlewareSeller');
 const router = express.Router()
 const multer = require('multer');
@@ -28,5 +28,5 @@ uploadSeller.single('photo'), // Only one file named 'photo'
 );
 router.post('/acceptsellers', acceptsellers);
 router.post('/rejectsellers',rejectsellers);
-
+router.post('/fetchproductsforSpecificSeller/:email',fetchProductsBySellerEmail)
 module.exports = router

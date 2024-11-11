@@ -9,6 +9,7 @@ import AdminCreateTag from './AdminCreateTag'
 import AdminDocumentManagementPage from './AdminDocumentManagementPage'
 import ComplaintsList from './ComplaintsList'
 import Deletion from '../Components/DeleteAdmin';
+import ShowAllproducts from '../Components/ShowAllproducts'
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -19,7 +20,8 @@ const AdminPage = ({email}) => {
         {id :6,title :'Create_Tag'},
         { id: 7, title: 'View Itineraries' },
         { id: 8,title : 'View Documents'},
-        { id:9,title :'View Complaints'}
+        { id:9,title :'View Complaints'},
+        {id:10,title:'View All products 3la ndafa'}
 
     ]);
 
@@ -37,6 +39,10 @@ const AdminPage = ({email}) => {
     const [itineraries, setItineraries] = useState([]);
     const [showDocumentManagmentPage,setshowDocumentPage]=useState(false);
     const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
+    const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
+    const handleShowAllProductsMahmoud =()=>{
+        SetshowAllproductsMahmoud(true);
+    }
    const handleViewDocmunets=()=>{
     setshowDocumentPage(true);
    }
@@ -261,6 +267,9 @@ const AdminPage = ({email}) => {
     if(ShowViewComplaintsPage){
         return<ComplaintsList/>
     }
+    if(showAllproductsMahmoud){
+        return <ShowAllproducts/>
+    }
 
     return (
         <div>
@@ -344,6 +353,9 @@ const AdminPage = ({email}) => {
                                 )}
                                 {activity.title==='View Complaints'&&(
                                    <button className="view-button" onClick={handleViewComplaints}>View Complaints</button>
+                                )}
+                                {activity.title==='View All products 3la ndafa'&&(
+                                    <button className="view-button" onClick={handleShowAllProductsMahmoud}>View All products</button>
                                 )}
 
                                 

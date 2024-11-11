@@ -8,7 +8,7 @@ import FilterProductByPrice from './FilterProductByPrice'
 import DeleteSeller from '../Components/DeleteSellerAcc';
 import UploadDocumentsSeller from './UploadDocumentsSeller'
 import UploadingAlogoSeller from './UploadingAlogoSeller'
-
+import FetchProducts from '../Components/uploadingAproductPicture'
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -45,6 +45,7 @@ const SellerPage = ({ email }) => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [uploadPage, setUploadPage]=useState(true); // default with true
   const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
+  const [isUploadingAproductPicture,setIsUploadingAproductPicture]=useState(false);
   const navigate = useNavigate();
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
@@ -106,7 +107,9 @@ const SellerPage = ({ email }) => {
         // Handle error (e.g., show error message)
     }
 };
-
+  const handleUploadAproductPicture = ()=>{
+    setIsUploadingAproductPicture(true);
+  }
   const handleUpdateProfile = async () => {
     if(!isEditing){
     const userInput = prompt("Please enter your password:");
@@ -137,6 +140,10 @@ const SellerPage = ({ email }) => {
   };
   if (uploadPage){
     return <UploadDocumentsSeller onBack={handleBackfromUploadPage} email={email} />
+  }
+  if(isUploadingAproductPicture){
+    console.log("email passed to the uploadproductpic:",email)
+    return <FetchProducts sellerEmail={email}/>
   }
  
   const r1 =()=>{
@@ -171,6 +178,7 @@ if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==
             Filter Product by Price
           </button> {/* New button with commented action listener */}
           <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
+          <button onClick={handleUploadAproductPicture}>UploadProductPicture</button>
         </div>
       </div>
 
