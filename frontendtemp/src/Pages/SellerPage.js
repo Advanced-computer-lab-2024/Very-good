@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethods';
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
 import Search from './Search';
@@ -7,6 +8,7 @@ import FilterProductByPrice from './FilterProductByPrice'
 import DeleteSeller from '../Components/DeleteSellerAcc';
 import UploadDocumentsSeller from './UploadDocumentsSeller'
 import UploadingAlogoSeller from './UploadingAlogoSeller'
+
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -19,6 +21,17 @@ const TermsAndConditionsModal = ({ onAccept }) => {
       </div>
   );
 };
+const NotAccepted = ({ onAccept }) => {
+  return (
+      <div className="modal-overlay">
+          <div className="modal-content">
+              <p>Not Accepted.</p>
+              <button onClick={onAccept}>back</button>
+          </div>
+      </div>
+  );
+};
+
 
 
 const SellerPage = ({ email }) => {
@@ -32,6 +45,7 @@ const SellerPage = ({ email }) => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [uploadPage, setUploadPage]=useState(true); // default with true
   const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
+  const navigate = useNavigate();
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
   }; 
@@ -53,9 +67,7 @@ const SellerPage = ({ email }) => {
   const handleAcceptTerms = () => {
     setTermsAccepted(true); // Set terms as accepted
 };
-if (!termsAccepted) {
-    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-}
+
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
@@ -72,19 +84,52 @@ if (!termsAccepted) {
   if(isProductFilterActive){
     return <FilterProductByPrice/>
   }
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete: true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateSellerByEmail(sellerData.email, editedData);  // or sellerData._id if you're using ID instead of email
+        
+        // Check if the update was successful
+        if (response.success) {
+            console.log("Seller marked for deletion:", response);
+            alert("Seller has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark seller for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+    } catch (error) {
+        console.error("Error updating seller:", error);
+        // Handle error (e.g., show error message)
+    }
+};
 
   const handleUpdateProfile = async () => {
+    if(!isEditing){
+    const userInput = prompt("Please enter your password:");
+    if( userInput !== sellerData.password){
+      return
+    }
+  }
     setIsEditing(!isEditing);
     if (isEditing) {
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
       }
-      setSellerData(editedData);
+      
       try {
         const response = await updateSellerByEmail(oldEmail, editedData);
         if (response) {
           console.log('Seller updated successfully:', response);
         }
+        setSellerData(editedData);
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== sellerData.password && isEditing){
+        return
+      }
       } catch (error) {
         console.error('Error updating seller:', error);
       }
@@ -93,9 +138,23 @@ if (!termsAccepted) {
   if (uploadPage){
     return <UploadDocumentsSeller onBack={handleBackfromUploadPage} email={email} />
   }
+ 
+  const r1 =()=>{
+    console.log("00000000000")
+    navigate("/");
+    
+  }
+  if(sellerData.isPendingAcceptance || sellerData.isAccepted==="false"){
+    return <NotAccepted onAccept={()=>r1()} />
+}
+if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==="true") {
+  return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+}
+
   if(isUploadingAlogo){
     return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
   }
+  
   return (
     <div className="seller-page">
       {/* Sidebar Toggle Button */}
@@ -185,6 +244,7 @@ if (!termsAccepted) {
               </button>
             </div>
              < DeleteSeller email={sellerData?.email} />
+             <button onClick={()=>handleDeleteReq()}> Send delete Request</button>
             <footer className="footer">
               <p>&copy; 2024 TravelApp. All rights reserved.</p>
             </footer>

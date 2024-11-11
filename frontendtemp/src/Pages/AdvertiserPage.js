@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ActivityList from '../Components/ActivityList';
 import CreateActivityForm from '../Components/CreateActivityForm';
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
@@ -9,6 +10,8 @@ import './AdvertiserPage.css';
 import CreateTransportationForm from '../Components/createTransportationForm';
 import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
 import {editTransportation, deleteTransportation} from '../Services/bookingTransportationServices'
+import { fetchAdvertiserByEmail } from '../RequestSendingMethods';
+
 
 const advertiserId = "66f826b0e184e2faa3ea510b";
 
@@ -19,6 +22,16 @@ const TermsAndConditionsModal = ({ onAccept }) => {
                 <h2>Terms and Conditions</h2>
                 <p>Please Accept The Terms and Conditions to proceed.</p>
                 <button onClick={onAccept}>Accept</button>
+            </div>
+        </div>
+    );
+  };
+  const NotAccepted = ({ onAccept }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <p>Not Accepted.</p>
+                <button onClick={onAccept}>back</button>
             </div>
         </div>
     );
@@ -34,6 +47,25 @@ const AdvertiserPage = ({email}) => {
     const [transportationerror, setTransportationError] = useState(null);
     const [transportationLoading, setTransportationLoading] = useState(null);
     const [uploadPage, setUploadPage]=useState(true); // default with true 
+    const navigate = useNavigate();
+    const [advertiserData, setAdvertiserData] = useState(null);
+    useEffect(() => {
+        const getAdvertiserData = async () => {
+          try {
+            console.log("Email el da5l  ad info :",email)
+            const response = await fetchAdvertiserByEmail({ email });
+            if (response) {
+              setAdvertiserData(response.advertiser);
+            }
+          } catch (error) {
+            console.error('Error fetching advertiser data:', error);
+          }
+        };
+    
+        if (email) {
+          getAdvertiserData();
+        }
+      }, [email]);
 
     const handleBackfromUploadPage = () => {
         setUploadPage(false);
@@ -101,9 +133,7 @@ const AdvertiserPage = ({email}) => {
     };
     
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
-    if (!termsAccepted) {
-        return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-    }
+   
     const handleCreateButtonClick = () => {
         setIsCreating(true); // Show the form when the button is clicked
     };
@@ -162,16 +192,37 @@ const AdvertiserPage = ({email}) => {
     }
 
 
-
+    const r1 =()=>{
+        console.log("00000000000")
+        navigate("/");
+        
+      }
 
     if (uploadPage){
         return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
       }
+      if(advertiserData.isPendingAcceptance || advertiserData.isAccepted==="false"){
+        return <NotAccepted onAccept={()=>r1()} />
+    }
+    if (!termsAccepted && !advertiserData.isPendingAcceptance && advertiserData.isAccepted==="true") {
+      return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
     }
-
+    
+//   const r1 =()=>{
+//     console.log("00000000000")
+//     navigate("/");
+    
+//   }
+    // if(!AdvertiserInfo.isAccepted){
+    //     return <NotAccepted onAccept={()=>r1()} />
+    // }
+    // if (AdvertiserInfo.isAccepted &&!termsAccepted) {
+    //   return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    // }
 
     // Otherwise, render the main AdvertiserPage
     return (

@@ -29,6 +29,7 @@ import RatePageForTourist from './RatePageForTourist';
 const TouristPage = ({ email }) => {
   const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
+  const [wallet, setWallet] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
@@ -69,6 +70,7 @@ const TouristPage = ({ email }) => {
         setTouristData(response.data);
         setEditedData(response.data);
         setTouristId(response.data._id);
+        setWallet(response.data.wallet);
       }
     };
     getTouristData();
@@ -86,7 +88,14 @@ const TouristPage = ({ email }) => {
 
   const handleUpdateProfile = () => {
     setIsEditing(!isEditing);
-    setShowProfileInfo(!showProfileInfo); // Toggle profile info
+    setShowProfileInfo(!showProfileInfo);
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== touristData.password){
+        return
+      }
+      
+    } // Toggle profile info
 
     if (isEditing) {
       if (editedData.email !== oldEmail) {
@@ -94,8 +103,35 @@ const TouristPage = ({ email }) => {
       }
       setTouristData(editedData);
       updateTouristByEmail(oldEmail, editedData);
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== touristData.password && isEditing){
+        return
+      }
     }
   };
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete : true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateTouristByEmail(touristData.email,editedData );  // or sellerData._id if you're using ID instead of email
+       
+        // Check if the update was successful
+        if (response.success) {
+            console.log("tourist marked for deletion:", response);
+            alert("tourist has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark tourist for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+        console.log("resp" ,response)
+    } catch (error) {
+        console.error("Error updating tourist:", error);
+        // Handle error (e.g., show error message)
+    }
+};
 
   const navigateToActivitySorted = () => {
     navigate('/tourist/activities');
@@ -144,6 +180,7 @@ const TouristPage = ({ email }) => {
       console.error('Error fetching tourist data:', error);
     }
   };
+
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
     setActivityError(null); // Reset error
@@ -183,7 +220,7 @@ const TouristPage = ({ email }) => {
   if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email} touristId={touristId}/>
   if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
-  if(ShowBookingPage)return <Booking touristId ={touristId}/>;
+  if(ShowBookingPage)return <Booking touristId={touristId} wallet={wallet}/>;
   if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email} touristId={touristId}/>
   return (
     <div className="tourist-page">
@@ -367,6 +404,7 @@ const TouristPage = ({ email }) => {
       
 
         <DeleteTourist email={email }/>
+        <button onClick={()=>handleDeleteReq()}> send delete request</button>
         <div>
             <h1>Welcome to the Activity Planner</h1>
            

@@ -31,6 +31,7 @@ const tourGuideSchema = new schema({
       },
     isAccepted: {
         type: String,
+        default : "false",
         required: false
       },
       photo: {
@@ -99,6 +100,10 @@ const tourGuideSchema = new schema({
         default : true,
       }
       ,
+      delete: {
+        type: Boolean, // Change from String to an array of strings
+        required: false
+    },
 }, { timestamps : true })
 
 module.exports = mongoose.model('tourGuide' ,tourGuideSchema)

@@ -449,6 +449,15 @@ const fetchSellers = async () => {
   }
 };
 // acceptSeller , accepting seller based on documents , 
+const fetchTourists = async () => {
+  try {
+    const response = await axios.get('http://localhost:4000/api/tourists/');
+    return response.data; // Assuming the response data is in JSON format
+  } catch (error) {
+    console.error('Error fetching advertisers:', error);
+    throw error; // You can choose to handle the error further
+  }
+};
 
 const acceptSeller = async (email) => {
   try {
@@ -914,4 +923,4 @@ export { registerTourist,fetchAllItineraries, fetchTouristByEmail, updateTourist
   registerAdvertiser,registerSeller,fetchSellerByEmail,updateSellerByEmail,fetchAdvertiserByEmail,filterActivities,filterItineraries,getTagNames,filterMuseumByTagName,filterProductsByPrice,updateAdvertiserByEmail,fetchTourGuides,acceptTourGuide,rejectTourGuide,
   fetchAdvertisers,acceptAdvertiser,rejectAdvertiser,fetchSellers,acceptSeller,rejectSeller,fetchPastbookedbytouristItineraries,
   fetchPastbookedbytouristItinerariesItneraryComment,fetchComplaintsByEmail,fetchPurchasedProducts,rateProduct,rateItinerary,rateTourGuide,purchaseProduct,fetchPastActivities,
-  rateactivity,bookItem ,deleteSeller,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail};
+  rateactivity,bookItem ,deleteSeller,updateTourGuideByEmail ,updateTouristByEmailT,deletAdvertiser,deleteTourGuide ,getActivitieswithAdvertiserId,getTourGuideByEmail,fetchTourists};

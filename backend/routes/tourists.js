@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity} = require('../controllers/touristController')
+const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2} = require('../controllers/touristController')
 const router = express.Router()
 
 router.get('/', getTourist)
@@ -23,5 +23,6 @@ router.patch('/rate-itinerary', rateItinerary);
 router.patch('/rate-activity', rateActivity);
 router.post('/:id/make-payment', makePayment);
 router.post('/:id/redeem-points', redeemPoints);
+router.post('/:id/make-payment2', makePayment2);
 
 module.exports = router

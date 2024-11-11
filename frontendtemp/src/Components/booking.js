@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
-
-const Booking = (touristId) => {
-    touristId = touristId.touristId
+import {makePayment2} from '../Services/payementServices'
+const Booking = ({ touristId, wallet }) => {
+    //touristId = touristId.touristId
     const [activities, setActivities] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState('');
@@ -14,6 +14,8 @@ const Booking = (touristId) => {
     const [bookings, setBookings] = useState([]);
     const [selectedItineraryDate, setSelectedItineraryDate] = useState('');
     const [selectedItineraryTime, setSelectedItineraryTime] = useState('');
+    const[itin, setItin] = useState(null);
+    const[activ, setActiv] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -65,6 +67,9 @@ const Booking = (touristId) => {
         const selectedItineraryData = itineraries.find(itinerary => itinerary._id === itineraryId);
         if (selectedItineraryData) {
             setSelectedItinerary(itineraryId);
+            setItin(selectedItineraryData);
+            console.log("selectedItineraryData :",selectedItineraryData)
+            console.log("itin :",itin)
             setSelectedItineraryDate(selectedItineraryData.availableDates[0] || '');
             setSelectedItineraryTime(selectedItineraryData.availableTimes[0] || '');
         }
@@ -87,15 +92,31 @@ const Booking = (touristId) => {
                 ? new Date().toISOString() 
                 : `${selectedItineraryDate}T${selectedItineraryTime}:00.000Z`,
         };
-    
-        if (selectedItinerary) bookingData.itineraryId = selectedItinerary;
-        if (selectedActivity) bookingData.activityId = selectedActivity;
-    
+        
+        let data;
+
+        if (selectedItinerary) {
+            bookingData.itineraryId = selectedItinerary;
+            data = itin;
+        }
+        if (selectedActivity) {
+            bookingData.activityId = selectedActivity;
+            data = activ;
+        }
+
         try {
+            console.log("wallet : ", wallet);
+            console.log("data.price : ", data.price)
+            if(wallet < data.price){
+                alert("elly m3hosh mylzmosh");
+                return;
+            }
+            wallet -= data.price;
             console.log("touristId : ", touristId)
             const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
             setMessage(response.data.message);
-            const bookingsResponse = await fetchBookings(touristId);
+            const bookingsResponse = await fetchBookings(touristId, data.price);
+            await makePayment2(touristId,data.price)
             setBookings(bookingsResponse || []);
             setSelectedActivity('');
             setSelectedItinerary('');
@@ -140,6 +161,8 @@ const Booking = (touristId) => {
                         value={selectedActivity}
                         onChange={(e) => {
                             setSelectedActivity(e.target.value);
+                            const selectedActivityData = activities.find(activity => activity._id === e.target.value);
+                            setActiv(selectedActivityData);
                             setSelectedItinerary('');
                             setSelectedItineraryDate('');
                             setSelectedItineraryTime('');

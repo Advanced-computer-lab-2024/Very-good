@@ -222,6 +222,7 @@ const updateRecords = async (req, res) => {
     tourist.wallet = updatedData.wallet || tourist.wallet;
     tourist.email=updatedData.email||tourist.email;
     tourist.password=updatedData.password||tourist.password;
+    tourist.delete=updatedData.delete||tourist.delete;
     // Any other fields you want to update
     // We are not updating `email` or `password` for security reasons unless explicitly needed
 
@@ -746,7 +747,82 @@ const redeemPoints = async (req, res) => {
   }
 };
 
+const makePayment2 = async (req, res) => {
+  try {
+      const { id } = req.params; // Tourist ID from the URL
+      const { amountPaid } = req.body; // Amount paid from the request body
+      if (isNaN(amountPaid)) {
+        console.error('Invalid amountPaid:', amountPaid);
+        //throw new Error('Invalid amountPaid value.');
+      }
+      else {
+      }
+      // Update loyalty points and level based on payment
+      console.log("ablawait loyalty2")
+      const updatedTourist = await updateLoyaltyPoints2(id, amountPaid);
+      console.log("b3dawait loyalty2")
+      res.status(200).json({
+          message: 'Payment successful, loyalty points updated',
+          updatedTourist
+      });
+  } catch (error) {
+      console.error('Error processing payment:', error);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+// Update loyalty points and level
+const updateLoyaltyPoints2 = async (touristId, amountPaid) => {
+  try {
+    console.log("d5lna makepayment22")
+      const tourist = await Tourist.findById(touristId);
+      if (!tourist) throw new Error("Tourist not found");
+
+      if(tourist.wallet < amountPaid)
+        throw new Error("not enough money in wallet");
+
+      tourist.wallet -= amountPaid;
+      
+      // Check tourist level validity
+      if (![1, 2, 3].includes(tourist.level)) {
+          console.error('Invalid tourist level:', tourist.level);
+          tourist.level = 1; // default to level 1
+      }
+
+      let pointsToAdd;
+      if (tourist.level === 1) pointsToAdd = amountPaid * 0.5;
+      else if (tourist.level === 2) pointsToAdd = amountPaid * 1;
+      else if (tourist.level === 3) pointsToAdd = amountPaid * 1.5;
+
+      console.log('Points to add:', pointsToAdd);
+      if (isNaN(pointsToAdd)) {
+          console.error('Calculated points are NaN:', pointsToAdd);
+          pointsToAdd = 6; // Default to 0 to avoid NaN errors
+      }
+
+      // Ensure loyaltyPoints is a valid number
+      tourist.loyaltyPoints = isNaN(tourist.loyaltyPoints) ? 0 : tourist.loyaltyPoints;
+      tourist.loyaltyPoints += pointsToAdd;
+
+      // Determine the new level based on loyalty points
+      if (tourist.loyaltyPoints > 500000) {
+          tourist.level = 3;
+          tourist.badge = "Gold";
+      } else if (tourist.loyaltyPoints > 100000) {
+          tourist.level = 2;
+          tourist.badge = "Silver";
+      } else {
+          tourist.level = 1;
+          tourist.badge = "Bronze";
+      }
+
+      await tourist.save();
+      return tourist;
+  } catch (error) {
+      console.error('Error updating loyalty points:', error);
+      throw error;
+  }
+};
 
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2}

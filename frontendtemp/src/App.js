@@ -142,6 +142,7 @@ function App() {
         dob: formElements.dob.value,
         nationality: formElements.nationality.value,
         job: formElements.job.value,
+        
       };
       await registerTourist(touristData);
       navigate("/tourist");
@@ -158,8 +159,8 @@ function App() {
         yearsOfExperience: formElements.experience.value,
         previousJob: formElements.previousWork.value,
       };
-      await createTourGuideRequest(tourGuideData);
       navigate("/tourGuide");
+      await createTourGuideRequest(tourGuideData);
     }
 
     if (role === "tourismGovernor") {
