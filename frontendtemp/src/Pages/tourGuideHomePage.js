@@ -98,13 +98,17 @@ const TourGuideHomePage = ({ email }) => {
   };
 
   const handleUpdateProfile = async () => {
-    if(!isEditing){
-      const userInput = prompt("Please enter your password:");
-      if( userInput !== tourGuideData.password){
-        return
-      }
-      
+    if (!isEditing) {
+      let userInput = prompt("Please enter your password:");
+      while (userInput !== tourGuideData.password) {
+        userInput = prompt("Please enter your password:");
+        if (userInput !== tourGuideData.password) {
+            alert("Wrong password. Please try again.");
+        }
     }
+  }
+      
+    
     if (isEditing) {
       try {
         console.log('Email:', email);
@@ -115,9 +119,12 @@ const TourGuideHomePage = ({ email }) => {
           setTourGuideData(editedData); // Update state with edited data
           console.log("response", response)
         }
-        const userInput2 = prompt("Please confirm password:");
-        if( userInput2 !== tourGuideData.password && isEditing){
-          return
+        let userInput2 = prompt("Please confirm password:");
+        while (userInput2 !== editedData.password) {
+          userInput2 = prompt("Please enter your password:");
+          if (userInput2 !== editedData.password) {
+              alert("Wrong password. Please try again.");
+          }
         }
       } catch (error) {
         console.error('Error updating advertiser:', error);

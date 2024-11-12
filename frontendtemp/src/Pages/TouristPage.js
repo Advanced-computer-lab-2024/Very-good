@@ -89,13 +89,15 @@ const TouristPage = ({ email }) => {
   const handleUpdateProfile = () => {
     setIsEditing(!isEditing);
     setShowProfileInfo(!showProfileInfo);
-    if(!isEditing){
-      const userInput = prompt("Please enter your password:");
-      if( userInput !== touristData.password){
-        return
-      }
-      
-    } // Toggle profile info
+    if (!isEditing) {
+      let userInput = prompt("Please enter your password:");
+      while (userInput !== touristData.password) {
+        userInput = prompt("Please enter your password:");
+        if (userInput !== touristData.password) {
+            alert("Wrong password. Please try again.");
+        }
+    }
+  }
 
     if (isEditing) {
       if (editedData.email !== oldEmail) {
@@ -103,11 +105,15 @@ const TouristPage = ({ email }) => {
       }
       setTouristData(editedData);
       updateTouristByEmail(oldEmail, editedData);
-      const userInput2 = prompt("Please confirm password:");
-      if( userInput2 !== touristData.password && isEditing){
-        return
+      let userInput2 = prompt("Please confirm password:");
+        while (userInput2 !== editedData.password) {
+          userInput2 = prompt("Please enter your password:");
+          if (userInput2 !== editedData.password) {
+              alert("Wrong password. Please try again.");
+          }
       }
-    }
+      }
+  
   };
   const handleDeleteReq = async () => {
     try {

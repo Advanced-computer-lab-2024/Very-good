@@ -8,7 +8,7 @@ import FilterProductByPrice from './FilterProductByPrice'
 import DeleteSeller from '../Components/DeleteSellerAcc';
 import UploadDocumentsSeller from './UploadDocumentsSeller'
 import UploadingAlogoSeller from './UploadingAlogoSeller'
-import FetchProducts from '../Components/uploadingAproductPicture'
+
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -45,7 +45,6 @@ const SellerPage = ({ email }) => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [uploadPage, setUploadPage]=useState(true); // default with true
   const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
-  const [isUploadingAproductPicture,setIsUploadingAproductPicture]=useState(false);
   const navigate = useNavigate();
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
@@ -54,8 +53,10 @@ const SellerPage = ({ email }) => {
     const getSellerData = async () => {
       const response = await fetchSellerByEmail(email);
       if (response) {
+        
         setSellerData(response.seller);
         setEditedData(response.seller);
+        console.log("sellerId",sellerData?._id)
       }
     };
 
@@ -79,7 +80,7 @@ const SellerPage = ({ email }) => {
   const handleUploadPhoto =()=>{
     setIsUploadingAphoto(true);
   }
-  const handleBackToSeller =()=>{
+  const handleBackToSeller=()=>{
     setIsUploadingAphoto(false);
   }
   if(isProductFilterActive){
@@ -96,6 +97,7 @@ const SellerPage = ({ email }) => {
         // Check if the update was successful
         if (response.success) {
             console.log("Seller marked for deletion:", response);
+           
             alert("Seller has been marked for deletion.");
             // Handle success (e.g., update UI or alert user)
         } else {
@@ -107,14 +109,15 @@ const SellerPage = ({ email }) => {
         // Handle error (e.g., show error message)
     }
 };
-  const handleUploadAproductPicture = ()=>{
-    setIsUploadingAproductPicture(true);
-  }
+
   const handleUpdateProfile = async () => {
-    if(!isEditing){
-    const userInput = prompt("Please enter your password:");
-    if( userInput !== sellerData.password){
-      return
+    if (!isEditing) {
+      let userInput = prompt("Please enter your password:");
+      while (userInput !== sellerData.password) {
+        userInput = prompt("Please enter your password:");
+        if (userInput !== sellerData.password) {
+            alert("Wrong password. Please try again.");
+        }
     }
   }
     setIsEditing(!isEditing);
@@ -129,9 +132,12 @@ const SellerPage = ({ email }) => {
           console.log('Seller updated successfully:', response);
         }
         setSellerData(editedData);
-      const userInput2 = prompt("Please confirm password:");
-      if( userInput2 !== sellerData.password && isEditing){
-        return
+        let userInput2 = prompt("Please confirm password:");
+        while (userInput2 !== editedData.password) {
+          userInput2 = prompt("Please enter your password:");
+          if (userInput2 !== editedData.password) {
+              alert("Wrong password. Please try again.");
+          }
       }
       } catch (error) {
         console.error('Error updating seller:', error);
@@ -141,25 +147,22 @@ const SellerPage = ({ email }) => {
   if (uploadPage){
     return <UploadDocumentsSeller onBack={handleBackfromUploadPage} email={email} />
   }
-  if(isUploadingAproductPicture){
-    console.log("email passed to the uploadproductpic:",email)
-    return <FetchProducts sellerEmail={email}/>
-  }
  
   const r1 =()=>{
     console.log("00000000000")
     navigate("/");
     
   }
-  if(sellerData.isPendingAcceptance || sellerData.isAccepted==="false"){
+  if(sellerData.taxationRegistryCard.length === 0){
     return <NotAccepted onAccept={()=>r1()} />
 }
-if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==="true") {
+if (sellerData.taxationRegistryCard.length > 0 &&!termsAccepted) {
   return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-}
 
+}
   if(isUploadingAlogo){
     return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
+
   }
   
   return (
@@ -178,14 +181,14 @@ if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==
             Filter Product by Price
           </button> {/* New button with commented action listener */}
           <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
-          <button onClick={handleUploadAproductPicture}>UploadProductPicture</button>
         </div>
       </div>
 
       {/* Conditional Rendering */}
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
         {isViewingManagement ? (
-          <SellerManagementPage  /> // {/* Pass seller's ID to SellerManagementPage id={sellerData?.id} */}
+         
+          <SellerManagementPage  sellerId={sellerData?._id} /> // {/* Pass seller's ID to SellerManagementPage id={sellerData?.id} */}
         ) : (
           <>
             <header className="header">
@@ -259,7 +262,7 @@ if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==
           </>
         )}
       </div>
-      <Search sellerId={sellerData._id}/>
+      <Search/>
     </div>
   );
 };

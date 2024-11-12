@@ -80,13 +80,16 @@ const TourismGovernerPage = ({ email }) => {
     
     setIsEditing(!isEditing);
     setShowProfileInfo(!showProfileInfo); // Toggle profile info
-    if(!isEditing){
-      const userInput = prompt("Please enter your password:");
-      if( userInput !== tourismData.password){
-        return
-      }
-      
+    if (!isEditing) {
+      let userInput = prompt("Please enter your password:");
+      while (userInput !== tourismData.password) {
+        userInput = prompt("Please enter your password:");
+        if (userInput !== tourismData.password) {
+            alert("Wrong password. Please try again.");
+        }
     }
+  }
+      
     if (isEditing) {
       if (editedData.email !== oldEmail) {
         setOldEmail(editedData.email);
@@ -94,10 +97,13 @@ const TourismGovernerPage = ({ email }) => {
       setTourismData(editedData);
       updateTouristByEmailT(oldEmail, editedData);
      
-      const userInput2 = prompt("Please confirm password:");
-      if( userInput2 !== tourismData.password && isEditing){
-        return
-      }
+      let userInput2 = prompt("Please confirm password:");
+        while (userInput2 !== editedData.password) {
+          userInput2 = prompt("Please enter your password:");
+          if (userInput2 !== editedData.password) {
+              alert("Wrong password. Please try again.");
+          }
+        }
     }
 
   };
