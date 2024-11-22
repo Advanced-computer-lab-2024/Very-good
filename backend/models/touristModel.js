@@ -78,7 +78,7 @@ const touristSchema = new schema({
     ],
     purchasedProducts: [{
       type: schema.Types.ObjectId,
-      ref: 'Product'
+      ref: 'product'
     }],
     loyaltyPoints :{
       type: Number,
@@ -98,7 +98,22 @@ const touristSchema = new schema({
     type: Boolean, // Change from String to an array of strings
     default : false,
     required: false
-},
+  },
+  bookmarkedActivities: [{
+    type: schema.Types.ObjectId,
+    ref: 'activity'
+  }],
+  productWishList: [{
+    type: schema.Types.ObjectId,
+    ref: 'product'
+  }],
+  deliveryAdresses: [{
+    type: String
+  }],
+  orders: [{
+    type: schema.Types.ObjectId,
+    ref: 'order'
+  }]
     
 }, { timestamps : true })
 
