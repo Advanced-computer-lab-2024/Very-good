@@ -113,7 +113,14 @@ const touristSchema = new schema({
   orders: [{
     type: schema.Types.ObjectId,
     ref: 'order'
-  }]
+  }],
+  OTP:{
+    type: Number,
+  },
+  isOTPValid:{
+    type : Boolean,
+    default : false
+  }
     
 }, { timestamps : true })
 

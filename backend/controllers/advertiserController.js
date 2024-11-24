@@ -41,6 +41,35 @@ const createAdvertiser = async (req, res) => {
     }
 };
 
+const updateAcceptedTermsAndConditions = async (req, res) => {
+  try {
+      // Get the tourGuideId from the request (e.g., params or body)
+      const { advertiserId } = req.params;
+
+      // Find and update the specific tour guide
+      const updatedAdvertiser = await Advertiser.findByIdAndUpdate(
+         advertiserId, 
+          { acceptedTermsAndConditions: true }, // Update the field
+          { new: true } // Return the updated document
+      );
+
+      // Handle case where the tour guide is not found
+      if (!updatedAdvertiser) {
+          return res.status(404).json({ message: "Advertiser not found" });
+      }
+
+      // Respond with the updated tour guide
+      return res.status(200).json({
+          message: "Accepted terms and conditions updated successfully",
+          data: updatedAdvertiser,
+      });
+  } catch (error) {
+      // Handle errors (e.g., invalid ID format, database errors)
+      return res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
+
 const getAdvertisers = async (req, res) => {
     try {
         const advertisers = await Advertiser.find(); // Fetch all Tour Guides from the database
@@ -343,4 +372,4 @@ const rejectadvertiser = async (req, res) => {
 
 
 module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
-fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser ,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser} 
+fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser ,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser, updateAcceptedTermsAndConditions} 

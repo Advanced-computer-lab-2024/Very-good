@@ -623,6 +623,9 @@ const updateTag = async (tagId ,updatedData) =>{
 const BASE_URL = 'http://localhost:4000/api/admins/';
 const addAdmin = async (adminData) => {
     try {
+        console.log("admin data before sending : ", adminData)
+        adminData = {email : adminData.email, name : adminData.username, password : adminData.password}
+        console.log("admin data before sending 2: ", adminData)
         const response = await axios.post(BASE_URL, adminData);
         return response.data; // Return the response data from the server
     } catch (error) {
@@ -915,7 +918,7 @@ const getActivitieswithAdvertiserId = async (userId) => {
     console.error("Error fetching tour Guide by email:" ,email, error);
     throw new Error("Failed to fetch tour guide data");  // Re-throw the error
 }
- }
+}
 
 
 // Export the new method along with others

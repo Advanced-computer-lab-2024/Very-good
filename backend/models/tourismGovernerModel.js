@@ -29,6 +29,13 @@ const tourismGovernerSchema = new schema({
       dob: {
         type: Date,  // Add the DOB field as a Date type
         required: true // You can decide if you want it to be required or not
+      },
+      OTP:{
+        type: Number,
+      },
+      isOTPValid:{
+        type : Boolean,
+        default : false
       }
     
 }, { timestamps : true })

@@ -33,6 +33,9 @@ import HotelBookingForm from "./Components/HotelBookingForm";
 import HotelTicket from "./Components/HotelTicket";
 import ViewBookedHotelOffers from "./Components/ViewBookedHotelOffers";
 import ViewBalance from "./Components/ViewBalance";
+import axios from 'axios';
+import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
+import ViewWishList from "./Pages/ViewWishList"
 //require('dotenv').config();
 
 
@@ -65,67 +68,79 @@ function App() {
   const handleActionSelection = (selectedAction) => {
     setAction(selectedAction);
   };
-  const handleLogin = async (event) => {
-    event.preventDefault();
-  
-    if (!loginRole) {
-      alert("Please select a role before logging in.");
-      return;
-    }
-  
-    try {
-      console.log("Logging in with:", { email: loginEmail, password: loginPassword, role: loginRole });
-  
-      const response = await fetch("http://localhost:4000/api/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: loginEmail,
-          password: loginPassword,
-          role: loginRole,
-        }),
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        // Navigate based on the role
-        switch (loginRole) {
-          case "admin":
-            navigate("/admin");
-            break;
-          case "tourist":
-            navigate("/tourist");
-            break;
-          case "tourGuide":
-            navigate("/tourGuide");
-            break;
-          case "tourismGovernor":
-            navigate("/tourismGoverner");
-            break;
-          case "seller":
-            navigate("/seller");
-            break;
-          case "advertiser":
-            navigate("/advertiser");
-            break;
-          default:
-            console.error("Unknown role:", loginRole);
-            alert("Login failed: Unknown role");
-            break;
-        }
-      } else {
-        alert(`Login failed: ${data.message || "Unknown error"}`);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      alert("Error during login. Please try again.");
-    }
-  };
 
+const handleLogin = async (event) => {
+    event.preventDefault();
+
+    if (!loginRole) {
+        alert("Please select a role before logging in.");
+        return;
+    }
+
+    try {
+        console.log("Logging in with:", { email: loginEmail, password: loginPassword, role: loginRole });
+        console.log("loginrole : ", loginRole)
+
+        // Sending the login request using Axios
+        const response = await axios.post("http://localhost:4000/api/login/", {
+            email: loginEmail,
+            password: loginPassword,
+            role: loginRole,
+        });
+
+        // If login is successful, save the token and user data to localStorage
+        if (response.status === 200) {
+            const data = response.data;
+
+            // Save the token in localStorage for persistent authentication
+            localStorage.setItem('token', data.token);
+
+            // Optionally, store user data (user data) in localStorage
+            // Assuming the user data is in data.user (or whatever the key is in the response)
+            localStorage.setItem('userData', JSON.stringify(data.user));
+
+            // Navigate based on the role
+            switch (loginRole) {
+                case "admin":
+                    navigate("/admin", { state: { login: true } });
+                    break;
+                case "tourist":
+                    navigate("/tourist", { state: { login: true } });
+                    break;
+                case "tourGuide":
+                    navigate('/tourGuide', { state: { login: true } });
+                    break;
+                case "tourismGovernor":
+                    navigate('/tourismGoverner', { state: { login: true } });
+                    break;
+                case "seller":
+                    navigate("/seller", { state: { login: true } });
+                    break;
+                case "advertiser":
+                    navigate("/advertiser", { state: { login: true } });
+                    break;
+                default:
+                    console.error("Unknown role:", loginRole);
+                    alert("Login failed: Unknown role");
+                    break;
+            }
+        } else {
+            alert(`Login failed: ${response.data.message || "Unknown error"}`);
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        alert("Error during login. Please try again.");
+    }
+};
+
+  
   const handleProceed = (event) => {
     event.preventDefault();
     setStep(2); // Move to step 2
+  };
+
+  const handleForgetPassword = () => {
+    navigate("/forgetPasswordPage");
   };
 
   const handleRegister = async (event) => {
@@ -159,8 +174,8 @@ function App() {
         yearsOfExperience: formElements.experience.value,
         previousJob: formElements.previousWork.value,
       };
-      navigate("/tourGuide");
       await createTourGuideRequest(tourGuideData);
+      navigate("/tourGuide");
     }
 
     if (role === "tourismGovernor") {
@@ -280,6 +295,7 @@ function App() {
       >
         Back
       </button>
+      <button type="button" className="btn" onClick={handleForgetPassword}>forgot password</button>
     </form>
   </div>
 )}
@@ -624,6 +640,7 @@ function App() {
           we should also according to the choice render the upload page then we render the registration forum 
           look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
+          <Route path="/tourist/viewWishList" element={<ViewWishList/>} /> 
           <Route path="/tourist/preference" element={<PerfrencePage/>} /> 
           <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
           <Route path="/hotelConfirmation" element={<HotelTicket/>} />
@@ -647,6 +664,7 @@ function App() {
           <Route path="/guest" element={<GuestPage />} />
           <Route path="/booking" element={<BookingForm />} />
           <Route path="/ticket" element={<Ticket />} />
+          <Route path="/forgetPasswordPage" element={<ForgetPasswordPage />} />
         </Routes>
       </div>
   );

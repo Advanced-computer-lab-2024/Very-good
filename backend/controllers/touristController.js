@@ -4,6 +4,8 @@ const Itinerary = require('../models/itineraryModel'); // Import your Itinerary 
 const TourGuide = require('../models/tourGuideModel')
 const Activity = require ('../models/activityModel')
 const Product = require ('../models/productModel')
+
+
 const bookTransportation = async (req, res) => {
   try {
     const { id } = req.params; // Get the tourist ID from the request parameters
@@ -34,6 +36,29 @@ const bookTransportation = async (req, res) => {
   } catch (error) {
     console.error('Error booking transportation:', error);
     res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const getWishlistProducts = async (req, res) => {
+  const { touristId } = req.body;
+
+  try {
+      // Find the tourist by ID
+      const tourist = await Tourist.findById(touristId);
+
+      if (!tourist) {
+          return res.status(404).json({ message: "Tourist not found" });
+      }
+
+      // Fetch products based on product IDs in the productWishList
+      const products = await Product.find({
+          _id: { $in: tourist.productWishList }
+      });
+
+      res.status(200).json({ products });
+  } catch (error) {
+      console.error("Error fetching wishlist products:", error);
+      res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -86,48 +111,50 @@ const addHotelOfferToTourist = async (req, res) => {
 };
 
 // get all workout
+
 const createTourist = async (req, res) => {
-    try {
-      // Destructure the request body to get user details
-      const { name, email, password, mobile, nationality, dob, job} = req.body;
-  
-      // Create a new user instance with the role of tourist
-      const newUser = new Tourist({
-        name,
-        email,
-        password,
-        mobile,
-        nationality,
-        dob,
-        job 
-        // No need to set bookedItineraries, createdItineraries, or wallet; they will default to appropriate values
-      });
-  
-      // Save the user to the database
-      await newUser.save();
-  
-      // Send success response
-      res.status(200).json({
-        message: 'Tourist created successfully',
-        tourist: {
-          id: newUser._id,
-          name: newUser.name,
-          email: newUser.email,
-          mobile: newUser.mobile,
-          nationality: newUser.nationality,
-          dob: newUser.dob,
-          job: newUser.job,
-        }
-      });
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-      res.status(400).json({
-        message: 'Error creating tourist',
-        error: error.message
-      });
-    }
+  try {
+    // Destructure the request body to get user details
+    const { name, email, password, mobile, nationality, dob, job} = req.body;
+
+    // Create a new user instance with the role of tourist
+    const newUser = new Tourist({
+      name,
+      email,
+      password,
+      mobile,
+      nationality,
+      dob,
+      job 
+      // No need to set bookedItineraries, createdItineraries, or wallet; they will default to appropriate values
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    // Send success response
+    res.status(200).json({
+      message: 'Tourist created successfully',
+      tourist: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        mobile: newUser.mobile,
+        nationality: newUser.nationality,
+        dob: newUser.dob,
+        job: newUser.job,
+      }
+    });
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    res.status(400).json({
+      message: 'Error creating tourist',
+      error: error.message
+    });
+  }
 };
+
 
 const getTourist = async (req, res) => {
     try {
@@ -202,6 +229,7 @@ const deleteTourist = async (req, res) => {
       res.status(500).json({ message: 'Error deleting tourist', error: error.message });
   }
 };
+
 const updateRecords = async (req, res) => {
   try {
     const { email, updatedData } = req.body; // Extract email and updated data from the request body
@@ -823,6 +851,35 @@ const updateLoyaltyPoints2 = async (touristId, amountPaid) => {
   }
 };
 
+const addProductToWishlist = async (req, res) => {
+  const { touristId, productId } = req.body; // Extract touristId and productId from the request body
+
+  if (!touristId || !productId) {
+    return res.status(400).json({ message: "touristId and productId are required." });
+  }
+
+  try {
+    // Find the tourist by ID and add the productId to the productWishList array if not already present
+    const updatedTourist = await Tourist.findByIdAndUpdate(
+      touristId,
+      { $addToSet: { productWishList: productId } }, // $addToSet ensures no duplicates
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    res.status(200).json({
+      message: "Product added to wishlist successfully.",
+      tourist: updatedTourist,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while adding the product to the wishlist." });
+  }
+};
+
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts}

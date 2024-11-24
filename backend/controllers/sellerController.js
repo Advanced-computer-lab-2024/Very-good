@@ -35,6 +35,34 @@ const createSeller = async (req, res) => {
     }
 };
 
+const updateAcceptedTermsAndConditions = async (req, res) => {
+    try {
+        // Get the tourGuideId from the request (e.g., params or body)
+        const { sellerId } = req.params;
+  
+        // Find and update the specific tour guide
+        const updatedSeller = await Seller.findByIdAndUpdate(
+            sellerId, 
+            { acceptedTermsAndConditions: true }, // Update the field
+            { new: true } // Return the updated document
+        );
+  
+        // Handle case where the tour guide is not found
+        if (!updatedSeller) {
+            return res.status(404).json({ message: "Seller not found" });
+        }
+  
+        // Respond with the updated tour guide
+        return res.status(200).json({
+            message: "Accepted terms and conditions updated successfully",
+            data: updatedSeller,
+        });
+    } catch (error) {
+        // Handle errors (e.g., invalid ID format, database errors)
+        return res.status(500).json({ message: "An error occurred", error: error.message });
+    }
+  };
+
 // Get all Sellers
 const getSellers = async (req, res) => {
     try {
@@ -281,4 +309,4 @@ const fetchProductsBySellerEmail = async (req, res) => {
 };
 
 
-module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail}
+module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail, updateAcceptedTermsAndConditions}

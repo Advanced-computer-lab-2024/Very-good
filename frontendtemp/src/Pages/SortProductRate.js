@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID ,updateProduct} from '../Services/productServices';
 import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported
 import {makePayment} from '../Services/payementServices'
+import {addProductToWishlist} from '../Services/TouristService'
+
 const ProductSort = ({ email, touristId }) => {
     const [products, setProducts] = useState([]); 
     const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ const ProductSort = ({ email, touristId }) => {
                 setPurchaseError("");  // Clear any previous errors
                 alert('Product purchased successfully');
                 // a call to wassfy 
-                console.log("touristId inside productSort :", touristId)
+                //console.log("touristId inside productSort :", touristId)
                 
                 makePayment(touristId, product.price);
             }
@@ -106,20 +108,17 @@ const ProductSort = ({ email, touristId }) => {
 
                 };
 
-    /* const updateProductSales = async (productId) => {
+    const handleAddToWishList = async (productId, touristId) => {
         try {
-            const response = await fetch(`/api/products/${productId}/increment-sales`, {
-                method: 'PATCH', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId })
-            });
-            const data = await response.json();
-            console.log("Sales incremented:", data);
-            return data;
-        } catch (err) {
-            console.error("Error updating sales count:", err);
-        }
-    };*/
+                console.log("productId : ", productId);
+                console.log("touristId : ", touristId);
+                const response = await addProductToWishlist(touristId, productId);
+                alert(response.message);
+            } catch (error) {
+                alert(error);
+            }
+    };
+                
 
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);
@@ -137,6 +136,8 @@ const ProductSort = ({ email, touristId }) => {
                 <button onClick={() => handlePurchase(product)} disabled={product.stock <= 0}>
                     {product.stock > 0 ? "Purchase" : "Out of Stock"}
                 </button>
+
+                <button onClick={() => handleAddToWishList(product._id, touristId)}>Add to WishList</button>
 
                 {/* Show error if wallet balance is insufficient */}
                 {purchaseError && <p style={{ color: 'red' }}>{purchaseError}</p>}

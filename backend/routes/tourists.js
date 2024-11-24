@@ -1,12 +1,15 @@
 const express = require('express')
-const {createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2} = require('../controllers/touristController')
+const {addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2} = require('../controllers/touristController')
+const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
 router.get('/', getTourist)
 
+router.post('/getWishList',getWishlistProducts)
+router.post('/addProductToWishList',addProductToWishlist)
 router.patch('/:id/bookTransportation', bookTransportation);
 router.post('/', createTourist)
-router.post('/getByEmail', getTouristByEmail);
+router.post('/getByEmail' ,getTouristByEmail);
 router.post('/updateByEmail',updateRecords);
 router.delete('/:id', deleteTourist);
 router.post('/past-itineraries', getPastItinerariesWithTourGuides);

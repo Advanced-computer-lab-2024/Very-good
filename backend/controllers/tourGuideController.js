@@ -47,6 +47,34 @@ const createTourGuide = async (req, res) => {
     }
 };
 
+const updateAcceptedTermsAndConditions = async (req, res) => {
+  try {
+      // Get the tourGuideId from the request (e.g., params or body)
+      const { tourGuideId } = req.params;
+
+      // Find and update the specific tour guide
+      const updatedTourGuide = await TourGuide.findByIdAndUpdate(
+          tourGuideId, 
+          { acceptedTermsAndConditions: true }, // Update the field
+          { new: true } // Return the updated document
+      );
+
+      // Handle case where the tour guide is not found
+      if (!updatedTourGuide) {
+          return res.status(404).json({ message: "Tour guide not found" });
+      }
+
+      // Respond with the updated tour guide
+      return res.status(200).json({
+          message: "Accepted terms and conditions updated successfully",
+          data: updatedTourGuide,
+      });
+  } catch (error) {
+      // Handle errors (e.g., invalid ID format, database errors)
+      return res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
 const addCommentToTourGuide = async (req, res) => {
   try {
       const { tourGuideId, touristId, comment } = req.body;
@@ -356,5 +384,5 @@ const updateTourGuideByEmail = async (req, res) => {
 
 
 
-module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide}
+module.exports = {updateAcceptedTermsAndConditions, createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide}
 

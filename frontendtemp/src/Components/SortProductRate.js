@@ -12,7 +12,7 @@ const ProductSort = () => {
         const getProducts = async () => {
             try {
                 const Products = await fetchProductsNoID();
-                console.log("raw fetch products:", Products);
+                //console.log("raw fetch products:", Products);
     
                 if (Products && Products.data) {
                     // Filter out archived products
@@ -22,7 +22,7 @@ const ProductSort = () => {
                     const sortedProducts = unarchivedProducts.sort((a, b) => b.rating - a.rating);
                     
                     setProducts(sortedProducts);  // Update state with sorted unarchived products
-                    console.log('sorted list of unarchived products by rating:', sortedProducts);
+                    //console.log('sorted list of unarchived products by rating:', sortedProducts);
                 } else {
                     throw new Error("No data found in the response for products sorted by rating.");
                 }
@@ -35,7 +35,7 @@ const ProductSort = () => {
         };
     
         getProducts();  // Fetch first set of products (sorted by rating)
-    }, []);
+    });
     
 
     // Toggle function

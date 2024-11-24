@@ -54,6 +54,13 @@ const sellerSchema = new schema({
         type: Boolean, // Change from String to an array of strings
         required: false
     },
+    OTP:{
+        type: Number,
+      },
+      isOTPValid:{
+        type : Boolean,
+        default : false
+      }
 }, { timestamps: true });
 
 module.exports = mongoose.model('seller' ,sellerSchema)

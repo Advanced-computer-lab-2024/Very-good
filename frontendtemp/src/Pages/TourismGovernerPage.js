@@ -5,8 +5,16 @@ import CreateMuseumForm from '../Components/CreateMuseumForm';
 import MuseumList from  '../Components/MusuemList'
 import { updateTouristByEmailT } from '../RequestSendingMethods';
 import CreateTagForm from './CreateTagForm'; // Import CreateTagForm
+import {useLocation } from "react-router-dom";
 
 const TourismGovernerPage = ({ email }) => {
+  const location = useLocation();
+
+    const login = location.state?.login || false;
+    if(login){
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        email = userData?.email;
+    }
   const [isCreatingMuseum, setIsCreatingMuseum] = useState(false); // State to manage the visibility of the museum form
   const [isCreatingTag, setIsCreatingTag] = useState(false); // State to manage the visibility of the tag form
   const [tags, setTags] = useState([]); // State to hold created tags
@@ -49,6 +57,13 @@ const TourismGovernerPage = ({ email }) => {
     if (email) {
       getTourismData(); // Fetch data only if email is available
     }
+
+    const interval = setInterval(() => {
+      getTourismData();
+    }, 5000); // 5000ms = 5 seconds
+  
+    // Cleanup function to clear the interval
+    return () => clearInterval(interval);
   }, [email]);
   
   const handleCreateMuseumButtonClick = () => {
