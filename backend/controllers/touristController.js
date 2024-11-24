@@ -559,7 +559,8 @@ const purchaseProductbck = async (req, res) => {
       if (!tourist.purchasedProducts.includes(productId)) {
           tourist.purchasedProducts.push(productId);
       }
-      
+      // now here we want to add the tourist to the product new array we just created (Promo Code hn3ml feh eh ?)
+      product.touristWhoBoughtSaidProduct.push(tourist.id)
       // Decrement the product stock by 1 (ensure it doesn't go below 0)
       product.stock = Math.max(0, product.stock - 1);
 

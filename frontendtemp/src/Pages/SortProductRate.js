@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID ,updateProduct} from '../Services/productServices';
-import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported
+import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported , this function is the one reponsible for purchasing a product
 import {makePayment} from '../Services/payementServices'
 const ProductSort = ({ email, touristId }) => {
     const [products, setProducts] = useState([]); 

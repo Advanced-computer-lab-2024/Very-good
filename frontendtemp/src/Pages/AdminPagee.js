@@ -10,6 +10,7 @@ import AdminDocumentManagementPage from './AdminDocumentManagementPage'
 import ComplaintsList from './ComplaintsList'
 import Deletion from '../Components/DeleteAdmin';
 import ShowAllproducts from '../Components/ShowAllproducts'
+import RevenuePage from '../Services/AdminSprint3Services'
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -21,7 +22,8 @@ const AdminPage = ({email}) => {
         { id: 7, title: 'View Itineraries' },
         { id: 8,title : 'View Documents'},
         { id:9,title :'View Complaints'},
-        {id:10,title:'View All products 3la ndafa'}
+        {id:10,title:'View All products 3la ndafa'},
+        {id:11,title:'View Sales Report Page'}
 
     ]);
 
@@ -40,6 +42,13 @@ const AdminPage = ({email}) => {
     const [showDocumentManagmentPage,setshowDocumentPage]=useState(false);
     const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
     const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
+    const [showSalesReport,SetShowSalesReport]=useState(false);
+    const handleBackFromSalesReportPage =()=>{
+        SetShowSalesReport(false);
+    }
+    const handleSalesReportPage=()=>{
+        SetShowSalesReport(true);
+    }
     const handleShowAllProductsMahmoud =()=>{
         SetshowAllproductsMahmoud(true);
     }
@@ -270,7 +279,9 @@ const AdminPage = ({email}) => {
     if(showAllproductsMahmoud){
         return <ShowAllproducts/>
     }
-
+    if(showSalesReport){
+        return <RevenuePage/>
+    }
     return (
         <div>
           
@@ -356,6 +367,10 @@ const AdminPage = ({email}) => {
                                 )}
                                 {activity.title==='View All products 3la ndafa'&&(
                                     <button className="view-button" onClick={handleShowAllProductsMahmoud}>View All products</button>
+                                )} 
+                                {activity.title==='View Sales Report Page'&&(
+                                     <button className="view-button" onClick={handleSalesReportPage}>View Sales Report</button>
+
                                 )}
 
                                 
