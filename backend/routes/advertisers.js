@@ -1,5 +1,5 @@
 const express = require('express')
-const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId,fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser,} = require('../controllers/advertiserController')
+const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId,fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser,updateAcceptedTermsAndConditions,} = require('../controllers/advertiserController')
 const uploadAdvertiser = require('../middlewares/uploadMiddlewareAdvertiser');
 const router = express.Router()
 
@@ -15,6 +15,8 @@ router.delete('/:id', deleteAdvertiser);
 router.post('/getAdvertiserByEmail', fetchAdvertiserByEmail);
 router.post('/', createAdvertiser)
 router.put('/updateAdvertiserByEmail', updateAdvertiserByEmail);
+
+router.put('/:advertiserId/accepted-terms', updateAcceptedTermsAndConditions);
 
 
 //router.delete('/:id', deleteWorkout)

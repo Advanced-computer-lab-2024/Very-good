@@ -22,7 +22,18 @@ export const getTouristByEmail = async (email) => {
 };
 
 
-
+export const addProductToWishlist = async (touristId, productId) => {
+    try {
+      const response = await axios.post(`http://localhost:4000/api/tourists/addProductToWishList`, {
+        touristId,
+        productId,
+      });
+      return response.data; // Return the response data to the caller
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      throw error.response?.data?.message || "Failed to add product to wishlist.";
+    }
+  };
 
 
 export const deleteTourist = async (userId) => {
@@ -34,3 +45,13 @@ export const deleteTourist = async (userId) => {
         throw error;
     }
 };
+
+export const fetchWishlistProducts = async (touristId) => {
+    try {
+      const response = await axios.post(`http://localhost:4000/api/tourists/getWishList`, {touristId});
+      return response.data.products; // Return the fetched products
+    } catch (error) {
+      console.error("Error fetching wishlist products:", error.response?.data || error.message);
+      throw error; // Re-throw the error for the caller to handle
+    }
+  };

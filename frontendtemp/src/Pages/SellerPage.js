@@ -9,6 +9,7 @@ import DeleteSeller from '../Components/DeleteSellerAcc';
 import UploadDocumentsSeller from './UploadDocumentsSeller'
 import UploadingAlogoSeller from './UploadingAlogoSeller'
 import FetchProducts from '../Components/uploadingAproductPicture'
+import updateAcceptedTermsAndConditions from '../Services/sellerServices'
 
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -35,6 +36,15 @@ const NotAccepted = ({ onAccept }) => {
 
 
 const SellerPage = ({ email }) => {
+
+  const location = useLocation();
+
+    const login = location.state?.login || false;
+    if(login){
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        email = userData?.email;
+    }
+
   const [sellerData, setSellerData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -51,22 +61,33 @@ const SellerPage = ({ email }) => {
     setUploadPage(false);
   }; 
   useEffect(() => {
-    const getSellerData = async () => {
+    const fetchSellerData = async () => {
       const response = await fetchSellerByEmail(email);
       if (response) {
         setSellerData(response.seller);
         setEditedData(response.seller);
       }
+      console.log("seller : ", response.seller);
     };
-
-    getSellerData();
-  }, [email]);
+  
+    // Fetch data initially
+    fetchSellerData();
+  
+    // Set up the interval
+    const interval = setInterval(() => {
+      fetchSellerData();
+    }, 5000); // 5000ms = 5 seconds
+  
+    // Cleanup function to clear the interval
+    return () => clearInterval(interval);
+  }, [email]); 
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   const handleAcceptTerms = () => {
     setTermsAccepted(true); // Set terms as accepted
+    updateAcceptedTermsAndConditions(sellerData._id);
 };
 
   const handleEditChange = (e) => {
@@ -138,7 +159,7 @@ const SellerPage = ({ email }) => {
       }
     }
   };
-  if (uploadPage){
+  if (uploadPage && !login){
     return <UploadDocumentsSeller onBack={handleBackfromUploadPage} email={email} />
   }
   if(isUploadingAproductPicture){
@@ -151,12 +172,15 @@ const SellerPage = ({ email }) => {
     navigate("/");
     
   }
-  if(sellerData.isPendingAcceptance || sellerData.isAccepted==="false"){
+
+  if (!termsAccepted && !login) {
+    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+  }
+
+  if(sellerData?.isPendingAcceptance || sellerData?.isAccepted==="false"){
     return <NotAccepted onAccept={()=>r1()} />
 }
-if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==="true") {
-  return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-}
+
 
   if(isUploadingAlogo){
     return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
@@ -259,7 +283,7 @@ if (!termsAccepted && !sellerData.isPendingAcceptance && sellerData.isAccepted==
           </>
         )}
       </div>
-      <Search sellerId={sellerData._id}/>
+      <Search sellerId={sellerData?._id}/>
     </div>
   );
 };

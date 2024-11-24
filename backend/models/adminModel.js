@@ -14,7 +14,14 @@ const adminSchema = new schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    OTP:{
+        type: Number,
+      },
+      isOTPValid:{
+        type : Boolean,
+        default : false
+      }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Admin' ,adminSchema);

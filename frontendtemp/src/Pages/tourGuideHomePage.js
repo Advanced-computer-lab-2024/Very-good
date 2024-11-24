@@ -7,6 +7,8 @@ import UploadDocumentsTourGuide from './UploadDocumentsTourGuide'
 import UploadingPhotoTourGuide from './UploadingApictureTourGuide'
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import updateAcceptedTermsAndConditions from '../Services/tourGuideServices'
+
 
 let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
@@ -32,6 +34,13 @@ const NotAccepted = ({ onAccept }) => {
 };
 
 const TourGuideHomePage = ({ email }) => {
+  const location = useLocation();
+
+  const login = location.state?.login || false;
+  if(login){
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    email = userData?.email;
+  }
   const [showItineraryDisplay, setShowItineraryDisplay] = useState(false);
   const [tourGuideData, setTourGuideData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,20 +72,31 @@ const TourGuideHomePage = ({ email }) => {
   useEffect(() => {
     const getTourGuideData = async () => {
       try {
-        console.log("Fetching tour guide with email:", email); // Log the email for debugging
+        //console.log("Fetching tour guide with email:", email); // Log the email for debugging
         // Fetch tour guide data by email from the backend
         const response = await fetchTourGuideByEmail(email); // Pass email directly
         setTourGuideData(response);
-        setId(tourGuideData._id)
+        //console.log("tourGuide : ", response)
+        setId(response._id)
         setEditedData(response); // Initialize editable data with fetched data
+        //setTermsAccepted(response.acceptedTermsAndConditions);
       } catch (error) {
         console.error("Error fetching tour guide data:", error);
       }
     };
 
     getTourGuideData();
+
+    const interval = setInterval(() => {
+      getTourGuideData();
+    }, 5000); // 5000ms = 5 seconds
+  
+    // Cleanup function to clear the interval
+    return () => clearInterval(interval);
   }, [email]);
+
   const { _id: tourGuideId } = tourGuideData || {};
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -84,13 +104,12 @@ const TourGuideHomePage = ({ email }) => {
   const handleViewItineraryDisplay = () => {
     setShowItineraryDisplay((prevState) => !prevState); // Set state to true to show the ItineraryDisplay
   };
+
   const handleAcceptTerms = () => {
     setTermsAccepted(true); // Set terms as accepted
-};
-
-// Render the terms and conditions modal if not accepted
-
-
+    console.log("id = ", id)
+    updateAcceptedTermsAndConditions(tourGuideData._id);
+  };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -150,9 +169,13 @@ const TourGuideHomePage = ({ email }) => {
 
   
 
-  if (uploadPage){
+  if (uploadPage && !tourGuideData?.IdDocument && !tourGuideData?.certificatesDocument && !login){
     return <UploadDocumentsTourGuide onBack={handleBackfromUploadPage} email={email} />
   }
+
+  const handleBackfromUploadPicPage = () => {
+    setisUploadingApicture(false);
+  };
 
   if(isUploadingApicture){
   return <UploadingPhotoTourGuide onBack={handleBackfromUploadPicPage} email={email} />
@@ -162,11 +185,9 @@ const TourGuideHomePage = ({ email }) => {
     // to the uploadDocumentsTourGuide , and we will be using the same backend with minor adjustments
     setisUploadingApicture(true);
   };
-  const handleBackfromUploadPicPage = () => {
-    setisUploadingApicture(false);
-  };
 
-  if (uploadPage) {
+
+  if (uploadPage && !login) {
     return (
       <UploadDocumentsTourGuide
         onBack={handleBackfromUploadPage}
@@ -187,12 +208,17 @@ const TourGuideHomePage = ({ email }) => {
     navigate("/");
     
   }
-  if(tourGuideData.isPendingAcceptance || tourGuideData.isAccepted==="false"){
+
+  
+
+  if (!termsAccepted && !login) {
+    return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+  }
+
+  if(tourGuideData?.isPendingAcceptance || tourGuideData?.isAccepted==="false" ){
     return <NotAccepted onAccept={()=>r1()} />
-}
-if (!termsAccepted && !tourGuideData.isPendingAcceptance && tourGuideData.isAccepted==="true") {
-  return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-}
+  }
+
   return (
     <div className="tour-guide-page">
      
@@ -348,7 +374,7 @@ if (!termsAccepted && !tourGuideData.isPendingAcceptance && tourGuideData.isAcce
 
         {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
          
-         <DeleteTA dataTA={tourGuideData?.email} isTourGuideA = {flag}/>
+         <DeleteTA dataTA={email} isTourGuideA = {flag}/>
          <button onClick={()=>handleDeleteReq()}> send delete request</button>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

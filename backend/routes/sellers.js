@@ -1,5 +1,5 @@
 const express = require('express')
-const {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail} = require('../controllers/sellerController')
+const {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail, updateAcceptedTermsAndConditions,} = require('../controllers/sellerController')
 const uploadSeller = require('../middlewares/uploadMiddlewareSeller');
 const router = express.Router()
 const multer = require('multer');
@@ -14,6 +14,9 @@ router.post('/getSellerByEmail', fetchSellerByEmail);
 router.put('/updateSeller', updateSeller);
 //router.patch('/:id', updateWorkout)
 router.delete('/:id', deleteSeller); 
+
+router.put('/:sellerId/accepted-terms', updateAcceptedTermsAndConditions);
+
 
 router.post('/upload/:email', 
         uploadSeller.fields([

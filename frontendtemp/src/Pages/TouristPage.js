@@ -13,7 +13,7 @@ import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
 import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
 import PreferenceChoose from '../Components/Preference.js';
 import { Link } from 'react-router-dom';
@@ -26,7 +26,16 @@ import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
 import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
-const TouristPage = ({ email }) => {
+const TouristPage = ({email}) => {
+  const location = useLocation();
+
+  // Directly read 'login' from location.state
+  const login = location.state?.login || false;
+  if(login){
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    email = userData?.email;
+  }
+  console.log("email from localStorge", email);
   const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
   const [wallet, setWallet] = useState(null);
@@ -166,6 +175,10 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/SearchHotel', {state : {touristId : touristId}})
   }
 
+  const handleViewMyWishList = (touristId) =>{
+    navigate('/tourist/viewWishList', {state : {touristId : touristId}})
+  }
+
   const handleViewMyBalance = async (email) => {
     try {
       
@@ -247,6 +260,7 @@ const TouristPage = ({ email }) => {
           <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
           <button onClick={() => handleViewMyBalance(email)}>View my Balance</button>
+          <button onClick={() => handleViewMyWishList(touristId)}>View My Wish List</button>
         </div>
       </div>
   

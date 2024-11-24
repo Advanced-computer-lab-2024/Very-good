@@ -11,9 +11,11 @@ import CreateTransportationForm from '../Components/createTransportationForm';
 import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
 import {editTransportation, deleteTransportation} from '../Services/bookingTransportationServices'
 import { fetchAdvertiserByEmail } from '../RequestSendingMethods';
+import updateAcceptedTermsAndConditions from '../Services/advertiserServices'
 
 
-const advertiserId = "66f826b0e184e2faa3ea510b";
+
+let advertiserId = "66f826b0e184e2faa3ea510b";
 
 const TermsAndConditionsModal = ({ onAccept }) => {
     return (
@@ -38,6 +40,15 @@ const TermsAndConditionsModal = ({ onAccept }) => {
   };
 
 const AdvertiserPage = ({email}) => {
+    const location = useLocation();
+
+    const login = location.state?.login || false;
+    if(login){
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        email = userData?.email;
+        advertiserId = userData?._id;
+    }
+
     const [isCreating, setIsCreating] = useState(false);
     const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
     const [activities, setActivities] = useState([]);
@@ -65,6 +76,12 @@ const AdvertiserPage = ({email}) => {
         if (email) {
           getAdvertiserData();
         }
+        const interval = setInterval(() => {
+            getAdvertiserData();
+          }, 5000); // 5000ms = 5 seconds
+        
+          // Cleanup function to clear the interval
+          return () => clearInterval(interval);
       }, [email]);
 
     const handleBackfromUploadPage = () => {
@@ -130,6 +147,7 @@ const AdvertiserPage = ({email}) => {
     }, []);
     const handleAcceptTerms = () => {
         setTermsAccepted(true); // Set terms as accepted
+        updateAcceptedTermsAndConditions(advertiserData._id);
     };
     
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
@@ -198,14 +216,16 @@ const AdvertiserPage = ({email}) => {
         
       }
 
-    if (uploadPage){
+    if (uploadPage && !login){
         return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
       }
-      if(advertiserData.isPendingAcceptance || advertiserData.isAccepted==="false"){
-        return <NotAccepted onAccept={()=>r1()} />
-    }
-    if (!termsAccepted && !advertiserData.isPendingAcceptance && advertiserData.isAccepted==="true") {
+
+    if (!termsAccepted && !login) {
       return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    }
+
+    if(advertiserData?.isPendingAcceptance || advertiserData?.isAccepted==="false"){
+        return <NotAccepted onAccept={()=>r1()} />
     }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {

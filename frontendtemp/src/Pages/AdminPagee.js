@@ -32,7 +32,7 @@ const AdminPage = ({email}) => {
     const [formData, setFormData] = useState({ name: '' }); // State for form data
     const [isAddingAdmin, setIsAddingAdmin] = useState(false); // State to manage visibility of the add admin form
     const [isAddingGovernor, setIsAddingGovernor] = useState(false); // State to manage visibility of the add tourism governor form
-    const [adminData, setAdminData] = useState({ username: '', password: '', email: '' }); // State for admin form data including email
+    const [adminData, setAdminData] = useState({ name: '', password: '', email: '' }); // State for admin form data including email
     const [governorData, setGovernorData] = useState({ username: '', email: '', password: '', mobile: '', nationality: '', dob: '' }); // State for governor form data
     const [showAdminDelete, setShowAdminDelete] = useState(false); // State to manage visibility of AdminDelete page
     const [showSearchPage,setShowSearchPage]=useState(false);
@@ -160,7 +160,7 @@ const AdminPage = ({email}) => {
             alert(result.message || 'Admin created successfully!');
 
             // Reset form and close it after submission
-            setAdminData({ username: '', password: '', email: '' }); // Reset email field
+            setAdminData({ name: '', password: '', email: '' }); // Reset email field
             setIsAddingAdmin(false); // Hide the form
         } catch (error) {
             console.error('Failed to add admin:', error.response ? error.response.data : error.message);
@@ -449,7 +449,7 @@ const AdminPage = ({email}) => {
                                     Name:
                                     <input
                                         type="text"
-                                        name="username"
+                                        name="name"
                                         value={adminData.username}
                                         onChange={handleAdminFormChange}
                                         required
