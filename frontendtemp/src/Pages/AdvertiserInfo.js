@@ -3,12 +3,15 @@ import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendi
 import UploadingALogoAdvertiser from './UploadingALogoAdvertiser'
 import '../styles/global.css'; // Assuming global styles are shared across components
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
-const AdvertiserInfo = ({ email, onBack }) => {
+import AdvertiserSalesReport from './AdvertiserSalesReport'
+const AdvertiserInfo = ({ email, onBack,id }) => {
+  console.log("ID SENT TO ADINFO:",id)
   const [advertiserData, setAdvertiserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
   const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
+  const [isSalesReportOpen,setIsSalesReportOpen]=useState(false);
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
@@ -90,6 +93,15 @@ const AdvertiserInfo = ({ email, onBack }) => {
         // Handle error (e.g., show error message)
     }
 };
+const handleSalesReport =()=>{
+  setIsSalesReportOpen(true);
+}
+const handleBackFromSalesReport =()=>{
+  setIsSalesReportOpen(false);
+}
+  if(isSalesReportOpen){
+   return <AdvertiserSalesReport advertiserId={id} onBack={ handleBackFromSalesReport}/>
+  }
   if(ISuploadLogoAdvertiserOpen){
     return <UploadingALogoAdvertiser onBack={handleBackToAdvertiserInfo} email={email} />;
   }
@@ -102,6 +114,7 @@ const AdvertiserInfo = ({ email, onBack }) => {
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-content">
           <button onClick={handleUploadLogo}>Upload Logo</button>
+          <button onClick={handleSalesReport}>Sales Report</button>
         </div>
       </div>
 

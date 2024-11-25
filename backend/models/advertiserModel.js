@@ -60,7 +60,12 @@ const advertiserSchema = new schema({
     isOTPValid:{
       type : Boolean,
       default : false
-    }
+    },
+    createdActivities:  [ //saving the id of the activity , when created this should hold 
+      {
+        type: schema.Types.ObjectId, ref: 'activity' 
+      }
+      ],
 }, { timestamps : true })
 
 module.exports = mongoose.model('advertiser' ,advertiserSchema)

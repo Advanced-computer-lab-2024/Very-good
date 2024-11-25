@@ -10,7 +10,7 @@ import UploadDocumentsSeller from './UploadDocumentsSeller'
 import UploadingAlogoSeller from './UploadingAlogoSeller'
 import FetchProducts from '../Components/uploadingAproductPicture'
 import updateAcceptedTermsAndConditions from '../Services/sellerServices'
-
+import SellerSalesReport from "./SellerSalesReport"
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
       <div className="modal-overlay">
@@ -56,6 +56,7 @@ const SellerPage = ({ email }) => {
   const [uploadPage, setUploadPage]=useState(true); // default with true
   const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
   const [isUploadingAproductPicture,setIsUploadingAproductPicture]=useState(false);
+  const [ViewSalesReport,setViewSalesReport]=useState(false);
   const navigate = useNavigate();
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
@@ -131,6 +132,12 @@ const SellerPage = ({ email }) => {
   const handleUploadAproductPicture = ()=>{
     setIsUploadingAproductPicture(true);
   }
+  const handleSalesReport =()=>{
+    setViewSalesReport(true);
+  }
+  const handleBackFromSellerReportPage =()=>{
+    setViewSalesReport(false);
+  }
   const handleUpdateProfile = async () => {
     if(!isEditing){
     const userInput = prompt("Please enter your password:");
@@ -185,6 +192,9 @@ const SellerPage = ({ email }) => {
   if(isUploadingAlogo){
     return <UploadingAlogoSeller onBack={handleBackToSeller} email={email} />;
   }
+  if(ViewSalesReport){
+    return <SellerSalesReport  sellerId={sellerData._id}/>
+  }
   
   return (
     <div className="seller-page">
@@ -203,13 +213,14 @@ const SellerPage = ({ email }) => {
           </button> {/* New button with commented action listener */}
           <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
           <button onClick={handleUploadAproductPicture}>UploadProductPicture</button>
+          <button onClick={handleSalesReport}>View Products Sales Report</button>
         </div>
       </div>
 
       {/* Conditional Rendering */}
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
         {isViewingManagement ? (
-          <SellerManagementPage  /> // {/* Pass seller's ID to SellerManagementPage id={sellerData?.id} */}
+          <SellerManagementPage sellerId={sellerData._id} /> // {/* Pass seller's ID to SellerManagementPage id={sellerData?.id} */}
         ) : (
           <>
             <header className="header">
