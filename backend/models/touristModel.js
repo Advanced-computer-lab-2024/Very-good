@@ -110,6 +110,10 @@ const touristSchema = new schema({
   deliveryAdresses: [{
     type: String
   }],
+  cart:[{
+    type: schema.Types.ObjectId,
+    ref: 'product'
+  }],
   orders: [{
     type: schema.Types.ObjectId,
     ref: 'order'
