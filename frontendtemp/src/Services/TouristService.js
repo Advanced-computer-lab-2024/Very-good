@@ -21,6 +21,18 @@ export const getTouristByEmail = async (email) => {
     }
 };
 
+export const removeProductFromWishlist = async (touristId, productId) => {
+    try {
+        const response = await axios.post("http://localhost:4000/api/tourists/removeProductWishList", {
+            touristId,
+            productId,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error removing product from wishlist:", error);
+        throw error;
+    }
+};
 
 export const addProductToWishlist = async (touristId, productId) => {
     try {

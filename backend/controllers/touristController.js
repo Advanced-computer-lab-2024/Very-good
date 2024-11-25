@@ -39,6 +39,35 @@ const bookTransportation = async (req, res) => {
   }
 };
 
+removeProductFromWishlist = async (req, res) => {
+  try {
+      const { touristId, productId } = req.body;
+
+      // Validate input
+      if (!touristId || !productId) {
+          return res.status(400).json({ message: "Tourist ID and Product ID are required." });
+      }
+
+      // Find the tourist and update their wishlist
+      const tourist = await Tourist.findById(touristId);
+      if (!tourist) {
+          return res.status(404).json({ message: "Tourist not found." });
+      }
+
+      // Remove the product ID from the wishlist
+      tourist.productWishList = tourist.productWishList.filter(
+          (wishlistProductId) => wishlistProductId.toString() !== productId
+      );
+
+      await tourist.save();
+
+      res.status(200).json({ message: "Product removed from wishlist successfully." });
+  } catch (error) {
+      console.error("Error removing product from wishlist:", error);
+      res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
 const getWishlistProducts = async (req, res) => {
   const { touristId } = req.body;
 
@@ -712,7 +741,7 @@ const updateLoyaltyPoints = async (touristId, amountPaid) => {
       console.log('Points to add:', pointsToAdd);
       if (isNaN(pointsToAdd)) {
           console.error('Calculated points are NaN:', pointsToAdd);
-          pointsToAdd = 6; // Default to 0 to avoid NaN errors
+          pointsToAdd = 0; // Default to 0 to avoid NaN errors
       }
 
       // Ensure loyaltyPoints is a valid number
@@ -883,4 +912,4 @@ const addProductToWishlist = async (req, res) => {
 
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist}

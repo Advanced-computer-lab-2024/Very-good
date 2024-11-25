@@ -176,7 +176,7 @@ const TouristPage = ({email}) => {
   }
 
   const handleViewMyWishList = (touristId) =>{
-    navigate('/tourist/viewWishList', {state : {touristId : touristId}})
+    navigate('/tourist/viewWishList', {state : {touristId : touristId, email: email}})
   }
 
   const handleViewMyBalance = async (email) => {
