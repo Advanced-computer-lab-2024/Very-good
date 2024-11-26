@@ -85,10 +85,9 @@ const itinerarySchema = new schema({
     type: String,
     required: true
   },
-  touristIds: [{ // Hold multiple tourist references
-    type: schema.Types.ObjectId,
-    ref: 'tourist',
-    required: true
+  touristIds: [{ // Hold multiple tourist references and the time at which they were placed 
+    touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+    addedAt: { type: Date }
   }],
   tourGuideId: {
     type: schema.Types.ObjectId,

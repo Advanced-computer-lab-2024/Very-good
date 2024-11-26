@@ -61,10 +61,10 @@ const activitySchema = new schema({
         type: [tagSchema], // Embed array of tags
         required: false
     },
-    tourGuideId: { // New field to reference the tour guide
-        type: schema.Types.ObjectId,
-        ref: 'tourGuide', // Reference to the TourGuide model
-    },
+    touristIds: [{ // Hold multiple tourist references and the time at which they were placed 
+        touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+        addedAt: { type: Date }
+      }],
     touristIds: [{ // Changed to an array to hold multiple tourist references
         type: schema.Types.ObjectId,
         ref: 'tourist', // Reference to the Tourist model

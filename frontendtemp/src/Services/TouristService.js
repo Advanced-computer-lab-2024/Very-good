@@ -20,6 +20,19 @@ export const getTouristByEmail = async (email) => {
         throw new Error("Failed to fetch tourist data");  // Re-throw the error
     }
 };
+export const getTouristsByIds = async (ids) => {
+  try {
+    // Send GET request to the backend with the tourist id as a route parameter
+    const response = await axios.get(`http://localhost:4000/api/tourists`, { params: { ids } });
+    // Handle successful response
+    console.log("Tourist data retrieved:", response.data);
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching tourist data:", error.response ? error.response.data : error.message);
+    throw error; // Rethrow the error to be handled by the calling function
+  }
+};
 
 export const removeProductFromWishlist = async (touristId, productId) => {
     try {

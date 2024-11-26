@@ -230,7 +230,16 @@ const getTouristByEmail = async (req, res) => {
       });
   }
 };
-
+const getTouristById = async (req, res) => {
+  try {
+    const { ids } = req.query; // Get the ids from the query parameter
+    const touristData = await Tourist.find({ '_id': { $in: ids } });
+    res.status(200).json(touristData);
+  } catch (error) {
+    console.error("Error retrieving tourists:", error);
+    res.status(500).json({ message: "Error retrieving tourists", error: error.message });
+  }
+};
 
 
 // create a workout
@@ -912,4 +921,4 @@ const addProductToWishlist = async (req, res) => {
 
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist,getTouristById}

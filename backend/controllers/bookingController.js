@@ -26,7 +26,9 @@ const createBooking = async (req, res) => {
             startDateTime = activity.date;
             booking = new Booking({ touristId, activityId, numberOfParticipants, startDateTime });
             await Tourist.findByIdAndUpdate(touristId, { $addToSet: { bookedActivities: activityId } });
-            activity.touristIds.push(touristId);{/* we want to also Find the amount Paid by that tourist */}
+            const addedAt = new Date().toISOString();
+            const newTourist = { touristId, addedAt };
+            activity.touristIds.push(newTourist);{/* we want to also Find the amount Paid by that tourist */}
             await activity.save(); // Save the updated activity
         } else if (itineraryId) {
             const itinerary = await Itinerary.findById(itineraryId);
@@ -59,7 +61,9 @@ const createBooking = async (req, res) => {
             });
             await Tourist.findByIdAndUpdate(touristId, { $addToSet: { bookedItineraries: itineraryId } });
             console.log(touristId);
-            itinerary.touristIds.push(touristId);
+            const addedAt = new Date().toISOString();
+            const newTourist = { touristId, addedAt };
+            itinerary.touristIds.push(newTourist);
             await itinerary.save(); // Save the updated itinerary
         } else {
             return res.status(400).json({ message: 'Must provide either activityId or itineraryId' });

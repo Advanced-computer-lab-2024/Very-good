@@ -3,7 +3,6 @@ import "../styles/global.css"; // Reuse the existing styles
 import { getItinerariesWithTourGuideId } from "../Services/tourGuideServices";
 
 const TourGuideSalesReport = ({ id, onBack }) => {
-  console.log("TourGuideID Sent to the Sales Page:", id);
   const [itineraries, setItineraries] = useState([]); // State to store itineraries
   const [filteredItineraries, setFilteredItineraries] = useState([]); // State for filtered itineraries
   const [loading, setLoading] = useState(true); // State for loading indicator
@@ -28,16 +27,13 @@ const TourGuideSalesReport = ({ id, onBack }) => {
     fetchSalesReport();
   }, [id]);
 
-  // Calculate subscribers for an itinerary
-  const calculateSubscribers = (item) => {
-    return item.touristIds && Array.isArray(item.touristIds)
-      ? item.touristIds.length
-      : 0;
-  };
-
-  // Calculate total price for an itinerary
-  const parsePrice = (price) => {
-    return typeof price === "number" ? price : parseFloat(price) || 0;
+  const getLastAvailableDate = (availableDates) => {
+    if (Array.isArray(availableDates) && availableDates.length > 0) {
+      return new Date(
+        Math.max(...availableDates.map((date) => new Date(date)))
+      );
+    }
+    return null;
   };
 
   // Handle filtering logic
@@ -46,22 +42,38 @@ const TourGuideSalesReport = ({ id, onBack }) => {
 
     // Filter by date
     if (filterDate) {
-      filtered = filtered.filter(
-        (item) =>
-          new Date(item.createdAt).toISOString().split("T")[0] === filterDate
-      );
+      filtered = filtered.filter((item) => {
+        const lastDate = getLastAvailableDate(item.availableDates);
+        return (
+          lastDate &&
+          lastDate.toISOString().split("T")[0] === filterDate
+        );
+      });
     }
 
     // Filter by month
     if (filterMonth) {
-      filtered = filtered.filter(
-        (item) =>
-          new Date(item.createdAt).getMonth() + 1 === parseInt(filterMonth, 10)
-      );
+      filtered = filtered.filter((item) => {
+        const lastDate = getLastAvailableDate(item.availableDates);
+        return (
+          lastDate &&
+          lastDate.getMonth() + 1 === parseInt(filterMonth, 10)
+        );
+      });
     }
 
     setFilteredItineraries(filtered);
   }, [filterDate, filterMonth, itineraries]);
+
+  const calculateSubscribers = (item) => {
+    return item.touristIds && Array.isArray(item.touristIds)
+      ? item.touristIds.length
+      : 0;
+  };
+
+  const parsePrice = (price) => {
+    return typeof price === "number" ? price : parseFloat(price) || 0;
+  };
 
   const renderTable = () => (
     <div className="partition">
@@ -75,7 +87,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
             <th>Total Price</th>
             <th>Status</th>
             <th>Site Revenue</th>
-            <th>Date</th> {/* New field to show date */}
+            <th>Last Available Date</th> {/* Use the last available date */}
           </tr>
         </thead>
         <tbody>
@@ -84,7 +96,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
             const price = parsePrice(item.price);
             const totalPrice = subscribers * price;
             const siteRevenue = totalPrice * 0.1; // 10% of total price
-            const date = new Date(item.createdAt).toLocaleDateString(); // Format the date
+            const lastDate = getLastAvailableDate(item.availableDates)?.toLocaleDateString() || "N/A";
 
             return (
               <tr key={index}>
@@ -94,7 +106,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
                 <td>{totalPrice.toFixed(2)}</td>
                 <td>{item.isActive ? "Active" : "Inactive"}</td>
                 <td>{siteRevenue.toFixed(2)}</td>
-                <td>{date}</td> {/* Display date */}
+                <td>{lastDate}</td> {/* Display the last available date */}
               </tr>
             );
           })}
@@ -108,10 +120,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
 
   return (
     <div className="revenue-page">
-      <div className="header">
-
-        Tour Guide Sales Report
-      </div>
+      <div className="header">Tour Guide Sales Report</div>
 
       {/* Filters Section */}
       <div className="filters">
@@ -146,7 +155,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
           Back
         </button>
       </div>
-      
+
       <div className="footer">Powered by Very Good App</div>
     </div>
   );

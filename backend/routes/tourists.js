@@ -1,10 +1,10 @@
 const express = require('express')
-const {removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2} = require('../controllers/touristController')
+const {removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById} = require('../controllers/touristController')
 const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
 router.get('/', getTourist)
-
+router.get('/:id', getTouristById);
 router.post('/removeProductWishList',removeProductFromWishlist)
 router.post('/getWishList',getWishlistProducts)
 router.post('/addProductToWishList',addProductToWishlist)

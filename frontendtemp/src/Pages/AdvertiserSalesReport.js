@@ -28,28 +28,28 @@ const AdvertiserSalesReport = ({ advertiserId,onBack }) => {
     fetchSalesReport();
   }, [advertiserId]);
 
-  // Handle filtering logic
-  useEffect(() => {
-    let filtered = activities;
+// Handle filtering logic
+useEffect(() => {
+  let filtered = activities;
 
-    // Filter by date
-    if (filterDate) {
-      filtered = filtered.filter(
-        (item) =>
-          new Date(item.createdAt).toISOString().split("T")[0] === filterDate
-      );
-    }
+  // Filter by date
+  if (filterDate) {
+    filtered = filtered.filter(
+      (item) =>
+        new Date(item.date).toISOString().split("T")[0] === filterDate
+    );
+  }
 
-    // Filter by month
-    if (filterMonth) {
-      filtered = filtered.filter(
-        (item) =>
-          new Date(item.createdAt).getMonth() + 1 === parseInt(filterMonth, 10)
-      );
-    }
+  // Filter by month
+  if (filterMonth) {
+    filtered = filtered.filter(
+      (item) =>
+        new Date(item.date).getMonth() + 1 === parseInt(filterMonth, 10)
+    );
+  }
 
-    setFilteredActivities(filtered);
-  }, [filterDate, filterMonth, activities]);
+  setFilteredActivities(filtered);
+}, [filterDate, filterMonth, activities]);
 
   const calculateSubscribers = (activity) => {
     return activity.touristIds && Array.isArray(activity.touristIds)
@@ -85,7 +85,7 @@ const AdvertiserSalesReport = ({ advertiserId,onBack }) => {
         </thead>
         <tbody>
           {filteredActivities.map((item, index) => {
-            const date = new Date(item.createdAt).toLocaleDateString(); // Format the date
+            const date = new Date(item.date).toLocaleDateString(); // Format the date
             const subscribers =calculateSubscribers(item);
             const RealPrice = (subscribers*item.price);
             const siteShare = RealPrice*0.1;
