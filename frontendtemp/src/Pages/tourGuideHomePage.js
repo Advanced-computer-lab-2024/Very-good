@@ -9,7 +9,7 @@ import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import updateAcceptedTermsAndConditions from '../Services/tourGuideServices'
 import TourGuideSalesReport from './TourGuideSalesReport'
-
+import TourGuideItinerariesUsersReport from './TourGuideNumberofSubscribersReport'
 let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -55,6 +55,7 @@ const TourGuideHomePage = ({ email }) => {
   // we get here normally to the tour guide home page
   const [showSalesReport,setShowSalesReport]=useState(false);
   const [isUploadingApicture, setisUploadingApicture] = useState(false);
+  const [ShowUsersReport,setShowUsersReport]=useState(false);
   const navigate = useNavigate();
 
   const handleBackfromUploadPage = () => {
@@ -191,6 +192,15 @@ const TourGuideHomePage = ({ email }) => {
   const handleBackfromSalesPage =()=>{
     setShowSalesReport(false);
   }
+  const handleviewItineraryUsersReport =()=>{
+    setShowUsersReport(true);
+  }
+  const handlebackFromUsersReport =()=>{
+    setShowUsersReport(false);
+  }
+  if(ShowUsersReport){
+    return <TourGuideItinerariesUsersReport id={id} onBack={handlebackFromUsersReport}/>
+  }
   if(showSalesReport){
     return <TourGuideSalesReport onBack ={handleBackfromSalesPage} id ={id}/>
   }
@@ -245,6 +255,7 @@ const TourGuideHomePage = ({ email }) => {
              <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
              <button onClick={() => alert('Filter Products')}>Filter Products</button>*/}
              <button onClick={handleViewSalesReport}>View Sales Report</button>
+             <button onClick={handleviewItineraryUsersReport}>View Users Report</button>
         </div>
       </div>
 

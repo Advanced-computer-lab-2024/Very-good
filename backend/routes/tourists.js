@@ -1,10 +1,10 @@
 const express = require('express')
-const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities } = require('../controllers/touristController')
+const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities } = require('../controllers/touristController')
 const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
 router.get('/', getTourist)
-
+router.get('/:id', getTouristById);
 router.post('/addProductToCart',addProductToCard)
 router.post('/removeProductWishList',removeProductFromWishlist)
 router.post('/getWishList',getWishlistProducts)

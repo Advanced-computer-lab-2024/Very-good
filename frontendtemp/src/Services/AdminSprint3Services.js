@@ -13,12 +13,22 @@ const RevenuePage = () => {
   const [filterDate, setFilterDate] = useState(null); // Date filter
   const [filterMonth, setFilterMonth] = useState(null); // Month filter
 
+  // Helper to get the last available date for itineraries
+  const getLastAvailableDate = (dates) => {
+    if (Array.isArray(dates) && dates.length > 0) {
+      return new Date(
+        Math.max(...dates.map((date) => new Date(date).getTime()))
+      );
+    }
+    return null;
+  };
+
   // Fetch Activities
   useEffect(() => {
     const fetchData = async () => {
       try {
         const fetchedActivities = await fetchAllActivities();
-        setActivities(fetchedActivities.data);
+        setActivities(fetchedActivities.data); // Activities already have a `date` attribute
       } catch (err) {
         console.error("Error fetching activities:", err.message);
         setError("Failed to load activities.");
@@ -34,7 +44,11 @@ const RevenuePage = () => {
     const fetchData2 = async () => {
       try {
         const fetchedItineraries = await fetchAllItineraries();
-        setItineraries(fetchedItineraries.data);
+        const itinerariesWithLastDate = fetchedItineraries.data.map((itinerary) => ({
+          ...itinerary,
+          lastAvailableDate: getLastAvailableDate(itinerary.availableDates),
+        }));
+        setItineraries(itinerariesWithLastDate);
       } catch (err) {
         console.error("Error fetching itineraries:", err.message);
         setError("Failed to load itineraries.");
@@ -93,24 +107,33 @@ const RevenuePage = () => {
   };
 
   // Filter data based on selected date or month
-  const getFilteredData = (data) => {
+  const getFilteredData = (data, type) => {
     if (filterDate) {
       return data.filter((item) => {
-        const itemDate = new Date(item.createdAt).toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-        return itemDate === filterDate;
+        const itemDate =
+          type === "itineraries"
+            ? item.lastAvailableDate
+            : new Date(item.date); // Use lastAvailableDate for itineraries, `date` for activities
+        return itemDate && itemDate.toISOString().split("T")[0] === filterDate;
       });
     }
     if (filterMonth) {
       return data.filter((item) => {
-        const itemMonth = new Date(item.createdAt).getMonth(); // Get the month (0-indexed)
-        return itemMonth === parseInt(filterMonth) - 1; // Compare with selected month
+        const itemDate =
+          type === "itineraries"
+            ? item.lastAvailableDate
+            : new Date(item.date); // Use lastAvailableDate for itineraries, `date` for activities
+        return (
+          itemDate &&
+          itemDate.getMonth() === parseInt(filterMonth, 10) - 1 // Compare with selected month
+        );
       });
     }
     return data; // If no filter, return all data
   };
-  
+
   // Render partition for activities, itineraries, and products
-  const renderPartition = (title, data) => (
+  const renderPartition = (title, data, type = null) => (
     <div className="partition">
       <h3 className="partition-title">{title}</h3>
       <table className="table">
@@ -149,7 +172,10 @@ const RevenuePage = () => {
               title === "Itineraries" ? item.title : item.name;
 
             // Format creation date
-            const creationDate = new Date(item.createdAt).toLocaleDateString();
+            const creationDate =
+              type === "itineraries"
+                ? item.lastAvailableDate.toLocaleDateString()
+                : new Date(item.date || item.createdAt).toLocaleDateString();
 
             return (
               <tr key={index}>
@@ -204,8 +230,8 @@ const RevenuePage = () => {
 
       {/* Render Horizontal Partitions */}
       <div className="horizontal-partitions">
-        {renderPartition("Activities", getFilteredData(activities))}
-        {renderPartition("Itineraries", getFilteredData(itineraries))}
+        {renderPartition("Activities", getFilteredData(activities, "activities"))}
+        {renderPartition("Itineraries", getFilteredData(itineraries, "itineraries"), "itineraries")}
         {renderPartition("Gift Shop Sales", getFilteredData(products))}
       </div>
 

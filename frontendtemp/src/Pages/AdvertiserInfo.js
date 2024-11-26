@@ -4,6 +4,7 @@ import UploadingALogoAdvertiser from './UploadingALogoAdvertiser'
 import '../styles/global.css'; // Assuming global styles are shared across components
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 import AdvertiserSalesReport from './AdvertiserSalesReport'
+import AdvertiserActivitiesUsersReport from './AdvertiserNumberOfSubscribersReport'
 const AdvertiserInfo = ({ email, onBack,id }) => {
   console.log("ID SENT TO ADINFO:",id)
   const [advertiserData, setAdvertiserData] = useState(null);
@@ -12,6 +13,7 @@ const AdvertiserInfo = ({ email, onBack,id }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
   const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
   const [isSalesReportOpen,setIsSalesReportOpen]=useState(false);
+  const [isUserNumberReportOpen,setIsUserNumberReportOpen]=useState(false);
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
@@ -99,6 +101,15 @@ const handleSalesReport =()=>{
 const handleBackFromSalesReport =()=>{
   setIsSalesReportOpen(false);
 }
+const handleNumberReport =()=>{
+  setIsUserNumberReportOpen(true);
+}
+const handleBackFromNumbersReport =()=>{
+  setIsUserNumberReportOpen(false);
+}
+  if(isUserNumberReportOpen){
+    return <AdvertiserActivitiesUsersReport id={id} onBack={handleBackFromNumbersReport}/>
+  }
   if(isSalesReportOpen){
    return <AdvertiserSalesReport advertiserId={id} onBack={ handleBackFromSalesReport}/>
   }
@@ -115,6 +126,7 @@ const handleBackFromSalesReport =()=>{
         <div className="sidebar-content">
           <button onClick={handleUploadLogo}>Upload Logo</button>
           <button onClick={handleSalesReport}>Sales Report</button>
+          <button onClick={handleNumberReport}>Users Report</button>
         </div>
       </div>
 
