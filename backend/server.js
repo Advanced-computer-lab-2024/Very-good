@@ -27,6 +27,7 @@ const loginRoutes = require('./routes/login'); // Adjust the path accordingly
 const notificationRoutes = require('./routes/notifications')
 const ordersRoutes = require('./routes/orders')
 const promoCodeRoutes = require('./routes/promoCodes')
+const stripeRoutes = require('./routes/stripeRoutes');
 
 
 const mongoose = require('mongoose')
@@ -71,6 +72,7 @@ app.use('/api/login', loginRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/promoCodes', promoCodeRoutes);
+app.use('/api/payments', stripeRoutes);
 
 
 // connect to db

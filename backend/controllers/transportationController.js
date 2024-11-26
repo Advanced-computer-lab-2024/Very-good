@@ -20,6 +20,26 @@ const getAllTransportations = async (req, res) => {
   }
 };
 
+const getTransportationsWithLocation = async (req, res) => {
+  const { departureLocation, arrivalLocation } = req.body; // Get locations from the request body
+
+  try {
+    // Fetch transportation documents that match the given locations
+    const transportations = await Transportation.find({ departureLocation, arrivalLocation });
+
+    // If no transportations are found, return a message
+    if (!transportations) {
+      return res.status(404).json({ message: 'No transportation records found for the given locations.' });
+    }
+
+    // Return the transportations in the response
+    res.status(200).json(transportations);
+  } catch (error) {
+    // Handle errors and return an appropriate response
+    res.status(500).json({ message: 'Error fetching transportation records', error: error.message });
+  }
+};
+
 const editTransportation = async (req, res) => {
   const { id } = req.params; // Get the ID from the request parameters
   
@@ -152,5 +172,6 @@ module.exports = {
   getTransportationById,
   getTransportationsByAdvertiserId,
   editTransportation,
-  deleteTransportation
+  deleteTransportation,
+  getTransportationsWithLocation
 };

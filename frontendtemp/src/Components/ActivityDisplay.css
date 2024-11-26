@@ -121,6 +121,18 @@
 .delete-button:hover {
     background-color: darkred; /* Darker red on hover */
   }
-  
+
+.bookmark-icon {
+  cursor: pointer;
+  opacity: 0.5; /* Initially transparent */
+  position: absolute;
+  top: 10px; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+}
+
+.bookmark-icon.bookmarked {
+  opacity: 1; /* Fully opaque when bookmarked */
+}
+
 
 

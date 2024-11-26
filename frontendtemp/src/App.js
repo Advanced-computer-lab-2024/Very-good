@@ -36,6 +36,7 @@ import ViewBalance from "./Components/ViewBalance";
 import axios from 'axios';
 import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import ViewWishList from "./Pages/ViewWishList"
+import ViewBookmarkedActivities from "./Pages/ViewBookmarkedActivities";
 //require('dotenv').config();
 
 
@@ -665,6 +666,7 @@ const handleLogin = async (event) => {
           <Route path="/booking" element={<BookingForm />} />
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/forgetPasswordPage" element={<ForgetPasswordPage />} />
+          <Route path="/tourist/viewBookmarkedActivities" element={<ViewBookmarkedActivities />} />
         </Routes>
       </div>
   );

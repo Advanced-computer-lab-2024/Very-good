@@ -3,13 +3,17 @@ import './ActivityDisplay.css';
 import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
 import ShareComponent from './shareComponent';
 import ViewComments from './viewComments';  // Import the new ViewComments component
+import axios from 'axios'; // Import axios for making API requests
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon component
+import { faBookmark } from '@fortawesome/free-solid-svg-icons'; // Import the bookmark icon
 
-const ActivityDisplayFilterWise = ({ activity, comments = false }) => {
+const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
   console.log("comments : ", comments);
 
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([]);
   const [showComments, setShowComments] = useState(false); // State to toggle comments visibility
+  const [isBookmarked, setIsBookmarked] = useState(false); // State to track if the activity is bookmarked
 
   useEffect(() => {
     const getCategoryName = async () => {
@@ -42,8 +46,28 @@ const ActivityDisplayFilterWise = ({ activity, comments = false }) => {
     setShowComments(prevState => !prevState);
   };
 
+  // Function to handle bookmarking the activity
+  const handleBookmark = async () => {
+    try {
+      await axios.post('http://localhost:4000/api/tourists/bookmark-activity', {
+        email,
+        activityId: activity._id
+      });
+      setIsBookmarked(true);
+      alert('Activity bookmarked successfully');
+    } catch (error) {
+      console.error('Error bookmarking activity:', error);
+      alert('Failed to bookmark activity');
+    }
+  };
+
   return (
     <div className="activity-card">
+      <FontAwesomeIcon 
+        icon={faBookmark} 
+        onClick={handleBookmark} 
+        className={`bookmark-icon ${isBookmarked ? 'bookmarked' : ''}`} 
+      />
       <h2 className="activity-title">{activity.name}</h2>
       <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
       <p className="activity-price">Price: ${activity.price}</p>

@@ -909,6 +909,123 @@ const addProductToWishlist = async (req, res) => {
   }
 };
 
+const addProductToCard = async (req, res) => {
+  const { touristId, productId } = req.body; // Extract touristId and productId from the request body
+
+  if (!touristId || !productId) {
+    return res.status(400).json({ message: "touristId and productId are required." });
+  }
+
+  try {
+    // Find the tourist by ID and add the productId to the productWishList array if not already present
+    const updatedTourist = await Tourist.findByIdAndUpdate(
+      touristId,
+      { $addToSet: { cart: productId } }, // $addToSet ensures no duplicates
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTourist) {
+      return res.status(404).json({ message: "Tourist not found." });
+    }
+
+    res.status(200).json({
+      message: "Product added to cart successfully.",
+      tourist: updatedTourist,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while adding the product to the cart." });
+  }
+};
+
+const getItinerariesForTourist = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // Find the tourist by email and populate bookedItineraries with itinerary details
+    const tourist = await Tourist.findOne({ email }).populate('bookedItineraries');
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    res.status(200).json({
+      message: 'Itineraries retrieved successfully',
+      itineraries: tourist.bookedItineraries
+    });
+  } catch (error) {
+    console.error('Error fetching itineraries:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const getActivitiesForTourist = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // Find the tourist by email and populate bookedActivities with activity details
+    const tourist = await Tourist.findOne({ email }).populate('bookedActivities');
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    res.status(200).json({
+      message: 'Activities retrieved successfully',
+      activities: tourist.bookedActivities
+    });
+  } catch (error) {
+    console.error('Error fetching activities:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const bookmarkActivity = async (req, res) => {
+  try {
+    const { email, activityId } = req.body;
+
+    // Find the tourist by email
+    const tourist = await Tourist.findOne({ email });
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Add the activity ID to the bookmarkedActivities array if not already present
+    if (!tourist.bookmarkedActivities.includes(activityId)) {
+      tourist.bookmarkedActivities.push(activityId);
+      await tourist.save();
+    }
+
+    res.status(200).json({
+      message: 'Activity bookmarked successfully',
+      bookmarkedActivities: tourist.bookmarkedActivities
+    });
+  } catch (error) {
+    console.error('Error bookmarking activity:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+const getBookmarkedActivities = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Find the tourist by email and populate bookmarkedActivities with activity details
+    const tourist = await Tourist.findOne({ email }).populate('bookmarkedActivities');
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    res.status(200).json({
+      message: 'Bookmarked activities retrieved successfully',
+      bookmarkedActivities: tourist.bookmarkedActivities
+    });
+  } catch (error) {
+    console.error('Error fetching bookmarked activities:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities}

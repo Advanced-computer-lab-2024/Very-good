@@ -146,8 +146,9 @@ const TouristPage = ({email}) => {
     navigate('/tourist/activities');
   }
 
-  const navigateToupcoming = () => {
-    navigate('/tourist/upcoming');
+  const navigateToupcoming = (touristEmail) => {
+    console.log("Navigating with email:", touristEmail);
+    navigate('/tourist/upcoming', { state: { email: touristEmail } });
   }
 
   const navigateToSearch = () => {
@@ -225,6 +226,9 @@ const TouristPage = ({email}) => {
  const handleBookingPageClick =()=>SetShowBookingPage(true);
  const handleRateClick =()=>setShowRatePage(true);
  const handleBackToTouristPageFromRatePage =()=>setShowRatePage(false);
+ const handleViewBookmarkedActivities = () => {
+    navigate('/tourist/viewBookmarkedActivities', { state: { email: email } });
+  };
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
@@ -261,6 +265,7 @@ const TouristPage = ({email}) => {
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
           <button onClick={() => handleViewMyBalance(email)}>View my Balance</button>
           <button onClick={() => handleViewMyWishList(touristId)}>View My Wish List</button>
+          <button onClick={handleViewBookmarkedActivities}>View Bookmarked Activities</button>
         </div>
       </div>
   
@@ -401,7 +406,7 @@ const TouristPage = ({email}) => {
           </div>
         )}
   
-        <button onClick={navigateToupcoming}>show upcoming activities / itineraries</button>
+        <button onClick={() => navigateToupcoming(touristData?.email)}>show upcoming activities / itineraries</button>
 
         <button onClick={navigateToActivitySorted}>show activity sorted</button>
 

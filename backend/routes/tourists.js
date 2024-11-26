@@ -1,10 +1,11 @@
 const express = require('express')
-const {removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2} = require('../controllers/touristController')
+const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities } = require('../controllers/touristController')
 const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
 router.get('/', getTourist)
 
+router.post('/addProductToCart',addProductToCard)
 router.post('/removeProductWishList',removeProductFromWishlist)
 router.post('/getWishList',getWishlistProducts)
 router.post('/addProductToWishList',addProductToWishlist)
@@ -28,5 +29,9 @@ router.patch('/rate-activity', rateActivity);
 router.post('/:id/make-payment', makePayment);
 router.post('/:id/redeem-points', redeemPoints);
 router.post('/:id/make-payment2', makePayment2);
+router.get('/:email/itineraries', getItinerariesForTourist);
+router.get('/:email/activities', getActivitiesForTourist);
+router.post('/bookmark-activity', bookmarkActivity);
+router.post('/getBookmarkedActivities', getBookmarkedActivities);
 
 module.exports = router

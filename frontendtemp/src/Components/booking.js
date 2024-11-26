@@ -5,6 +5,12 @@ import { fetchItinerariesNoId } from '../Services/itineraryServices';
 import { makePayment2 } from '../Services/payementServices';
 import ItineraryDisplayFilterWise from './ItineraryDisplayFilterWise';
 import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
+import PaymentForm from './PaymentForm'; // Import the PaymentForm component
+import { useNavigate } from 'react-router-dom';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51QP6GEIjdL7iHsR6Zjy5EB8ixOlCfL2PnqICOkaAorgK8zFYvpnsDeHCZSx78V0uBCIaZ8uvdtVbw2FYPCbKxWMx00qSClGNRP'); // Replace with your Stripe publishable key
 
 const Booking = ({ touristId, wallet }) => {
     const [activities, setActivities] = useState([]);
@@ -18,6 +24,10 @@ const Booking = ({ touristId, wallet }) => {
     const [selectedItineraryTime, setSelectedItineraryTime] = useState('');
     const [itin, setItin] = useState(null);
     const [activ, setActiv] = useState(null);
+    const [data, setData] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('wallet');
+    const [showPaymentForm, setShowPaymentForm] = useState(false); // Add state to control payment form visibility
+    const [clientSecret, setClientSecret] = useState(''); // Add state for clientSecret
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +59,25 @@ const Booking = ({ touristId, wallet }) => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchClientSecret = async () => {
+            if (paymentMethod === 'creditCard' && data) {
+                try {
+                    const response = await axios.post('http://localhost:4000/api/payments/create-payment-intent', {
+                        amount: data.price * 100, // Convert to cents (smallest currency unit)
+                        currency: 'usd', // Default to USD if not provided
+                    });
+                    setClientSecret(response.data.clientSecret);
+                } catch (error) {
+                    console.error('Error creating payment intent:', error);
+                    setMessage('Error creating payment intent.');
+                }
+            }
+        };
+
+        fetchClientSecret();
+    }, [paymentMethod, data]);
+
     const fetchBookings = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/api/bookings/${touristId}`);
@@ -63,6 +92,7 @@ const Booking = ({ touristId, wallet }) => {
         if (selectedItineraryData) {
             setSelectedItinerary(itineraryId);
             setItin(selectedItineraryData);
+            setData(selectedItineraryData);
             //setSelectedItineraryDate(selectedItineraryData.availableDates[0] || '');
             //setSelectedItineraryTime(selectedItineraryData.availableTimes[0] || '');
         }
@@ -77,6 +107,9 @@ const Booking = ({ touristId, wallet }) => {
             return;
         }
 
+        // For now, just log the selected payment method
+        console.log('Selected payment method:', paymentMethod);
+
         const bookingData = {
             touristId,
             numberOfParticipants,
@@ -90,36 +123,96 @@ const Booking = ({ touristId, wallet }) => {
         if (selectedItinerary) {
             bookingData.itineraryId = selectedItinerary;
             data = itin;
+            setData(itin);
         }
         if (selectedActivity) {
             bookingData.activityId = selectedActivity;
             data = activ;
+            setData(activ);
         }
 
-        try {
-            if (wallet < data.price) {
-                alert('ely m3hosh mylzmosh');
-                return;
-            }
+        if (!data) {
+            setMessage('Error: No activity or itinerary selected.');
+            return;
+        }
 
-            wallet -= data.price;
+        if (paymentMethod === 'wallet') {
+            try {
+                if (wallet < data.price) {
+                    alert('ely m3hosh mylzmosh');
+                    return;
+                }
+
+                wallet -= data.price;
+                const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
+                setMessage(response.data.message);
+                const bookingsResponse = await fetchBookings();
+                await makePayment2(touristId, data.price);
+                setBookings(bookingsResponse || []);
+                setSelectedActivity('');
+                setSelectedItinerary('');
+                setNumberOfParticipants(1);
+                setSelectedItineraryDate('');
+                setSelectedItineraryTime('');
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || 'Error creating booking.';
+                setMessage(errorMessage);
+            }
+        }
+
+        if (paymentMethod === 'creditCard') {
             const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
-            setMessage(response.data.message);
-            const bookingsResponse = await fetchBookings();
-            await makePayment2(touristId, data.price);
-            setBookings(bookingsResponse || []);
-            setSelectedActivity('');
-            setSelectedItinerary('');
-            setNumberOfParticipants(1);
-            setSelectedItineraryDate('');
-            setSelectedItineraryTime('');
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || 'Error creating booking.';
-            setMessage(errorMessage);
         }
     };
 
-    const handleCancel = async (bookingId, startDateTime) => {
+    const handlePayment = async () => {
+        if (!selectedActivity && !selectedItinerary) {
+            setMessage('Please select either an activity or an itinerary.');
+            return;
+        }
+
+        // For now, just log the selected payment method
+        console.log('Selected payment method:', paymentMethod);
+
+        const bookingData = {
+            touristId,
+            numberOfParticipants,
+            startDateTime: selectedActivity 
+                ? new Date().toISOString() 
+                : `${selectedItineraryDate}T${selectedItineraryTime}:00.000Z`,
+        };
+
+        let data;
+
+        if (selectedItinerary) {
+            bookingData.itineraryId = selectedItinerary;
+            data = itin;
+            setData(itin);
+        }
+        if (selectedActivity) {
+            bookingData.activityId = selectedActivity;
+            data = activ;
+            setData(activ);
+        }
+
+        if (!data) {
+            setMessage('Error: No activity or itinerary selected.');
+            return;
+        }
+
+        const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
+
+        const bookingsResponse = await fetchBookings();
+        setBookings(bookingsResponse || []);
+        setSelectedActivity('');
+        setSelectedItinerary('');
+        setNumberOfParticipants(1);
+        setSelectedItineraryDate('');
+        setSelectedItineraryTime('');
+
+    }
+
+    const handleCancel = async (bookingId, startDateTime, refundedAmount) => {
         const currentDateTime = new Date();
         const bookingDateTime = new Date(startDateTime);
         const timeDiff = bookingDateTime.getTime() - currentDateTime.getTime();
@@ -131,7 +224,7 @@ const Booking = ({ touristId, wallet }) => {
         }
 
         try {
-            const response = await axios.patch(`http://localhost:4000/api/bookings/cancel/${bookingId}`);
+            const response = await axios.patch(`http://localhost:4000/api/bookings/cancel/${bookingId}`, {refundedAmount});
             setMessage(response.data.message);
             const bookingsResponse = await fetchBookings();
             setBookings(bookingsResponse || []);
@@ -154,6 +247,7 @@ const Booking = ({ touristId, wallet }) => {
                             setSelectedActivity(e.target.value);
                             const selectedActivityData = activities.find(activity => activity._id === e.target.value);
                             setActiv(selectedActivityData);
+                            setData(selectedActivityData);
                             setSelectedItinerary('');
                             setSelectedItineraryDate('');
                             setSelectedItineraryTime('');
@@ -201,9 +295,51 @@ const Booking = ({ touristId, wallet }) => {
                         required
                     />
                 </div>
-                <button type="submit">Book Now</button>
-                {message && <p>{message}</p>}
+                <div>
+                    <label>Payment Method:</label>
+                    <div>
+                        <input
+                            type="radio"
+                            id="wallet"
+                            name="paymentMethod"
+                            value="wallet"
+                            checked={paymentMethod === 'wallet'}
+                            onChange={(e) => {
+                                setPaymentMethod(e.target.value);
+                                setShowPaymentForm(false); // Hide the payment form
+                            }}
+                        />
+                        <label htmlFor="wallet">Wallet</label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            id="creditCard"
+                            name="paymentMethod"
+                            value="creditCard"
+                            checked={paymentMethod === 'creditCard'}
+                            onChange={(e) => {
+                                setPaymentMethod(e.target.value);
+                                setShowPaymentForm(true); // Show the payment form
+                            }}
+                        />
+                        <label htmlFor="creditCard">Credit Card</label>
+                    </div>
+                </div>
+                {paymentMethod === 'wallet' && (
+                    <>
+                        <button type="submit">Book Now</button>
+                        {message && <p>{message}</p>}
+                    </>
+                )}
             </form>
+            {showPaymentForm && clientSecret && (
+                console.log("clientSecret in booking.js : ",clientSecret),
+                console.log("stripePromise in booking.js : ",stripePromise),    
+                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <PaymentForm data={{ price: data.price, currency: 'usd' }} handlePayment={handlePayment} />
+                </Elements>
+            )}
             <h2>Your Bookings</h2>
             {bookings.length > 0 ? (
                 bookings.map((booking) => (
@@ -213,17 +349,18 @@ const Booking = ({ touristId, wallet }) => {
                         ) : (
                             <ItineraryDisplayFilterWise itinerary={booking.itineraryId} />
                         )}
-<p>
-    Start Date: {(() => {
-        const upcomingDate = booking.itineraryId
-            ? booking.itineraryId.availableDates
-                .map(date => new Date(date))  // Convert each date to Date object
-                .filter(date => date >= new Date())  // Filter only upcoming dates
-                .sort((a, b) => a - b)[0]  // Sort the dates and get the first upcoming one
-            : new Date(booking.activityId?.date); // Fallback to activity date if no itinerary
-        return new Date(upcomingDate).toLocaleString(); // Format and display the date
-    })()}
-</p>                        <p>Status: {booking.status}</p>
+                        <p>
+                            Start Date: {(() => {
+                                const upcomingDate = booking.itineraryId
+                                    ? booking.itineraryId.availableDates
+                                        .map(date => new Date(date))  // Convert each date to Date object
+                                        .filter(date => date >= new Date())  // Filter only upcoming dates
+                                        .sort((a, b) => a - b)[0]  // Sort the dates and get the first upcoming one
+                                    : new Date(booking.activityId?.date); // Fallback to activity date if no itinerary
+                                return new Date(upcomingDate).toLocaleString(); // Format and display the date
+                            })()}
+                        </p>                       
+                        <p>Status: {booking.status}</p>
                         {booking.status !== 'Cancelled' && (
                             <button
                             onClick={() => {
@@ -238,7 +375,9 @@ const Booking = ({ touristId, wallet }) => {
                                     booking._id,
                                     booking.activityId
                                         ? booking.activityId?.date
-                                        : upcomingDate || ''  // If no upcoming date, send an empty string or fallback date
+                                        : upcomingDate || '',  // If no upcoming date, send an empty string or fallback date
+                                    booking.activityId?
+                                    booking.activityId.price : booking.itineraryId.price
                                 );
                             }}
                         >

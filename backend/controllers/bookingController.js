@@ -94,6 +94,7 @@ const getBookings = async (req, res) => {
 const cancelBooking = async (req, res) => {
     try {
         const { bookingId } = req.params;
+        const {refundedAmount} = req.body;
 
         // Find the booking by ID
         console.log('Booking ID:', bookingId);
@@ -126,8 +127,26 @@ const cancelBooking = async (req, res) => {
         await Tourist.findByIdAndUpdate(booking.touristId, {
             $pull: { [updateField]: booking.activityId || booking.itineraryId }
         });
+        
+        if (refundedAmount && refundedAmount > 0) {
+            const tourist = await Tourist.findById(booking.touristId);
 
-        res.status(200).json({ message: 'Booking successfully cancelled', booking });
+            if (!tourist) {
+                return res.status(404).json({ message: 'Tourist not found' });
+            }
+
+            // Update the tourist's wallet
+            tourist.wallet = (tourist.wallet || 0) + refundedAmount;
+            await tourist.save();
+
+            console.log(`Refunded ${refundedAmount} to tourist's wallet.`);
+        }
+
+        res.status(200).json({
+            message: 'Booking successfully cancelled',
+            booking,
+            walletUpdated: refundedAmount ? `Refunded ${refundedAmount}` : 'No refund processed'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error cancelling booking', error });

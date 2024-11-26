@@ -21,6 +21,19 @@ export const getTouristByEmail = async (email) => {
     }
 };
 
+export const addProductToCart = async (touristId, productId) => {
+    try {
+      const response = await axios.post(`http://localhost:4000/api/tourists/addProductToCart`, {
+        touristId,
+        productId,
+      });
+      return response.data; // Return the response data to the caller
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      throw error.response?.data?.message || "Failed to add product to cart.";
+    }
+  };
+
 export const removeProductFromWishlist = async (touristId, productId) => {
     try {
         const response = await axios.post("http://localhost:4000/api/tourists/removeProductWishList", {
