@@ -8,7 +8,7 @@ import UploadingPhotoTourGuide from './UploadingApictureTourGuide'
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import updateAcceptedTermsAndConditions from '../Services/tourGuideServices'
-
+import TourGuideSalesReport from './TourGuideSalesReport'
 
 let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
@@ -53,7 +53,7 @@ const TourGuideHomePage = ({ email }) => {
   const [id, setId] = useState(null);
   // what i added here is that after the registration is done we would render this page but initially the upload then after pressing back
   // we get here normally to the tour guide home page
-
+  const [showSalesReport,setShowSalesReport]=useState(false);
   const [isUploadingApicture, setisUploadingApicture] = useState(false);
   const navigate = useNavigate();
 
@@ -185,6 +185,15 @@ const TourGuideHomePage = ({ email }) => {
     // to the uploadDocumentsTourGuide , and we will be using the same backend with minor adjustments
     setisUploadingApicture(true);
   };
+  const handleViewSalesReport =()=>{
+    setShowSalesReport(true);
+  }
+  const handleBackfromSalesPage =()=>{
+    setShowSalesReport(false);
+  }
+  if(showSalesReport){
+    return <TourGuideSalesReport onBack ={handleBackfromSalesPage} id ={id}/>
+  }
 
 
   if (uploadPage && !login) {
@@ -235,6 +244,7 @@ const TourGuideHomePage = ({ email }) => {
           {/*  <button onClick={() => alert('Filter Itineraries')}>Filter Itineraries</button>
              <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
              <button onClick={() => alert('Filter Products')}>Filter Products</button>*/}
+             <button onClick={handleViewSalesReport}>View Sales Report</button>
         </div>
       </div>
 

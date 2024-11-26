@@ -62,7 +62,12 @@ const productSchema = new schema({
       numberOfRatings : {
         type : Number,
         default : 1
-      }
+      },
+      touristWhoBoughtSaidProduct:[
+        {
+            type: schema.Types.ObjectId, ref: 'Tourist' 
+          }
+          ],
 }, { timestamps: true });
 
 

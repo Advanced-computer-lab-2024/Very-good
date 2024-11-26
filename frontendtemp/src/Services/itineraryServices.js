@@ -61,3 +61,14 @@ export const createItinerary = async (newItinerary) => {
     const response = await axios.post(url, newItinerary);
     return response.data;
 };
+export const fetchAllItineraries = async () => {
+    const url = `http://localhost:4000/api/itineraries/`; // Same base URL as the other method
+
+    try {
+        const response = await axios.get(url); // Send a GET request to fetch all activities
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error("Error fetching all itineraries:", error.message);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+};

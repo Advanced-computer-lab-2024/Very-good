@@ -229,7 +229,7 @@ const AdvertiserPage = ({email}) => {
     }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
-        return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
+        return <AdvertiserInfo email={email} onBack={handleBackButtonClick} id={advertiserId} />;
     }
     
 //   const r1 =()=>{

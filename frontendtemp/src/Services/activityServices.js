@@ -112,3 +112,15 @@ export const searchactivity = async (searchTerm) => {
         throw error; // Re-throw the error if needed
     }
 };
+
+export const fetchAllActivities = async () => {
+    const url = `http://localhost:4000/api/activities/`; // Same base URL as the other method
+
+    try {
+        const response = await axios.get(url); // Send a GET request to fetch all activities
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error("Error fetching all activities:", error.message);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+};

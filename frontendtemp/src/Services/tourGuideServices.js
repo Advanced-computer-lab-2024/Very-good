@@ -13,5 +13,16 @@ const updateAcceptedTermsAndConditions = async (tourGuideId) => {
     throw error; // Rethrow the error for further handling by the caller
   }
 };
+export const getItinerariesWithTourGuideId = async (id) => {
+  try {
+    // Use template literals to include the id in the URL path
+    const response = await axios.get(`http://localhost:4000/api/tourguides/${id}/itineraries`);
+    return response.data; // Returns the array of itineraries
+  } catch (error) {
+    console.error("Error fetching itineraries:", error.message);
+    throw error;
+  }
+};
+
 
 export default updateAcceptedTermsAndConditions;
