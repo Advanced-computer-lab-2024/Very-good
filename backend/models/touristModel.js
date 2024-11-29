@@ -118,6 +118,15 @@ const touristSchema = new schema({
     type: schema.Types.ObjectId,
     ref: 'order'
   }],
+  ordersMahmoudBidoAlliance: [{
+    orderDate: { type: Date, default: Date.now }, // Track when the order was created
+    products: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'product' // Reference to the Product model
+    }],
+    totalPrice: { type: Number, required: true }, // Store the total price for the order
+    status: { type: String, enum: ['delivered', 'not delivered'], default: 'not delivered' } // New status attribute
+  }],
   OTP:{
     type: Number,
   },

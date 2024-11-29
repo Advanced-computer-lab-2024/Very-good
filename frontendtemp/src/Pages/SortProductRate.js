@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID ,updateProduct} from '../Services/productServices';
 import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported , this function is the one reponsible for purchasing a product
 import {makePayment} from '../Services/payementServices'
-import {addProductToWishlist} from '../Services/TouristService'
+import {addProductToWishlist,addProductToCart} from '../Services/TouristService'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const ProductSort = ({ email, touristId }) => {
     const [products, setProducts] = useState([]); 
@@ -12,6 +14,54 @@ const ProductSort = ({ email, touristId }) => {
     const [touristWallet, setTouristWallet] = useState(0);  // To store the tourist's wallet balance
     const [purchaseError, setPurchaseError] = useState(""); // To handle errors when purchasing
     console.log('Passing email:', email);  
+    const styles = {
+        card: {
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "16px",
+          margin: "16px 0",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          backgroundColor: "#fff",
+        },
+        title: {
+          fontSize: "1.5em",
+          marginBottom: "8px",
+        },
+        buttonContainer: {
+          display: "flex",
+          alignItems: "center",
+          marginTop: "8px",
+        },
+        removeButton: {
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: "red",
+          fontSize: "18px",
+          marginRight: "10px",
+        },
+        addButton: {
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: "green",
+          fontSize: "18px",
+        },
+        purchaseButton: {
+          marginTop: "16px",
+          padding: "8px 16px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "16px",
+        },
+        errorText: {
+          color: "red",
+          marginTop: "8px",
+        },
+      };
     useEffect(() => {
         const getProducts = async () => {
             try {
@@ -119,7 +169,25 @@ const ProductSort = ({ email, touristId }) => {
             }
     };
                 
-
+    const handleAddToCart = async (productId) => {
+        
+            // first check there is enough stock
+            const response = await fetchProductsNoID() ; // fetching all products 
+            const products = response.data; 
+            console.log("FetchedProductFromTheAddToCartIco:",products)
+            // Filter the products to find the one with the specified productId
+            const selectedProduct = products.find((product) => product._id === productId);
+            console.log("RESULTOFFILTERIJUSTDID:",selectedProduct);
+            if(selectedProduct.stock!=0){
+                try {
+            await addProductToCart(touristId, productId); // Assuming this removes the product in your backend
+            alert(`Product added to cart.`);
+        } catch (error) {
+            console.error("Failed to add product to cart:", error);
+        } } else {
+            alert ('Product Out of Stock')
+        }
+    };
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);
 
@@ -136,7 +204,15 @@ const ProductSort = ({ email, touristId }) => {
                 <button onClick={() => handlePurchase(product)} disabled={product.stock <= 0}>
                     {product.stock > 0 ? "Purchase" : "Out of Stock"}
                 </button>
-
+                 {/*HERE ADD THE ICON OF ADD TO CART  */}
+                 <button
+              className="add-to-cart-button"
+              onClick={() => handleAddToCart(product._id)}
+              title="Add to Cart"
+              style={styles.addButton}
+            >
+              <FontAwesomeIcon icon={faShoppingCart} />
+            </button>
                 <button onClick={() => handleAddToWishList(product._id, touristId)}>Add to WishList</button>
 
                 {/* Show error if wallet balance is insufficient */}

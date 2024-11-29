@@ -1,5 +1,5 @@
 const express = require('express')
-const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities } = require('../controllers/touristController')
+const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart} = require('../controllers/touristController')
 const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
@@ -33,5 +33,10 @@ router.get('/:email/itineraries', getItinerariesForTourist);
 router.get('/:email/activities', getActivitiesForTourist);
 router.post('/bookmark-activity', bookmarkActivity);
 router.post('/getBookmarkedActivities', getBookmarkedActivities);
-
+router.post('/:touristId/add-delivery-address', addDeliveryAddress);
+router.get('/:touristId/get-delivery-addresses', getDeliveryAddresses);
+router.get('/:touristId/orders-create-view',CreateAndReturnOrderArray)
+router.delete('/:touristId/orders/:orderId', deleteOrder);
+router.get('/:touristId/cart', viewCart);
+router.delete('/:touristId/cart/:productId', removeProductFromCart);
 module.exports = router

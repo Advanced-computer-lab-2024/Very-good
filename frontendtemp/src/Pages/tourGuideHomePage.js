@@ -10,6 +10,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import updateAcceptedTermsAndConditions from '../Services/tourGuideServices'
 import TourGuideSalesReport from './TourGuideSalesReport'
 import TourGuideItinerariesUsersReport from './TourGuideNumberofSubscribersReport'
+import Notification from './TourGuideNotifications'
 let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -256,6 +257,16 @@ const TourGuideHomePage = ({ email }) => {
              <button onClick={() => alert('Filter Products')}>Filter Products</button>*/}
              <button onClick={handleViewSalesReport}>View Sales Report</button>
              <button onClick={handleviewItineraryUsersReport}>View Users Report</button>
+    {/* Notification Container */}
+    <div className="notification-container">
+      {tourGuideData && (
+        <Notification 
+          targetId={tourGuideData._id} 
+          targetType="TourGuide" 
+        />
+      )}
+    </div>
+
         </div>
       </div>
 

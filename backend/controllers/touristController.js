@@ -920,7 +920,7 @@ const addProductToCard = async (req, res) => {
     // Find the tourist by ID and add the productId to the productWishList array if not already present
     const updatedTourist = await Tourist.findByIdAndUpdate(
       touristId,
-      { $addToSet: { cart: productId } }, // $addToSet ensures no duplicates
+      { $push: { cart: productId } }, // $addToSet ensures no duplicates , i removed and made it simply push 
       { new: true } // Return the updated document
     );
 
@@ -1037,6 +1037,273 @@ const getTouristById = async (req, res) => {
     res.status(500).json({ message: "Error retrieving tourists", error: error.message });
   }
 };
+const addDeliveryAddress = async (req, res) => {
+  try {
+    console.log('Add Delivery Address function invoked');
+    
+    const touristId = req.params.touristId;  // Extract touristId from the request params
+    const { addresses } = req.body;  // Extract the addresses from the request body
+
+    // Validate addresses: it should be a string or an array of strings
+    if (!addresses || (Array.isArray(addresses) && addresses.length === 0) || typeof addresses !== 'string' && !Array.isArray(addresses)) {
+      return res.status(400).json({ error: 'Addresses are required and must be a string or an array of strings' });
+    }
+
+    // If the addresses is a single string, convert it to an array
+    const addressesArray = Array.isArray(addresses) ? addresses : [addresses];
+
+    console.log('Adding these addresses:', addressesArray);  // Log to check the addresses
+
+    // Find the tourist by their ID
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    // Initialize deliveryAdresses if it doesn't exist
+    if (!tourist.deliveryAdresses) {
+      tourist.deliveryAdresses = [];
+    }
+
+    // Add the new addresses to the tourist's deliveryAdresses list
+    tourist.deliveryAdresses.push(...addressesArray);
+    console.log('Updated deliveryAdresses:', tourist.deliveryAdresses);  // Log the updated addresses
+
+    // Log tourist object before saving
+    console.log('Tourist object before saving:', tourist);
+
+    // Save the updated tourist document
+    await tourist.save();
+
+    // Log tourist object after saving to check if changes are persisted
+    const updatedTourist = await Tourist.findById(touristId);
+    console.log('Tourist object after saving:', updatedTourist);
+
+    res.status(200).json({ message: 'Addresses added successfully', tourist: updatedTourist });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while adding the addresses', details: error.message });
+  }
+};
+const getDeliveryAddresses = async (req, res) => {
+  try {
+    const touristId = req.params.touristId;  // Extract touristId from the request params
+
+    // Find the tourist by their ID
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    // Ensure you are accessing the correct field name, which is 'deliveryAdresses'
+    const deliveryAddresses = Array.isArray(tourist.deliveryAdresses) ? tourist.deliveryAdresses : [];
+
+    // Respond with the list of delivery addresses
+    res.status(200).json({
+      message: 'Success',
+      addresses: deliveryAddresses  // This will send the addresses back correctly
+    });
+  } catch (error) {
+    console.error('Error fetching delivery addresses:', error);
+    res.status(500).json({
+      error: 'An error occurred while fetching delivery addresses',
+      details: error.message
+    });
+  }
+};
+const viewCart = async (req, res) => {
+  const { touristId } = req.params; // Get the touristId from the request params
+
+  try {
+    // Fetch the tourist document, populate the 'cart' field to get product details
+    const tourist = await Tourist.findById(touristId)
+      .populate({
+        path: 'cart', // This will populate the products in the 'cart' field
+        select: 'name price stock description pictures' // Choose fields you want to return
+      })
+      .exec();
+
+    // Check if the tourist was found
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    // Return the populated cart with product details
+    res.status(200).json(tourist.cart); // The cart now contains populated products
+  } catch (error) {
+    console.error('Error viewing cart:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+// do we build a method that empties out the cart ? , the method createAndReturn Does in fact delete the cart and this method would be called upon check out 
+  // all we should do is a method that given a touristId and a product Id Removes that product ,
+  const removeProductFromCart = async (req, res) => {
+    const { touristId, productId } = req.params; // Get touristId and productId from the request params
+  
+    try {
+      // Find the tourist by ID
+      const tourist = await Tourist.findById(touristId);
+  
+      // If the tourist doesn't exist, return an error
+      if (!tourist) {
+        return res.status(404).json({ error: 'Tourist not found' });
+      }
+  
+      // Check if the product exists in the cart
+      const productIndex = tourist.cart.indexOf(productId);
+  
+      // If the product is not in the cart, return an error
+      if (productIndex === -1) {
+        return res.status(404).json({ error: 'Product not found in cart' });
+      }
+  
+      // Remove only one instance of the product from the cart
+      tourist.cart.splice(productIndex, 1); // Removes one product at the found index
+  
+      // Save the updated tourist document
+      const updatedTourist = await tourist.save();
+  
+      // Return the updated cart array
+      res.status(200).json({
+        message: 'Product removed from cart successfully',
+        updatedCart: updatedTourist.cart, // Return the updated cart array
+      });
+    } catch (error) {
+      console.error('Error removing product from cart:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+const CreateAndReturnOrderArray = async (req, res) => {
+  const { touristId } = req.params;
+ // one thing left to check the orders and add the tourist to the number of subscribers 
+  try {
+    // Validate the touristId
+    if (!mongoose.Types.ObjectId.isValid(touristId)) {
+      return res.status(400).send({ error: 'Invalid tourist ID' });
+    }
+
+    // Fetch the tourist document
+    const tourist = await Tourist.findById(touristId).exec();
+    if (!tourist) {
+      return res.status(404).send({ error: 'Tourist not found' });
+    }
+
+    // Log the tourist's cart to verify its contents
+    const cart = tourist.cart; // Ensure cart is accessed correctly
+    console.log('Tourist Cart:', cart);
+
+    // If cart is empty, just return existing orders without modifying anything
+    if (!cart || cart.length === 0) {
+      // Populate and return existing orders (no changes)
+      const updatedTourist = await Tourist.findById(touristId)
+        .populate({
+          path: 'ordersMahmoudBidoAlliance.products', // Populate the product details in each order
+        })
+        .exec();
+
+      return res.json(updatedTourist.ordersMahmoudBidoAlliance);
+    }
+
+    // Fetch products based on the cart IDs
+    const products = await Product.find({ _id: { $in: cart } }).lean();
+    if (!products || products.length === 0) {
+      return res.status(404).send({ error: 'No products found in cart' });
+    }
+
+    console.log('Products in Cart:', products);
+        // Update the status of all existing orders
+        const currentDate = new Date();
+        tourist.ordersMahmoudBidoAlliance.forEach(order => {
+          const daysDifference = Math.floor((currentDate - order.orderDate) / (1000 * 60 * 60 * 24));
+          order.status = daysDifference > 2 ? 'delivered' : 'not delivered';
+        });
+
+    // Calculate total price
+    const totalPrice = products.reduce((total, product) => total + product.price, 0);
+    
+    // Create a new order object
+    const newOrder = {
+      orderDate: new Date(),
+      products: products.map(product => product._id), // Save product IDs
+      totalPrice, // Store the total price
+      status: 'not delivered' // New orders default to "not delivered"
+    };
+    tourist.wallet -= totalPrice;
+    await tourist.save();
+    // Push the new order into ordersMahmoudBidoAlliance and clear the cart
+    await Tourist.findByIdAndUpdate(touristId, {
+      $push: { ordersMahmoudBidoAlliance: newOrder },
+      $set: { cart: [] } // Clear the cart after placing the order
+      
+    });
+
+    // Log the new order to verify
+    console.log('New Order:', newOrder);
+
+    // Fetch the updated tourist with populated orders
+    const updatedTourist = await Tourist.findById(touristId)
+      .populate({
+        path: 'ordersMahmoudBidoAlliance.products', // Populate the product details in each order
+      })
+      .exec();
+
+    // Return the updated list of orders with products populated
+    return res.json(updatedTourist.ordersMahmoudBidoAlliance);
+
+  } catch (error) {
+    console.error('Error creating and returning order array:', error);
+    return res.status(500).send({ error: 'An error occurred while processing the order' });
+  }
+};
+
+// Controller to delete an order by ID
+const deleteOrder = async (req, res) => {
+  const { touristId, orderId } = req.params;
+
+  try {
+    // Find the tourist and locate the order to be deleted
+    const tourist = await Tourist.findById(touristId);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    // Find the order to retrieve its totalPrice
+    const orderToDelete = tourist.ordersMahmoudBidoAlliance.find(
+      (order) => order._id.toString() === orderId
+    );
+
+    if (!orderToDelete) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Add the order's totalPrice back to the wallet
+    tourist.wallet += orderToDelete.totalPrice;
+
+    // Remove the order from the orders array
+    tourist.ordersMahmoudBidoAlliance = tourist.ordersMahmoudBidoAlliance.filter(
+      (order) => order._id.toString() !== orderId
+    );
+
+    // Save the updated tourist document
+    await tourist.save();
+
+    res.status(200).json({
+      message: 'Order deleted successfully, wallet updated',
+      updatedOrders: tourist.ordersMahmoudBidoAlliance,
+      wallet: tourist.wallet,
+    });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
+
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart}

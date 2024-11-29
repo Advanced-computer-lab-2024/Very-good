@@ -2,6 +2,8 @@ const { default: mongoose } = require('mongoose');
 const Itinerary = require('../models/itineraryModel'); // Ensure this is the correct path for the Itinerary model
 const TourGuide = require('../models/tourGuideModel'); // Ensure this is the correct path for the TourGuide model
 const Tag = require('../models/tagModel'); // Adjust the path if necessary
+const Notification = require('../models/notificationModel'); // Import the Notification model
+
 // Create an Itinerary
 
 const getItineraryByID = async (req, res) => {
@@ -236,7 +238,15 @@ const flagItinerary = async (req, res) => {
 
         itinerary.flagged = true; // Toggle flag status
         await itinerary.save();
-
+                // Create a notification for the TourGuide
+                const notification = new Notification({
+                    targetId: itinerary.tourGuideId._id, // TourGuide ID from the itinerary
+                    targetType: 'TourGuide', // Target is the TourGuide
+                    subject: 'Itinerary Flagged',
+                    message: `Your itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
+                });
+        
+                await notification.save(); // Save the notification
         return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });
     } catch (error) {
         return res.status(500).json({ message: 'Server error', error });

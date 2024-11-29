@@ -93,3 +93,42 @@ export const fetchWishlistProducts = async (touristId) => {
       throw error; // Re-throw the error for the caller to handle
     }
   };
+ export const addDeliveryAddress = async (touristId, addressData) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/tourists/${touristId}/add-delivery-address`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(addressData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add address');
+      }
+  
+      return response.json();  // Return the response data from the server
+    } catch (error) {
+      console.error('Error adding delivery address:', error);
+      throw error;
+    }
+  };
+  
+  export const fetchDeliveryAddresses = async (touristId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/tourists/${touristId}/get-delivery-addresses`
+      );
+  
+      if (response.data.addresses) {
+        return response.data.addresses;  // Return the fetched addresses
+      } else {
+        return [];  // Return an empty array if no addresses are found
+      }
+    } catch (error) {
+      console.error('Error fetching delivery addresses:', error);
+      throw new Error('Failed to fetch delivery addresses');  // Throw an error to be handled by the caller
+    }
+  };
+  
+  
