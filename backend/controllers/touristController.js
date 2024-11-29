@@ -4,7 +4,9 @@ const Itinerary = require('../models/itineraryModel'); // Import your Itinerary 
 const TourGuide = require('../models/tourGuideModel')
 const Activity = require ('../models/activityModel')
 const Product = require ('../models/productModel')
-
+const Seller = require ('../models/sellerModel')
+const Admin = require ('../models/adminModel')
+const nodemailer = require('nodemailer');
 
 const bookTransportation = async (req, res) => {
   try {
@@ -618,7 +620,16 @@ const purchaseProductbck = async (req, res) => {
       }
       
       // Decrement the product stock by 1 (ensure it doesn't go below 0)
-      product.stock = Math.max(0, product.stock - 1);
+      if (product.stock > 0) {
+          product.stock -= 1;
+      }
+
+      if(product.stock === 0 && !product.isOutOfStock) {
+        const sellerId = product.sellerId;
+        await sendMailToSeller(sellerId, product);
+        await notifyAdmins(product);
+        product.isOutOfStock = true;
+      }
 
       // Save the updated tourist and product documents
       await tourist.save();
@@ -630,6 +641,53 @@ const purchaseProductbck = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
+
+const notifyAdmins = async (product) => {
+  const admins = await Admin.find({});
+  const adminEmails = admins.map(admin => admin.email);
+
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+      }
+  });
+
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: adminEmails,
+      subject: 'Product Out of Stock Notification',
+      text: `The product with name ${product.name} and ID ${product._id} is out of stock.`
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+const sendMailToSeller = async (sellerId, product) => {
+  const seller = await Seller.findById(sellerId);
+  if (!seller) {
+      console.error('Seller not found');
+      return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: seller.email,
+      subject: "Product is out of stock",
+      text: `Your product ${product.name} with id : ${product._id} is out of stock`,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
 
 const getPurchasedProducts = async (req, res) => {
   try {
@@ -1305,5 +1363,17 @@ const deleteOrder = async (req, res) => {
 
 
 
+const deleteAllTourists = async (req, res) => {
+  try {
+    console.log('deleteAllTourists function called'); // Add logging
+    const result = await Tourist.deleteMany({});
+    console.log('Deletion result:', result); // Log the result of the deletion
+    res.status(200).json({ message: 'All tourists deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all tourists:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById, deleteAllTourists,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart}

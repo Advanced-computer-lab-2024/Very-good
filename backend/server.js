@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const path = require('path'); // Ensure this line is included
 const app = express()
+const cron = require('node-cron');
+const { generateBirthdayPromoCodes } = require('./controllers/userPromoCodeController');
 
 const touristRoutes = require('./routes/tourists')
 const tourGuideRoutes = require('./routes/tourGuides')
@@ -81,6 +83,11 @@ mongoose.connect(process.env.MONG_URI)
         // listen for requests
         app.listen(process.env.PORT, () => {
             console.log('connected to db & listening on port', process.env.PORT )
+
+            cron.schedule('0 0 * * *', () => {
+                console.log('Running daily birthday promo code generation...');
+                generateBirthdayPromoCodes();
+            });
         }) 
     })
     .catch((error) => {

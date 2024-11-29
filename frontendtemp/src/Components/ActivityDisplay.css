@@ -9,7 +9,7 @@
   display: flex; /* Use flexbox for layout */
   flex-direction: column; /* Stack elements vertically */
   position: relative; /* Allow absolute positioning within this container */
-  width: 1000px;
+  width: 100%; /* Change width to 100% for responsiveness */
 }
 .itinerary-card,.opening-hours {
   background-color: white; /* Light background for the activity card */
@@ -22,7 +22,7 @@
   display: flex; /* Use flexbox for layout */
   flex-direction: column; /* Stack elements vertically */
   position: relative; /* Allow absolute positioning within this container */
-  width: 1000px;
+  width: 100%; /* Change width to 100% for responsiveness */
 }
 
   
@@ -133,6 +133,3 @@
 .bookmark-icon.bookmarked {
   opacity: 1; /* Fully opaque when bookmarked */
 }
-
-
-

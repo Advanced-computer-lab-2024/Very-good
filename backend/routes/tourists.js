@@ -1,9 +1,10 @@
 const express = require('express')
-const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart} = require('../controllers/touristController')
+const {addProductToCard, removeProductFromWishlist, addProductToWishlist, getWishlistProducts, createTourist, getTourist,getTouristByEmail,updateRecords,deleteTourist,getPastItinerariesWithTourGuides,getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist, rateProduct ,purchaseProductbck, getPurchasedProducts, rateTourGuide, rateItinerary ,makePayment,redeemPoints,rateActivity,makePayment2,getTouristById, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, deleteAllTourists,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart} = require('../controllers/touristController')
 const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router()
 
 router.get('/', getTourist)
+router.delete('/deleteAll', deleteAllTourists); // Move this line above the `/:id` route
 router.get('/:id', getTouristById);
 router.post('/addProductToCart',addProductToCard)
 router.post('/removeProductWishList',removeProductFromWishlist)

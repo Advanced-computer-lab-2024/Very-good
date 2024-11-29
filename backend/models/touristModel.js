@@ -133,7 +133,12 @@ const touristSchema = new schema({
   isOTPValid:{
     type : Boolean,
     default : false
-  }
+  },
+  promoCodes: [{
+    type: schema.Types.ObjectId,
+    ref: 'userPromoCode'
+  }]
+
     
 }, { timestamps : true })
 

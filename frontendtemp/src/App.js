@@ -37,6 +37,7 @@ import axios from 'axios';
 import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import ViewWishList from "./Pages/ViewWishList"
 import ViewBookmarkedActivities from "./Pages/ViewBookmarkedActivities";
+import CreatePromoCode from './Pages/CreatePromoCode'; // Import the CreatePromoCode component
 //require('dotenv').config();
 
 
@@ -667,6 +668,7 @@ const handleLogin = async (event) => {
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/forgetPasswordPage" element={<ForgetPasswordPage />} />
           <Route path="/tourist/viewBookmarkedActivities" element={<ViewBookmarkedActivities />} />
+          <Route path="/admin/createPromoCode" element={<CreatePromoCode />} />
         </Routes>
       </div>
   );
