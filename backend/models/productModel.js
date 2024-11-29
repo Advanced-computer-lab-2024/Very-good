@@ -22,6 +22,10 @@ const productSchema = new schema({
         type: Number,
         required: true
     },
+    isOutOfStock: {
+        type: Boolean,
+        default: false
+    },
     rating: {
         type: Number,
         min: 0,

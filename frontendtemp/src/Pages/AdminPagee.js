@@ -11,6 +11,9 @@ import ComplaintsList from './ComplaintsList'
 import Deletion from '../Components/DeleteAdmin';
 import ShowAllproducts from '../Components/ShowAllproducts'
 import RevenuePage from '../Services/AdminSprint3Services'
+import { useNavigate,  } from "react-router-dom";
+import CreatePromoCode from './CreatePromoCode'; // Import the CreatePromoCode component
+
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -23,10 +26,11 @@ const AdminPage = ({email}) => {
         { id: 8,title : 'View Documents'},
         { id:9,title :'View Complaints'},
         {id:10,title:'View All products 3la ndafa'},
-        {id:11,title:'View Sales Report Page'}
-
+        {id:11,title:'View Sales Report Page'},
+        { id: 12, title: 'Create Promo Code' } // New activity for creating promo code
     ]);
 
+    const navigate = useNavigate();
     const [tags, setTags] = useState([]); // State to hold the tags
     const [editingTag, setEditingTag] = useState(null); // State for the tag currently being edited
     const [formData, setFormData] = useState({ name: '' }); // State for form data
@@ -43,6 +47,7 @@ const AdminPage = ({email}) => {
     const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
     const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
     const [showSalesReport,SetShowSalesReport]=useState(false);
+    const [showCreatePromoCodePage, setShowCreatePromoCodePage] = useState(false); // State to manage visibility of CreatePromoCode page
     const handleBackFromSalesReportPage =()=>{
         SetShowSalesReport(false);
     }
@@ -268,6 +273,10 @@ const AdminPage = ({email}) => {
         }
       };
 
+    const handleCreatePromoCode = () => {
+        //setShowCreatePromoCodePage(true); // Show the create promo code form
+        navigate('/admin/createPromoCode');
+    };
     
     // render the document managment page 
     if(showDocumentManagmentPage){
@@ -281,6 +290,9 @@ const AdminPage = ({email}) => {
     }
     if(showSalesReport){
         return <RevenuePage/>
+    }
+    if (showCreatePromoCodePage) {
+        return <CreatePromoCode />;
     }
     return (
         <div>
@@ -372,7 +384,9 @@ const AdminPage = ({email}) => {
                                      <button className="view-button" onClick={handleSalesReportPage}>View Sales Report</button>
 
                                 )}
-
+                                {activity.title === 'Create Promo Code' && (
+                                    <button className="view-button" onClick={handleCreatePromoCode}>Create Promo Code</button>
+                                )}
                                 
                             </div>
                         ))}
