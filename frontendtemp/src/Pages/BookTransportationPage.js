@@ -4,14 +4,16 @@ import TransportationDisplay from '../Components/TransportationDisplay';
 import { fetchTouristByEmail } from '../RequestSendingMethods';
 import { useLocation } from 'react-router-dom';
 
-
 const BookTransportationPage = () => {
   const location = useLocation();
   const { email } = location.state || {};
   const [touristId, setTouristId] = useState(null);
   const [transportations, setTransportations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [departureLocation, setDepartureLocation] = useState('');
+  const [arrivalLocation, setArrivalLocation] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
     const getTouristData = async () => {
@@ -21,26 +23,34 @@ const BookTransportationPage = () => {
           setTouristId(data.data._id); // Extract and store only the ID
         }
       }
-      setLoading(false);
     };
 
     getTouristData();
   }, [email]);
 
-  useEffect(() => {
-    const fetchTransportations = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/api/transportations/'); // Adjust the endpoint as necessary
-        setTransportations(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchTransportations = async () => {
+    setLoading(true);
+    try {
+      //console.log("departureLocation : ", departureLocation);
+      //console.log("arrivalLocation : ", arrivalLocation);
+      const response = await axios.post('http://localhost:4000/api/transportations/getWithLocation', {
+        departureLocation,
+        arrivalLocation
+      });
+      setTransportations(response.data);
+    } catch (err) {
+      alert(err.message);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormSubmitted(true);
     fetchTransportations();
-  }, []);
+  };
 
   if (loading) {
     return <div>Loading transportations...</div>;
@@ -53,12 +63,38 @@ const BookTransportationPage = () => {
   return (
     <div className="book-transportation-page">
       <h1>Available Transportations</h1>
-      {transportations.length === 0 ? (
-        <p>No transportations available at the moment.</p>
+      {!formSubmitted ? (
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Departure Location:</label>
+            <input
+              type="text"
+              value={departureLocation}
+              onChange={(e) => setDepartureLocation(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Arrival Location:</label>
+            <input
+              type="text"
+              value={arrivalLocation}
+              onChange={(e) => setArrivalLocation(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Search</button>
+        </form>
       ) : (
-        transportations.map((transportation) => (
-          <TransportationDisplay key={transportation._id} transportation={transportation} touristId={touristId}/>
-        ))
+        <>
+          {transportations.length === 0 ? (
+            <p>No transportations available at the moment.</p>
+          ) : (
+            transportations.map((transportation) => (
+              <TransportationDisplay key={transportation._id} transportation={transportation} touristId={touristId}/>
+            ))
+          )}
+        </>
       )}
     </div>
   );

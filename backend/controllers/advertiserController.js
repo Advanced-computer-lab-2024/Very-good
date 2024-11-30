@@ -41,6 +41,35 @@ const createAdvertiser = async (req, res) => {
     }
 };
 
+const updateAcceptedTermsAndConditions = async (req, res) => {
+  try {
+      // Get the tourGuideId from the request (e.g., params or body)
+      const { advertiserId } = req.params;
+
+      // Find and update the specific tour guide
+      const updatedAdvertiser = await Advertiser.findByIdAndUpdate(
+         advertiserId, 
+          { acceptedTermsAndConditions: true }, // Update the field
+          { new: true } // Return the updated document
+      );
+
+      // Handle case where the tour guide is not found
+      if (!updatedAdvertiser) {
+          return res.status(404).json({ message: "Advertiser not found" });
+      }
+
+      // Respond with the updated tour guide
+      return res.status(200).json({
+          message: "Accepted terms and conditions updated successfully",
+          data: updatedAdvertiser,
+      });
+  } catch (error) {
+      // Handle errors (e.g., invalid ID format, database errors)
+      return res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
+
 const getAdvertisers = async (req, res) => {
     try {
         const advertisers = await Advertiser.find(); // Fetch all Tour Guides from the database
@@ -158,6 +187,37 @@ const deleteAdvertiser = async (req, res) => {
   }
 }; 
 
+const updateAdvertiserByEmail = async (req, res) => {
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log("Received a request to update advertiser");
+  const { email, updatedData } = req.body;
+  console.log("Updating advertiser with emailYY:", email);
+  console.log("Updated DataYY:", updatedData);
+  console.log("BODY",req.body)
+
+  try {
+    const advertiser = await Advertiser.findOneAndUpdate(
+      { email }, // Find by email
+      { $set: updatedData }, // Update only the fields in updatedData
+      { new: true } // Return the updated document
+      );
+
+      if (!advertiser) {
+          console.log("No advertiser found with this email", advertiser);
+          return res.status(404).json({ message: "Advertiser not found" });
+      }
+      
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+      console.log("Advertiser updated successfully:", advertiser);
+      console.log("Updating advertiser with emailYY:", email);
+      console.log("Updated DataYY:", updatedData);
+
+      res.status(200).json(advertiser); // Send back the updated advertiser
+  } catch (error) {
+      console.error("Error updating advertiser:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
 const updateAdvertiserByEmailBackend = async (req, res) => {
   const { email } = req.body; // Extract email from request body
   const updatedData = req.body.updatedData; // Extract updated data
@@ -183,7 +243,133 @@ const updateAdvertiserByEmailBackend = async (req, res) => {
 
 
 
+const uploadDocuments = async (req, res) => {
+  try {
+      const { email } = req.params;
+      console.log("Received email:", email);
+
+      const idDocumentFile = req.files['IdDocument'] ? req.files['IdDocument'][0] : null;
+      const taxFiles = req.files['taxationRegistryCard'] || [];
+
+      console.log("ID Document File:", idDocumentFile);
+      console.log("Certificates Files:", taxFiles);
+
+      if (!email || !idDocumentFile || taxFiles.length === 0) {
+          console.error("Missing required documents or email");
+          return res.status(400).json({ message: 'Missing required documents or email' });
+      }
+
+      const idDocumentUrl = `http://localhost:4000/uploads/${idDocumentFile.filename}`;
+      const taxUrls = taxFiles.map(file => `http://localhost:4000/uploads/${file.filename}`);
+
+      // Attempt to update the database
+      const updatedadvertiser = await Advertiser.findOneAndUpdate(
+          { email },
+          {
+              IdDocument: idDocumentUrl,
+              taxationRegistryCard: taxUrls,
+          },
+          { new: true }
+      );
+
+      if (!updatedadvertiser) {
+          console.error("Tour Guide not found with email:", email);
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      console.log("Documents uploaded successfully:", updatedadvertiser);
+      res.status(200).json({ message: 'Documents uploaded successfully', Advertiser: updatedadvertiser });
+  } catch (error) {
+      console.error("Error in uploadDocuments function:", error);
+      res.status(500).json({ message: 'An error occurred while uploading documents', error });
+  }
+};
+const uploadPhoto = async (req, res) => {
+  try {
+      const { email } = req.params;
+
+      // Check if the 'photo' file exists in the request
+      const photoFile = req.file; // Access the single uploaded file
+
+      if (!email || !photoFile) {
+        return res.status(400).json({ message: 'Missing required photo or email' });
+    }
+
+      // Construct the photo URL (adjust path as necessary)
+      const photoUrl = `http://localhost:4000/uploads/${photoFile.filename}`;
+
+      // Update the TourGuide document with the photo URL
+      const updatedAdvertiser = await Advertiser.findOneAndUpdate(
+          { email },
+          { logo: photoUrl },
+          { new: true }
+      );
+
+      if (!updatedAdvertiser) {
+          return res.status(404).json({ message: 'advertiser not found' });
+      }
+
+      res.status(200).json({
+          message: 'Photo uploaded successfully',
+          Advertiser: updatedAdvertiser
+      });
+  } catch (error) {
+      console.error("Error uploading photo:", error);
+      res.status(500).json({ message: 'An error occurred while uploading photo', error });
+  }
+};
+
+const acceptAdvertiser = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const advertiser = await Advertiser.findOne({ email });
+    
+    if (!advertiser) {
+      return res.status(404).json({ message: 'advertiser not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    advertiser.isAccepted = "true";
+    advertiser.isPendingAcceptance = false;
+    await advertiser.save();
+
+    // Send success response
+    res.status(200).json({ message: 'advertiser accepted successfully', advertiser });
+  } catch (error) {
+    console.error('Error accepting advertiser:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const rejectadvertiser = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const advertiser = await Advertiser.findOne({ email });
+    
+    if (!advertiser) {
+      return res.status(404).json({ message: 'advertiser not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    advertiser.isAccepted = "false";
+    advertiser.isPendingAcceptance = false;
+    await advertiser.save();
+
+    // Send success response
+    res.status(200).json({ message: 'advertiser rejected successfully', advertiser });
+  } catch (error) {
+    console.error('Error accepting tour guide:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 
 
 module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId ,
-  fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend}
+fetchAdvertiserByEmail,deleteAdvertiser,updateAdvertiserByEmailBackend,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser ,updateAdvertiserByEmail,uploadDocuments,uploadPhoto,acceptAdvertiser,rejectadvertiser, updateAcceptedTermsAndConditions} 

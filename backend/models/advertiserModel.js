@@ -27,7 +27,7 @@ const advertiserSchema = new schema({
       },
     logo: {
         type : String, // url of a photo
-        required : true
+        required : false
     },
     acceptedTermsAndConditions :{
       type : Boolean,
@@ -35,16 +35,37 @@ const advertiserSchema = new schema({
     },
     IdDocument: {
         type : String, // url of a photo
-        required : true
+        required : false
     },
     taxationRegistryCard: {
-      type : String, // url of a photo
-      required : true
-    },
+      type: [String], // Change from String to an array of strings
+      required: false
+  },
     isAccepted: {
         type: String,
-        required: true
+        default : "false",
+        required: false
       },
+      isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      },
+      delete: {
+        type: Boolean, // Change from String to an array of strings
+        required: false
+    },
+    OTP:{
+      type: Number,
+    },
+    isOTPValid:{
+      type : Boolean,
+      default : false
+    },
+    createdActivities:  [ //saving the id of the activity , when created this should hold 
+      {
+        type: schema.Types.ObjectId, ref: 'activity' 
+      }
+      ],
 }, { timestamps : true })
 
 module.exports = mongoose.model('advertiser' ,advertiserSchema)

@@ -17,6 +17,10 @@ const itinerarySchema = new schema({
     max: 5,
     default: 0
   },
+  numberOfRatings : {
+    type : Number,
+    default : 1
+  },
   activities: [{
     title: {
       type: String,
@@ -81,10 +85,9 @@ const itinerarySchema = new schema({
     type: String,
     required: true
   },
-  touristIds: [{ // Hold multiple tourist references
-    type: schema.Types.ObjectId,
-    ref: 'tourist',
-    required: true
+  touristIds: [{ // Hold multiple tourist references and the time at which they were placed 
+    touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+    addedAt: { type: Date }
   }],
   tourGuideId: {
     type: schema.Types.ObjectId,
@@ -107,6 +110,19 @@ const itinerarySchema = new schema({
   flagged: {
      type: Boolean, default: false 
     },
+    commentsArray: [
+      {
+        comment: {
+          type: String,
+          required: true
+        },
+        touristId: {
+          type: schema.Types.ObjectId,
+          ref: 'Tourist',  
+          required: true
+        }
+      }
+    ]
 
 }, { timestamps: true });
 

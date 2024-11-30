@@ -9,7 +9,8 @@ const sellerSchema = new schema({
     },
     email: {
         type: String,
-        required: true,
+        required
+        : true,
         unique: true
     },
     password: {
@@ -22,19 +23,20 @@ const sellerSchema = new schema({
     },
     IdDocument: {
         type : String, // url of a photo
-        required : true
+        required : false
     },
     taxationRegistryCard: {
-      type : String, // url of a photo
-      required : true
+        type: [String], // Change from String to an array of strings
+        required: false
     },
     logo: {
         type : String, // url of a photo
-        required : true
+        required : false
     },
     isAccepted: {
         type: String,
-        required: true
+        default: "false",
+        required: false
       },
     acceptedTermsAndConditions :{
         type : Boolean,
@@ -43,7 +45,22 @@ const sellerSchema = new schema({
     createdProducts: [{
         type: schema.Types.ObjectId,
         ref: 'product' // Reference to the Product model
-    }]
+    }],
+    isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      },
+      delete: {
+        type: Boolean, // Change from String to an array of strings
+        required: false
+    },
+    OTP:{
+        type: Number,
+      },
+      isOTPValid:{
+        type : Boolean,
+        default : false
+      }
 }, { timestamps: true });
 
 module.exports = mongoose.model('seller' ,sellerSchema)

@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods'; // Import the fetching method
+import { fetchAdvertiserByEmail, updateAdvertiserByEmail } from '../RequestSendingMethods';
+import UploadingALogoAdvertiser from './UploadingALogoAdvertiser'
 import '../styles/global.css'; // Assuming global styles are shared across components
-
-const AdvertiserInfo = ({ email, onBack }) => {
+import DeleteTA from '../Components/DeleteTourGuideAndAdver';
+import AdvertiserSalesReport from './AdvertiserSalesReport'
+import AdvertiserActivitiesUsersReport from './AdvertiserNumberOfSubscribersReport'
+const AdvertiserInfo = ({ email, onBack,id }) => {
+  console.log("ID SENT TO ADINFO:",id)
   const [advertiserData, setAdvertiserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
+  const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
+  const [isSalesReportOpen,setIsSalesReportOpen]=useState(false);
+  const [isUserNumberReportOpen,setIsUserNumberReportOpen]=useState(false);
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
-        const response = await fetchAdvertiserByEmail({ email }); // Call fetch method with email as JSON object
+        console.log("Email el da5l  ad info :",email)
+        const response = await fetchAdvertiserByEmail({ email });
         if (response) {
           setAdvertiserData(response.advertiser);
           setEditedData(response.advertiser);
@@ -31,23 +39,97 @@ const AdvertiserInfo = ({ email, onBack }) => {
   };
 
   const handleUpdateProfile = async () => {
-  if (isEditing) {
-    try {
-      console.log('Email:', email);
-      console.log('Updated Data:', { updatedData: editedData }); // Log updated data
-      const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
-      if (response) {
-        setAdvertiserData(editedData); // Update state with edited data
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== advertiserData.password){
+        return
       }
-    } catch (error) {
-      console.error('Error updating advertiser:', error);
     }
-  }
-  setIsEditing(!isEditing); // Toggle editing state
-};
+    if (isEditing) {
+      try {
+        const response = await updateAdvertiserByEmail(email, { updatedData: editedData });
+        console.log("RESPONSE" , response)
+      if (response) {
+          setAdvertiserData(editedData);
+          console.log("response", response)
+      }
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== advertiserData.password && isEditing){
+        return
+      }
+      } catch (error) {
+        console.error('Error updating advertiser:', error);
+      }
+    }
+    setIsEditing(!isEditing);
+  };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const handleUploadLogo = ()=>{
+   setISuploadLogoAdvertiserOpen(true);
+  };
+  const handleBackToAdvertiserInfo =()=>{
+    setISuploadLogoAdvertiserOpen(false);
+  }
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete: true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateAdvertiserByEmail(advertiserData.email,  { updatedData: editedData });  // or sellerData._id if you're using ID instead of email
+        
+        // Check if the update was successful
+        if (response.success) {
+            console.log("Seller marked for deletion:", response);
+            alert("Seller has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark seller for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+    } catch (error) {
+        console.error("Error updating seller:", error);
+        // Handle error (e.g., show error message)
+    }
+};
+const handleSalesReport =()=>{
+  setIsSalesReportOpen(true);
+}
+const handleBackFromSalesReport =()=>{
+  setIsSalesReportOpen(false);
+}
+const handleNumberReport =()=>{
+  setIsUserNumberReportOpen(true);
+}
+const handleBackFromNumbersReport =()=>{
+  setIsUserNumberReportOpen(false);
+}
+  if(isUserNumberReportOpen){
+    return <AdvertiserActivitiesUsersReport id={id} onBack={handleBackFromNumbersReport}/>
+  }
+  if(isSalesReportOpen){
+   return <AdvertiserSalesReport advertiserId={id} onBack={ handleBackFromSalesReport}/>
+  }
+  if(ISuploadLogoAdvertiserOpen){
+    return <UploadingALogoAdvertiser onBack={handleBackToAdvertiserInfo} email={email} />;
+  }
   return (
-    <div className="advertiser-page">
+    <div className={`advertiser-page ${isSidebarOpen ? 'shifted' : ''}`}>
+      <button className="toggle-btn" onClick={toggleSidebar}>
+        {isSidebarOpen ? 'Close' : 'Menu'}
+      </button>
+
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-content">
+          <button onClick={handleUploadLogo}>Upload Logo</button>
+          <button onClick={handleSalesReport}>Sales Report</button>
+          <button onClick={handleNumberReport}>Users Report</button>
+        </div>
+      </div>
+
       <div className="container">
         <header className="header">
           <h1>Welcome, Advertiser!</h1>
@@ -67,6 +149,19 @@ const AdvertiserInfo = ({ email, onBack }) => {
               />
             ) : (
               <p>{advertiserData?.name || 'NA'}</p>
+            )}
+          </div>
+          <div className="profile-info">
+            <label>Password:</label>
+            {isEditing ? (
+              <input
+                type="text"
+                name="password"
+                value={editedData?.password || ''}
+                onChange={handleEditChange}
+              />
+            ) : (
+              <p>{"Not Visible"|| 'NA'}</p>
             )}
           </div>
 
@@ -98,30 +193,17 @@ const AdvertiserInfo = ({ email, onBack }) => {
             )}
           </div>
 
-          {/* Removed Wallet Balance field */}
-          {/* <div className="profile-info">
-            <label>Wallet Balance:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="wallet"
-                value={editedData?.wallet || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>${advertiserData?.wallet || 'NA'}</p>
-            )}
-          </div> */}
-
           <button className="btn" onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
 
-          {/* Back Button in Bottom Right */}
           <button className="back-button bottom-right" onClick={onBack}>
             &larr; Back
           </button>
         </div>
+        
+        <DeleteTA dataTA={advertiserData?.email} isTourGuideA={flag}/>
+        <button onClick={()=>handleDeleteReq()}> send delete request</button>
 
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

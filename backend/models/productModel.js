@@ -36,7 +36,7 @@ const productSchema = new schema({
     pictures: {
         type: [String], // Array of URLs for pictures
         required: false
-    },
+    }, // uploaded by the admin , and seller 
     sales: {
         type: Number, // how many times this product was sold
         default : 0
@@ -49,25 +49,25 @@ const productSchema = new schema({
         {
           comment: {
             type: String,
-            required: true
+            required: false
           },
           touristId: {
             type: schema.Types.ObjectId,
             ref: 'Tourist',  
-            required: true
+            required: false
           }
         }
       ],
-      ratings: {
-        type: Number,
-        min: 0,
-        max: 5,
-        default: 5
-      },
+
       numberOfRatings : {
         type : Number,
         default : 1
-      }
+      },
+      touristWhoBoughtSaidProduct:[
+        {
+            type: schema.Types.ObjectId, ref: 'Tourist' 
+          }
+          ],
 }, { timestamps: true });
 
 

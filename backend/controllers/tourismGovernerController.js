@@ -98,4 +98,57 @@ const deleteTourismGoverner = async (req, res) => {
       res.status(500).json({ message: 'Error deleting tourism governer', error: error.message });
   }
 };
-module.exports = {createTourismGoverner, getTourismGoverners,deleteTourismGoverner}
+
+
+const updateRecordsTourism = async (req, res) => {
+  try {
+    const { email, updatedData } = req.body; // Extract email and updated data from the request body
+
+    // Check if email and updatedData are provided
+    if (!email || !updatedData) {
+      return res.status(400).json({ error: 'Email and updated data are required' });
+    }
+
+    // Find the tourism governor by email
+    const tourismGoverner = await TourismGoverner.findOne({ email: email });
+
+    if (!tourismGoverner) {
+      // If no tourism governor is found with the provided email, send an error response
+      return res.status(404).json({ error: 'Tourism governor not found' });
+    }
+
+    // Update the tourism governor's fields with the values from updatedData
+    tourismGoverner.username = updatedData.username || tourismGoverner.username;
+    tourismGoverner._id = updatedData._id || tourismGoverner._id;
+    tourismGoverner.password = updatedData.password || tourismGoverner.password;
+    tourismGoverner.email = updatedData.email || tourismGoverner.email;
+    tourismGoverner.mobile = updatedData.mobile || tourismGoverner.mobile;
+    tourismGoverner.nationality = updatedData.nationality || tourismGoverner.nationality;
+   
+
+
+    // Save the updated tourism governor record back to the database
+    const updatedTourism = await tourismGoverner.save();
+
+    // Send a success response with the updated tourism governor data
+    res.status(200).json({
+      message: 'Tourism governor updated successfully',
+      data: updatedTourism
+    });
+  } catch (error) {
+    console.error('Error updating tourism:', error);
+    res.status(500).json({ error: 'Internal server error' });
+    console.log("debug");
+  }
+};
+
+module.exports = {
+  createTourismGoverner,
+  getTourismGoverners,
+  deleteTourismGoverner,
+  updateRecordsTourism
+};
+
+
+
+module.exports = {createTourismGoverner, getTourismGoverners,deleteTourismGoverner , updateRecordsTourism}

@@ -1,17 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import ActivityList from '../Components/ActivityList';
 import CreateActivityForm from '../Components/CreateActivityForm';
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { fetchActivities, deleteActivity, updateActivity } from '../Services/activityServices'; // Ensure this import is correct
 import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
+import UploadDocumentsAdvertiser from './UploadDocumentsAdvertiser'
 import './AdvertiserPage.css'; 
 import CreateTransportationForm from '../Components/createTransportationForm';
 import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
 import {editTransportation, deleteTransportation} from '../Services/bookingTransportationServices'
+import { fetchAdvertiserByEmail } from '../RequestSendingMethods';
+import updateAcceptedTermsAndConditions from '../Services/advertiserServices'
 
-const advertiserId = "66f826b0e184e2faa3ea510b";
+
+
+let advertiserId = "66f826b0e184e2faa3ea510b";
+
+const TermsAndConditionsModal = ({ onAccept }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h2>Terms and Conditions</h2>
+                <p>Please Accept The Terms and Conditions to proceed.</p>
+                <button onClick={onAccept}>Accept</button>
+            </div>
+        </div>
+    );
+  };
+  const NotAccepted = ({ onAccept }) => {
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <p>Not Accepted.</p>
+                <button onClick={onAccept}>back</button>
+            </div>
+        </div>
+    );
+  };
 
 const AdvertiserPage = ({email}) => {
+    const location = useLocation();
+
+    const login = location.state?.login || false;
+    if(login){
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        email = userData?.email;
+        advertiserId = userData?._id;
+    }
+
     const [isCreating, setIsCreating] = useState(false);
     const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
     const [activities, setActivities] = useState([]);
@@ -20,6 +57,38 @@ const AdvertiserPage = ({email}) => {
     const [error, setError] = useState(null);
     const [transportationerror, setTransportationError] = useState(null);
     const [transportationLoading, setTransportationLoading] = useState(null);
+    const [uploadPage, setUploadPage]=useState(true); // default with true 
+    const navigate = useNavigate();
+    const [advertiserData, setAdvertiserData] = useState(null);
+    useEffect(() => {
+        const getAdvertiserData = async () => {
+          try {
+            console.log("Email el da5l  ad info :",email)
+            const response = await fetchAdvertiserByEmail({ email });
+            if (response) {
+              setAdvertiserData(response.advertiser);
+            }
+          } catch (error) {
+            console.error('Error fetching advertiser data:', error);
+          }
+        };
+    
+        if (email) {
+          getAdvertiserData();
+        }
+        const interval = setInterval(() => {
+            getAdvertiserData();
+          }, 5000); // 5000ms = 5 seconds
+        
+          // Cleanup function to clear the interval
+          return () => clearInterval(interval);
+      }, [email]);
+
+    const handleBackfromUploadPage = () => {
+        setUploadPage(false);
+      };
+    const [termsAccepted, setTermsAccepted] = useState(false);
+
 
     const fetchAndSetActivities = async () => {
         try {
@@ -76,8 +145,13 @@ const AdvertiserPage = ({email}) => {
         fetchAndSetActivities(); // Fetch activities on mount
         fetchAndSetTransportations();
     }, []);
+    const handleAcceptTerms = () => {
+        setTermsAccepted(true); // Set terms as accepted
+        updateAcceptedTermsAndConditions(advertiserData._id);
+    };
+    
     const [isViewingProfile, setIsViewingProfile] = useState(false); // State to manage the profile info view
-
+   
     const handleCreateButtonClick = () => {
         setIsCreating(true); // Show the form when the button is clicked
     };
@@ -135,10 +209,40 @@ const AdvertiserPage = ({email}) => {
         setIsCreatingTransportation(true);
     }
 
+
+    const r1 =()=>{
+        console.log("00000000000")
+        navigate("/");
+        
+      }
+
+    if (uploadPage && !login){
+        return <UploadDocumentsAdvertiser onBack={handleBackfromUploadPage} email={email} />
+      }
+
+    if (!termsAccepted && !login) {
+      return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    }
+
+    if(advertiserData?.isPendingAcceptance || advertiserData?.isAccepted==="false"){
+        return <NotAccepted onAccept={()=>r1()} />
+    }
     // If viewing the profile, render only the AdvertiserInfo component
     if (isViewingProfile) {
-        return <AdvertiserInfo email={email} onBack={handleBackButtonClick} />;
+        return <AdvertiserInfo email={email} onBack={handleBackButtonClick} id={advertiserId} />;
     }
+    
+//   const r1 =()=>{
+//     console.log("00000000000")
+//     navigate("/");
+    
+//   }
+    // if(!AdvertiserInfo.isAccepted){
+    //     return <NotAccepted onAccept={()=>r1()} />
+    // }
+    // if (AdvertiserInfo.isAccepted &&!termsAccepted) {
+    //   return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
+    // }
 
     // Otherwise, render the main AdvertiserPage
     return (
@@ -180,7 +284,7 @@ const AdvertiserPage = ({email}) => {
                     onDelete={handleDeleteTransportation}  />
                 ))}
             </div>
-
+            
         </div>
     );
 };

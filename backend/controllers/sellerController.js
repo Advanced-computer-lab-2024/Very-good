@@ -35,6 +35,34 @@ const createSeller = async (req, res) => {
     }
 };
 
+const updateAcceptedTermsAndConditions = async (req, res) => {
+    try {
+        // Get the tourGuideId from the request (e.g., params or body)
+        const { sellerId } = req.params;
+  
+        // Find and update the specific tour guide
+        const updatedSeller = await Seller.findByIdAndUpdate(
+            sellerId, 
+            { acceptedTermsAndConditions: true }, // Update the field
+            { new: true } // Return the updated document
+        );
+  
+        // Handle case where the tour guide is not found
+        if (!updatedSeller) {
+            return res.status(404).json({ message: "Seller not found" });
+        }
+  
+        // Respond with the updated tour guide
+        return res.status(200).json({
+            message: "Accepted terms and conditions updated successfully",
+            data: updatedSeller,
+        });
+    } catch (error) {
+        // Handle errors (e.g., invalid ID format, database errors)
+        return res.status(500).json({ message: "An error occurred", error: error.message });
+    }
+  };
+
 // Get all Sellers
 const getSellers = async (req, res) => {
     try {
@@ -107,14 +135,14 @@ const updateSeller = async (req, res) => {
   };
 
 // Delete seller by ID
+
 const deleteSeller = async (req, res) => {
     try {
-        const { id } = req.params; // Get the seller ID from the request parameters
-
-        // Find the seller and delete them
+        const { id } = req.params; // Get seller ID from URL params
+        
+        // Try to delete the seller from DB
         const deletedSeller = await Seller.findByIdAndDelete(id);
 
-        // Check if the seller was found and deleted
         if (!deletedSeller) {
             return res.status(404).json({ message: 'Seller not found' });
         }
@@ -127,4 +155,158 @@ const deleteSeller = async (req, res) => {
 };
 
 
-module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller}
+const uploadDocuments = async (req, res) => {
+    try {
+        const { email } = req.params;
+        console.log("Received email:", email);
+  
+        const idDocumentFile = req.files['IdDocument'] ? req.files['IdDocument'][0] : null;
+        const taxFiles = req.files['taxationRegistryCard'] || [];
+  
+        console.log("ID Document File:", idDocumentFile);
+        console.log("Certificates Files:", taxFiles);
+  
+        if (!email || !idDocumentFile || taxFiles.length === 0) {
+            console.error("Missing required documents or email");
+            return res.status(400).json({ message: 'Missing required documents or email' });
+        }
+  
+        const idDocumentUrl = `http://localhost:4000/uploads/${idDocumentFile.filename}`;
+        const taxUrls = taxFiles.map(file => `http://localhost:4000/uploads/${file.filename}`);
+  
+        // Attempt to update the database
+        const updatedSeller = await Seller.findOneAndUpdate(
+            { email },
+            {
+                IdDocument: idDocumentUrl,
+                taxationRegistryCard: taxUrls,
+            },
+            { new: true }
+        );
+  
+        if (!updatedSeller) {
+            console.error("Tour Guide not found with email:", email);
+            return res.status(404).json({ message: 'Tour Guide not found' });
+        }
+  
+        console.log("Documents uploaded successfully:", updatedSeller);
+        res.status(200).json({ message: 'Documents uploaded successfully', Seller: updatedSeller });
+    } catch (error) {
+        console.error("Error in uploadDocuments function:", error);
+        res.status(500).json({ message: 'An error occurred while uploading documents', error });
+    }
+  };
+  const uploadPhoto = async (req, res) => {
+    try {
+        const { email } = req.params;
+  
+        // Check if the 'photo' file exists in the request
+        const photoFile = req.file; // Access the single uploaded file
+  
+        if (!email || !photoFile) {
+          return res.status(400).json({ message: 'Missing required photo or email' });
+      }
+  
+        // Construct the photo URL (adjust path as necessary)
+        const photoUrl = `http://localhost:4000/uploads/${photoFile.filename}`;
+  
+        // Update the TourGuide document with the photo URL
+        const updatedSeller = await Seller.findOneAndUpdate(
+            { email },
+            { logo: photoUrl },
+            { new: true }
+        );
+  
+        if (!updatedSeller) {
+            return res.status(404).json({ message: 'seller not found' });
+        }
+  
+        res.status(200).json({
+            message: 'Photo uploaded successfully',
+            Seller: updatedSeller
+        });
+    } catch (error) {
+        console.error("Error uploading photo:", error);
+        res.status(500).json({ message: 'An error occurred while uploading photo', error });
+    }
+  };
+  const acceptsellers = async (req, res) => {
+    try {
+      // Extract email from request body
+      const { email } = req.body;
+  
+      // Find the tour guide by email
+      const seller = await Seller.findOne({ email });
+      
+      if (!seller) {
+        return res.status(404).json({ message: 'seller not found' });
+      }
+  
+      // Update the isAccepted attribute to "true"
+      seller.isAccepted = "true";
+      seller.isPendingAcceptance = false;
+      await seller.save();
+  
+      // Send success response
+      res.status(200).json({ message: 'seller accepted successfully', seller });
+    } catch (error) {
+      console.error('Error accepting seller:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  const rejectsellers = async (req, res) => {
+    try {
+      // Extract email from request body
+      const { email } = req.body;
+  
+      // Find the tour guide by email
+      const seller = await Seller.findOne({ email });
+      
+      if (!seller) {
+        return res.status(404).json({ message: 'seller not found' });
+      }
+  
+      // Update the isAccepted attribute to "true"
+      seller.isAccepted = "false";
+      seller.isPendingAcceptance = false;
+      await seller.save();
+  
+      // Send success response
+      res.status(200).json({ message: 'seller rejected successfully', seller });
+    } catch (error) {
+      console.error('Error accepting seller:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+// Fetch all product IDs for a seller by email
+const fetchProductsBySellerEmail = async (req, res) => {
+    try {
+        const { email } = req.params; // Extract email from URL params
+        
+        // Find the seller by email
+        const seller = await Seller.findOne({ email }); // Populate only the _id field from the Product model
+        
+        if (!seller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        // Extract the product IDs from the populated 'createdProducts' array
+        const productIds = seller.createdProducts;
+        
+        // Send success response with the list of product IDs
+        res.status(200).json({
+            message: 'Products fetched successfully',
+            productIds: productIds
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Error fetching products for seller',
+            error: error.message
+        });
+    }
+};
+
+
+module.exports = {createSeller, getSellers,fetchSellerByEmail,updateSeller,deleteSeller,uploadDocuments,uploadPhoto,acceptsellers,rejectsellers,fetchProductsBySellerEmail, updateAcceptedTermsAndConditions}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductSort from '../Components/SortProductRate.js';
-import { createProduct, updateProduct, fetchProductsNoID } from '../Services/productServices';
+import { createProduct, updateProduct, fetchProductsNoID , archiveProduct,unarchiveProduct} from '../Services/productServices';
 
 function AdminCategory(sellerId) {
   const [categories, setCategories] = useState([]);
@@ -21,6 +21,7 @@ function AdminCategory(sellerId) {
     description: '',
     stock: '',
     rating: '',
+    sales:''
   });
 
   // Fetch categories on page load
@@ -70,6 +71,39 @@ function AdminCategory(sellerId) {
       console.error('Error creating category:', error);
     }
   };
+  const handleArchive = async (productId) => {
+    try {
+        // Trigger archive operation
+        await axios.patch(`http://localhost:4000/api/products/${productId}/archive`);
+        // Update product list after successful archive operation
+        setProducts((prevProducts) =>
+            prevProducts.map((prod) =>
+                prod._id === productId ? { ...prod, isArchived: true } : prod
+            )
+        );
+        console.log(`Product with ID ${productId} archived successfully.`);
+    } catch (error) {
+        console.error('Error archiving product:', error.response?.data || error.message);
+    }
+};
+
+const handleUnarchive = async (productId) => {
+    try {
+        // Trigger unarchive operation
+        await axios.patch(`http://localhost:4000/api/products/${productId}/unarchive`);
+        // Update product list after successful unarchive operation
+        setProducts((prevProducts) =>
+            prevProducts.map((prod) =>
+                prod._id === productId ? { ...prod, isArchived: false } : prod
+            )
+        );
+        console.log(`Product with ID ${productId} unarchived successfully.`);
+    } catch (error) {
+        console.error('Error unarchiving product:', error.response?.data || error.message);
+    }
+};
+
+
 
   // Update a category
   const handleUpdate = async () => {
@@ -127,6 +161,7 @@ const resetForm2 = () => {
       description: '',
       stock: '',
       rating: '',
+      sales:''
   });
   setEditMode(false);
   setCurrentProductId(null);
@@ -185,6 +220,7 @@ const handleEditP = (product) => {
       description: product.description,
       stock: product.stock,
       rating: product.rating,
+      sales: product.sales
   });
   setEditMode(true);
   setCurrentProductId(product._id); // Set the current product ID
@@ -391,6 +427,15 @@ const handleEditP = (product) => {
         step="0.1" // Allows decimal values (e.g., 0.0, 1.5, etc.)
     />
 
+<label>Sales</label>
+    <input
+        type="number"
+        name="sales"
+        value={formData2.rating} 
+        onChange={handleInputChangeP}
+        min="0" // Allows decimal values (e.g., 0.0, 1.5, etc.)
+    />
+
     <button type="submit">{editMode ? 'Update Product' : 'Create Product'}</button>
     {editMode && <button type="button" onClick={resetForm2}>Cancel Edit</button>}
 </form>
@@ -415,6 +460,14 @@ const handleEditP = (product) => {
                                 <p>Description: {product.description}</p>
                                 <p>Stock: {product.stock}</p>
                                 <p>Rating: {product.rating}</p>
+                                <p>Sales: {product.sales}</p>
+                                {product.isArchived ? (
+                                  
+                                  <button onClick={() => handleUnarchive(product._id)}>Unarchive</button>
+                                ) : (
+                                  <button onClick={() => handleArchive(product._id)}>Archive</button>
+                                )}
+                
                                 <button onClick={() => handleEditP(product)}>Edit</button>
                             </div>
                         ))

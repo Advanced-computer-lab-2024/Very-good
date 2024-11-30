@@ -12,16 +12,17 @@ const ProductSort = () => {
         const getProducts = async () => {
             try {
                 const Products = await fetchProductsNoID();
-                console.log("raw fetch products:", Products);
-
+                //console.log("raw fetch products:", Products);
+    
                 if (Products && Products.data) {
-                    const sortedProducts = Products.data.sort((a, b) => {
-                        const rateA = a.rating;
-                        const rateB = b.rating;
-                        return rateB - rateA;  // Sort by rating in ascending order
-                    });
-                    setProducts(sortedProducts);  // Update state with sorted products
-                    console.log('sorted list by rate:', sortedProducts);
+                    // Filter out archived products
+                    const unarchivedProducts = Products.data.filter(product => !product.isArchived);
+                    
+                    // Sort the unarchived products by rating
+                    const sortedProducts = unarchivedProducts.sort((a, b) => b.rating - a.rating);
+                    
+                    setProducts(sortedProducts);  // Update state with sorted unarchived products
+                    //console.log('sorted list of unarchived products by rating:', sortedProducts);
                 } else {
                     throw new Error("No data found in the response for products sorted by rating.");
                 }
@@ -32,9 +33,10 @@ const ProductSort = () => {
                 setLoading(false);  // Stop loading for activities
             }
         };
-
+    
         getProducts();  // Fetch first set of products (sorted by rating)
-    }, []);
+    });
+    
 
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);

@@ -234,7 +234,7 @@ const flagItinerary = async (req, res) => {
         const itinerary = await Itinerary.findById(id);
         if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
 
-        itinerary.flagged = !itinerary.flagged; // Toggle flag status
+        itinerary.flagged = true; // Toggle flag status
         await itinerary.save();
 
         return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });
@@ -242,6 +242,61 @@ const flagItinerary = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error });
     }
 };
+const itinerary_status = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const itinerary = await Itinerary.findById(id);
+
+        if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
+
+        // Check if there are existing bookings (touristIds list)
+        if (itinerary.touristIds && itinerary.touristIds.length > 0) {
+            // If there are bookings, the itinerary can be deactivated for new users but remains visible for those who booked
+            itinerary.isActive = false; // You can also add a flag for showing this to existing tourists
+        } else {
+            // Toggle active status if no bookings are present
+            itinerary.isActive = !itinerary.isActive;
+        }
+
+        await itinerary.save();
+
+        return res.status(200).json({ message: 'Itinerary status updated', itinerary });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+// function takes tourist id and a comment , and itnerary id 
+const addCommentToItinerary = async (req, res) => {
+    try {
+        const { itineraryId, touristId, comment } = req.body;
+
+        // Find the itinerary by ID
+        const itinerary = await Itinerary.findById(itineraryId);
+        
+        if (!itinerary) {
+            return res.status(404).json({ message: 'Itinerary not found' });
+        }
+
+        // Add the comment and tourist ID to the comments array
+        itinerary.commentsArray.push({ comment, touristId });
+
+        // Save the updated itinerary
+        await itinerary.save();
+
+        res.status(200).json({
+            message: 'Comment added successfully',
+            itinerary
+        });
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).json({
+            message: 'Error adding comment',
+            error: error.message
+        });
+    }
+};
+
 
 
 
@@ -251,5 +306,8 @@ module.exports = {
     filterItineraries,
     searchforitinerary,filterItinerariesYassin,
     flagItinerary,
-    getItineraryByID
+    getItineraryByID,
+    itinerary_status,
+    addCommentToItinerary,
+    
 };

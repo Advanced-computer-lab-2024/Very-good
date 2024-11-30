@@ -5,7 +5,7 @@ import './Ticket.css'; // Ensure you import the CSS file
 const HotelTicketViewForTourist = (offer) => {
   console.log("offer inside  : ", offer)
   const formData = offer.offer.hotelInfo.data
-  const hotel = offer.offer.bookedHotels.data
+  const hotel = offer.offer.bookedHotels.data.data
   //console.log('offer inside the component :', formData)
   //console.log('formData inside the component :', formData)
   // Accessing the itinerary details

@@ -31,20 +31,21 @@ const tourGuideSchema = new schema({
       },
     isAccepted: {
         type: String,
-        required: true
+        default : "false",
+        required: false
       },
       photo: {
         type : String, // url of a photo
-        required : true
+        required : false
     },
       IdDocument: {
         type : String, // url of a photo
-        required : true
+        required : false
       },
       certificatesDocument:[ 
       {
         type : String,
-        required : true
+        required : false
       }
     ],
     acceptedTermsAndConditions :{
@@ -93,7 +94,23 @@ const tourGuideSchema = new schema({
             required: true
           }
         }
-      ]
+      ],
+      isPendingAcceptance : {
+        type : Boolean,
+        default : true,
+      }
+      ,
+      delete: {
+        type: Boolean, // Change from String to an array of strings
+        required: false
+    },
+    OTP:{
+      type: Number,
+    },
+    isOTPValid:{
+      type : Boolean,
+      default : false
+    }
 }, { timestamps : true })
 
 module.exports = mongoose.model('tourGuide' ,tourGuideSchema)

@@ -33,7 +33,8 @@ const createTourGuide = async (req, res) => {
           nationality: newTourGuide.nationality,
           dob: newTourGuide.dob,
           yearsOfExperience : newTourGuide.yearsOfExperience,
-          previousJob : newTourGuide.previousJob
+          previousJob : newTourGuide.previousJob,
+          isAccepted : "false",
         }
       });
     } catch (error) {
@@ -45,6 +46,65 @@ const createTourGuide = async (req, res) => {
       });
     }
 };
+
+const updateAcceptedTermsAndConditions = async (req, res) => {
+  try {
+      // Get the tourGuideId from the request (e.g., params or body)
+      const { tourGuideId } = req.params;
+
+      // Find and update the specific tour guide
+      const updatedTourGuide = await TourGuide.findByIdAndUpdate(
+          tourGuideId, 
+          { acceptedTermsAndConditions: true }, // Update the field
+          { new: true } // Return the updated document
+      );
+
+      // Handle case where the tour guide is not found
+      if (!updatedTourGuide) {
+          return res.status(404).json({ message: "Tour guide not found" });
+      }
+
+      // Respond with the updated tour guide
+      return res.status(200).json({
+          message: "Accepted terms and conditions updated successfully",
+          data: updatedTourGuide,
+      });
+  } catch (error) {
+      // Handle errors (e.g., invalid ID format, database errors)
+      return res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
+const addCommentToTourGuide = async (req, res) => {
+  try {
+      const { tourGuideId, touristId, comment } = req.body;
+
+      // Find the itinerary by ID
+      const tourGuide = await TourGuide.findById(tourGuideId);
+      
+      if (!tourGuide) {
+          return res.status(404).json({ message: 'tourGuide not found' });
+      }
+
+      // Add the comment and tourist ID to the comments array
+      tourGuide.commentsArray.push({ comment, touristId });
+
+      // Save the updated itinerary
+      await tourGuide.save();
+
+      res.status(200).json({
+          message: 'Comment added successfully',
+          tourGuide
+      });
+  } catch (error) {
+      console.error('Error adding comment:', error);
+      res.status(500).json({
+          message: 'Error adding comment',
+          error: error.message
+      });
+  }
+};
+
 
 const getItinerarieswithTourGuideId = async (req, res) => {
   try {
@@ -168,4 +228,161 @@ const deleteTourGuide = async (req, res) => {
   }
 };
 
-module.exports = {createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, deleteItineraryById, updateItineraryWithId}
+
+
+
+
+const uploadDocuments = async (req, res) => {
+  try {
+      const { email } = req.params;
+      console.log("Received email:", email);
+
+      const idDocumentFile = req.files['IdDocument'] ? req.files['IdDocument'][0] : null;
+      const certificatesFiles = req.files['certificatesDocument'] || [];
+
+      console.log("ID Document File:", idDocumentFile);
+      console.log("Certificates Files:", certificatesFiles);
+
+      if (!email || !idDocumentFile || certificatesFiles.length === 0) {
+          console.error("Missing required documents or email");
+          return res.status(400).json({ message: 'Missing required documents or email' });
+      }
+
+      const idDocumentUrl = `http://localhost:4000/uploads/${idDocumentFile.filename}`;
+      const certificatesUrls = certificatesFiles.map(file => `http://localhost:4000/uploads/${file.filename}`);
+
+      // Attempt to update the database
+      const updatedTourGuide = await TourGuide.findOneAndUpdate(
+          { email },
+          {
+              IdDocument: idDocumentUrl,
+              certificatesDocument: certificatesUrls,
+          },
+          { new: true }
+      );
+
+      if (!updatedTourGuide) {
+          console.error("Tour Guide not found with email:", email);
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      console.log("Documents uploaded successfully:", updatedTourGuide);
+      res.status(200).json({ message: 'Documents uploaded successfully', tourGuide: updatedTourGuide });
+  } catch (error) {
+      console.error("Error in uploadDocuments function:", error);
+      res.status(500).json({ message: 'An error occurred while uploading documents', error });
+  }
+};
+const uploadPhoto = async (req, res) => {
+  try {
+      const { email } = req.params;
+
+      // Check if the 'photo' file exists in the request
+      const photoFile = req.file; // Access the single uploaded file
+
+      if (!email || !photoFile) {
+        return res.status(400).json({ message: 'Missing required photo or email' });
+    }
+
+      // Construct the photo URL (adjust path as necessary)
+      const photoUrl = `http://localhost:4000/uploads/${photoFile.filename}`;
+
+      // Update the TourGuide document with the photo URL
+      const updatedTourGuide = await TourGuide.findOneAndUpdate(
+          { email },
+          { photo: photoUrl },
+          { new: true }
+      );
+
+      if (!updatedTourGuide) {
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      res.status(200).json({
+          message: 'Photo uploaded successfully',
+          tourGuide: updatedTourGuide
+      });
+  } catch (error) {
+      console.error("Error uploading photo:", error);
+      res.status(500).json({ message: 'An error occurred while uploading photo', error });
+  }
+};
+
+// we want a method that sets the attribute isAccepted to true , 
+
+const acceptTourGuide = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const tourGuide = await TourGuide.findOne({ email });
+    
+    if (!tourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    tourGuide.isAccepted = "true";
+    tourGuide.isPendingAcceptance = false;
+    await tourGuide.save();
+
+    // Send success response
+    res.status(200).json({ message: 'Tour guide accepted successfully', tourGuide });
+  } catch (error) {
+    console.error('Error accepting tour guide:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const rejectTourGuide = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+
+    // Find the tour guide by email
+    const tourGuide = await TourGuide.findOne({ email });
+    
+    if (!tourGuide) {
+      return res.status(404).json({ message: 'Tour guide not found' });
+    }
+
+    // Update the isAccepted attribute to "true"
+    tourGuide.isAccepted = "false";
+    tourGuide.isPendingAcceptance = false;
+    await tourGuide.save();
+
+    // Send success response
+    res.status(200).json({ message: 'Tour guide accepted successfully', tourGuide });
+  } catch (error) {
+    console.error('Error accepting tour guide:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateTourGuideByEmail = async (req, res) => {
+  const { email, updatedData } = req.body;
+
+  try {
+    const tourGuide = await TourGuide.findOneAndUpdate(
+      { email }, // Find by email
+      { $set: updatedData }, // Update only the fields in updatedData
+      { new: true } // Return the updated document
+      );
+
+      if (!tourGuide) {
+          console.log("No TourGuide found with this email", tourGuide);
+          return res.status(404).json({ message: "TourGuide not found" });
+      }
+      
+      res.status(200).json(tourGuide); // Send back the updated advertiser
+  } catch (error) {
+      console.error("Error updating TourGuide:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+module.exports = {updateAcceptedTermsAndConditions, createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide}
+

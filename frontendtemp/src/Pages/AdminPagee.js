@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import '../styles/global.css'; // Ensure to have your CSS file
-import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner,fetchAllItineraries } from '../RequestSendingMethods'; // Import the addAdmin and addTourismGoverner methods
+import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner, fetchAllItineraries } from '../RequestSendingMethods'; // Import the addAdmin and addTourismGoverner methods
 import AdminDelete from './AdminDelete'; // Import the new AdminDelete component
 import AdminCategory from './AdminCategory';
 import Search from './Search'
 import FilterProductByPrice from './FilterProductByPrice'
 import AdminCreateTag from './AdminCreateTag'
-
-const AdminPage = () => {
+import AdminCreatePromoCode from './AdminCreatePromoCode'
+import AdminDocumentManagementPage from './AdminDocumentManagementPage'
+import ComplaintsList from './ComplaintsList'
+import Deletion from '../Components/DeleteAdmin';
+import ShowAllproducts from '../Components/ShowAllproducts'
+import RevenuePage from '../Services/AdminSprint3Services'
+const AdminPage = ({ email }) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
         { id: 2, title: 'View Tags' },
         { id: 3, title: 'Add Tourism Governor' }, // New activity for adding tourism governor
         { id: 4, title: 'Delete Admin' }, // New activity for deleting admin
-        {id :5 ,title : 'FilterProductsByPrice' },
-        {id :6,title :'Create_Tag'},
-        { id: 7, title: 'View Itineraries' }
+        { id: 5, title: 'FilterProductsByPrice' },
+        { id: 6, title: 'Create_Tag' },
+        { id: 7, title: 'View Itineraries' },
+        { id: 8, title: 'View Documents' },
+        { id: 9, title: 'View Complaints' },
+        { id: 10, title: 'View All products 3la ndafa' },
+        { id: 11, title: 'View Sales Report Page' },
+        { id: 12 , title: 'Create Promo Code'}
 
     ]);
 
@@ -24,28 +34,89 @@ const AdminPage = () => {
     const [formData, setFormData] = useState({ name: '' }); // State for form data
     const [isAddingAdmin, setIsAddingAdmin] = useState(false); // State to manage visibility of the add admin form
     const [isAddingGovernor, setIsAddingGovernor] = useState(false); // State to manage visibility of the add tourism governor form
-    const [adminData, setAdminData] = useState({ username: '', password: '', email: '' }); // State for admin form data including email
+    const [adminData, setAdminData] = useState({ name: '', password: '', email: '' }); // State for admin form data including email
     const [governorData, setGovernorData] = useState({ username: '', email: '', password: '', mobile: '', nationality: '', dob: '' }); // State for governor form data
     const [showAdminDelete, setShowAdminDelete] = useState(false); // State to manage visibility of AdminDelete page
-    const [showSearchPage,setShowSearchPage]=useState(false);
-    const [showProductFilterPage,setShowProductFilterPage]=useState(false);
-    const [showCreateTagPage,setshowCreateTagPage]=useState(false);
+    const [showSearchPage, setShowSearchPage] = useState(false);
+    const [showProductFilterPage, setShowProductFilterPage] = useState(false);
+    const [showCreateTagPage, setshowCreateTagPage] = useState(false);
     const [itineraries, setItineraries] = useState([]);
+    const [showDocumentManagmentPage, setshowDocumentPage] = useState(false);
+    const [ShowViewComplaintsPage, setShowViewComplaintsPage] = useState(false);
+    const [showAllproductsMahmoud, SetshowAllproductsMahmoud] = useState(false);
+    const [showSalesReport, SetShowSalesReport] = useState(false);
+    const [showCreatePromoPage, SetShowCreatePromoPage] = useState(false);
+    const handleBackFromSalesReportPage = () => {
+        SetShowSalesReport(false);
+    }
+    const handleSalesReportPage = () => {
+        SetShowSalesReport(true);
+    }
+    const handleShowAllProductsMahmoud = () => {
+        SetshowAllproductsMahmoud(true);
+    }
+    const handleViewDocmunets = () => {
+        setshowDocumentPage(true);
+    }
+    const handleViewComplaints = () => {
+        setShowViewComplaintsPage(true);
+    }; const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({});
+    const [oldEmail, setOldEmail] = useState(email);
+    const [isChangingPassword, setIsChangingPassword] = useState(false); // State for showing password change form
+    const [newPassword, setNewPassword] = useState(''); // State for the new password
+    const [confirmPassword, setConfirmPassword] = useState(''); // State for confirming the new password
+
+
+    const handleChangePassword = () => {
+        setIsChangingPassword(!isChangingPassword); // Toggle the password change form
+    };
+
+    const handlePasswordChange = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match!'); // Ensure passwords match
+            return;
+        }
+
+        try {
+            // Here you would call a function to update the password, e.g., updatePassword(oldEmail, newPassword)
+            // For demonstration purposes, we'll log the new password
+            console.log('Changing password for:', oldEmail, 'to:', newPassword);
+
+            // Reset form after submission
+            setNewPassword('');
+            setConfirmPassword('');
+            setIsChangingPassword(false);
+            alert('Password changed successfully!'); // Notify the user of success
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('Failed to change password.'); // Notify the user of failure
+        }
+    };
 
     // Action listeners
-    const handleCreateTag=()=>{
+    const handleCreateTag = () => {
         setshowCreateTagPage(true);
     }
-    if(showCreateTagPage){
-       return <AdminCreateTag/>
+    if (showCreateTagPage) {
+        return <AdminCreateTag />
     }
     const handleAddAdmins = () => {
         setIsAddingAdmin(true); // Show the add admin form
     };
-    const handleFilterProductByPrice =() =>{
+
+    const handleCreatePromoCode = () => {
+        SetShowCreatePromoPage(true);
+    }
+    if (showCreatePromoPage) {
+        return  <AdminCreatePromoCode />
+    }
+
+    const handleFilterProductByPrice = () => {
         setShowProductFilterPage(true);
     }
-    if(showProductFilterPage){
+    if (showProductFilterPage) {
         return <FilterProductByPrice />
     }
 
@@ -53,17 +124,17 @@ const AdminPage = () => {
         const fetchedTags = await fetchAllTags();
         if (fetchedTags) {
             console.log('Retrieved tags:', fetchedTags);
-    
+
             // Filter tags to keep only those with category 'preference'
             const filteredTags = fetchedTags.filter(tag => tag.category === 'preference');
-    
+
             // Update the state with the filtered tags
             setTags(filteredTags);
         } else {
             console.error('Failed to retrieve tags.');
         }
     };
-    
+
 
     const handleAddGovernor = () => {
         setIsAddingGovernor(true); // Show the add tourism governor form
@@ -95,12 +166,12 @@ const AdminPage = () => {
         try {
             const result = await addAdmin(adminData); // Call the addAdmin method
             console.log('Admin Data Submitted:', result); // Log the result of the request
-            
+
             // Optionally, handle successful admin creation here
             alert(result.message || 'Admin created successfully!');
 
             // Reset form and close it after submission
-            setAdminData({ username: '', password: '', email: '' }); // Reset email field
+            setAdminData({ name: '', password: '', email: '' }); // Reset email field
             setIsAddingAdmin(false); // Hide the form
         } catch (error) {
             console.error('Failed to add admin:', error.response ? error.response.data : error.message);
@@ -113,7 +184,7 @@ const AdminPage = () => {
         try {
             const result = await addTourismGoverner(governorData); // Call the addTourismGoverner method
             console.log('Tourism Governor Data Submitted:', result); // Log the result of the request
-            
+
             // Optionally, handle successful governor creation here
             alert(result.message || 'Tourism Governor created successfully!');
 
@@ -156,6 +227,7 @@ const AdminPage = () => {
         // e.g., console.log('New Button Clicked');
         setShowSearchPage(true);
     };
+
     const handleViewItineraries = async () => {
         const fetchedItineraries = await fetchAllItineraries();
         if (fetchedItineraries) {
@@ -166,11 +238,6 @@ const AdminPage = () => {
         }
     };
     const handleFlagItinerary = async (id, isFlagged) => {
-        if (isFlagged) {
-            console.log(`Itinerary ${id} is already flagged.`);
-            return; // Prevent re-flagging if already flagged
-        }
-    
         try {
             const response = await fetch(`http://localhost:4000/api/itineraries/${id}/flag`, {
                 method: 'PATCH',
@@ -178,36 +245,98 @@ const AdminPage = () => {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             if (!response.ok) {
-                throw new Error('Failed to flag itinerary');
+                throw new Error('Failed to toggle flag status');
             }
-    
+
             const data = await response.json();
-            console.log('Itinerary flagged:', data);
-    
-            // Update state to reflect that the itinerary is flagged
+            console.log(`Itinerary ${id} ${isFlagged ? 'unflagged' : 'flagged'}:`, data);
+
+            // Update state to reflect the new flag status
             setItineraries(prevItineraries =>
                 prevItineraries.map(itinerary =>
                     itinerary._id === id ? { ...itinerary, flagged: !itinerary.flagged } : itinerary // Toggle the flag status in the state
                 )
             );
         } catch (error) {
-            console.error('Error flagging itinerary:', error);
+            console.error('Error toggling flag status for itinerary:', error);
         }
     };
-    
-    
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditedData({ ...editedData, [name]: value });
+    };
 
+    const handleUpdateProfile = () => {
+        setIsEditing(!isEditing);
+        if (isEditing) {
+            if (editedData.email !== oldEmail) {
+                setOldEmail(editedData.email);
+            }
+            setAdminData(editedData);
+            //   updateTouristByEmailT(oldEmail, editedData);
+        }
+    };
+
+
+    // render the document managment page 
+    if (showDocumentManagmentPage) {
+        return <AdminDocumentManagementPage />
+    }
+    if (ShowViewComplaintsPage) {
+        return <ComplaintsList />
+    }
+    if (showAllproductsMahmoud) {
+        return <ShowAllproducts />
+    }
+    if (showSalesReport) {
+        return <RevenuePage />
+    }
     return (
         <div>
-       <AdminCategory />
-        {showSearchPage ? ( // Conditional rendering for Search page
-            <Search /> // Render the Search component
-        ) : showAdminDelete ? ( // Conditional rendering for AdminDelete page
-            <AdminDelete onBack={() => setShowAdminDelete(false)} /> // Pass back function to return to AdminPage
-        ) : (
-            <>
+
+
+            {/* ... existing JSX */}
+            <button className="btn" onClick={handleChangePassword}>
+                {isChangingPassword ? 'Cancel' : 'Change Password'}
+            </button>
+
+            {isChangingPassword && (
+                <div className="change-password-form">
+                    <h3>Change Password</h3>
+                    <form onSubmit={handlePasswordChange}>
+                        <label>
+                            New Password:
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                        <label>
+                            Confirm Password:
+                            <input
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </label>
+                        <button type="submit">Change Password</button>
+                    </form>
+                </div>
+            )}
+
+
+            <AdminCategory />
+            {showSearchPage ? ( // Conditional rendering for Search page
+                <Search /> // Render the Search component
+            ) : showAdminDelete ? ( // Conditional rendering for AdminDelete page
+                <AdminDelete onBack={() => setShowAdminDelete(false)} /> // Pass back function to return to AdminPage
+            ) : (
+                <>
                     <h1>Admin Page</h1>
                     <p>Welcome to the Admin Page!</p>
                     <div className="admin-activity-cards">
@@ -217,14 +346,14 @@ const AdminPage = () => {
                                 {activity.title === 'Add Admins' && (
                                     <button className="view-button" onClick={handleAddAdmins}>Add Admins</button>
                                 )}
-                                {activity.title==='FilterProductsByPrice' &&(
-                                    < button className="view-button" onClick ={handleFilterProductByPrice}>Filter Products</button>
-                                    )}
-                                    {
-                                        activity.title==='Create_Tag'&&(
-                                            <button className="view-button" onClick={handleCreateTag}>Create Tag</button>
-                                        )
-                                    }
+                                {activity.title === 'FilterProductsByPrice' && (
+                                    < button className="view-button" onClick={handleFilterProductByPrice}>Filter Products</button>
+                                )}
+                                {
+                                    activity.title === 'Create_Tag' && (
+                                        <button className="view-button" onClick={handleCreateTag}>Create Tag</button>
+                                    )
+                                }
                                 {activity.title === 'View Tags' && (
                                     <button className="view-button" onClick={handleViewTags}>View Tags</button>
                                 )}
@@ -239,10 +368,25 @@ const AdminPage = () => {
                                     </>
                                 )}
                                 {activity.title === 'View Itineraries' && (
-                                        <button className="view-button" onClick={handleViewItineraries}>View Itineraries</button>
+                                    <button className="view-button" onClick={handleViewItineraries}>View Itineraries</button>
+                                )}
+                                {activity.title === 'View Documents' && (
+                                    <button className="view-button" onClick={handleViewDocmunets}>View Documents</button>
+                                )}
+                                {activity.title === 'View Complaints' && (
+                                    <button className="view-button" onClick={handleViewComplaints}>View Complaints</button>
+                                )}
+                                {activity.title === 'View All products 3la ndafa' && (
+                                    <button className="view-button" onClick={handleShowAllProductsMahmoud}>View All products</button>
+                                )}
+                                {activity.title === 'View Sales Report Page' && (
+                                    <button className="view-button" onClick={handleSalesReportPage}>View Sales Report</button>
+                                )}
+                                {activity.title === 'Create Promo Code' && (
+                                    <button className="view-button" onClick={handleCreatePromoCode}>Create Promo Code</button>
                                 )}
 
-                                
+
                             </div>
                         ))}
                     </div>
@@ -266,25 +410,25 @@ const AdminPage = () => {
                     // Inside your return statement in AdminPage component
 
                     <div className="itineraries-container">
-    {itineraries.length > 0 ? (
-        itineraries.map(itinerary => (
-            <div key={itinerary._id} className="itinerary-card">
-                <h4 className="itinerary-title">
-                    {itinerary.title}
-                    {itinerary.flagged && <span style={{ color: 'red', marginLeft: '5px' }}>Flagged</span>}
-                </h4>
-                <button 
-    className="flag-button" 
-    onClick={() => handleFlagItinerary(itinerary._id, itinerary.flagged)}>
-    {itinerary.flagged ? 'Already Flagged' : 'Flag Itinerary'}
-</button>
+                        {itineraries.length > 0 ? (
+                            itineraries.map(itinerary => (
+                                <div key={itinerary._id} className="itinerary-card">
+                                    <h4 className="itinerary-title">
+                                        {itinerary.title}
+                                        {itinerary.flagged && <span style={{ color: 'red', marginLeft: '5px' }}>Flagged</span>}
+                                    </h4>
+                                    <button
+                                        className="flag-button"
+                                        onClick={() => handleFlagItinerary(itinerary._id, itinerary.flagged)}>
+                                        {itinerary.flagged ? 'Already Flagged' : 'Flag Itinerary'}
+                                    </button>
 
-            </div>
-        ))
-    ) : (
-        <p>No itineraries available.</p>
-    )}
-</div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No itineraries available.</p>
+                        )}
+                    </div>
 
 
 
@@ -318,7 +462,7 @@ const AdminPage = () => {
                                     Name:
                                     <input
                                         type="text"
-                                        name="username"
+                                        name="name"
                                         value={adminData.username}
                                         onChange={handleAdminFormChange}
                                         required
@@ -422,6 +566,7 @@ const AdminPage = () => {
                     )}
                 </>
             )}
+            <Deletion />
         </div>
     );
 };

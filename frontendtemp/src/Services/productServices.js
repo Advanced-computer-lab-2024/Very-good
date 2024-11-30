@@ -3,6 +3,7 @@ import axios from 'axios';
 export const fetchProducts = async (sellerId) => {
     const url = `http://localhost:4000/api//${sellerId}/products`; 
     const response = await axios.get(url);
+    console.log("FETCH")
     return response.data;
 };
 
@@ -13,11 +14,33 @@ export const fetchProductsNoID = async () => {
 
     return response.data; 
 };
+// Archive a product
+export const archiveProduct = async (productId) => {
+    const url = `http://localhost:4000/api/products/${productId}/archive`;
+    const response = await axios.patch(url); // Use PATCH method
+    return response.data; // Return the response data
+};
+
+// Unarchive a product
+export const unarchiveProduct = async (productId) => {
+    const url = `http://localhost:4000/api/products/${productId}/unarchive`;
+    const response = await axios.patch(url); // Use PATCH method
+    return response.data; // Return the response data
+};
+
+  
 
 
-export const deleteProduct = async (sellerId) => {
-    const url = `http://localhost:4000/api/sellers/${sellerId}/products`;
-    await axios.delete(url);
+export const deleteProductsBySeller = async (sellerId) => {
+    try {
+        const url = `http://localhost:4000/api/products/${sellerId}/products`;
+        const response = await axios.delete(url);
+        console.log("Products deleted successfully for seller:", sellerId, response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting products for seller:", error.response || error.message || error);
+        throw new Error('Failed to delete products. Please try again later.');
+    }
 };
 
 export const updateProduct = async (sellerId, productId, updatedData) => {

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-
+const path = require('path'); // Ensure this line is included
 const app = express()
 
 const touristRoutes = require('./routes/tourists')
@@ -16,16 +16,23 @@ const tagRoutes = require('./routes/tags')
 const adminRoutes = require('./routes/admin')
 const categoryRoutes = require('./routes/category')
 const categoryRouter = require('./routes/category'); // Adjust the path as necessary
-const complaintRoutes = require('./routes/complaints')
+const complaintRoutes = require('./routes/complaints');
+const bookingRoutes = require('./routes/bookingRoutes')
 const transportationRoutes = require('./routes/transportations')
 const flightOfferRoutes = require('./routes/flightOffers')
 const flightInfoRoutes = require('./routes/flightInfos')
 const hotelOfferRoutes = require('./routes/hotelOffers')
 const hotelInfoRoutes = require('./routes/hotelInfos')
+const loginRoutes = require('./routes/login'); // Adjust the path accordingly
+const notificationRoutes = require('./routes/notifications')
+const ordersRoutes = require('./routes/orders')
+const promoCodeRoutes = require('./routes/promoCodes')
+const stripeRoutes = require('./routes/stripeRoutes');
 
 
 const mongoose = require('mongoose')
 const cors = require('cors');
+
 
 
 app.use(cors());
@@ -54,10 +61,19 @@ app.use('/api/tags', tagRoutes)
 // app.use('./routes/complaints', complaintRoutes)
 app.use('/api/complaints', complaintRoutes)
 app.use('/api/transportations', transportationRoutes)
+//This means you tell your server to make the files in D:/UploadAcl accessible over the web.
+app.use('/uploads', express.static(path.join(__dirname, 'middlewares/UploadAcl')));
+app.use('/api/bookings',bookingRoutes)
 app.use('/api/flightOffers', flightOfferRoutes)
 app.use('/api/flightInfos', flightInfoRoutes)
 app.use('/api/hotelOffers', hotelOfferRoutes)
 app.use('/api/hotelInfos', hotelInfoRoutes)
+app.use('/api/login', loginRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/promoCodes', promoCodeRoutes);
+app.use('/api/payments', stripeRoutes);
+
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)

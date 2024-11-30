@@ -30,8 +30,8 @@ const handleCurrencyChange = (e) => {
 
 const currencyRates = {
     EGP: 1,    // Base currency
-    USD: 0.032, // Example conversion rate
-    EUR: 0.029, // Example conversion rate
+    USD: 0.02, // Example conversion rate
+    EUR: 0.016, // Example conversion rate
     // Add more rates as needed
 };
 

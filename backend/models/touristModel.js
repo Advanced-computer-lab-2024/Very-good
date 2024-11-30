@@ -51,7 +51,7 @@ const touristSchema = new schema({
       ],
       wallet: { // only for tourist
         type: Number,
-        default: 0 
+        default: 10000 
       },
       bookedTransportations : [{
         type: schema.Types.ObjectId,
@@ -75,7 +75,56 @@ const touristSchema = new schema({
         type : schema.Types.ObjectId,
         ref: 'flightInfo'
       }
-    ]
+    ],
+    purchasedProducts: [{
+      type: schema.Types.ObjectId,
+      ref: 'product'
+    }],
+    loyaltyPoints :{
+      type: Number,
+      default : 0
+    },
+    badge: {
+      type: String,
+      enum: ["Gold", "Silver", "Bronze"],
+      default: "Bronze"
+    },
+    level : {
+      type : Number,
+      default : 1
+    }
+   ,
+   delete: {
+    type: Boolean, // Change from String to an array of strings
+    default : false,
+    required: false
+  },
+  bookmarkedActivities: [{
+    type: schema.Types.ObjectId,
+    ref: 'activity'
+  }],
+  productWishList: [{
+    type: schema.Types.ObjectId,
+    ref: 'product'
+  }],
+  deliveryAdresses: [{
+    type: String
+  }],
+  cart:[{
+    type: schema.Types.ObjectId,
+    ref: 'product'
+  }],
+  orders: [{
+    type: schema.Types.ObjectId,
+    ref: 'order'
+  }],
+  OTP:{
+    type: Number,
+  },
+  isOTPValid:{
+    type : Boolean,
+    default : false
+  }
     
 }, { timestamps : true })
 

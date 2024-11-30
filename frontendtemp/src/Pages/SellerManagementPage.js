@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { fetchProducts, createProduct, updateProduct, deleteProduct, fetchProductsNoID } from '../Services/productServices';
+import { fetchProducts, createProduct, updateProduct, deleteProduct, fetchProductsNoID ,archiveProduct,unarchiveProduct} from '../Services/productServices';
 import ProductSort from '../Components/SortProductRate.js';
 import '../Components/ActivityDisplay.css';
+import axios from 'axios';
 
 const SellerManagementPage = ({ sellerId }) => {
     const [products, setProducts] = useState([]); // List of products for the seller
@@ -13,7 +14,8 @@ const SellerManagementPage = ({ sellerId }) => {
         price: '',
         description: '',
         stock: '',
-        rating: ''
+        rating: '',
+        sales:''
     }); // Form data for new or updated products
     const [editMode, setEditMode] = useState(false); // Whether we're editing or creating
     const [currentProductId, setCurrentProductId] = useState(null); 
@@ -35,7 +37,7 @@ const SellerManagementPage = ({ sellerId }) => {
         };
 
         getSellerProducts();
-    }, [sellerId]);
+    },);
 
     // Handle form input changes
     const handleInputChange = (e) => {
@@ -87,6 +89,38 @@ const SellerManagementPage = ({ sellerId }) => {
             console.error(err);
         }
     };
+    const handleArchive = async (productId) => {
+        try {
+            // Trigger archive operation
+            await axios.patch(`http://localhost:4000/api/products/${productId}/archive`);
+            // Update product list after successful archive operation
+            setProducts((prevProducts) =>
+                prevProducts.map((prod) =>
+                    prod._id === productId ? { ...prod, isArchived: true } : prod
+                )
+            );
+            console.log(`Product with ID ${productId} archived successfully.`);
+        } catch (error) {
+            console.error('Error archiving product:', error.response?.data || error.message);
+        }
+    };
+    
+    const handleUnarchive = async (productId) => {
+        try {
+            // Trigger unarchive operation
+            await axios.patch(`http://localhost:4000/api/products/${productId}/unarchive`);
+            // Update product list after successful unarchive operation
+            setProducts((prevProducts) =>
+                prevProducts.map((prod) =>
+                    prod._id === productId ? { ...prod, isArchived: false } : prod
+                )
+            );
+            console.log(`Product with ID ${productId} unarchived successfully.`);
+        } catch (error) {
+            console.error('Error unarchiving product:', error.response?.data || error.message);
+        }
+    };
+    
 
     // Reset the form and toggle off edit mode
     const resetForm = () => {
@@ -96,7 +130,8 @@ const SellerManagementPage = ({ sellerId }) => {
             price: '',
             description: '',
             stock: '',
-            rating: ''
+            rating: '',
+            sales:''
         });
         setEditMode(false);
         setCurrentProductId(null);
@@ -111,7 +146,8 @@ const SellerManagementPage = ({ sellerId }) => {
             price: product.price,
             description: product.description,
             stock: product.stock,
-            rating: product.rating
+            rating: product.rating,
+            sales: product.sales
         });
         setEditMode(true);
         setCurrentProductId(product._id);
@@ -179,6 +215,16 @@ const SellerManagementPage = ({ sellerId }) => {
                 max="5"
                 step="0.1" // Allows decimal values (e.g., 0.0, 1.5, etc.)
             />
+            <label>sales</label>
+            <input
+                type="number"
+                name="sales"
+                value={formData.sales}
+                onChange={handleInputChange}
+                min="0" 
+                
+            />
+
 
             <button type="submit">{editMode ? 'Update Product' : 'Create Product'}</button>
             {editMode && <button type="button" onClick={resetForm}>Cancel Edit</button>}
@@ -187,7 +233,7 @@ const SellerManagementPage = ({ sellerId }) => {
             <div>
                 <ProductSort products={products} setProducts={setProducts} /> {/* Pass products for sorting */}
             </div>
-
+            
             {loading ? (
                 <p>Loading products...</p>
             ) : error ? (
@@ -203,6 +249,14 @@ const SellerManagementPage = ({ sellerId }) => {
                                 <p>Description: {product.description}</p>
                                 <p>Stock: {product.stock}</p>
                                 <p>Rating: {product.rating}</p>
+                                <p>Sales: {product.sales}</p>
+                                {product.isArchived ? (
+                                  
+                                  <button onClick={() => handleUnarchive(product._id)}>Unarchive</button>
+                                ) : (
+                                  <button onClick={() => handleArchive(product._id)}>Archive</button>
+                                )}
+
                                 <button onClick={() => handleEdit(product)}>Edit</button>
                             </div>
                         ))

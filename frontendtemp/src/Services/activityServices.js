@@ -3,7 +3,9 @@ import axios from 'axios';
 export const fetchActivities = async (advertiserId) => {
     const url = `http://localhost:4000/api/advertisers/${advertiserId}/activities`; 
     const response = await axios.get(url);
+    console.log("response fetch activites",response)
     return response.data;
+
 };
 
 
@@ -24,8 +26,10 @@ export const fetchActivitiesDate = async () => {
 
 
 export const deleteActivity = async (activityId) => {
+    console.log("DELETE")
     const url = `http://localhost:4000/api/advertisers/${activityId}/activities`;
     await axios.delete(url);
+    
 };
 
 export const updateActivity = async (activityId, updatedActivity) => {
@@ -106,5 +110,17 @@ export const searchactivity = async (searchTerm) => {
     } catch (error) {
         console.error("Error fetching activities:", error.response.data); // Log the error response
         throw error; // Re-throw the error if needed
+    }
+};
+
+export const fetchAllActivities = async () => {
+    const url = `http://localhost:4000/api/activities/`; // Same base URL as the other method
+
+    try {
+        const response = await axios.get(url); // Send a GET request to fetch all activities
+        return response.data; // Return the response data
+    } catch (error) {
+        console.error("Error fetching all activities:", error.message);
+        throw error; // Rethrow the error for handling in the calling function
     }
 };

@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ActivityDisplay.css';
 import ShareComponent from './shareComponent';
+import ViewComments from './viewComments';  // Import ViewComments component
 
-const ItineraryDisplayFilterWise = ({ itinerary, onDelete }) => {
+const ItineraryDisplayFilterWise = ({ itinerary, comments = false }) => {
+  // State to toggle visibility of comments
+  const [showComments, setShowComments] = useState(false);
+
+  // Function to handle toggle of comments visibility
+  const toggleComments = () => {
+    setShowComments(prevState => !prevState);
+  };
+
   return (
     <div className="activity-card">
       <h2 className="itinerary-title">{itinerary.title}</h2>
@@ -50,10 +59,20 @@ const ItineraryDisplayFilterWise = ({ itinerary, onDelete }) => {
         ))}
       </div>
 
+      {/* View Comments Button */}
+      {comments && (
+        <button onClick={toggleComments} className="view-comments-button">
+          {showComments ? 'Hide Comments' : 'View Comments'}
+        </button>
+      )}
+
+      {/* Conditionally render ViewComments component */}
+      {showComments && <ViewComments comments={itinerary.commentsArray} />}
+
       <div className="itinerary-buttons">
       </div>
       <ShareComponent type="itinerary" id={itinerary._id} />
-      </div>
+    </div>
   );
 };
 

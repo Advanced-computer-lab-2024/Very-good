@@ -1,22 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/global.css';
-import { fetchTouristByEmail, updateTouristByEmail } from '../RequestSendingMethods';
+import { fetchTouristByEmail, updateTouristByEmail ,bookItem} from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
-import ProductSort from '../Components/SortProductRate.js';
+import ProductSort from './SortProductRate.js';
 import FilterActivitiesPage from './FilterActivitiesPage';
 import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
+
+
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
 import FlightBookingPage from './FlightBookingPage';
 import { fetchCategories, searchactivity } from '../Services/activityServices'; // Combined imports
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise.js';
+import PreferenceChoose from '../Components/Preference.js';
+import { Link } from 'react-router-dom';
+import DeleteTourist from '../Components/DeleteTouristAcc.js';
+import TouristService from '../Services/TouristService';
 
-const TouristPage = ({ email }) => {
+
+import CommentPageForTourist from './CommentPageForTourist';
+import TouristComplaint from './TouristComplaint';
+import ViewMyComplaint  from './ViewMyComplaint';
+import Booking from '../Components/booking.js';
+import RatePageForTourist from './RatePageForTourist';
+const TouristPage = ({email}) => {
+  const location = useLocation();
+
+  // Directly read 'login' from location.state
+  const login = location.state?.login || false;
+  if(login){
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    email = userData?.email;
+  }
+  console.log("email from localStorge", email);
   const navigate = useNavigate();
   const [touristData, setTouristData] = useState(null);
+  const [wallet, setWallet] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
@@ -32,7 +54,11 @@ const TouristPage = ({ email }) => {
   const [activityError, setActivityError] = useState(null);
   const [touristId, setTouristId] = useState(null);
   const [ShowBookFlightPage, setShowBookFlightPage] = useState(false);
-
+  const [showCommentPage,setShowCommentPage]=useState(false);
+  const [showComplaintPage,setShowComplaintPage]=useState(false);
+  const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
+  const [ShowBookingPage,SetShowBookingPage]=useState(false);
+  const [showRatePage, setShowRatePage] = useState(false);
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -53,10 +79,12 @@ const TouristPage = ({ email }) => {
         setTouristData(response.data);
         setEditedData(response.data);
         setTouristId(response.data._id);
+        setWallet(response.data.wallet);
       }
     };
     getTouristData();
   }, []);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -69,7 +97,14 @@ const TouristPage = ({ email }) => {
 
   const handleUpdateProfile = () => {
     setIsEditing(!isEditing);
-    setShowProfileInfo(!showProfileInfo); // Toggle profile info
+    setShowProfileInfo(!showProfileInfo);
+    if(!isEditing){
+      const userInput = prompt("Please enter your password:");
+      if( userInput !== touristData.password){
+        return
+      }
+      
+    } // Toggle profile info
 
     if (isEditing) {
       if (editedData.email !== oldEmail) {
@@ -77,15 +112,43 @@ const TouristPage = ({ email }) => {
       }
       setTouristData(editedData);
       updateTouristByEmail(oldEmail, editedData);
+      const userInput2 = prompt("Please confirm password:");
+      if( userInput2 !== touristData.password && isEditing){
+        return
+      }
     }
   };
+  const handleDeleteReq = async () => {
+    try {
+        // Set the 'delete' field to true for the seller
+        let editedData = { delete : true };
+
+        // Assuming 'sellerData' contains the email or ID of the seller you want to update
+        const response = await updateTouristByEmail(touristData.email,editedData );  // or sellerData._id if you're using ID instead of email
+       
+        // Check if the update was successful
+        if (response.success) {
+            console.log("tourist marked for deletion:", response);
+            alert("tourist has been marked for deletion.");
+            // Handle success (e.g., update UI or alert user)
+        } else {
+            console.error("Failed to mark tourist for deletion:", response.message);
+            // Handle failure (e.g., show error message)
+        }
+        console.log("resp" ,response)
+    } catch (error) {
+        console.error("Error updating tourist:", error);
+        // Handle error (e.g., show error message)
+    }
+};
 
   const navigateToActivitySorted = () => {
     navigate('/tourist/activities');
   }
 
-  const navigateToupcoming = () => {
-    navigate('/tourist/upcoming');
+  const navigateToupcoming = (touristEmail) => {
+    console.log("Navigating with email:", touristEmail);
+    navigate('/tourist/upcoming', { state: { email: touristEmail } });
   }
 
   const navigateToSearch = () => {
@@ -113,6 +176,24 @@ const TouristPage = ({ email }) => {
     navigate('/tourist/SearchHotel', {state : {touristId : touristId}})
   }
 
+  const handleViewMyWishList = (touristId) =>{
+    navigate('/tourist/viewWishList', {state : {touristId : touristId, email: email}})
+  }
+
+  const handleViewMyBalance = async (email) => {
+    try {
+      
+      const response = await fetchTouristByEmail({ email });
+      if (response) {
+        setTouristData(response.data);  // Update the state with the response data
+        setEditedData(response.data);    // Update the edited data
+        setTouristId(response.data._id); // Update the tourist ID
+        navigate('/tourist/viewBalance', { state: { touristData: response.data } }); // Pass the updated data directly
+      }
+    } catch (error) {
+      console.error('Error fetching tourist data:', error);
+    }
+  };
 
   const handleCategoryClick = async (categoryName) => {
     setLoadingActivities(true); // Show loading indicator
@@ -138,14 +219,26 @@ const TouristPage = ({ email }) => {
   const handleBackToTouristPageFromFilterProductPage = () => setShowProductFilterPage(false);
   const handleBookFlightPageClick = () => setShowBookFlightPage(true);
   const handleBackToTouristPageFromBookFlightPage = () => setShowBookFlightPage(false);
-
-
+  const handleCommentClick =()=>setShowCommentPage(true);
+  const handleBackToTouristPageFromCommentPage =()=>setShowCommentPage(false);
+ const handleComplaintpageClick =()=>setShowComplaintPage(true);
+ const handleComplaintViewPageClick =()=>SetshowviewComplaintsPage(true);
+ const handleBookingPageClick =()=>SetShowBookingPage(true);
+ const handleRateClick =()=>setShowRatePage(true);
+ const handleBackToTouristPageFromRatePage =()=>setShowRatePage(false);
+ const handleViewBookmarkedActivities = () => {
+    navigate('/tourist/viewBookmarkedActivities', { state: { email: email } });
+  };
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
   if (showProductFilterPage) return <FilterProductByPrice onBack={handleBackToTouristPageFromFilterProductPage} />;
   if (ShowBookFlightPage) return <FlightBookingPage onBack={handleBackToTouristPageFromBookFlightPage} touristId={touristId}/>
-
+  if (showCommentPage)return <CommentPageForTourist onBackClick = {handleBackToTouristPageFromCommentPage} email={email} touristId={touristId}/>
+  if (showViewComplaintsPage)return <ViewMyComplaint email ={email}/>;
+  if(showComplaintPage)return <TouristComplaint email ={email}/>;
+  if(ShowBookingPage)return <Booking touristId={touristId} wallet={wallet}/>;
+  if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email} touristId={touristId}/>
   return (
     <div className="tourist-page">
       <button className="toggle-btn" onClick={toggleSidebar}>
@@ -160,11 +253,19 @@ const TouristPage = ({ email }) => {
           <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
           <button onClick={handleFilterProductPageClick}>Filter Products</button>
           <button onClick={handleBookFlightPageClick}>Book a Flight</button>
+          <button onClick={handleCommentClick}>Comment</button>
+          <button onClick={handleRateClick}>Rate</button>
+          <button onClick={handleComplaintpageClick}>Complaint</button>
+          <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
+          <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
           <button onClick={handleViewBookedFlightsPageClick}>View my Booked Flights</button>
           <button onClick={() => handleHotelFlightPageClick(touristId)}>Book a Hotel</button>
           <button onClick={() => handleViewBookedHotels(touristId)}>View my Booked Hotels</button>
           <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
           <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
+          <button onClick={() => handleViewMyBalance(email)}>View my Balance</button>
+          <button onClick={() => handleViewMyWishList(touristId)}>View My Wish List</button>
+          <button onClick={handleViewBookmarkedActivities}>View Bookmarked Activities</button>
         </div>
       </div>
   
@@ -230,6 +331,19 @@ const TouristPage = ({ email }) => {
               )}
             </div>
             <div className="profile-info">
+              <label>Password:</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="password"
+                  value={editedData?.password || ''}
+                  onChange={handleEditChange}
+                />
+              ) : (
+                <p>{touristData?.password || 'NA'}</p>
+              )}
+            </div>
+            <div className="profile-info">
               <label>Email:</label>
               {isEditing ? (
                 <input
@@ -292,20 +406,34 @@ const TouristPage = ({ email }) => {
           </div>
         )}
   
-        <button onClick={navigateToupcoming}>show upcoming activities / itineraries</button>
+        <button onClick={() => navigateToupcoming(touristData?.email)}>show upcoming activities / itineraries</button>
 
         <button onClick={navigateToActivitySorted}>show activity sorted</button>
 
         <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
+        
+        <br></br> <br>
+        </br>
+        {/* <PreferenceChoose/> */}
+           <button onClick={() => navigate('/tourist/preference')}>
+                Choose Preferences
+            </button>
 
+        <ProductSort email ={email} touristId = {touristId} />
+      
 
-        <ProductSort />
-  
+        <DeleteTourist email={email }/>
+        <button onClick={()=>handleDeleteReq()}> send delete request</button>
+        <div>
+            <h1>Welcome to the Activity Planner</h1>
+           
+        </div>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
+         
       </div>
-  
+      
     </div>
   );
 };
