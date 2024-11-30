@@ -1,6 +1,8 @@
 const Tourist = require('../models/touristModel');
 const userPromoCode = require('../models/userPromoCodeModel');
 const sendEmail = require('./emailController'); // Email utility
+const Notification = require ('../models/notificationModel')
+
 
 // Utility to generate a random promo code
 function generatePromoCodeTitle() {
@@ -34,6 +36,15 @@ async function generateBirthdayPromoCodes() {
 
                 // Save promo code to the database
                 await promoCode.save();
+
+                const notification = new Notification({
+                    targetId: tourist._id, // TourGuide ID from the itinerary
+                    targetType: 'Tourist', // Target is the TourGuide
+                    subject: 'Happy Birthday! 🎉 Here’s Your Promo Code!',
+                    message: `Hi ${tourist.name},\n\nCelebrate your birthday with a special gift! Use the promo code "${promoCode.title}" to get ${promoCode.percentage}% off on anything on our website. Enjoy your day!`,
+                  });
+          
+                  await notification.save(); // Save the notification
 
                 // Add promo code ID to the tourist's promoCodes array
                 tourist.promoCodes.push(promoCode._id);

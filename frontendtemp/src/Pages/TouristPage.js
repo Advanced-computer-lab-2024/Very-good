@@ -7,7 +7,6 @@ import FilterActivitiesPage from './FilterActivitiesPage';
 import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
-import CheckOutComponent from './CheckOutComponent'
 import TouristOrders from './ViewTouristOrders.js'
 import FilterHistoricalPage from './FilterHistoricalPage';
 import FilterProductByPrice from './FilterProductByPrice';
@@ -20,12 +19,13 @@ import { Link } from 'react-router-dom';
 import DeleteTourist from '../Components/DeleteTouristAcc.js';
 import TouristService from '../Services/TouristService';
 import ViewCart from './ViewCart'
-
 import CommentPageForTourist from './CommentPageForTourist';
 import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
 import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
+import Notification from './TourGuideNotifications';
+
 const TouristPage = ({email}) => {
   const location = useLocation();
 
@@ -59,7 +59,6 @@ const TouristPage = ({email}) => {
   const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
   const [ShowBookingPage,SetShowBookingPage]=useState(false);
   const [showRatePage, setShowRatePage] = useState(false);
-  const [ShowCheckOut,setShowCheckOut]=useState(false);
   const [ShowOrdersPage,SetShowOrdersPage]=useState(false);
   const [ShowCart,SetShowCart]=useState(false);
   useEffect(() => {
@@ -229,8 +228,6 @@ const TouristPage = ({email}) => {
  const handleBookingPageClick =()=>SetShowBookingPage(true);
  const handleRateClick =()=>setShowRatePage(true);
  const handleBackToTouristPageFromRatePage =()=>setShowRatePage(false);
- const handleCheckOut =()=>setShowCheckOut(true);
- const handleBackFromCheckOut =()=>setShowCheckOut(false);
  const handleViewOrdersPage = ()=>SetShowOrdersPage(true);
  const handleBackFromOrderPage =()=>SetShowOrdersPage(false);
  const handleViewCart =()=>SetShowCart(true);
@@ -240,7 +237,6 @@ const TouristPage = ({email}) => {
   };
   if(ShowCart) return <ViewCart onBack={handleBackFromViewCart} TouristID={touristId}/>
   if(ShowOrdersPage) return <TouristOrders touristId={touristId}/>
-  if(ShowCheckOut) return <CheckOutComponent onBack ={handleBackFromCheckOut} touristID ={touristId} TouristEmail ={email}/>
   if (showFilterPage) return <FilterActivitiesPage onBack={handleBackToTouristPage} />;
   if (ShowItenaryPage) return <FilterItenaryPage onBack={handleBackToTouristPageFromItenaryFilterPage} />;
   if (showHistoricalPlace) return <FilterHistoricalPage onBack={handleBackToTouristPageFromFilterHistoricalPlacesPage} />;
@@ -279,8 +275,15 @@ const TouristPage = ({email}) => {
           <button onClick={() => handleViewMyWishList(touristId)}>View My Wish List</button>
           <button onClick={handleViewBookmarkedActivities}>View Bookmarked Activities</button>
           <button onClick={handleViewCart}>View Cart</button>
-          <button onClick={handleCheckOut}>Check out</button>
           <button onClick={handleViewOrdersPage}>View Orders</button>
+          <div className="notification-container">
+            {touristData && (
+              <Notification 
+                targetId={touristData._id} 
+                targetType="Tourist" 
+              />
+            )}
+          </div>
         </div>
       </div>
   

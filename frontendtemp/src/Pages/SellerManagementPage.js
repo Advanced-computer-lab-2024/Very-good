@@ -171,14 +171,6 @@ const SellerManagementPage = ({ sellerId }) => {
                 onChange={handleInputChange}
                 required
             />
-            <label>ID</label>
-            <input
-                type="text"
-                name="sellerId"
-                value={formData.sellerId}
-                onChange={handleInputChange}
-                required
-            />
             <label>Price</label>
             <input
                 type="number"

@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../styles/global.css';
 
-const TouristOrders = ({ touristId }) => {
+const TouristOrders = ({touristId}) => {
+  const location = useLocation(); // Initialize useLocation
+  let fromView = true;
+  if(!touristId){
+    touristId = location.state?.TouristID; // Get touristID from state
+    fromView = false;
+  }
+  const credit = location.state?.credit; // Get credit from state
+  console.log('TouristID:', touristId); // Log touristID to console
+  console.log('Credit:', credit); // Log credit to console
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -12,7 +23,10 @@ const TouristOrders = ({ touristId }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/tourists/${touristId}/orders-create-view`);
+        const url = fromView 
+          ? `http://localhost:4000/api/tourists/${touristId}/ordersView` 
+          : `http://localhost:4000/api/tourists/${touristId}/orders-create-view`;
+        const response = await axios.post(url, { credit });
         setOrders(response.data);
         setLoading(false);
       } catch (err) {
@@ -22,7 +36,7 @@ const TouristOrders = ({ touristId }) => {
     };
 
     fetchOrders();
-  }, [touristId]);
+  }, [touristId, fromView]);
 
   if (loading) {
     return <p>Loading orders...</p>;
@@ -33,7 +47,7 @@ const TouristOrders = ({ touristId }) => {
   }
 
   // Filter orders based on the selected filter
-  const filteredOrders = orders.filter((order) =>
+  const filteredOrders = orders?.filter((order) =>
     filter === 'current' ? order.status !== 'Delivered' : order.status === 'Delivered'
   );
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {addProductToCart} from '../Services/TouristService'
-
+import { addProductToCart } from '../Services/TouristService';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const ViewCart = ({ TouristID, onBack }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch cart products for the given touristId
   useEffect(() => {
@@ -45,7 +46,10 @@ const ViewCart = ({ TouristID, onBack }) => {
             alert ('Product Out of Stock')
         }
     } 
-  
+
+  const handleCheckout = () => {
+    navigate('/tourist/checkout', { state: { TouristID, totalPrice } }); // Send totalPrice as state
+  };
 
   if (loading) {
     return <p>Loading cart...</p>;
@@ -54,6 +58,8 @@ const ViewCart = ({ TouristID, onBack }) => {
   if (error) {
     return <p className="error">{error}</p>;
   }
+
+  const totalPrice = cartProducts.reduce((total, product) => total + product.price, 0); // Calculate total price
 
   return (
     <div className="view-cart-container">
@@ -91,6 +97,10 @@ const ViewCart = ({ TouristID, onBack }) => {
           ))}
         </div>
       )}
+      <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
+      <button onClick={handleCheckout} className="checkout-button">
+        Checkout
+      </button>
     </div>
   );
 };

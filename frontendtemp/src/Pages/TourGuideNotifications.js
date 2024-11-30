@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Notifications = ({ targetId }) => {
+const Notifications = ({ targetId, targetType }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true); // To manage loading state
   const [error, setError] = useState(null); // To handle errors
@@ -10,10 +10,14 @@ const Notifications = ({ targetId }) => {
     // Define the Axios function
     const fetchNotifications = async () => {
       try {
-        // Backend API endpoint with targetId from props
-        const response = await axios.get(
-          `http://localhost:4000/api/notifications/TourGuide/${targetId}`
-        );
+        // Choose the endpoint based on targetType
+        const endpoint = targetType === "Seller"
+          ? `http://localhost:4000/api/notifications/Seller/${targetId}`
+          : targetType === "Tourist"
+          ? `http://localhost:4000/api/notifications/Tourist/${targetId}`
+          : `http://localhost:4000/api/notifications/TourGuide/${targetId}`;
+
+        const response = await axios.get(endpoint);
 
         if (response.data.success) {
           setNotifications(response.data.notifications);
@@ -30,7 +34,7 @@ const Notifications = ({ targetId }) => {
     if (targetId) {
       fetchNotifications(); // Fetch notifications only if targetId is available
     }
-  }, [targetId]); // Run the effect whenever the targetId changes
+  }, [targetId, targetType]); // Run the effect whenever the targetId or targetType changes
 
   // Loading and Error Handling
   if (loading) {

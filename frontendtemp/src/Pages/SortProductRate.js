@@ -201,9 +201,6 @@ const ProductSort = ({ email, touristId }) => {
                 <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
 
                 {/* Purchase Button */}
-                <button onClick={() => handlePurchase(product)} disabled={product.stock <= 0}>
-                    {product.stock > 0 ? "Purchase" : "Out of Stock"}
-                </button>
                  {/*HERE ADD THE ICON OF ADD TO CART  */}
                  <button
               className="add-to-cart-button"

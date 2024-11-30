@@ -6,6 +6,7 @@ const Activity = require ('../models/activityModel')
 const Product = require ('../models/productModel')
 const Seller = require ('../models/sellerModel')
 const Admin = require ('../models/adminModel')
+const Notification = require ('../models/notificationModel')
 const nodemailer = require('nodemailer');
 
 const bookTransportation = async (req, res) => {
@@ -583,62 +584,143 @@ const rateItinerary = async (req, res) => {
   }
 };
 
-const purchaseProductbck = async (req, res) => {
+const purchaseProductbck = async ({ email, productId, credit }) => {
   try {
-      const { email, productId } = req.body;
+    const tourist = await Tourist.findOne({ email: email });
+    if (!tourist) {
+      throw new Error('Tourist not found');
+    }
 
-      // Find the tourist by email
-      const tourist = await Tourist.findOne({ email: email });
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error('Product not found');
+    }
 
-      if (!tourist) {
-          return res.status(404).json({ message: 'Tourist not found' });
-      }
+    if (product.stock <= 0) {
+      throw new Error('Product is out of stock');
+    }
 
-      // Find the product by ID
-      const product = await Product.findById(productId);
+    if (tourist.wallet < product.price) {
+      throw new Error('Insufficient funds in wallet');
+    }
 
-      if (!product) {
-          return res.status(404).json({ message: 'Product not found' });
-      }
-
-      // Check if the product is in stock
-      if (product.stock <= 0) {
-          return res.status(400).json({ message: 'Product is out of stock' });
-      }
-
-      // Check if the tourist has enough money in their wallet
-      if (tourist.wallet < product.price) {
-          return res.status(400).json({ message: 'Insufficient funds in wallet' });
-      }
-
-      // Deduct the product price from the tourist's wallet
+    if(!credit){
       tourist.wallet -= product.price;
+    }
 
-      // Add the product ID to the tourist's purchasedProducts array (if not already purchased)
-      if (!tourist.purchasedProducts.includes(productId)) {
-          tourist.purchasedProducts.push(productId);
-      }
-      
-      // Decrement the product stock by 1 (ensure it doesn't go below 0)
-      if (product.stock > 0) {
-          product.stock -= 1;
-      }
+    if (!tourist.purchasedProducts.includes(productId)) {
+      tourist.purchasedProducts.push(productId);
+    }
 
-      if(product.stock === 0 && !product.isOutOfStock) {
-        const sellerId = product.sellerId;
-        await sendMailToSeller(sellerId, product);
-        await notifyAdmins(product);
-        product.isOutOfStock = true;
-      }
+    if (product.stock > 0) {
+      product.stock -= 1;
+    }
 
-      // Save the updated tourist and product documents
-      await tourist.save();
-      await product.save();
+    if (product.stock === 0 && !product.isOutOfStock) {
+      const sellerId = product.sellerId;
+      await sendMailToSeller(sellerId, product);
+      await notifyAdmins(product);
+      product.isOutOfStock = true;
+    }
 
-      res.status(200).json({ message: 'Product purchased successfully' ,data: tourist.purchasedProducts});
+    if (!product.touristWhoBoughtSaidProduct.includes(tourist._id)) {
+      product.touristWhoBoughtSaidProduct.push(tourist._id);
+    }
+
+    await tourist.save();
+    await product.save();
+
+    return { success: true };
   } catch (error) {
-      console.error('Error purchasing product:', error.stack);
-      res.status(500).json({ message: 'Internal server error', error: error.message });
+    console.error('Error purchasing product:', error.stack);
+    return { success: false, error: error.message };
+  }
+};
+
+const CreateAndReturnOrderArray = async (req, res) => {
+  const { touristId } = req.params;
+  const { credit } = req.body;
+  console.log("credit : ", credit);
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(touristId)) {
+      return res.status(400).send({ error: 'Invalid tourist ID' });
+    }
+
+    const tourist = await Tourist.findById(touristId).exec();
+    if (!tourist) {
+      return res.status(404).send({ error: 'Tourist not found' });
+    }
+
+    const cart = tourist.cart;
+    console.log('Tourist Cart:', cart);
+
+    if (!cart || cart.length === 0) {
+      const updatedTourist = await Tourist.findById(touristId)
+        .populate({
+          path: 'ordersMahmoudBidoAlliance.products',
+        })
+        .exec();
+
+      return res.json(updatedTourist.ordersMahmoudBidoAlliance);
+    }
+
+    const products = [];
+    for (const productId of cart) {
+      const product = await Product.findById(productId).lean();
+      if (product) {
+        products.push(product);
+      }
+    }
+
+    if (products.length === 0) {
+      return res.status(404).send({ error: 'No products found in cart' });
+    }
+
+    console.log('Products in Cart:', products);
+
+    for (const product of products) {
+      const result = await purchaseProductbck({ email: tourist.email, productId: product._id, credit: credit });
+      if (!result.success) {
+        return res.status(500).send({ error: `Failed to purchase product: ${product.name}` });
+      }
+    }
+
+    const currentDate = new Date();
+    tourist.ordersMahmoudBidoAlliance.forEach(order => {
+      const daysDifference = Math.floor((currentDate - order.orderDate) / (1000 * 60 * 60 * 24));
+      order.status = daysDifference > 2 ? 'delivered' : 'not delivered';
+    });
+
+    const totalPrice = products.reduce((total, product) => total + product.price, 0);
+
+    const newOrder = {
+      orderDate: new Date(),
+      products: products.map(product => product._id),
+      totalPrice,
+      status: 'not delivered'
+    };
+
+    await tourist.save();
+
+    await Tourist.findByIdAndUpdate(touristId, {
+      $push: { ordersMahmoudBidoAlliance: newOrder },
+      $set: { cart: [] }
+    });
+
+    console.log('New Order:', newOrder);
+
+    const updatedTourist = await Tourist.findById(touristId)
+      .populate({
+        path: 'ordersMahmoudBidoAlliance.products',
+      })
+      .exec();
+
+    return res.json(updatedTourist.ordersMahmoudBidoAlliance);
+
+  } catch (error) {
+    console.error('Error creating and returning order array:', error);
+    return res.status(500).send({ error: 'An error occurred while processing the order' });
   }
 };
 
@@ -1234,86 +1316,32 @@ const viewCart = async (req, res) => {
     }
   };
   
-const CreateAndReturnOrderArray = async (req, res) => {
+
+const viewOrders = async (req, res) => {
   const { touristId } = req.params;
- // one thing left to check the orders and add the tourist to the number of subscribers 
+
   try {
     // Validate the touristId
     if (!mongoose.Types.ObjectId.isValid(touristId)) {
       return res.status(400).send({ error: 'Invalid tourist ID' });
     }
 
-    // Fetch the tourist document
-    const tourist = await Tourist.findById(touristId).exec();
-    if (!tourist) {
-      return res.status(404).send({ error: 'Tourist not found' });
-    }
-
-    // Log the tourist's cart to verify its contents
-    const cart = tourist.cart; // Ensure cart is accessed correctly
-    console.log('Tourist Cart:', cart);
-
-    // If cart is empty, just return existing orders without modifying anything
-    if (!cart || cart.length === 0) {
-      // Populate and return existing orders (no changes)
-      const updatedTourist = await Tourist.findById(touristId)
-        .populate({
-          path: 'ordersMahmoudBidoAlliance.products', // Populate the product details in each order
-        })
-        .exec();
-
-      return res.json(updatedTourist.ordersMahmoudBidoAlliance);
-    }
-
-    // Fetch products based on the cart IDs
-    const products = await Product.find({ _id: { $in: cart } }).lean();
-    if (!products || products.length === 0) {
-      return res.status(404).send({ error: 'No products found in cart' });
-    }
-
-    console.log('Products in Cart:', products);
-        // Update the status of all existing orders
-        const currentDate = new Date();
-        tourist.ordersMahmoudBidoAlliance.forEach(order => {
-          const daysDifference = Math.floor((currentDate - order.orderDate) / (1000 * 60 * 60 * 24));
-          order.status = daysDifference > 2 ? 'delivered' : 'not delivered';
-        });
-
-    // Calculate total price
-    const totalPrice = products.reduce((total, product) => total + product.price, 0);
-    
-    // Create a new order object
-    const newOrder = {
-      orderDate: new Date(),
-      products: products.map(product => product._id), // Save product IDs
-      totalPrice, // Store the total price
-      status: 'not delivered' // New orders default to "not delivered"
-    };
-    tourist.wallet -= totalPrice;
-    await tourist.save();
-    // Push the new order into ordersMahmoudBidoAlliance and clear the cart
-    await Tourist.findByIdAndUpdate(touristId, {
-      $push: { ordersMahmoudBidoAlliance: newOrder },
-      $set: { cart: [] } // Clear the cart after placing the order
-      
-    });
-
-    // Log the new order to verify
-    console.log('New Order:', newOrder);
-
-    // Fetch the updated tourist with populated orders
-    const updatedTourist = await Tourist.findById(touristId)
+    // Fetch the tourist document and populate the orders
+    const tourist = await Tourist.findById(touristId)
       .populate({
         path: 'ordersMahmoudBidoAlliance.products', // Populate the product details in each order
       })
       .exec();
 
-    // Return the updated list of orders with products populated
-    return res.json(updatedTourist.ordersMahmoudBidoAlliance);
+    if (!tourist) {
+      return res.status(404).send({ error: 'Tourist not found' });
+    }
 
+    // Return the populated orders
+    return res.json(tourist.ordersMahmoudBidoAlliance);
   } catch (error) {
-    console.error('Error creating and returning order array:', error);
-    return res.status(500).send({ error: 'An error occurred while processing the order' });
+    console.error('Error viewing orders:', error);
+    return res.status(500).send({ error: 'An error occurred while viewing the orders' });
   }
 };
 
@@ -1376,4 +1404,4 @@ const deleteAllTourists = async (req, res) => {
 };
 
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
-  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById, deleteAllTourists,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart}
+  getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist, addProductToCard, getItinerariesForTourist, getActivitiesForTourist, bookmarkActivity, getBookmarkedActivities, getTouristById, deleteAllTourists,addDeliveryAddress,getDeliveryAddresses,CreateAndReturnOrderArray,deleteOrder,viewCart,removeProductFromCart,viewOrders}

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createAdmin ,getAdmins} = require('../controllers/adminController');
+const { createAdmin ,getAdmins, getUserStatistics} = require('../controllers/adminController');
 const { createTag, getTags, updateTag, deleteTag }= require('../controllers/tagController');
 const { flagItinerary } = require('../controllers/adminController'); // Import the flagging function
 
@@ -19,6 +19,7 @@ router.put('/itinerary/:itineraryId/flag', flagItinerary); // Flag/unflag itiner
 
 
 router.get('/', getAdmins)
+router.get('/getUserStatistics', getUserStatistics)
 
 //router.get('/:id', getWorkout)
 

@@ -1,13 +1,48 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../styles/global.css';
 import { addDeliveryAddress, fetchDeliveryAddresses } from '../Services/TouristService';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import PaymentForm from '../Components/PaymentForm'; // Import the PaymentForm component
+import axios from 'axios';
 
-const CheckOutComponent = ({ touristID, TouristEmail }) => {
+
+const stripePromise = loadStripe('pk_test_51QP6GEIjdL7iHsR6Zjy5EB8ixOlCfL2PnqICOkaAorgK8zFYvpnsDeHCZSx78V0uBCIaZ8uvdtVbw2FYPCbKxWMx00qSClGNRP'); // Replace with your Stripe publishable key
+
+const CheckOutComponent = () => {
+  const location = useLocation(); // Initialize useLocation
+  const navigate = useNavigate(); // Initialize useNavigate
+  const touristID = location.state?.TouristID; // Get touristID from state
+  const totalPrice = location.state?.totalPrice; // Get totalPrice from state
+  console.log('TouristID:', touristID); // Log touristID to console
+  console.log('Total Price:', totalPrice); // Log totalPrice to console
+
   // State for selected address, address input, and list of added addresses
   const [selectedAddress, setSelectedAddress] = useState('');
   const [addressInput, setAddressInput] = useState('');
   const [addresses, setAddresses] = useState([]); // To store multiple addresses
   const [error, setError] = useState(''); // For handling errors
+  const [paymentMethod, setPaymentMethod] = useState(''); // State for payment method
+  const [clientSecret, setClientSecret] = useState(''); // Add state for clientSecret
+
+  useEffect(() => {
+    const fetchClientSecret = async () => {
+        if (paymentMethod === 'credit-card' && totalPrice) {
+            try {
+                const response = await axios.post('http://localhost:4000/api/payments/create-payment-intent', {
+                    amount: totalPrice * 100, // Convert to cents (smallest currency unit)
+                    currency: 'usd', // Default to USD if not provided
+                });
+                setClientSecret(response.data.clientSecret);
+            } catch (error) {
+                console.error('Error creating payment intent:', error);
+            }
+        }
+    };
+
+    fetchClientSecret();
+}, [paymentMethod, totalPrice]);
 
   // Fetch addresses for the tourist when the component mounts
   useEffect(() => {
@@ -28,8 +63,8 @@ const CheckOutComponent = ({ touristID, TouristEmail }) => {
   };
 
   const handleCheckOutOrder = () => {
-    // Placeholder action
-    console.log('Check Out Order clicked');
+    const credit = paymentMethod === 'credit-card';
+    navigate('/tourist/viewOrders', { state: { TouristID: touristID, credit } });
   };
 
   const handleAddAddress = async () => {
@@ -65,10 +100,15 @@ const CheckOutComponent = ({ touristID, TouristEmail }) => {
     console.log(`Selected Address: ${address}`);
   };
 
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
   return (
     <div className="container">
       <div className="header">
         <h2>Checkout Page</h2>
+        <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
       </div>
 
       <div className="form-container">
@@ -105,8 +145,28 @@ const CheckOutComponent = ({ touristID, TouristEmail }) => {
             </button>
           </div>
 
+          <div className="profile-info">
+            <label htmlFor="payment-method">Select Payment Method</label>
+            <select
+              id="payment-method"
+              value={paymentMethod}
+              onChange={handlePaymentMethodChange}
+            >
+              <option value="">--Choose a Payment Method--</option>
+              <option value="wallet">Wallet</option>
+              <option value="credit-card">Credit Card</option>
+            </select>
+          </div>
+
           {/* Display error if there is any */}
           {/*error && <div className="error">{error}</div>*/}
+          {paymentMethod==="credit-card" && clientSecret && (
+                console.log("clientSecret in booking.js : ",clientSecret),
+                console.log("stripePromise in booking.js : ",stripePromise),    
+                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <PaymentForm data={{ price: totalPrice, currency: 'usd' }} />
+                </Elements>
+            )}
         </div>
       </div>
 

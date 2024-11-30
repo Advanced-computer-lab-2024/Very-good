@@ -49,8 +49,6 @@ const ProductSort = () => {
                 <p><strong>Price:</strong> {product.price} EGP</p>
                 <p><strong>Rating:</strong> {product.rating} </p>
                 <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
-
-                
             </div>
         );
     };

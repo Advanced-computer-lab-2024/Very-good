@@ -122,7 +122,9 @@ const RevenuePage = () => {
         const itemDate =
           type === "itineraries"
             ? item.lastAvailableDate
-            : new Date(item.date); // Use lastAvailableDate for itineraries, `date` for activities
+            : type === "activities"
+            ? new Date(item.date)
+            : new Date(item.createdAt);
         return (
           itemDate &&
           itemDate.getMonth() === parseInt(filterMonth, 10) - 1 // Compare with selected month

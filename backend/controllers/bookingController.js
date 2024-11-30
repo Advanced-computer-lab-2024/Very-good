@@ -2,6 +2,8 @@ const Booking = require('../models/bookingModel'); // Adjust if the path is diff
 const Activity = require('../models/activityModel'); // Import the Activity model
 const Itinerary = require('../models/itineraryModel'); // Import the Itinerary model
 const Tourist = require('../models/touristModel'); // Import the Tourist model
+const sendEmail = require('./emailController'); // Email utility
+
 
 const createBooking = async (req, res) => {
     const { touristId, activityId, itineraryId, numberOfParticipants, startDateTime: reqStartDateTime } = req.body;
@@ -70,6 +72,14 @@ const createBooking = async (req, res) => {
         }
 
         await booking.save();
+
+        // Send email receipt to the tourist
+        await sendEmail({
+            to: tourist.email,
+            subject: 'Booking Confirmation',
+            text: `Hi ${tourist.name},\n\nYour booking has been confirmed. Details:\n\nBooking ID: ${booking._id}\nStart Date and Time: ${startDateTime}\nNumber of Participants: ${numberOfParticipants}\n\nThank you for booking with us!`,
+        });
+
         res.status(201).json({ message: 'Booking successful', booking });
     } catch (error) {
         console.error(error);

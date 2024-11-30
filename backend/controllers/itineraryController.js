@@ -3,6 +3,8 @@ const Itinerary = require('../models/itineraryModel'); // Ensure this is the cor
 const TourGuide = require('../models/tourGuideModel'); // Ensure this is the correct path for the TourGuide model
 const Tag = require('../models/tagModel'); // Adjust the path if necessary
 const Notification = require('../models/notificationModel'); // Import the Notification model
+const sendEmail = require('./emailController'); // Email utility
+
 
 // Create an Itinerary
 
@@ -238,15 +240,30 @@ const flagItinerary = async (req, res) => {
 
         itinerary.flagged = true; // Toggle flag status
         await itinerary.save();
-                // Create a notification for the TourGuide
-                const notification = new Notification({
-                    targetId: itinerary.tourGuideId._id, // TourGuide ID from the itinerary
-                    targetType: 'TourGuide', // Target is the TourGuide
-                    subject: 'Itinerary Flagged',
-                    message: `Your itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
-                });
-        
-                await notification.save(); // Save the notification
+
+        // Fetch the tour guide associated with the itinerary
+        const tourGuide = await TourGuide.findById(itinerary.tourGuideId);
+        if (!tourGuide) return res.status(404).json({ message: 'Tour guide not found' });
+
+        // Create a notification for the TourGuide
+        const notification = new Notification({
+            targetId: tourGuide._id, // TourGuide ID from the itinerary
+            targetType: 'TourGuide', // Target is the TourGuide
+            subject: 'Itinerary Flagged',
+            message: `Your itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
+        });
+
+        await notification.save(); // Save the notification
+
+        // Fetch the email of the tour guide
+        const tourGuideEmail = tourGuide.email;
+
+        await sendEmail({
+            to: tourGuideEmail,
+            subject: 'Itinerary Flagged',
+            text: `Hi ${tourGuide.name},\n\nYour itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
+        });
+
         return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });
     } catch (error) {
         return res.status(500).json({ message: 'Server error', error });

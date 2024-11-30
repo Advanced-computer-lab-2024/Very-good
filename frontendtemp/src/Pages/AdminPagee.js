@@ -13,7 +13,7 @@ import ShowAllproducts from '../Components/ShowAllproducts'
 import RevenuePage from '../Services/AdminSprint3Services'
 import { useNavigate,  } from "react-router-dom";
 import CreatePromoCode from './CreatePromoCode'; // Import the CreatePromoCode component
-
+import NumberofUsers from './NumberofUsers'
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -27,7 +27,8 @@ const AdminPage = ({email}) => {
         { id:9,title :'View Complaints'},
         {id:10,title:'View All products 3la ndafa'},
         {id:11,title:'View Sales Report Page'},
-        { id: 12, title: 'Create Promo Code' } // New activity for creating promo code
+        { id: 12, title: 'Create Promo Code' }, // New activity for creating promo code
+        {id :13,title:'View number of users'}
     ]);
 
     const navigate = useNavigate();
@@ -48,6 +49,9 @@ const AdminPage = ({email}) => {
     const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
     const [showSalesReport,SetShowSalesReport]=useState(false);
     const [showCreatePromoCodePage, setShowCreatePromoCodePage] = useState(false); // State to manage visibility of CreatePromoCode page
+    const [shownumberofusers,setshownumberofusers]=useState(false);
+    const handleNumberofUsers=()=>{
+        setshownumberofusers(true);}
     const handleBackFromSalesReportPage =()=>{
         SetShowSalesReport(false);
     }
@@ -294,6 +298,9 @@ const AdminPage = ({email}) => {
     if (showCreatePromoCodePage) {
         return <CreatePromoCode />;
     }
+    if(shownumberofusers){
+        return <NumberofUsers/>
+    }
     return (
         <div>
           
@@ -386,6 +393,9 @@ const AdminPage = ({email}) => {
                                 )}
                                 {activity.title === 'Create Promo Code' && (
                                     <button className="view-button" onClick={handleCreatePromoCode}>Create Promo Code</button>
+                                )}
+                                {activity.title==='View number of users'&&(
+                                    <button className="view-button" onClick={handleNumberofUsers}>View number of users</button>
                                 )}
                                 
                             </div>

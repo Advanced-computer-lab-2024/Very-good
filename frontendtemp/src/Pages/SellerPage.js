@@ -11,6 +11,7 @@ import UploadingAlogoSeller from './UploadingAlogoSeller'
 import FetchProducts from '../Components/uploadingAproductPicture'
 import updateAcceptedTermsAndConditions from '../Services/sellerServices'
 import SellerSalesReport from "./SellerSalesReport"
+import Notification from './TourGuideNotifications';
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
       <div className="modal-overlay">
@@ -214,6 +215,14 @@ const SellerPage = ({ email }) => {
           <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
           <button onClick={handleUploadAproductPicture}>UploadProductPicture</button>
           <button onClick={handleSalesReport}>View Products Sales Report</button>
+          <div className="notification-container">
+            {sellerData && (
+              <Notification 
+                targetId={sellerData._id} 
+                targetType="Seller" 
+              />
+            )}
+          </div>
         </div>
       </div>
 

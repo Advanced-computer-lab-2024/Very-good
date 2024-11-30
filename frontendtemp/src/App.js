@@ -38,6 +38,8 @@ import ForgetPasswordPage from "./Pages/ForgetPasswordPage";
 import ViewWishList from "./Pages/ViewWishList"
 import ViewBookmarkedActivities from "./Pages/ViewBookmarkedActivities";
 import CreatePromoCode from './Pages/CreatePromoCode'; // Import the CreatePromoCode component
+import CheckOutComponent from './Pages/CheckOutComponent'
+import TouristOrders from './Pages/ViewTouristOrders'
 //require('dotenv').config();
 
 
@@ -643,6 +645,8 @@ const handleLogin = async (event) => {
           look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
           <Route path="/tourist/viewWishList" element={<ViewWishList/>} /> 
+          <Route path="/tourist/checkout" element={<CheckOutComponent/>} /> 
+          <Route path="/tourist/viewOrders" element={<TouristOrders/>} /> 
           <Route path="/tourist/preference" element={<PerfrencePage/>} /> 
           <Route path="/Hotelbooking" element={<HotelBookingForm/>} />
           <Route path="/hotelConfirmation" element={<HotelTicket/>} />

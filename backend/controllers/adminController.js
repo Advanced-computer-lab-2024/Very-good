@@ -1,7 +1,11 @@
 const Admin = require('../models/adminModel');
 const { default: mongoose } = require('mongoose')
 const Itinerary = require('../models/itineraryModel'); // Ensure this is the correct path for the Itinerary model
-
+const Tourist = require('../models/touristModel');
+const TourGuide = require('../models/tourGuideModel');
+const TourismGoverner = require('../models/tourismGovernerModel');
+const Advertiser = require('../models/advertiserModel');
+const Seller = require('../models/sellerModel');
 
 const checkAdmin = async (req, res) => {
 
@@ -65,13 +69,40 @@ const flagItinerary = async (req, res) => {
     }
 };
 
+const getUserStatistics = async (req, res) => {
+    try {
+        const [tourists, tourGuides, tourismGoverners, advertisers, sellers] = await Promise.all([
+            Tourist.find({}),
+            TourGuide.find({}),
+            TourismGoverner.find({}),
+            Advertiser.find({}),
+            Seller.find({})
+        ]);
 
+        const totalUsers = tourists.length + tourGuides.length + tourismGoverners.length + advertisers.length + sellers.length;
 
+        const months = Array(12).fill(0);
+        const allUsers = [...tourists, ...tourGuides, ...tourismGoverners, ...advertisers, ...sellers];
+        allUsers.forEach(user => {
+            const month = new Date(user.createdAt).getMonth();
+            months[month]++;
+        });
 
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const userStats = { total: totalUsers };
+        monthNames.forEach((month, index) => {
+            userStats[month] = months[index];
+        });
 
+        res.status(200).json(userStats);
+    } catch (error) {
+        console.error('Error fetching user statistics:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
 
 const getAdmins = async (req, res) => {
     
 }
 
-module.exports = {checkAdmin, createAdmin,  getAdmins ,flagItinerary};
+module.exports = {checkAdmin, createAdmin,  getAdmins ,flagItinerary, getUserStatistics};
