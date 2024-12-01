@@ -122,14 +122,28 @@
     background-color: darkred; /* Darker red on hover */
   }
 
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
 .bookmark-icon {
   cursor: pointer;
   opacity: 0.5; /* Initially transparent */
   position: absolute;
   top: 10px; /* Distance from the top */
   right: 10px; /* Distance from the right */
+  margin-right: 10px;
 }
 
 .bookmark-icon.bookmarked {
   opacity: 1; /* Fully opaque when bookmarked */
+}
+
+.notify-icon.transparent {
+  opacity: 0.5;
+}
+
+.notify-icon.notified {
+  opacity: 1;
 }

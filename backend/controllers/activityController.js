@@ -4,6 +4,7 @@ const tourGuide = require('../models/tourGuideModel')
 const advertiser = require('../models/advertiserModel')
 const activity = require('../models/activityModel');
 const Category = require('../models/categoryModel')
+const Tourist = require('../models/touristModel'); // Import the Tourist model
 
 // get all workout
 
@@ -293,7 +294,45 @@ const filterActivities = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+const addInterestedTourist = async (req, res) => {
+    try {
+        const { activityId, email } = req.body;
+
+        // Find the tourist by email
+        const tourist = await Tourist.findOne({ email });
+
+        if (!tourist) {
+            return res.status(404).json({ message: 'Tourist not found' });
+        }
+
+        // Find the activity by ID
+        const activity = await Activity.findById(activityId);
+
+        if (!activity) {
+            return res.status(404).json({ message: 'Activity not found' });
+        }
+
+        // Add the tourist ID to the interestedTourists array if not already added
+        if (!activity.interestedTourists.some(t => t.touristId.equals(tourist._id))) {
+            activity.interestedTourists.push({ touristId: tourist._id, notified: false });
+            await activity.save();
+        }
+
+        res.status(200).json({
+            message: 'Tourist added to interested list successfully',
+            activity
+        });
+    } catch (error) {
+        console.error('Error adding interested tourist:', error);
+        res.status(500).json({
+            message: 'Error adding interested tourist',
+            error: error.message
+        });
+    }
+};
+
  
   
 
-module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity, getActivityById, addCommentToActivity}
+module.exports = {createActivity, getActivities,filterActivities,filterActivitiesyassin,searchactivity, getActivityById, addCommentToActivity, addInterestedTourist}

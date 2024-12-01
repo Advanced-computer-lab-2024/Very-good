@@ -11,6 +11,7 @@ const TouristOrders = ({touristId}) => {
     fromView = false;
   }
   const credit = location.state?.credit; // Get credit from state
+  const promoCodePercentage = location.state?.promoCodePercentage; 
   console.log('TouristID:', touristId); // Log touristID to console
   console.log('Credit:', credit); // Log credit to console
 
@@ -26,7 +27,7 @@ const TouristOrders = ({touristId}) => {
         const url = fromView 
           ? `http://localhost:4000/api/tourists/${touristId}/ordersView` 
           : `http://localhost:4000/api/tourists/${touristId}/orders-create-view`;
-        const response = await axios.post(url, { credit });
+        const response = await axios.post(url, { credit, promoCodePercentage });
         setOrders(response.data);
         setLoading(false);
       } catch (err) {

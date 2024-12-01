@@ -25,6 +25,13 @@ const CheckOutComponent = () => {
   const [error, setError] = useState(''); // For handling errors
   const [paymentMethod, setPaymentMethod] = useState(''); // State for payment method
   const [clientSecret, setClientSecret] = useState(''); // Add state for clientSecret
+  const [promoCode, setPromoCode] = useState(''); // State for selected promo code
+  const [promoCodes, setPromoCodes] = useState([]); // State for list of promo codes
+  const [promoCodePercentage, setPromoCodePercentage] = useState(0); // State for selected promo code percentage
+
+  const calculateDiscountedPrice = (price, discountPercentage) => {
+    return price - (price * discountPercentage / 100);
+  };
 
   useEffect(() => {
     const fetchClientSecret = async () => {
@@ -57,6 +64,37 @@ const CheckOutComponent = () => {
     getAddresses();
   }, [touristID]); // Re-run when the touristID changes
 
+  useEffect(() => {
+    const fetchPromoCodes = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/promoCodes');
+        return Array.isArray(response.data) ? response.data : [];
+      } catch (error) {
+        console.error('Error fetching promo codes:', error);
+        return [];
+      }
+    };
+  
+    const fetchUserPromoCodes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/promoCodes/${touristID}`);
+        return Array.isArray(response.data) ? response.data : [];
+      } catch (error) {
+        console.error('Error fetching user promo codes:', error);
+        return [];
+      }
+    };
+  
+    const fetchAllPromoCodes = async () => {
+      const [genericPromoCodes, userPromoCodes] = await Promise.all([fetchPromoCodes(), fetchUserPromoCodes()]);
+      setPromoCodes([...genericPromoCodes, ...userPromoCodes]);
+    };
+  
+    if (touristID) {
+      fetchAllPromoCodes();
+    }
+  }, [touristID]); // Fetch promo codes when the component mounts and when touristID changes
+
   const handleViewCart = () => {
     // Placeholder action
     console.log('View Cart clicked');
@@ -64,7 +102,7 @@ const CheckOutComponent = () => {
 
   const handleCheckOutOrder = () => {
     const credit = paymentMethod === 'credit-card';
-    navigate('/tourist/viewOrders', { state: { TouristID: touristID, credit } });
+    navigate('/tourist/viewOrders', { state: { TouristID: touristID, credit, promoCodePercentage } });
   };
 
   const handleAddAddress = async () => {
@@ -104,11 +142,17 @@ const CheckOutComponent = () => {
     setPaymentMethod(e.target.value);
   };
 
+  const handlePromoCodeChange = (e) => {
+    const selectedCode = e.target.value;
+    setPromoCode(selectedCode);
+    const selectedPromo = promoCodes.find(code => code.title === selectedCode);
+    setPromoCodePercentage(selectedPromo ? selectedPromo.percentage : 0);
+  };
+
   return (
     <div className="container">
       <div className="header">
         <h2>Checkout Page</h2>
-        <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
       </div>
 
       <div className="form-container">
@@ -158,19 +202,47 @@ const CheckOutComponent = () => {
             </select>
           </div>
 
+          <div className="profile-info">
+            <label htmlFor="promo-code">Select Promo Code</label>
+            <select
+              id="promo-code"
+              value={promoCode}
+              onChange={handlePromoCodeChange}
+            >
+              <option value="">--Choose a Promo Code--</option>
+              {promoCodes.map((code, index) => (
+                <option key={index} value={code.title}>
+                  {code.title} ({code.percentage}%)
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Display error if there is any */}
           {/*error && <div className="error">{error}</div>*/}
           {paymentMethod==="credit-card" && clientSecret && (
                 console.log("clientSecret in booking.js : ",clientSecret),
                 console.log("stripePromise in booking.js : ",stripePromise),    
                 <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  {promoCodePercentage > 0 ? (
+                    <PaymentForm data={{ price: calculateDiscountedPrice(totalPrice, promoCodePercentage).toFixed(2), currency: 'usd' }} />
+                  ) : (
                     <PaymentForm data={{ price: totalPrice, currency: 'usd' }} />
+                  )}
                 </Elements>
             )}
         </div>
+        <h4>{`Total Price: $${totalPrice}`}</h4> {/* Display total price */}
+        {promoCodePercentage > 0 && (
+          <h4>{`Discounted Price: $${calculateDiscountedPrice(totalPrice, promoCodePercentage).toFixed(2)}`}</h4> 
+        )}
       </div>
 
       <div className="footer">
+        <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
+        {promoCodePercentage > 0 && (
+          <h3>{`Discounted Price: $${calculateDiscountedPrice(totalPrice, promoCodePercentage).toFixed(2)}`}</h3> 
+        )}
         <button className="btn" onClick={handleViewCart}>
           View Cart
         </button>

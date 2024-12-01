@@ -28,6 +28,13 @@ const Booking = ({ touristId, wallet }) => {
     const [paymentMethod, setPaymentMethod] = useState('wallet');
     const [showPaymentForm, setShowPaymentForm] = useState(false); // Add state to control payment form visibility
     const [clientSecret, setClientSecret] = useState(''); // Add state for clientSecret
+    const [promoCode, setPromoCode] = useState(''); // State for selected promo code
+    const [promoCodes, setPromoCodes] = useState([]); // State for list of promo codes
+    const [promoCodePercentage, setPromoCodePercentage] = useState(0); // State for selected promo code percentage
+
+    const calculateDiscountedPrice = (price, discountPercentage) => {
+        return price - (price * discountPercentage / 100);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -77,6 +84,44 @@ const Booking = ({ touristId, wallet }) => {
 
         fetchClientSecret();
     }, [paymentMethod, data]);
+
+    useEffect(() => {
+        const fetchPromoCodes = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/api/promoCodes');
+                return Array.isArray(response.data) ? response.data : [];
+            } catch (error) {
+                console.error('Error fetching promo codes:', error);
+                return [];
+            }
+        };
+
+        const fetchUserPromoCodes = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4000/api/promoCodes/${touristId}`);
+                return Array.isArray(response.data) ? response.data : [];
+            } catch (error) {
+                console.error('Error fetching user promo codes:', error);
+                return [];
+            }
+        };
+
+        const fetchAllPromoCodes = async () => {
+            const [genericPromoCodes, userPromoCodes] = await Promise.all([fetchPromoCodes(), fetchUserPromoCodes()]);
+            setPromoCodes([...genericPromoCodes, ...userPromoCodes]);
+        };
+
+        if (touristId) {
+            fetchAllPromoCodes();
+        }
+    }, [touristId]);
+
+    const handlePromoCodeChange = (e) => {
+        const selectedCode = e.target.value;
+        setPromoCode(selectedCode);
+        const selectedPromo = promoCodes.find(code => code.title === selectedCode);
+        setPromoCodePercentage(selectedPromo ? selectedPromo.percentage : 0);
+    };
 
     const fetchBookings = async () => {
         try {
@@ -143,11 +188,21 @@ const Booking = ({ touristId, wallet }) => {
                     return;
                 }
 
-                wallet -= data.price;
+                if(!promoCode)
+                    wallet -= data.price;
+                else
+                    wallet -= calculateDiscountedPrice(data.price, promoCodePercentage).toFixed(2);
+
+                
                 const response = await axios.post('http://localhost:4000/api/bookings/', bookingData);
                 setMessage(response.data.message);
                 const bookingsResponse = await fetchBookings();
-                await makePayment2(touristId, data.price);
+                
+                if(!promoCode)
+                    await makePayment2(touristId, data.price);
+                else
+                    await makePayment2(touristId, calculateDiscountedPrice(data.price, promoCodePercentage).toFixed(2));
+
                 setBookings(bookingsResponse || []);
                 setSelectedActivity('');
                 setSelectedItinerary('');
@@ -326,6 +381,21 @@ const Booking = ({ touristId, wallet }) => {
                         <label htmlFor="creditCard">Credit Card</label>
                     </div>
                 </div>
+                <div>
+                    <label htmlFor="promoCode">Promo Code:</label>
+                    <select
+                        id="promoCode"
+                        value={promoCode}
+                        onChange={handlePromoCodeChange}
+                    >
+                        <option value="">--Select a Promo Code--</option>
+                        {promoCodes.map((code) => (
+                            <option key={code._id} value={code.title}>
+                                {code.title} - {code.percentage}% off
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 {paymentMethod === 'wallet' && (
                     <>
                         <button type="submit">Book Now</button>
@@ -337,8 +407,20 @@ const Booking = ({ touristId, wallet }) => {
                 console.log("clientSecret in booking.js : ",clientSecret),
                 console.log("stripePromise in booking.js : ",stripePromise),    
                 <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <PaymentForm data={{ price: data.price, currency: 'usd' }} handlePayment={handlePayment} />
+                    {promoCodePercentage > 0 ? (
+                        <PaymentForm data={{ price: calculateDiscountedPrice(data.price, promoCodePercentage).toFixed(2), currency: 'usd' }} handlePayment={handlePayment} />
+                    ) : (
+                        <PaymentForm data={{ price: data.price, currency: 'usd' }} handlePayment={handlePayment} />
+                    )}
                 </Elements>
+            )}
+            {data && (
+                <div>
+                    <h4>{`Total Price: $${data.price}`}</h4> {/* Display total price */}
+                    {promoCodePercentage > 0 && (
+                        <h4>{`Discounted Price: $${calculateDiscountedPrice(data.price, promoCodePercentage).toFixed(2)}`}</h4> 
+                    )}
+                </div>
             )}
             <h2>Your Bookings</h2>
             {bookings.length > 0 ? (

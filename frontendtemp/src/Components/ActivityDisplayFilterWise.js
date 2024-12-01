@@ -5,7 +5,7 @@ import ShareComponent from './shareComponent';
 import ViewComments from './viewComments';  // Import the new ViewComments component
 import axios from 'axios'; // Import axios for making API requests
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon component
-import { faBookmark } from '@fortawesome/free-solid-svg-icons'; // Import the bookmark icon
+import { faBookmark, faBell } from '@fortawesome/free-solid-svg-icons'; // Import the bookmark and bell icons
 
 const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
   console.log("comments : ", comments);
@@ -14,6 +14,7 @@ const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
   const [categories, setCategories] = useState([]);
   const [showComments, setShowComments] = useState(false); // State to toggle comments visibility
   const [isBookmarked, setIsBookmarked] = useState(false); // State to track if the activity is bookmarked
+  const [isNotified, setIsNotified] = useState(false); // State to track if the user is notified
 
   useEffect(() => {
     const getCategoryName = async () => {
@@ -61,13 +62,35 @@ const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
     }
   };
 
+  // Function to handle notifying the user
+  const handleNotify = async () => {
+    try {
+        await axios.post('http://localhost:4000/api/activities/addInterestedTourist', {
+            email,
+            activityId: activity._id
+        });
+        setIsNotified(true);
+        alert('You will be notified about this activity');
+    } catch (error) {
+        console.error('Error notifying user:', error);
+        alert('Failed to set notification for this activity');
+    }
+  };
+
   return (
     <div className="activity-card">
-      <FontAwesomeIcon 
-        icon={faBookmark} 
-        onClick={handleBookmark} 
-        className={`bookmark-icon ${isBookmarked ? 'bookmarked' : ''}`} 
-      />
+      <div className="icon-container">
+        <FontAwesomeIcon 
+          icon={faBookmark} 
+          onClick={handleBookmark} 
+          className={`bookmark-icon ${isBookmarked ? 'bookmarked' : ''}`} 
+        />
+        <FontAwesomeIcon 
+          icon={faBell} 
+          onClick={handleNotify} 
+          className={`notify-icon ${isNotified ? 'notified' : 'transparent'}`} 
+        />
+      </div>
       <h2 className="activity-title">{activity.name}</h2>
       <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
       <p className="activity-price">Price: ${activity.price}</p>

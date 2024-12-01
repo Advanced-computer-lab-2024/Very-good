@@ -1,5 +1,5 @@
 const express = require('express')
-const {createActivity, getActivities, searchactivity,filterActivities,filterActivitiesyassin, getActivityById, addCommentToActivity} = require('../controllers/activityController')
+const {createActivity, getActivities, searchactivity,filterActivities,filterActivitiesyassin, getActivityById, addCommentToActivity, addInterestedTourist} = require('../controllers/activityController')
 const router = express.Router()
 
 router.get('/', getActivities)
@@ -15,4 +15,5 @@ router.post('/addComment', addCommentToActivity)
 router.post('/filterYassin',filterActivitiesyassin)
 //router.patch('/:id', updateWorkout)
 router.get('/filter', filterActivities)
+router.post('/addInterestedTourist', addInterestedTourist)
 module.exports = router

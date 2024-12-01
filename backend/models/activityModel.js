@@ -77,6 +77,10 @@ const activitySchema = new schema({
         type: Boolean, // Boolean to indicate if booking is open
         default: true // Default value is true (open)
     },
+    interestedTourists: [{
+        touristId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tourist' },
+        notified: { type: Boolean, default: false }
+    }],
     commentsArray: [
         {
           comment: {

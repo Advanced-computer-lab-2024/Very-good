@@ -235,13 +235,6 @@ const getTouristByEmail = async (req, res) => {
 };
 
 
-
-// create a workout
-const createWorkout = async (req, res) => {
-
-
-}
-
 // Delete tourist by ID
 const deleteTourist = async (req, res) => {
   try {
@@ -584,7 +577,7 @@ const rateItinerary = async (req, res) => {
   }
 };
 
-const purchaseProductbck = async ({ email, productId, credit }) => {
+const purchaseProductbck = async ({ email, productId, credit, promoCodePercentage = 0 }) => {
   try {
     const tourist = await Tourist.findOne({ email: email });
     if (!tourist) {
@@ -600,12 +593,23 @@ const purchaseProductbck = async ({ email, productId, credit }) => {
       throw new Error('Product is out of stock');
     }
 
-    if (tourist.wallet < product.price) {
+    let finalPrice = product.price;
+
+    if (promoCodePercentage > 0) {
+      finalPrice -= (finalPrice * promoCodePercentage) / 100;
+    }
+
+    // Ensure final price is non-negative
+    finalPrice = Math.max(finalPrice, 0);
+
+    // Check if the tourist has enough funds
+    if (!credit && tourist.wallet < finalPrice) {
       throw new Error('Insufficient funds in wallet');
     }
 
-    if(!credit){
-      tourist.wallet -= product.price;
+    // Deduct price from wallet if not using credit
+    if (!credit) {
+      tourist.wallet -= finalPrice;
     }
 
     if (!tourist.purchasedProducts.includes(productId)) {
@@ -627,6 +631,8 @@ const purchaseProductbck = async ({ email, productId, credit }) => {
       product.touristWhoBoughtSaidProduct.push(tourist._id);
     }
 
+    await updateLoyaltyPoints(tourist._id, product.price);
+
     await tourist.save();
     await product.save();
 
@@ -639,7 +645,7 @@ const purchaseProductbck = async ({ email, productId, credit }) => {
 
 const CreateAndReturnOrderArray = async (req, res) => {
   const { touristId } = req.params;
-  const { credit } = req.body;
+  const { credit, promoCodePercentage } = req.body;
   console.log("credit : ", credit);
 
   try {
@@ -680,7 +686,7 @@ const CreateAndReturnOrderArray = async (req, res) => {
     console.log('Products in Cart:', products);
 
     for (const product of products) {
-      const result = await purchaseProductbck({ email: tourist.email, productId: product._id, credit: credit });
+      const result = await purchaseProductbck({ email: tourist.email, productId: product._id, credit: credit, promoCodePercentage: promoCodePercentage });
       if (!result.success) {
         return res.status(500).send({ error: `Failed to purchase product: ${product.name}` });
       }

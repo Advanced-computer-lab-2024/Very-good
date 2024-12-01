@@ -53,11 +53,13 @@ const Notifications = ({ targetId, targetType }) => {
         <ul>
           {notifications.map((notification) => (
             <li key={notification._id}>
-              <h2>{notification.subject}</h2>
+              <p>--------------------------------------</p>
+              <h4>{notification.subject}</h4>
               <p>{notification.message}</p>
               <small>
                 Created At: {new Date(notification.createdAt).toLocaleString()}
               </small>
+              <p>--------------------------------------</p>
             </li>
           ))}
         </ul>

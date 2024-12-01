@@ -4,6 +4,7 @@ const path = require('path'); // Ensure this line is included
 const app = express()
 const cron = require('node-cron');
 const { generateBirthdayPromoCodes } = require('./controllers/userPromoCodeController');
+const {notifyUpcomingActivities, notifyInterestedTourists} = require('./controllers/schedulerContorller');
 
 const touristRoutes = require('./routes/tourists')
 const tourGuideRoutes = require('./routes/tourGuides')
@@ -28,7 +29,7 @@ const hotelInfoRoutes = require('./routes/hotelInfos')
 const loginRoutes = require('./routes/login'); // Adjust the path accordingly
 const notificationRoutes = require('./routes/notifications')
 const ordersRoutes = require('./routes/orders')
-const promoCodeRoutes = require('./routes/promoCodes')
+const promoCodeRoutes = require('./routes/promoCodesRoutes')
 const stripeRoutes = require('./routes/stripeRoutes');
 
 
@@ -84,10 +85,15 @@ mongoose.connect(process.env.MONG_URI)
         app.listen(process.env.PORT, () => {
             console.log('connected to db & listening on port', process.env.PORT )
 
-            cron.schedule('0 0 * * *', () => {
+            cron.schedule('0 0 * * *', async () => {
                 console.log('Running daily birthday promo code generation...');
-                generateBirthdayPromoCodes();
+                await generateBirthdayPromoCodes();
+                console.log('Running daily notifying of upcoming activities...');
+                await notifyUpcomingActivities();
+                console.log('Running daily notifying of open bookings...');
+                await notifyInterestedTourists();
             });
+
         }) 
     })
     .catch((error) => {
