@@ -7,6 +7,9 @@ import FilterActivitiesPage from './FilterActivitiesPage';
 import FilterItenaryPage from './FilterItenaryPage';
 import ActivityItinerarySort from '../Components/SortRatePrice.js';
 import MuseumSearch from './MuseumSearch';
+import { fetchActivitiesDate } from '../Services/activityServices';
+import { fetchAllItineraries } from '../Services/itineraryServices.js';
+import ActivitiesAndItineraries from '../Components/eventNotifications.js';
 
 
 import FilterHistoricalPage from './FilterHistoricalPage';
@@ -26,6 +29,7 @@ import TouristComplaint from './TouristComplaint';
 import ViewMyComplaint  from './ViewMyComplaint';
 import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
+import PreferencePage from './perfrencePage.js';
 const TouristPage = ({email}) => {
   const location = useLocation();
 
@@ -422,11 +426,20 @@ const TouristPage = ({email}) => {
         <ProductSort email ={email} touristId = {touristId} />
       
 
-        <DeleteTourist email={email }/>
+        {/* <DeleteTourist email={email }/> */}
         <button onClick={()=>handleDeleteReq()}> send delete request</button>
         <div>
             <h1>Welcome to the Activity Planner</h1>
            
+        </div>
+        <div>
+            
+            <PreferenceChoose touristId={touristId} />
+            <PreferencePage touristId={touristId}/>
+            <ActivitiesAndItineraries touristId={touristId} />
+            
+
+            
         </div>
         <footer className="footer">
           <p>&copy; 2024 TravelApp. All rights reserved.</p>

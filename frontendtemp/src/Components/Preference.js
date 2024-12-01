@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchMuseums } from '../Services/museumServices';
 import { useNavigate } from 'react-router-dom';
-const PreferenceChoose = () => {
+import axios from 'axios';
+
+const PreferenceChoose = ({touristId}) => {
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showResults, setShowResults] = useState(false);
     const [savedPre, setSavedPre] = useState([]); // State for selected preferences
+    const [bookingOpenActivities, setBookingOpenActivities] = useState([]); // Activities with bookings open
+    const [bookingClosedActivities, setBookingClosedActivities] = useState([]); // Activities with bookings closed
 
     // State for activity categories
     const [family, setFamily] = useState([]);
@@ -33,6 +37,12 @@ const PreferenceChoose = () => {
                     const activityDate = new Date(activity.date);
                     return activityDate >= currentDate;
                 });
+                 // Filter activities based on bookingOpen
+                 const openActivities = filteredActivities.filter(activity => activity.bookingOpen);
+                 const closedActivities = filteredActivities.filter(activity => !activity.bookingOpen);
+ 
+                 setBookingOpenActivities(openActivities);
+                 setBookingClosedActivities(closedActivities);
                 setActivities(filteredActivities);
             } catch (err) {
                 setError(err.message);
@@ -143,6 +153,35 @@ const PreferenceChoose = () => {
             categorizeActivities();
         }
     }, [activities, historicalPlaces]);
+  console.log(touristId)
+    const handleNotifyMe = async (activity) => {
+       console.log(touristId)
+        
+        if (!touristId) {
+            alert('Tourist ID is missing!');
+            return; // Exit if the touristId is invalid
+        }
+    
+        const notificationData = {
+            targetId: touristId,  // The target ID will be the tourist's ID
+            targetType: 'Tourist',  // The type of target is Tourist
+            subject: 'Booking Notification',
+            message: `The activity "${activity.name}" you are interested in has opened for booking!`, // The activity message
+        };
+    
+        try {
+            const response = await axios.post('http://localhost:4000/api/notifications', notificationData);
+            if (response.data.success) {
+                alert('You will be notified when bookings open for this activity!');
+            } else {
+                alert('There was an issue with the notification system.');
+            }
+        } catch (error) {
+            console.error('Error creating notification:', error);
+            alert('Failed to send notification request');
+        }
+    };
+    
 
     const toggleMappings = () => {
         setShowResults(prevState => !prevState);
@@ -227,6 +266,12 @@ const PreferenceChoose = () => {
                                                         <p><strong>Name:</strong> {activity.name}</p>
                                                         <p><strong>Price:</strong> {activity.price}</p>
                                                         <p><strong>Ratings:</strong> {activity.ratings || 'N/A'}</p>
+                                                        {!activity.bookingOpen && (
+                                                            <button onClick={() => handleNotifyMe(activity)}>
+                                                            Notify Me When Booking Opens
+                                                        </button>
+                                                        
+                                                        )}
                                                     </li>
                                                 ))
                                             ) : (

@@ -129,6 +129,7 @@ const SellerPage = ({ email }) => {
         // Handle error (e.g., show error message)
     }
 };
+
   const handleUploadAproductPicture = ()=>{
     setIsUploadingAproductPicture(true);
   }
@@ -138,6 +139,7 @@ const SellerPage = ({ email }) => {
   const handleBackFromSellerReportPage =()=>{
     setViewSalesReport(false);
   }
+  
   const handleUpdateProfile = async () => {
     if(!isEditing){
     const userInput = prompt("Please enter your password:");

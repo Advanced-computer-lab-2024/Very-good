@@ -1,23 +1,37 @@
+const { default: mongoose } = require('mongoose')
 const Notification = require('../models/notificationModel');
-
 // Create a notification
+const { isValidObjectId } = mongoose;
+
 exports.createNotification = async (req, res) => {
     const { targetId, targetType, subject, message } = req.body;
 
+    // Validate the targetId before proceeding
+    if (!isValidObjectId(targetId)) {
+        return res.status(400).json({ success: false, message: 'Invalid targetId' });
+    }
+
+    console.log('Incoming Payload:', req.body); // Log the payload
     try {
         const notification = new Notification({
             targetId,
             targetType,
             subject,
-            message
+            message,
         });
+        console.log('Received targetId:', targetId);
+
         await notification.save();
 
         res.status(201).json({ success: true, notification });
     } catch (error) {
+        console.error('Error creating notification:', error); // Log the exact error
         res.status(500).json({ success: false, message: 'Failed to create notification', error });
     }
 };
+
+
+
 
 // Fetch notifications for a specific target
 exports.getNotifications = async (req, res) => {
