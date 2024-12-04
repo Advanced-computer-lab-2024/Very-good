@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/global.css';
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { fetchSellerByEmail, updateSellerByEmail } from '../RequestSendingMethods';
 import SellerManagementPage from './SellerManagementPage'; // Import the new page
@@ -58,6 +58,7 @@ const SellerPage = ({ email }) => {
   const [isUploadingAlogo,setIsUploadingAphoto]=useState(false);
   const [isUploadingAproductPicture,setIsUploadingAproductPicture]=useState(false);
   const [ViewSalesReport,setViewSalesReport]=useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const handleBackfromUploadPage = () => {
     setUploadPage(false);
@@ -196,35 +197,28 @@ const SellerPage = ({ email }) => {
   if(ViewSalesReport){
     return <SellerSalesReport  sellerId={sellerData._id}/>
   }
-  
+  const toggleNotification = () => {
+    setShowNotification((prevState) => !prevState);
+  };
   return (
-    <div className="seller-page">
-      {/* Sidebar Toggle Button */}
-      <button className="toggle-btn" onClick={toggleSidebar}>
-        {isSidebarOpen ? 'Close' : 'Menu'}
-      </button>
+    <div className={styles.sellerPage}>
+ 
 
       {/* Sidebar */}
-      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-content">
-          <h3>Quick Links</h3>
-          <button onClick={() => setIsViewingManagement(true)}>SellerProduct</button> {/* New button */}
-          <button onClick={handleProductFilterButtonOnClick}>
+    
+        <div className={styles.navbar}>
+       
+          <button onClick={() => setIsViewingManagement(true)} className={styles.button}>SellerProduct</button> {/* New button */}
+          <button onClick={handleProductFilterButtonOnClick} className={styles.button}>
             Filter Product by Price
           </button> {/* New button with commented action listener */}
-          <button onClick={handleUploadPhoto}>Upload_A_Logo</button>
-          <button onClick={handleUploadAproductPicture}>UploadProductPicture</button>
-          <button onClick={handleSalesReport}>View Products Sales Report</button>
-          <div className="notification-container">
-            {sellerData && (
-              <Notification 
-                targetId={sellerData._id} 
-                targetType="Seller" 
-              />
-            )}
-          </div>
+          <button onClick={handleUploadPhoto} className={styles.button}>Upload_A_Logo</button>
+          <button onClick={handleUploadAproductPicture} className={styles.button}>UploadProductPicture</button>
+          <button onClick={handleSalesReport} className={styles.button}>View Products Sales Report</button>
+        
         </div>
-      </div>
+      
+    
 
       {/* Conditional Rendering */}
       <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
@@ -232,14 +226,35 @@ const SellerPage = ({ email }) => {
           <SellerManagementPage sellerId={sellerData._id} /> // {/* Pass seller's ID to SellerManagementPage id={sellerData?.id} */}
         ) : (
           <>
-            <header className="header">
-              <h1>Welcome, Seller!</h1>
+            <header className={styles.header}>
+              <h1 className={styles.h1t}>Welcome, Seller!</h1>
             </header>
 
-            <div className="profile">
-              <h2 className="form-header">Your Profile</h2>
+   {/* Notification Container */}
+   <div className="notification-container">
+      <button 
+        onClick={toggleNotification} 
+        className={styles.button6}
+        
+      >
+        {showNotification ? 'Hide Notification' : 'Show Notification'}
+       
+      </button> 
+      
+      {showNotification && sellerData && (
+        <Notification 
+          targetId={sellerData._id} 
+          targetType="TourGuide" 
+        />
+      )}
+    </div>
+
+
+
+            <div className={styles.categoryButtons}>
+              <h2 className={styles.h2}>Your Profile</h2>
               <div className="profile-info">
-                <label>Name:</label>
+                <label style={{ fontWeight: 'bold', color:'#442446'}}>Name:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -252,7 +267,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label>Password:</label>
+                <label style={{ fontWeight: 'bold', color:'#442446'}} >Password:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -265,7 +280,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label>Email:</label>
+                <label style={{ fontWeight: 'bold', color:'#442446'}}>Email:</label>
                 {isEditing ? (
                   <input
                     type="email"
@@ -278,7 +293,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label>Description:</label>
+                <label style={{ fontWeight: 'bold', color:'#442446'}}>Description:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -291,19 +306,31 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
 
-              <button className="btn" onClick={handleUpdateProfile}>
+              <button className={styles.button3} onClick={handleUpdateProfile}>
                 {isEditing ? 'Save Changes' : 'Update Profile'}
               </button>
+              <div>
+  {isEditing ? (
+    <button onClick={() => handleDeleteReq()} className={styles.button3}>
+      Send delete Request
+    </button>
+  ) : null}
+</div>
+
             </div>
-             < DeleteSeller email={sellerData?.email} />
-             <button onClick={()=>handleDeleteReq()}> Send delete Request</button>
-            <footer className="footer">
+              
+          
+          <Search sellerId={sellerData?._id}/>
+          <button className={styles.button3}  onClick={() => navigate("/")}>
+           Back to login Page
+          </button>
+            <footer className={styles.footer}>
               <p>&copy; 2024 TravelApp. All rights reserved.</p>
             </footer>
           </>
         )}
       </div>
-      <Search sellerId={sellerData?._id}/>
+     
     </div>
   );
 };

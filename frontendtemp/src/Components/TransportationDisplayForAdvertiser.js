@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ActivityDisplay.css'; // Importing the CSS file
-
+import styles from '../styles/Advertisor.module.css'; // Keep your existing global styles
 // Define the TransportationDisplay component
 const TransportationDisplayForAdvertiser = ({ transportation, onEdit, onDelete }) => {
   // Local state for editing mode and updated data
@@ -26,9 +26,9 @@ const TransportationDisplayForAdvertiser = ({ transportation, onEdit, onDelete }
   };
 
   return (
-    <div className="activity-card"> {/* Changed to activity-card for styling */}
-      <h2 className="activity-title">Transportation Details</h2>
-      <div className="transportation-details">
+    <div className={styles.categoryButtons}> {/* Changed to activity-card for styling */}
+      <h2 className={styles.h2}>Transportation Details</h2>
+      <div >
         {isEditing ? (
           <>
             <p className="activity-date">
@@ -111,14 +111,14 @@ const TransportationDisplayForAdvertiser = ({ transportation, onEdit, onDelete }
           </>
         ) : (
           <>
-            <p className="activity-date"><strong>Type:</strong> {transportation.type}</p>
-            <p className="activity-location"><strong>Provider:</strong> {transportation.provider}</p>
-            <p className="activity-location"><strong>Departure Location:</strong> {transportation.departureLocation}</p>
-            <p className="activity-location"><strong>Arrival Location:</strong> {transportation.arrivalLocation}</p>
-            <p className="activity-time"><strong>Departure Time:</strong> {new Date(transportation.departureTime).toLocaleString()}</p>
-            <p className="activity-time"><strong>Arrival Time:</strong> {new Date(transportation.arrivalTime).toLocaleString()}</p>
-            <p className="activity-price"><strong>Price:</strong> ${transportation.price.toFixed(2)}</p>
-            <p className="activity-booking-status"><strong>Available:</strong> {transportation.isAvailable ? 'Yes' : 'No'}</p>
+            <p style={{color:"grey"}}><strong>Type:</strong> {transportation.type}</p>
+            <p style={{color:"grey"}}><strong>Provider:</strong> {transportation.provider}</p>
+            <p style={{color:"grey"}}><strong>Departure Location:</strong> {transportation.departureLocation}</p>
+            <p style={{color:"grey"}}><strong>Arrival Location:</strong> {transportation.arrivalLocation}</p>
+            <p style={{color:"grey"}}><strong>Departure Time:</strong> {new Date(transportation.departureTime).toLocaleString()}</p>
+            <p style={{color:"grey"}}><strong>Arrival Time:</strong> {new Date(transportation.arrivalTime).toLocaleString()}</p>
+            <p style={{color:"grey"}}><strong>Price:</strong> ${transportation.price.toFixed(2)}</p>
+            <p style={{color:"grey"}}><strong>Available:</strong> {transportation.isAvailable ? 'Yes' : 'No'}</p>
           </>
         )}
       </div>
@@ -133,13 +133,13 @@ const TransportationDisplayForAdvertiser = ({ transportation, onEdit, onDelete }
         ) : (
           <>
             <button 
-              className="edit-button" 
+              className={styles.button} 
               onClick={() => setIsEditing(true)} // Set editing mode on Edit button click
             >
               Edit
             </button>
             <button 
-              className="delete-button" 
+              className={styles.button} 
               onClick={() => onDelete(transportation._id)} // Call the onDelete function with the transportation ID
             >
               Delete

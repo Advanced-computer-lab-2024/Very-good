@@ -5,6 +5,7 @@ import '../styles/global.css'; // Assuming global styles are shared across compo
 import DeleteTA from '../Components/DeleteTourGuideAndAdver';
 import AdvertiserSalesReport from './AdvertiserSalesReport'
 import AdvertiserActivitiesUsersReport from './AdvertiserNumberOfSubscribersReport'
+import styles from '../styles/Advertisor.module.css'; // Keep your existing global styles
 const AdvertiserInfo = ({ email, onBack,id }) => {
   console.log("ID SENT TO ADINFO:",id)
   const [advertiserData, setAdvertiserData] = useState(null);
@@ -14,6 +15,7 @@ const AdvertiserInfo = ({ email, onBack,id }) => {
   const [ISuploadLogoAdvertiserOpen,setISuploadLogoAdvertiserOpen]=useState(false);  let flag= false ;
   const [isSalesReportOpen,setIsSalesReportOpen]=useState(false);
   const [isUserNumberReportOpen,setIsUserNumberReportOpen]=useState(false);
+  
   useEffect(() => {
     const getAdvertiserData = async () => {
       try {
@@ -117,42 +119,42 @@ const handleBackFromNumbersReport =()=>{
     return <UploadingALogoAdvertiser onBack={handleBackToAdvertiserInfo} email={email} />;
   }
   return (
+    <div className={styles.advertisorInfo}>
     <div className={`advertiser-page ${isSidebarOpen ? 'shifted' : ''}`}>
-      <button className="toggle-btn" onClick={toggleSidebar}>
-        {isSidebarOpen ? 'Close' : 'Menu'}
-      </button>
+     
 
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-content">
-          <button onClick={handleUploadLogo}>Upload Logo</button>
-          <button onClick={handleSalesReport}>Sales Report</button>
-          <button onClick={handleNumberReport}>Users Report</button>
+        <div className={styles.navbar2}>
+          <button onClick={handleUploadLogo} className={styles.button}>Upload Logo</button>
+          <button onClick={handleSalesReport}  className={styles.button}>Sales Report</button>
+          <button onClick={handleNumberReport}  className={styles.button}>Users Report</button>
         </div>
       </div>
 
       <div className="container">
-        <header className="header">
-          <h1>Welcome, Advertiser!</h1>
+        <header className={styles.header}>
+          <h1 className={styles.h1i}>Welcome, Advertiser!</h1>
         </header>
 
-        <div className="profile">
-          <h2 className="form-header">Advertiser Profile</h2>
+        <div className={styles.categoryButtons}>
+          <h2 className={styles.h2i}>Advertiser Profile</h2>
 
           <div className="profile-info">
-            <label>Name:</label>
+            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Name:</label>
             {isEditing ? (
-              <input
+              <input 
                 type="text"
                 name="name"
                 value={editedData?.name || ''}
                 onChange={handleEditChange}
+                
               />
             ) : (
-              <p>{advertiserData?.name || 'NA'}</p>
+              <p style={{ color:'#5c63bd'}}>{advertiserData?.name || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
-            <label>Password:</label>
+            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Password:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -161,12 +163,12 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{"Not Visible"|| 'NA'}</p>
+              <p style={{ color:'#5c63bd'}} >{"Not Visible"|| 'NA'}</p>
             )}
           </div>
 
           <div className="profile-info">
-            <label>Email:</label>
+            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Email:</label>
             {isEditing ? (
               <input
                 type="email"
@@ -175,12 +177,12 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{advertiserData?.email || 'NA'}</p>
+              <p style={{ color:'#5c63bd'}}>{advertiserData?.email || 'NA'}</p>
             )}
           </div>
 
           <div className="profile-info">
-            <label>Description:</label>
+            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}} >Description:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -189,26 +191,31 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p>{advertiserData?.description || 'NA'}</p>
+              <p style={{ color:'#5c63bd'}}>{advertiserData?.description || 'NA'}</p>
             )}
           </div>
-
-          <button className="btn" onClick={handleUpdateProfile}>
+          {isEditing ? (
+    <button onClick={() => handleDeleteReq()} className={styles.button6}>
+      Send delete Request
+    </button>
+  ) : null}
+          <button className={styles.button6} onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
 
-          <button className="back-button bottom-right" onClick={onBack}>
+          
+       
+        {/* <button onClick={()=>handleDeleteReq()}> send delete request</button> */}
+        
+        </div>
+        <button className={styles.button5} onClick={onBack}>
             &larr; Back
           </button>
-        </div>
-        
-        <DeleteTA dataTA={advertiserData?.email} isTourGuideA={flag}/>
-        <button onClick={()=>handleDeleteReq()}> send delete request</button>
-
-        <footer className="footer">
+        <footer className={styles.footer2}>
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
+    </div>
     </div>
   );
 };

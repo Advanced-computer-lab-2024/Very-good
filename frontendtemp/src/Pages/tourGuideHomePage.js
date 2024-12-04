@@ -11,6 +11,9 @@ import updateAcceptedTermsAndConditions from '../Services/tourGuideServices'
 import TourGuideSalesReport from './TourGuideSalesReport'
 import TourGuideItinerariesUsersReport from './TourGuideNumberofSubscribersReport'
 import Notification from './TourGuideNotifications'
+import styles from '../styles/TourGuidePage.module.css'; // Keep your existing global styles
+
+
 let flag= true ;
 const TermsAndConditionsModal = ({ onAccept }) => {
   return (
@@ -57,6 +60,7 @@ const TourGuideHomePage = ({ email }) => {
   const [showSalesReport,setShowSalesReport]=useState(false);
   const [isUploadingApicture, setisUploadingApicture] = useState(false);
   const [ShowUsersReport,setShowUsersReport]=useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
 
   const handleBackfromUploadPage = () => {
@@ -199,6 +203,9 @@ const TourGuideHomePage = ({ email }) => {
   const handlebackFromUsersReport =()=>{
     setShowUsersReport(false);
   }
+  const toggleNotification = () => {
+    setShowNotification((prevState) => !prevState);
+  };
   if(ShowUsersReport){
     return <TourGuideItinerariesUsersReport id={id} onBack={handlebackFromUsersReport}/>
   }
@@ -242,44 +249,48 @@ const TourGuideHomePage = ({ email }) => {
   return (
     <div className="tour-guide-page">
      
-      {/* Sidebar Toggle Button */}
-      <button className="toggle-btn" onClick={toggleSidebar}>
-        {isSidebarOpen ? "Close" : "Menu"}
-      </button>
+    
 
       {/* Sidebar */}
-      <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
-        <div className="sidebar-content">
-          <h3>Quick Links</h3>
-          <button onClick={handleUploadAphoto}>Upload A photo</button>
-          {/*  <button onClick={() => alert('Filter Itineraries')}>Filter Itineraries</button>
-             <button onClick={() => alert('Filter Historical Places')}>Filter Historical Places</button>
-             <button onClick={() => alert('Filter Products')}>Filter Products</button>*/}
-             <button onClick={handleViewSalesReport}>View Sales Report</button>
-             <button onClick={handleviewItineraryUsersReport}>View Users Report</button>
-    {/* Notification Container */}
-    <div className="notification-container">
-      {tourGuideData && (
+      <div className={styles.navbar}>
+  <button onClick={handleUploadAphoto} className={styles.button}>Upload A Photo</button>
+  <button onClick={handleViewSalesReport}className={styles.button}>View Sales Report</button>
+  <button onClick={handleviewItineraryUsersReport}className={styles.button}>View Users Report</button>
+   
+
+</div>
+
+
+
+      {/* Main Container */}
+      <div className={styles.tourGiudePage}>
+      <div className={`container ${isSidebarOpen ? "shifted" : ""}`}>
+        <header className={styles.header}>
+          <h1 className={styles.h1}>Welcome, Tour Guide!</h1>
+        </header>
+         {/* Notification Container */}
+         <div className="notification-container">
+      <button 
+        onClick={toggleNotification} 
+        className={styles.button6}
+        
+      >
+        {showNotification ? 'Hide Notification' : 'Show Notification'}
+       
+      </button>
+      
+      {showNotification && tourGuideData && (
         <Notification 
           targetId={tourGuideData._id} 
           targetType="TourGuide" 
         />
       )}
     </div>
-
-        </div>
-      </div>
-
-      {/* Main Container */}
-      <div className={`container ${isSidebarOpen ? "shifted" : ""}`}>
-        <header className="header">
-          <h1>Welcome, Tour Guide!</h1>
-        </header>
-
         <div className="profile">
-          <h2 className="form-header">Your Profile</h2>
-          <div className="profile-info">
-            <label>Name:</label>
+          <h2  className={styles.h2}>Your Profile</h2>
+          <div className={styles.categoryButtons}>
+          <div className="categoryButton">
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Name:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -292,7 +303,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Password:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Password:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -305,7 +316,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Password:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Password:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -318,7 +329,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Email:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Email:</label>
             {isEditing ? (
               <input
                 type="email"
@@ -331,7 +342,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Mobile:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Mobile:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -344,7 +355,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Nationality:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Nationality:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -357,7 +368,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Previous Work:</label>
+            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Previous Work:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -370,7 +381,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label>Years of Experience:</label>
+            <label style={{ fontWeight: 'bold ' , color:'rgb(85, 39, 17)'}}>Years of Experience:</label>
             {isEditing ? (
               <input
                 type="number"
@@ -382,20 +393,26 @@ const TourGuideHomePage = ({ email }) => {
               <p>{tourGuideData?.yearsOfExperience || "NA"}</p>
             )}
           </div>
-
-          <button className="btn" onClick={handleUpdateProfile}>
+          {isEditing ? (
+    <button onClick={() => handleDeleteReq()} className={styles.button}>
+      Send delete Request
+    </button>
+  ) : null}
+          <button onClick={handleUpdateProfile} className={styles.button}>
             {isEditing ? "Save Changes" : "Update Profile"}
           </button>
+          </div>
+        
         </div>
 
-        <div className="itinerary-layout">
-          <h2 className="itinerary-header">Your Itinerary</h2>
-          <button className="btn" onClick={handleViewItineraryDisplay}>
+        <div className={styles.categoryButtons}>
+          <h2 className={styles.h2}>Your Itinerary</h2>
+          <button className={styles.button} onClick={handleViewItineraryDisplay}>
             {showItineraryDisplay
               ? "Hide Full Itinerary"
               : "View Full Itinerary"}
           </button>
-          <button className="btn" onClick={handleCreateButtonClick}>
+          <button className={styles.button} onClick={handleCreateButtonClick}>
             Create Itinerary
           </button>
         </div>
@@ -406,12 +423,15 @@ const TourGuideHomePage = ({ email }) => {
 
         {showItineraryDisplay && <ItineraryList tourGuideId={tourGuideId} />}
          
-         <DeleteTA dataTA={email} isTourGuideA = {flag}/>
-         <button onClick={()=>handleDeleteReq()}> send delete request</button>
-        <footer className="footer">
+        <button className={styles.button}  onClick={() => navigate("/")}>
+           Back to login Page
+          </button>
+        
+        <footer className={styles.footer1}>
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
+    </div>
     </div>
   );
 };

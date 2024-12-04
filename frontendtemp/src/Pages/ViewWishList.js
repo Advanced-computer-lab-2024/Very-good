@@ -6,7 +6,7 @@ import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the fun
 import {makePayment} from '../Services/payementServices'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-
+import Navbar from "../Components/Navbar";
 const ViewWishList = () => {
     const [wishlistProducts, setWishlistProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -196,6 +196,7 @@ const ViewWishList = () => {
   
     return (
       <div className="wishlist-page">
+        <Navbar/>
         <h2>Your Wishlist</h2>
         {wishlistProducts.length === 0 ? (
           <p>Your wishlist is empty.</p>

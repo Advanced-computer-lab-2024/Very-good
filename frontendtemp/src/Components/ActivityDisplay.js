@@ -3,6 +3,7 @@ import './ActivityDisplay.css';
 import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
 import MapComponent from './MapComponent';
 import SimpleMapComponent from './SimpleMapComponent'; // Import your MapComponent
+import styles from '../styles/Advertisor.module.css'; // Keep your existing global styles
 
 const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -81,15 +82,16 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
   };
 
   return (
-    <div className="activity-card">
+    <div className={styles.categoryButtons}>
       {isEditing ? (
         <>
-          <input
+          <input 
             type="text"
             name="name"
             value={updatedActivity.name}
             onChange={handleInputChange}
             placeholder="Activity Name"
+            
           />
           <input
             type="date"
@@ -193,33 +195,34 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
         </>
       ) : (
         <>
-          <h2 className="activity-title">{activity.name}</h2>
-          <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
-          <p className="activity-price">Price: ${activity.price}</p>
-          <p className="activity-duration">Duration: {activity.duration} minutes</p>
-          <p className="activity-category">Category: {categoryName}</p>
-          <p className="activity-ratings">Ratings: {activity.ratings}/5</p>
-          <p className="activity-special-discount">Special Discount: {activity.specialDiscount}%</p>
-          <p className="activity-booking-status">Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+          <h2  className={styles.h2}>{activity.name}</h2>
+          <p style={{color:"grey"}}>Date: {new Date(activity.date).toLocaleDateString()}</p>
+          <p  style={{color:"grey"}} >Price: ${activity.price}</p>
+          <p  style={{color:"grey"}}>Duration: {activity.duration} minutes</p>
+          <p style={{color:"grey"}}>Category: {categoryName}</p>
+          <p  style={{color:"grey"}}>Ratings: {activity.ratings}/5</p>
+          <p style={{color:"grey"}}>Special Discount: {activity.specialDiscount}%</p>
+          <p style={{color:"grey"}}>Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
           
           {/* Displaying location coordinates */}
-          <p className="activity-location">
+          <p  style={{color:"grey"}} >
           Location: {activity.location.lat}, {activity.location.lng}
           </p>
-
+          
+         
           {/* Render the MapComponent */}
           <SimpleMapComponent
             location={activity.location}
           />
-
+       
           <div className="tags-container">
             {activity.tags.map((tag, index) => (
               <span key={index} className="activity-tag">{tag.name}</span>
             ))}
           </div>
           <div className="activity-buttons">
-            <button className="edit-button" onClick={handleEditClick}>Edit</button>
-            <button className="delete-button" onClick={() => onDelete(activity._id)}>Delete</button>
+            <button className={styles.button}  onClick={handleEditClick}>Edit</button>
+            <button  className={styles.button}  onClick={() => onDelete(activity._id)}>Delete</button>
           </div>
         </>
       )}

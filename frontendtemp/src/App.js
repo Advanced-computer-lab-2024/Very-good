@@ -41,6 +41,7 @@ import CreatePromoCode from './Pages/CreatePromoCode'; // Import the CreatePromo
 import CheckOutComponent from './Pages/CheckOutComponent'
 import TouristOrders from './Pages/ViewTouristOrders'
 //require('dotenv').config();
+import FlightBookingPage  from "./Pages/FlightBookingPage";
 
 
 function App() {
@@ -643,6 +644,7 @@ const handleLogin = async (event) => {
         {/*what we do here is that we choose the type of user from the drop down menu then according to the choice we render the form specific 
           we should also according to the choice render the upload page then we render the registration forum 
           look , from page guest we should upon pressing an option from the drop down menu come here bu we should skip the part where we are asked to choose the type of the user again since this was already done in the guest page  */ }
+          
           <Route path="/tourist" element={<TouristPage email={emailagain}/>} />
           <Route path="/tourist/viewWishList" element={<ViewWishList/>} /> 
           <Route path="/tourist/checkout" element={<CheckOutComponent/>} /> 
@@ -672,6 +674,7 @@ const handleLogin = async (event) => {
           <Route path="/ticket" element={<Ticket />} />
           <Route path="/forgetPasswordPage" element={<ForgetPasswordPage />} />
           <Route path="/tourist/viewBookmarkedActivities" element={<ViewBookmarkedActivities />} />
+          <Route path="/tourist/ticket" element={<FlightBookingPage />} />
           <Route path="/admin/createPromoCode" element={<CreatePromoCode />} />
         </Routes>
       </div>

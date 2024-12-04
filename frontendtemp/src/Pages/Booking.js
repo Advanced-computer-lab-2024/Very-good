@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
+import Navbar from '../Components/Navbar';
 
 const Booking = ({email}) => {
     const [activities, setActivities] = useState([]);
@@ -80,6 +81,7 @@ const Booking = ({email}) => {
     
     return (
         <form onSubmit={handleSubmit}>
+             <Navbar/>
             <h2>Book an Activity or Itinerary</h2>
 
 

@@ -5,7 +5,13 @@ const SimpleMapComponent = ({ location }) => {
     
     // State to hold the marker's positio
 
-    return (
+    return ( 
+        <div    style={{  display: 'grid', 
+            placeItems: 'center', 
+            height: '60vh', 
+            width: '100%', 
+            position: 'relative' 
+          }} >
         <GoogleMap
             id="map"
             mapContainerStyle={{ height: '400px', width: '800px' }}
@@ -15,6 +21,7 @@ const SimpleMapComponent = ({ location }) => {
             
             <MarkerF position={{location}} />
         </GoogleMap>
+        </div>
     );
 };
 

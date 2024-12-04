@@ -6,7 +6,7 @@ import { fetchActivities, deleteActivity, updateActivity } from '../Services/act
 import { fetchTransportationsByAdvertiserId } from '../Services/bookingTransportationServices';
 import AdvertiserInfo from './AdvertiserInfo'; // Import AdvertiserInfo
 import UploadDocumentsAdvertiser from './UploadDocumentsAdvertiser'
-import './AdvertiserPage.css'; 
+import styles from '../styles/Advertisor.module.css'; // Keep your existing global styles
 import CreateTransportationForm from '../Components/createTransportationForm';
 import TransportationDisplayForAdvertiser from '../Components/TransportationDisplayForAdvertiser';
 import {editTransportation, deleteTransportation} from '../Services/bookingTransportationServices'
@@ -60,6 +60,8 @@ const AdvertiserPage = ({email}) => {
     const [uploadPage, setUploadPage]=useState(true); // default with true 
     const navigate = useNavigate();
     const [advertiserData, setAdvertiserData] = useState(null);
+    
+    
     useEffect(() => {
         const getAdvertiserData = async () => {
           try {
@@ -231,6 +233,8 @@ const AdvertiserPage = ({email}) => {
     if (isViewingProfile) {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} id={advertiserId} />;
     }
+
+    
     
 //   const r1 =()=>{
 //     console.log("00000000000")
@@ -246,23 +250,30 @@ const AdvertiserPage = ({email}) => {
 
     // Otherwise, render the main AdvertiserPage
     return (
-        <div>
-            <h1>Advertiser Page</h1>
+        <div className={styles.advertisorPage}>
+ 
+
+ 
+            <div className={styles.navbar}>
             
+            <button  className={styles.button} onClick={() => navigate("/")}>
+               Back to login page 
+            </button>
             {/* Create Activity button */}
-            <button className="create-activity-button" onClick={handleCreateButtonClick}>
+            <button  className={styles.button} onClick={handleCreateButtonClick}>
                 Create Activity
             </button>
 
-            <button className="create-transportation-button" onClick={handleCreateTransportationButtonClick} >
+            <button  className={styles.button} onClick={handleCreateTransportationButtonClick} >
                 Create Transportation
             </button>
 
             {/* View Profile Information button */}
-            <button className="view-profile-button" onClick={handleViewProfileClick}>
+            <button  className={styles.button} onClick={handleViewProfileClick}>
                 View Profile Information
             </button>
-
+            </div>
+            <h1 className={styles.header}>Advertiser Page</h1>
             {/* Render the CreateActivityForm if isCreating is true */}
             {isCreating && <CreateActivityForm onClose={closeForm} advertiserId={advertiserId} setActivities={setActivities} />}
 
@@ -276,7 +287,7 @@ const AdvertiserPage = ({email}) => {
             />
 
             <div>
-                <h1>Transportations</h1>
+                <h1 className={styles.h1}>Transportations</h1>
                 {transportations.map((transportation) => (
                     <TransportationDisplayForAdvertiser key={transportation._id} 
                     transportation={transportation} 

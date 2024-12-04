@@ -1,0 +1,135 @@
+/* General Container Styling */
+.container2 {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Title Styling for Activity List */
+  h1 {
+    color: #2c6b3c; /* Forest Green */
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Styling for Empty Activity List */
+  p {
+    font-size: 18px;
+    color: #e44a5b; /* Red for No Activities */
+    text-align: center;
+  }
+  
+  /* Activity List Card Styling */
+  .activity-card {
+    background-color: #f0f8ff; /* Sky Blue Background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    color: #1e3a3a; /* Forest Green Text */
+    font-family: 'Arial', sans-serif;
+    position: relative; /* To position the bookmark icon */
+  }
+  
+  /* Activity Title Styling */
+  .activity-title {
+    color: #2c6b3c; /* Forest Green */
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Activity Details Styling */
+  .activity-date, .activity-price, .activity-duration,
+  .activity-category, .activity-ratings, .activity-special-discount,
+  .activity-booking-status, .activity-location {
+    font-size: 16px;
+    color: #3b7a61; /* Light Forest Green */
+    margin: 8px 0;
+  }
+  
+  /* Bookmark Icon Styling */
+  .bookmark-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #1e3a3a; /* Forest Green */
+  }
+  
+  .bookmarked {
+    color: gold;
+  }
+  
+  /* Activity Button Styles */
+  .activity-buttons button {
+    background-color: #2c6b3c; /* Forest Green */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .activity-buttons button:hover {
+    background-color: #1e3a3a; /* Dark Forest Green */
+  }
+  
+  /* Comment Button Styling */
+  .view-comments-button {
+    background-color: #2c6b3c; /* Forest Green */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .view-comments-button:hover {
+    background-color: #1e3a3a; /* Dark Forest Green */
+  }
+  
+  /* Comment Section Styling */
+  .activity-comments {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #3b7a61; /* Light Forest Green */
+  }
+  
+  /* Filter-wise Activity Display */
+  .activity-filter-wise {
+    background-color: #e1f5e1; /* Light Green */
+    padding: 10px;
+    border-radius: 8px;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .activity-filter-wise h2 {
+    font-size: 20px;
+    color: #2c6b3c; /* Forest Green */
+    margin-bottom: 10px;
+  }
+  
+  .activity-filter-wise .activity-title {
+    color: #2c6b3c; /* Forest Green */
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  /* Additional Styles for List of Activities */
+  .activity-list-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
