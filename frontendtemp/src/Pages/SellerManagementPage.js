@@ -26,8 +26,9 @@ const SellerManagementPage = ({ sellerId }) => {
         const getSellerProducts = async () => {
             try {
                 const productsData = await fetchProductsNoID(); // Fetch products based on sellerId
-                console.log("productsData", productsData);
-                setProducts(productsData.data); // Set products fetched
+                const filteredProducts = productsData.data.filter(product => product.sellerId === sellerId); // Filter products by sellerId
+                console.log("filteredProducts", filteredProducts);
+                setProducts(filteredProducts); // Set filtered products
             } catch (err) {
                 setError('Failed to fetch products.');
                 console.error(err);

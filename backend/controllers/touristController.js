@@ -618,10 +618,21 @@ const purchaseProductbck = async ({ email, productId, credit, promoCodePercentag
 
     if (product.stock > 0) {
       product.stock -= 1;
+      product.sales += 1;
     }
 
     if (product.stock === 0 && !product.isOutOfStock) {
       const sellerId = product.sellerId;
+
+      const notification = new Notification({
+        targetId: sellerId, // TourGuide ID from the itinerary
+        targetType: 'Seller', // Target is the TourGuide
+        subject: 'Product is out of Stock',
+        message: `Your product ${product.name} with id : ${product._id} is out of stock`,
+      });
+
+
+      await notification.save(); // Save the notification
       await sendMailToSeller(sellerId, product);
       await notifyAdmins(product);
       product.isOutOfStock = true;
@@ -730,6 +741,7 @@ const CreateAndReturnOrderArray = async (req, res) => {
   }
 };
 
+
 const notifyAdmins = async (product) => {
   const admins = await Admin.find({});
   const adminEmails = admins.map(admin => admin.email);
@@ -750,6 +762,17 @@ const notifyAdmins = async (product) => {
   };
 
   await transporter.sendMail(mailOptions);
+
+// Create notifications for each admin
+  const notifications = admins.map(admin => ({
+    targetId: admin._id,
+    targetType: 'Admin',
+    subject: 'Product is out of Stock',
+    message: `The product ${product.name} with id : ${product._id} is out of stock`,
+  }));
+
+  // Save all notifications
+  await Notification.insertMany(notifications);
 };
 
 const sendMailToSeller = async (sellerId, product) => {

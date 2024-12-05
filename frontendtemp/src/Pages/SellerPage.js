@@ -244,7 +244,7 @@ const SellerPage = ({ email }) => {
       {showNotification && sellerData && (
         <Notification 
           targetId={sellerData._id} 
-          targetType="TourGuide" 
+          targetType="Seller" 
         />
       )}
     </div>
