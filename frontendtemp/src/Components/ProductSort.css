@@ -1,0 +1,51 @@
+/* General styles for the container */
+.products-container{
+    padding: 20px;
+    text-align: center;
+}
+
+/* Styling for the button */
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Styling for the product cards */
+.itinerary-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+/* Flexbox layout for displaying products side by side */
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;  /* Center the cards */
+    gap: 20px;  /* Spacing between product cards */
+}
+
+/* Optional: Styling for headers */
+h1, h2 {
+    color: #333;
+}
+
+p {
+    font-size: 14px;
+    color: #555;
+}

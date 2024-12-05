@@ -9,9 +9,9 @@ import {
     fetchTourists
 } from '../RequestSendingMethods';
 import { deleteTourist } from '../Services/TouristService';
-import { fetchActivities } from '../Services/activityServices';
-import { fetchItineraries } from '../Services/itineraryServices';
-import { fetchProductsNoID } from '../Services/productServices'; // Assuming this service is for fetching products
+import { deleteActivity, fetchActivities } from '../Services/activityServices';
+import { deleteItinerary, fetchItineraries } from '../Services/itineraryServices';
+import { deleteProductsBySeller, fetchProductsNoID ,fetchProducts} from '../Services/productServices'; // Assuming this service is for fetching products
 
 const Deletion = () => {
     const [entities, setEntities] = useState([]);
@@ -60,25 +60,48 @@ const Deletion = () => {
         let itineraryCount = 0;
         let activityCount = 0;
         let productCount = 0;
-
+    
+        const touristList = await fetchTourists(); // Fetch list of tourists once
+    
         if (entity.role === 'Tourist') {
             itineraryCount = entity.bookedItineraries?.length || 0;
             activityCount = entity.bookedActivities?.length || 0;
+    
         } else if (entity.role === 'Advertiser') {
+            // Fetch activities by Advertiser ID
             const activities = await fetchActivities(entity._id);
-            activityCount = activities.length;
+    
+            // Count the total bookings for activities associated with this Advertiser
+            activityCount = touristList.data.reduce((count, tourist) => {
+                return count + (tourist.bookedActivities?.filter(activityID => 
+                    activities.some(activity => activity._id === activityID)
+                ).length || 0);
+            }, 0);
+    
         } else if (entity.role === 'Tour Guide') {
+            // Fetch itineraries by Tour Guide ID
             const itineraries = await fetchItineraries(entity._id);
-            itineraryCount = itineraries.length;
+    
+            // Count the total bookings for itineraries associated with this Tour Guide
+            itineraryCount = touristList.data.reduce((count, tourist) => {
+                return count + (tourist.bookedItineraries?.filter(itineraryID => 
+                    itineraries.some(itinerary => itinerary._id === itineraryID)
+                ).length || 0);
+            }, 0);
+    
         } else if (entity.role === 'Seller') {
+            // Fetch all products
             const products = await fetchProductsNoID();
-            // Filter products by sellerId
+    
+            // Filter products by sellerId and count them
             const sellerProducts = products.data.filter(product => product.sellerId === entity._id);
             productCount = sellerProducts.length;
         }
-
+    
         return { itineraryCount, activityCount, productCount };
     };
+    
+    
 
     // Store the counts for each entity
     const [counts, setCounts] = useState({});
@@ -106,7 +129,7 @@ const Deletion = () => {
     const handleDelete = async (entity) => {
         try {
             const { itineraryCount, activityCount, productCount } = counts[entity._id] || {};
-
+    
             // Check if there are bookings or products to prevent deletion
             if (entity.role === 'Tourist' && (itineraryCount > 0 || activityCount > 0)) {
                 alert(`Cannot delete Tourist with ${itineraryCount} itineraries and ${activityCount} activities.`);
@@ -117,30 +140,56 @@ const Deletion = () => {
             } else if (entity.role === 'Tour Guide' && itineraryCount > 0) {
                 alert(`Cannot delete Tour Guide with ${itineraryCount} active itineraries.`);
                 return;
-            } else if (entity.role === 'Seller' && productCount > 0) {
-                alert(`Cannot delete Seller with ${productCount} products.`);
-                return;
             }
-
+    
             // Delete from backend based on role
             if (entity.role === 'Advertiser') {
-                await deletAdvertiser(entity._id);
+                const activities = await fetchActivities(entity._id); // Fetch activities related to the Advertiser
+                await Promise.all(activities.map(activity => deleteActivity(activity._id))); // Delete all activities
+                await deletAdvertiser(entity._id); // Delete the Advertiser
             } else if (entity.role === 'Tour Guide') {
-                await deleteTourGuide(entity._id);
+                const itineraries = await fetchItineraries(entity._id); // Fetch itineraries related to the Tour Guide
+                await Promise.all(itineraries.map(itinerary => deleteItinerary(itinerary._id))); // Delete all itineraries
+                await deleteTourGuide(entity._id); // Delete the Tour Guide
             } else if (entity.role === 'Tourist') {
-                await deleteTourist(entity._id);
+                await deleteTourist(entity._id); // Delete the Tourist directly
             } else if (entity.role === 'Seller') {
-                await deleteSeller(entity._id);
+                console.log('Fetching products for deletion...');
+                
+                // Fetch and filter products
+                const productResponse = await fetchProductsNoID();
+                const filteredProducts = productResponse.data.filter(product => {
+                    const productSellerId = String(product.sellerId);
+                    const entitySellerId = String(entity._id);
+                    return productSellerId === entitySellerId;
+                });
+            
+                console.log(`Products to delete for Seller ${entity._id}:, filteredProducts`);
+            
+                // Delete each product related to the seller
+                await Promise.all(
+                    filteredProducts.map(async (product) => {
+                        console.log(`Deleting product with ID: ${product?._id}`);
+                        await deleteProductsBySeller(entity._id);
+                    })
+                );
+            
+                console.log(`Deleting seller with ID: ${entity._id}`);
+                await deleteSeller(entity._id); // Delete the Seller
             }
-
-            // Remove from frontend list
-            setEntities(prevEntities => prevEntities.filter(e => e._id !== entity._id));
+            
+            
+            // Remove entity from frontend list after successful deletion
+            setEntities((prevEntities) => prevEntities.filter((e) => e._id !== entity._id));
             alert(`${entity.role} deleted successfully.`);
         } catch (err) {
             console.error(`Error deleting ${entity.role}:`, err);
             setError(`Failed to delete ${entity.role}.`);
+            alert(`An error occurred while trying to delete the ${entity.role}. Please try again.`);
         }
     };
+    
+
 
     // Handle ignore action (frontend only)
     const handleIgnore = (entityId) => {
@@ -164,16 +213,17 @@ const Deletion = () => {
                             <p>Role: {entity.role}</p>
                             <p>Email: {entity.email}</p>
                             <p>Name: {entity.name}</p>
+                            <p>ID:{entity._id} </p>
 
                             {/* Show counts based on role */}
                             {entity.role === 'Tourist' && (
                                 <p>Bookings: {itineraryCount + activityCount || 0}</p>
                             )}
                             {entity.role === 'Advertiser' && (
-                                <p>Activities Count: {activityCount || 0}</p>
+                                <p>Booked Activities Count: {activityCount || 0}</p>
                             )}
                             {entity.role === 'Tour Guide' && (
-                                <p>Itinerary Count: {itineraryCount || 0}</p>
+                                <p>Booked Itinerary Count: {itineraryCount || 0}</p>
                             )}
                             {entity.role === 'Seller' && (
                                 <p>Product Count: {productCount || 0}</p>

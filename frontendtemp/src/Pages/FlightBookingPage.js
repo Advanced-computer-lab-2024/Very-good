@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchFlightoffers, createFlightOffer, addFlightOfferToTourist } from '../Services/BookingFlightServices';  
 import FlightSearchForm from '../Components/FlightSearchForm';
 import FlightOffersDisplay from '../Components/FlightOffersDisplay';
+import Navbar from '../Components/Navbar';
 
 const FlightBookingPage = ({ onBack, touristId }) => {
     const [flightoffers, setFlightoffers] = useState([]); // Start as an empty array
@@ -84,6 +85,7 @@ const FlightBookingPage = ({ onBack, touristId }) => {
 
     return (
         <div>
+            <Navbar/>
             <h1>Flight Booking</h1>
             <FlightSearchForm onSearch={handleSearch} formData={formData} updateFormData={updateFormData} />
             <h2>Flight Offers</h2>

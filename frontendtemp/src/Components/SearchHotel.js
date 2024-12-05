@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { fetchHotelsByCity, createHotelOffer,  addHotelOfferToTourist} from '../Services/BookingFlightServices';
 import HotelOffersDisplay from './HotelOffersDisplay';
 import { useLocation } from 'react-router-dom';
-
+import Navbar from './Navbar';
 const locationOptions = [
     { name: "London", code: "LON" },
     { name: "New York City", code: "NYC" },
@@ -83,6 +83,7 @@ const SearchHotel = () => {
 
     return (
         <div className="search-hotel-container">
+            <Navbar/>
             <h2>Search Hotels</h2>
             <form className="search-hotel-form" onSubmit={handleSubmit}>
                 <div className="form-group">

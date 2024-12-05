@@ -3,6 +3,7 @@ import { fetchProductsNoID ,updateProduct} from '../Services/productServices';
 import { purchaseProduct } from '../RequestSendingMethods';  // Assuming the function for purchase is imported , this function is the one reponsible for purchasing a product
 import {makePayment} from '../Services/payementServices'
 import {addProductToWishlist,addProductToCart} from '../Services/TouristService'
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,6 +14,7 @@ const ProductSort = ({ email, touristId }) => {
     const [showMappings, setShowMappings] = useState(false);  // Toggle for activities
     const [touristWallet, setTouristWallet] = useState(0);  // To store the tourist's wallet balance
     const [purchaseError, setPurchaseError] = useState(""); // To handle errors when purchasing
+    const [hover, setHover] = useState(false);
     console.log('Passing email:', email);  
     const styles = {
         card: {
@@ -220,14 +222,29 @@ const ProductSort = ({ email, touristId }) => {
     
     return (
         <div className="container">
-            <h1>Sort Products</h1>
-            <h2>Sorted by Rating</h2>
             
             {/* Toggle Button: Show/Hide Products */}
-            <button onClick={toggleMappings}>
-                {showMappings ? "Hide Products Sorted by Rating" : "Show Products Sorted by Rating"}
+            <div >
+            <button
+      onClick={toggleMappings}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className={styles.button}
+      style={{
+        width: "125%",
+        color: hover ? "grey" : "grey", // Change color on hover
+        borderColor: "#70e8c4",
+        borderRadius: "5px",
+        backgroundColor: hover ? "#70e8c472" : "#dceb772f", // Change background color on hover
+        height: "35px",
+        marginLeft: "-12.5%",
+        marginBottom: "-1rem",
+        marginTop: "-20rem",
+      }}
+    >
+                {showMappings ? "Hide Products Sorted by Rating" : "Look up Products Sorted by Rating"}
             </button>
-
+            </div>
             {loading && <p>Loading products sorted by rating...</p>}
             {error && <p>Error: {error}</p>}
 

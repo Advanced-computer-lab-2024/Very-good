@@ -1,0 +1,563 @@
+.advertisorPage {
+    background-image: url('ap.jpeg');
+    background-color: #f4f1eb7e; /* Light Beige as fallback */
+    color: #333333; /* Slate Gray text */
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    padding: 10px;
+  
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    background-position: right center; /* Positions the background to the right center */
+    /* Ensures the background covers the entire container */
+  
+    width: 98vw; /* Full viewport width */
+    height: 4000vh; /* Full viewport height */
+    overflow: visible; /* Allows overflow if necessary */
+  
+    position: relative; /* Ensures the content stays on top of the background */
+    z-index: 0; /* Places the background image at the lowest layer */
+    transform: translateY(-10.5%);
+    transform: translateX(-10.5%);
+   
+  }
+  .advertisorInfo {
+    background-image: url('api2.jpeg');
+    background-color: #f4f1eb7e; /* Light Beige as fallback */
+    color: #333333; /* Slate Gray text */
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    padding: 10px;
+  
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    background-position: right center; /* Positions the background to the right center */
+    /* Ensures the background covers the entire container */
+  
+    width: 98vw; /* Full viewport width */
+    height: 150vh; /* Full viewport height */
+    overflow: visible; /* Allows overflow if necessary */
+  
+    position: relative; /* Ensures the content stays on top of the background */
+    z-index: 0; /* Places the background image at the lowest layer */
+    transform: translateY(-10.5%);
+    transform: translateX(-10.5%);
+   
+  }
+  
+  
+  .buttonToggle {
+    width: 125%;
+    height: 35px;
+    margin-left: -12.5%;
+    box-sizing: border-box; /* Corrected to camelCase */
+    margin-bottom: -1rem;
+    margin-top: -20rem; /* Space between buttons */
+  }
+  
+  /* Header */
+  .header ,.foter{
+   
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-size: cover;
+    background-color: #a2bedfd8; /* Forest Green */
+    color: #fff6f6; /* White text */
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.8rem; /* Slightly larger text */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow for depth */
+  }
+  /* Headings */
+   .h1, .h2, h3, h4 {
+    color: #442446; /* Forest Green for headings */
+    text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
+  }
+  .h1t{
+    color: #270444; /* Forest Green for headings */
+    text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
+  }
+  .h1i{
+    color: #f8f8f8; /* Forest Green for headings */
+    text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
+  }
+  .h2i{
+    color: #5c63bd; /* Forest Green for headings */
+    text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
+  }
+  
+  /* Footer */
+  .footer2 {
+    background-color: #a2bedfd8; /* Forest Green */
+    color: #FFFFFF; /* White text */
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    font-size: 1.2rem; /* Enhanced readability */
+  }
+  
+  /* Alerts */
+  .alert {
+    background-color: #FFD700; /* Muted Gold */
+    color: #FFFFFF; /* White text */
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 1.1rem; /* Larger text */
+    text-align: center; /* Center-align for emphasis */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slight shadow for emphasis */
+    border: 2px solid #B8860B; /* Gold border for added detail */
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: #9d90be; /* Forest Green */
+    color: #FFFFFF; /* White text */
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+  }
+  
+  /* Container for buttons */
+  /* Styling the container div for categories */
+  .categoryButtons {
+    background-color: #f4edff7c; /* Light Beige background for a soft look */
+    padding: 2rem; /* Adequate padding to give space around the content */
+    margin: 2rem 0; /* Margin for spacing the divider from other sections */
+    border-radius: 8px; /* Rounded corners for a smooth effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a card-like effect */
+    position: relative; /* To add a pseudo-element divider */
+    color: white;
+    font-size: 1.05rem; /* Slightly larger text */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); 
+  }
+  
+  /* Category header style */
+  .category-buttons h2 {
+    font-size: 1.5rem;
+    color: #509665; /* Forest Green for the header text */
+    margin-bottom: 1rem; /* Space below the title */
+    text-align: center; /* Center-align the title */
+    font-weight: bold;
+  }
+  
+  /* Style for the button container inside the category section */
+  .categoryButtons .button {
+    background-color: #f7f8eddc; /* Muted Gold */
+    color: #7d7373; /* Slate Gray text */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border-color: #70e8c4;
+    border-style: solid;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 0.5rem; /* Space between buttons */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .category-buttons .button:hover {
+    background-color: #70e8c472; /* Tomato Red */
+  }
+  
+  /* Optional: Add a thin, elegant separator line between the category section and the rest of the content */
+  .category-buttons::before {
+    content: "";
+    position: absolute;
+    top: -1rem;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #71aebd; /* Sky Blue divider */
+    border-radius: 2px;
+  }
+  
+  /* Media query for mobile responsiveness */
+  @media (max-width: 600px) {
+    .categoryButtons {
+      padding: 1rem; /* Reduce padding on smaller screens */
+    }
+  
+    .category-buttons .button {
+      padding: 0.5rem; /* Make the button padding more compact on mobile */
+    }
+  }
+  
+  .button-container {
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: stretch; /* Ensure all buttons stretch to the same width */
+    gap: 1rem; /* Adds consistent space between buttons */
+    margin-top: 2rem;
+    width: 100%; /* Make the container take up the full width of the screen */
+  }
+  
+  /* Buttons */
+  .button {
+    background-color: #a1bde6; /* Muted Gold */
+    color: #f7fafd; /* White text */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+ 
+    border: none ;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 160%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+    text-align: center;
+    font-size: 1.05rem; /* Slightly larger text */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow for depth */
+  }
+  
+  
+  
+  .button:hover {
+    background-color: #3a517472; /* Tomato Red */
+  }
+  
+  /* Media query for smaller screens (mobile view) */
+  @media (max-width: 600px) {
+    .button-container {
+      gap: 0.5rem; /* Reduce the space between buttons on smaller screens */
+    }
+  
+    .button {
+      width: 100%; /* Ensure buttons stretch to the same width even on small screens */
+    }
+  }
+  
+  
+  
+  /* Links */
+  a {
+    color: #71aebd; /* Sky Blue */
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #FFD700; /* Muted Gold */
+    text-decoration: underline;
+  }
+  
+  /* Containers */
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Form Elements */
+  input, textarea {
+    border: 1px solid #D3D3D3; /* Light Gray */
+    padding: 0.5rem;
+    font-style: italic;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Headings */
+  
+  
+  
+  /* Cards or Content Boxes */
+  .card {
+    background-color: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.048);
+    margin-bottom: 1.5rem;
+  }
+  
+  .card h3 {
+    color: #71aebd; /* Sky Blue for card headings */
+  }
+  
+  /* Navigation */
+  .navbar {
+    background-color: #71aebd; /* Sky Blue */
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .navbar a {
+    color: #FFFFFF; /* White text for navbar */
+    margin: 0 1rem;
+    text-decoration: none;
+  }
+  
+  .navbar a:hover {
+    color: #FFD700; /* Muted Gold on hover */
+  }
+  
+  /* Alerts */
+  .alert {
+    background-color: #FFD700; /* Muted Gold */
+    color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  /* Footer Link Styles */
+  .footer a {
+    color: #FFFFFF; /* White links in footer */
+    text-decoration: none;
+  }
+  
+  .footer a:hover {
+    color: #FFD700; /* Muted Gold on hover in footer */
+  }
+  /* Global container for the app */
+  .app-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f1eb;
+  }
+  
+  /* Sidebar container */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Hide it off-screen initially */
+    width: 250px;
+    height: 100%;
+    background-color: #71aebd; /* Dark background */
+    color: white;
+    transition: left 0.3s ease; /* Smooth slide-in/out effect */
+    z-index: 1000;
+    overflow-y: auto; /* Scrollable content */
+  }
+  
+  /* Sidebar content */
+  .sidebar-content {
+    padding: 20px;
+  }
+  
+  .sidebar h3 {
+    margin-top: 0;
+  }
+  
+  /* When the sidebar is open */
+  .sidebar.open {
+    left: 0; /* Slide in */
+  }
+  /* Adjusting the toggle button to be positioned inside the sidebar */
+  .toggleBtn {
+    position: absolute; /* Positioned relative to the sidebar */
+    top: 10px;          /* Position the button 10px from the top */
+    left: 15px;     /* Position the button 10px from the right */
+    z-index: 1100;      /* Ensure the button stays on top of the sidebar */
+    background-color: #e2e4c8; /* Muted Gold background */
+    color: #403d4b;      /* Text color */
+    padding: 0.5rem 1rem; /* Padding for the button */
+    border-radius: 5px;  /* Rounded corners */
+    cursor: pointer;    /* Pointer cursor on hover */
+    font-size: 16px;     /* Font size */
+  }
+  
+  /* Toggle button */
+  .toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100; /* Above the sidebar */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #e2e4c8; /* Muted Gold */
+    ; /* Muted Gold */
+      color: #403d4b; /* White text */
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border-color: #5cc7c2;
+      border-style: solid;
+      cursor: pointer;
+     
+      box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  
+  /* Main content shifts when sidebar is open */
+  .container {
+    transition: margin-left 0.3s ease;
+  }
+  
+  .container.shifted {
+    margin-left: 250px; /* Adjust width of sidebar */
+  }
+  .categoryButtons2 {
+    /* Light Beige background for a soft look */
+    padding: 1rem; /* Adequate padding to give space around the content */
+    margin: 3rem 0; /* Margin for spacing the divider from other sections */
+    border-radius: 8px; /* Rounded corners for a smooth effect */
+  
+    position: relative; /* To add a pseudo-element divider */
+  }
+  .button2 {
+    background-color: #f5fdbecc; /* Muted Gold */
+    color: #7d7373; /* White text */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border-color: #70e8c4;
+    margin: 0.3rem 0;
+    border-style: solid;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 110%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  .category-buttons3 {
+    /* Light Beige background for a soft look */
+    padding: 2rem; /* Adequate padding to give space around the content */
+    margin: 2rem 0; /* Margin for spacing the divider from other sections */
+    border-radius: 8px; /* Rounded corners for a smooth effect */
+    background-color: #71aebda6;
+    color: white;
+    position: relative; /* To add a pseudo-element divider */
+  }
+  .button3 {
+    background-color: #2e224d; /* Muted Gold */
+    color: #e9e9e9; /* White text */
+    padding: 0.3rem 1rem;
+    border-radius: 5px;
+    border-color: #20164e;
+    border-style: solid;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 100%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; 
+    margin-bottom: 7.0px;/* Ensure padding is included in the width calculation */
+  }
+  .button5 {
+    background-color: #f8ffc9a4; /* Muted Gold */
+    color: #7d7373; /* White text */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border-color: #ccb8fa;
+    margin: 0.3rem 0;
+    border-style: solid;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 10%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  .button5:hover {
+    background-color: #7c70e872; /* Tomato Red */
+  }
+  .button6 {
+    background-color: #f8ffc9a4; /* Muted Gold */
+    color: #7d7373; /* White text */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border-color: #ccb8fa;
+    margin: 0.3rem 0;
+    border-style: solid;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 100%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  .button6:hover {
+    background-color: #7c70e872; /* Tomato Red */
+  }
+  
+  .button2:hover {
+    background-color: #70e8c472; /* Tomato Red */
+  }
+  .button3:hover {
+    background-color: #9eaaec72; /* Tomato Red */
+  }
+  
+  
+  .toggle-btn:hover {
+    background-color: #70e8c472; /* Tomato Red */
+  }
+  /* Main navbar container */
+  .navbar {
+    /* background-color: #71aebdf6;  */
+    background-color: #a1bde6;
+    padding: 8px;
+    display: flex;
+    justify-content: center; /* Center-align items horizontally */
+    align-items: center; /* Center-align items vertically */
+    margin-top: -40px;
+    width: 100%;
+    top: 100;
+    left: 0;
+    z-index: 990;
+    margin-left: -10px;
+  }
+  .navbar2 {
+    /* background-color: #71aebdf6;  */
+    background-color: #a1bde6;
+    padding: 8px;
+    display: flex;
+    justify-content: center; /* Center-align items horizontally */
+    align-items: center; /* Center-align items vertically */
+    margin-top: -60px;
+    margin-left: -60px;
+    width: 110%;
+    top: 100;
+    left: 0;
+    z-index: 990;
+  }
+  
+  
+  /* Navigation links */
+  .nav-links {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    justify-content: space-around; /* Space out the items evenly */
+    width: 100%;
+    margin-left: -8% ;
+    margin-top: -0.7%;
+    max-width: 1200px; /* Max width to prevent stretching */
+  }
+  
+  /* Individual navigation buttons */
+  .nav-btn {
+    background-color: #e2e4c8;
+    color: white;
+    border: none;
+    padding: 9px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #7d7373; /* White text */
+    padding: 0.5srem 1rem;
+    border-radius: 5px;
+    /* border-color: #70e8c4;
+    border-style: solid; */
+    cursor: pointer;
+    white-space: nowrap;
+    width: 100%; /* Make all buttons take the same width */
+    text-align: center; /* Center the text inside the button */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  
+  .nav-btn:hover {
+    background-color: #84ccc094; /* Lighter shade on hover */
+  }
+  
+  .nav-btn:focus {
+    outline: none; /* Remove focus outline */
+  }
+  

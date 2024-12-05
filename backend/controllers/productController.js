@@ -167,6 +167,11 @@ const putProducts = async (req, res) => {
     const { sellerId, productId } = req.params;
     const updatedData = req.body;
 
+    // Check if stock value is provided and greater than zero
+    if (updatedData.stock && updatedData.stock > 0) {
+        updatedData.isOutOfStock = false;
+    }
+
     try {
         const updatedProduct = await Product.findOneAndUpdate(
             { _id: productId, sellerId: sellerId }, // Find by both product ID and seller ID

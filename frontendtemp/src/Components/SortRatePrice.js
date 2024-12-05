@@ -4,7 +4,7 @@ import { fetchItinerariesNoId } from '../Services/itineraryServices';
 import ShareComponent from './shareComponent';
 import { fetchCategoryById, fetchCategories } from '../Services/activityServices';
 import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
-
+import Navbar from './Navbar';
 const ActivityItinerarySort = () => {
     const [activities, setActivities] = useState([]); 
     const [activities2, setActivities2] = useState([]); 
@@ -241,6 +241,7 @@ const convertPrice = (price) => {
     
     return (
         <div className="container">
+        <Navbar/>
 <h1>Sort Activities and Itineraries</h1>
 <label>
     Choose Currency:

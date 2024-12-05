@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise';
+import Navbar from '../Components/Navbar';
+
 
 const ViewBookmarkedActivities = () => {
   const location = useLocation();
@@ -30,6 +32,7 @@ const ViewBookmarkedActivities = () => {
 
   return (
     <div>
+      <Navbar/>
       <h2>Bookmarked Activities</h2>
       {bookmarkedActivities.length > 0 ? (
         <div className="activities-list">

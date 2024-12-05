@@ -1,0 +1,255 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fbead1; /* Champagne */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4 {
+    text-align: center;
+    color: #47241a; /* Cocoa Bean */
+    margin-bottom: 15px;
+}
+.admin {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #fbead1, #d48947) ; /* Gradient gold-beige with image */
+    background-repeat: no-repeat; 
+    background-size: cover; 
+    width: 100vw; /* Full viewport width */
+    height: 650vh;
+    margin-left: -13%;
+    margin-top: -4%;
+    color: var(--cocoa-bean); /* Cocoa Bean */
+}
+
+p {
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Container Styles */
+.admin-activity-cards, .tags-container, .itineraries-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.activity-card, .tag-card, .itinerary-card {
+    background-color: #fbead1; /* Limed Oak */
+    border: 1px solid #d9c2b6; /* Clam Shell */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    width: 100%px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.activity-card:hover, .tag-card:hover, .itinerary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tag-actions, .itinerary-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+/* Buttons */
+button {
+    background-color: #c7a77e; /* Bali Hai */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+    background-color: #7098a4; /* Gothic */
+    transform: scale(1.05);
+}
+
+.view-button, .edit-button, .delete-button, .flag-button {
+    background-color: #8b5b3b; /* Potters Clay */
+    margin: 5px;
+    font-size: 14px;
+}
+
+.view-button:hover {
+    background-color: #47241a; /* Cocoa Bean */
+}
+
+.delete-button {
+    background-color: #c7a77e; /* Sorrell Brown */
+}
+
+.delete-button:hover {
+    background-color: #e53935; /* Darker Red */
+}
+
+.flag-button {
+    background-color: #fbead1; /* Champagne */
+    color: #333;
+}
+
+.flag-button:hover {
+    background-color: #ac8656; /* Limed Oak */
+}
+
+/* Forms */
+form {
+    margin: 20px auto;
+    max-width: 400px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #d9c2b6; /* Clam Shell */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+form button {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Special Forms */
+.edit-form, .add-admin-form, .add-governor-form, .change-password-form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-form button, .add-admin-form button, .add-governor-form button, .change-password-form button {
+    width: auto;
+    margin: 0 5px;
+}
+
+/* Style for the product containers displayed beside each other */
+.product-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line if needed */
+    gap: 20px; /* Space between items */
+    justify-content: space-around; /* Distribute items evenly */
+}
+
+.product-container {
+    background-color: #f9f9f9; /* Light Gray */
+    border: 1px solid #d9c2b6; /* Clam Shell */
+    border-radius: 8px;
+    padding: 20px;
+    width: calc(33% - 20px); /* Makes the items responsive */
+    box-sizing: border-box; /* Ensures padding doesn't affect width calculation */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-container h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.product-container p {
+    color: #555;
+}
+
+.product-container .price {
+    font-weight: bold;
+    color: #333;
+}
+/* Center the admin-category and admin-products containers */
+.admin-category, .admin-products {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+    width: 80%; /* Adjust the width as needed */
+    max-width: 1000px; /* Set a maximum width if you want to limit the container's size */
+}
+
+.admin-category h1, .admin-products h1 {
+    margin-bottom: 20px;
+}
+
+/* Style for buttons */
+button {
+    margin: 10px;
+}
+
+/* Optional: If you want to ensure that these sections take full height of the page */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-category, .admin-products {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0d5b5; /* Optional background color */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-activity-cards, .tags-container, .itineraries-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .activity-card, .tag-card, .itinerary-card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    form {
+        padding: 10px;
+    }
+
+    form button {
+        font-size: 14px;
+    }
+}

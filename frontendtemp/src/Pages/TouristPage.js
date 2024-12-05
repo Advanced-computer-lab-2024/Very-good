@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/global.css';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 import { fetchTouristByEmail, updateTouristByEmail ,bookItem} from '../RequestSendingMethods';
 import ActivityHistoricalList from '../Components/UpcomingSort.js';
 import ProductSort from './SortProductRate.js';
@@ -26,6 +26,7 @@ import Booking from '../Components/booking.js';
 import RatePageForTourist from './RatePageForTourist';
 import Notification from './TourGuideNotifications';
 
+import Navbar from '../Components/Navbar';
 const TouristPage = ({email}) => {
   const location = useLocation();
 
@@ -59,6 +60,7 @@ const TouristPage = ({email}) => {
   const [showViewComplaintsPage,SetshowviewComplaintsPage]=useState(false);
   const [ShowBookingPage,SetShowBookingPage]=useState(false);
   const [showRatePage, setShowRatePage] = useState(false);
+  const [activeCategories, setActiveCategories] = useState({}); 
   const [ShowOrdersPage,SetShowOrdersPage]=useState(false);
   const [ShowCart,SetShowCart]=useState(false);
   useEffect(() => {
@@ -197,19 +199,19 @@ const TouristPage = ({email}) => {
     }
   };
 
-  const handleCategoryClick = async (categoryName) => {
-    setLoadingActivities(true); // Show loading indicator
-    setActivityError(null); // Reset error
+  // const handleCategoryClick = async (categoryName) => {
+  //   setLoadingActivities(true); // Show loading indicator
+  //   setActivityError(null); // Reset error
 
-    try {
-      const activityResults = await searchactivity({ category: categoryName }); // Fetch activities by category
-      setActivities(activityResults); // Set the activities to display
-    } catch (error) {
-      setActivityError('Error fetching activities for this category');
-    } finally {
-      setLoadingActivities(false); // Stop loading
-    }
-  };
+  //   try {
+  //     const activityResults = await searchactivity({ category: categoryName }); // Fetch activities by category
+  //     setActivities(activityResults); // Set the activities to display
+  //   } catch (error) {
+  //     setActivityError('Error fetching activities for this category');
+  //   } finally {
+  //     setLoadingActivities(false); // Stop loading
+  //   }
+  // };
 
   const handleFilterActivitiesClick = () => setShowFilterPage(true);
   const handleBackToTouristPage = () => setShowFilterPage(false);
@@ -247,95 +249,85 @@ const TouristPage = ({email}) => {
   if(showComplaintPage)return <TouristComplaint email ={email}/>;
   if(ShowBookingPage)return <Booking touristId={touristId} wallet={wallet}/>;
   if (showRatePage)return <RatePageForTourist onBackClick = {handleBackToTouristPageFromRatePage} email={email} touristId={touristId}/>
+
+  const handleCategoryClick = async (categoryName) => {
+    // Toggle category's active state
+    setActiveCategories(prevState => {
+      const newState = { ...prevState };
+      newState[categoryName] = !newState[categoryName];
+      return newState;
+    });
+
+    if (!activeCategories[categoryName]) { // If category is being activated
+      setLoadingActivities(true); // Show loading indicator
+      setActivityError(null); // Reset error
+      try {
+        const activityResults = await searchactivity({ category: categoryName });
+        setActivities(activityResults);
+      } catch (error) {
+        setActivityError('Error fetching activities for this category');
+      } finally {
+        setLoadingActivities(false); // Stop loading
+      }
+    } else {
+      setActivities([]); // Hide activities if category is deactivated
+    }
+  };
   return (
-    <div className="tourist-page">
-      <button className="toggle-btn" onClick={toggleSidebar}>
+    <div className={styles['tourist-page']}> {/* Use the CSS Module for this div */}
+      <button
+        className={styles['toggle-btn']} // Use the CSS Module for button
+        onClick={toggleSidebar}
+      >
         {isSidebarOpen ? 'Close' : 'Menu'}
       </button>
-  
-      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-content">
+
+      {/* Navigation Bar */}
+      <div>
+        <Navbar email={touristData?.email} />
+        {/* Content of the page */}
+      </div>
+
+      <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`}>
+        <div className={styles['category-buttons2']}>
           <h3>Quick Links</h3>
-          <button onClick={handleFilterActivitiesClick}>Filter Activities</button>
-          <button onClick={handleFilterItenariesClick}>Filter Itineraries</button>
-          <button onClick={handleFilterHistoricalPlacesClick}>Filter Historical Places</button>
-          <button onClick={handleFilterProductPageClick}>Filter Products</button>
-          <button onClick={handleBookFlightPageClick}>Book a Flight</button>
-          <button onClick={handleCommentClick}>Comment</button>
-          <button onClick={handleRateClick}>Rate</button>
-          <button onClick={handleComplaintpageClick}>Complaint</button>
-          <button onClick={handleComplaintViewPageClick}>View_My_Complaints</button>
-          <button onClick={handleBookingPageClick}>Book itineraries/activities</button>
-          <button onClick={handleViewBookedFlightsPageClick}>View my Booked Flights</button>
-          <button onClick={() => handleHotelFlightPageClick(touristId)}>Book a Hotel</button>
-          <button onClick={() => handleViewBookedHotels(touristId)}>View my Booked Hotels</button>
-          <button onClick={() => handleBookTransportationPageClick(touristData?.email)}>Book a Transportation</button>
-          <button onClick={() => handleViewTransportation(touristData?.email)}>View my Transportations</button>
-          <button onClick={() => handleViewMyBalance(email)}>View my Balance</button>
-          <button onClick={() => handleViewMyWishList(touristId)}>View My Wish List</button>
-          <button onClick={handleViewBookmarkedActivities}>View Bookmarked Activities</button>
-          <button onClick={handleViewCart}>View Cart</button>
-          <button onClick={handleViewOrdersPage}>View Orders</button>
-          <div className="notification-container">
-            {touristData && (
-              <Notification 
-                targetId={touristData._id} 
-                targetType="Tourist" 
-              />
-            )}
-          </div>
+          <button onClick={handleFilterActivitiesClick} className={styles.button2}>Filter Activities</button>
+          <button onClick={handleFilterItenariesClick} className={styles.button2}>Filter Itineraries</button>
+          <button onClick={handleFilterHistoricalPlacesClick} className={styles.button2}>Filter Historical Places</button>
+          <button onClick={handleFilterProductPageClick} className={styles.button2}>Filter Products</button>
+          <button onClick={handleBookFlightPageClick} className={styles.button2}>Book a Flight</button>
+          <button onClick={handleCommentClick} className={styles.button2}>Comment</button>
+          <button onClick={handleRateClick} className={styles.button2}>Rate</button>
+          <button onClick={handleComplaintpageClick} className={styles.button2}>Complaint</button>
+          <button onClick={handleComplaintViewPageClick} className={styles.button2}>View_My_Complaints</button>
+          <button onClick={handleBookingPageClick} className={styles.button2}>Book itineraries/activities</button>
+          <button onClick={handleViewBookedFlightsPageClick} className={styles.button2}>View my Booked Flights</button>
+          <button onClick={() => handleHotelFlightPageClick(touristId)} className={styles.button2}>Book a Hotel</button>
+          <button onClick={() => handleViewBookedHotels(touristId)} className={styles.button2}>View my Booked Hotels</button>
+          <button onClick={() => handleBookTransportationPageClick(touristData?.email)} className={styles.button2}>Book a Transportation</button>
+          <button onClick={() => handleViewTransportation(touristData?.email)} className={styles.button2}>View my Transportations</button>
+          <button onClick={() => handleViewMyBalance(email)} className={styles.button2}>View my Balance</button>
+          <button onClick={() => handleViewMyWishList(touristId)} className={styles.button2}> View My Wish List</button>
+          <button onClick={handleViewBookmarkedActivities} className={styles.button2}>View Bookmarked Activities</button>
+          <button onClick={handleViewCart} className={styles.button2}>View Cart</button>
+          <button onClick={handleViewOrdersPage} className={styles.button2}>View Orders</button>
+          <div className="notification-container"></div>
         </div>
       </div>
-  
-      <div className={`container ${isSidebarOpen ? 'shifted' : ''}`}>
-        <header className="header">
+
+      <div className={`${styles.container} ${isSidebarOpen ? styles.shifted : ''}`}>
+        <header className={styles.header}>
           <h1>Welcome, Tourist!</h1>
         </header>
-  
-        <button className="btn" onClick={handleUpdateProfile}>
+
+        <button className={styles.button} onClick={handleUpdateProfile}>
           {isEditing ? 'Save Changes' : 'Update Profile'}
         </button>
 
-        {/* Display Categories as Buttons */}
-        <div className="category-buttons">
-          <h2>Choose a Category:</h2>
-          {categories.length > 0 ? (
-            categories.map((category, index) => (
-              <button
-                key={index}
-                onClick={() => handleCategoryClick(category.name)} // Use category name here
-                className="category-btn"
-              >
-                {category.name}
-              </button>
-            ))
-          ) : (
-            <p>No categories available.</p>
-          )}
-        </div>
-  
-        {/* Loading Indicator */}
-        {loadingActivities && <p>Loading activities...</p>}
-  
-        {/* Error Message */}
-        {activityError && <p className="error">{activityError}</p>}
-  
-        {/* Display Selected Activities */}
-        {activities.length > 0 && (
-          <div className="activities-list">
-            <h2>Available Activities:</h2>
-            <ul>
-              {activities.map((activity, index) => (
-                <ActivityDisplayFilterWise activity={activity}/> // Assuming activity has a 'name' field
-              ))}
-            </ul>
-          </div>
-        )}
-  
         {showProfileInfo && (
-          <div className="profile">
-            <h2 className="form-header">Your Profile</h2>
-            <div className="profile-info">
+          <div className={styles['category-buttons3']}>
+            <h2 className={styles['form-header']}>Your Profile</h2>
+            <div className={styles['profile-info']}>
               <label>Name:</label>
               {isEditing ? (
                 <input
@@ -348,7 +340,7 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.name || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Password:</label>
               {isEditing ? (
                 <input
@@ -361,7 +353,7 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.password || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Email:</label>
               {isEditing ? (
                 <input
@@ -374,7 +366,7 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.email || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Mobile:</label>
               {isEditing ? (
                 <input
@@ -387,7 +379,7 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.mobile || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Nationality:</label>
               {isEditing ? (
                 <input
@@ -400,7 +392,7 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.nationality || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Job:</label>
               {isEditing ? (
                 <input
@@ -413,47 +405,71 @@ const TouristPage = ({email}) => {
                 <p>{touristData?.job || 'NA'}</p>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Date of Birth:</label>
               <p>{touristData?.dob || 'NA'}</p>
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <label>Wallet Balance:</label>
               <p>${touristData?.wallet || 'NA'}</p>
             </div>
+            {/* <DeleteTourist email={email }/> */}
+            <button className={styles.button3} onClick={() => handleDeleteReq()}> send delete request</button>
           </div>
         )}
-  
-        <button onClick={() => navigateToupcoming(touristData?.email)}>show upcoming activities / itineraries</button>
 
-        <button onClick={navigateToActivitySorted}>show activity sorted</button>
-
-        <button onClick={navigateToSearch}> search activity / musuem / itinerary </button>
-        
-        <br></br> <br>
-        </br>
-        {/* <PreferenceChoose/> */}
-           <button onClick={() => navigate('/tourist/preference')}>
-                Choose Preferences
-            </button>
-
-        <ProductSort email ={email} touristId = {touristId} />
-      
-
-        <DeleteTourist email={email }/>
-        <button onClick={()=>handleDeleteReq()}> send delete request</button>
-        <div>
-            <h1>Welcome to the Activity Planner</h1>
-           
+        <div className={styles['category-buttons']}>
+          <h2>Categories to look at:</h2>
+          {categories.length > 0 ? (
+            categories.map((category, index) => (
+              <button
+                key={index}
+                onClick={() => handleCategoryClick(category.name)} // Toggle category state
+                className={`${styles.button} ${activeCategories[category.name] ? styles.active : ''}`}
+              >
+                {category.name}
+              </button>
+            ))
+          ) : (
+            <p>No categories available.</p>
+          )}
         </div>
-        <footer className="footer">
+
+        {/* Loading Indicator */}
+        {loadingActivities && <p>Loading activities...</p>}
+
+        {/* Error Message */}
+        {activityError && <p className={styles.error}>{activityError}</p>}
+
+        {/* Display Selected Activities */}
+        {activities.length > 0 && (
+          <div className={styles['activities-list']}>
+            <h2>Available Activities:</h2>
+            <ul>
+              {activities.map((activity, index) => (
+                <ActivityDisplayFilterWise activity={activity} key={index} />
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className={styles['category-buttons']}>
+          <h2>You may also:</h2>
+          <button className={styles.button} onClick={() => navigateToupcoming(touristData?.email)}>Look up upcoming activities / itineraries</button>
+          <button className={styles.button} onClick={navigateToActivitySorted}>Look up activity sorted</button>
+          <button className={styles.button} onClick={navigateToSearch}>Search For activity / musuem / itinerary</button>
+          <button className={styles.button} onClick={() => navigate('/tourist/preference')}>Choose Your Preferences</button>
+          <ProductSort email={email} touristId={touristId} />
+        </div>
+
+        <button className={styles.button} onClick={() => navigate("/")}>Back to login page</button>
+        <footer className={styles.footer}>
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
-         
       </div>
-      
     </div>
   );
+  
 };
 
 export default TouristPage;

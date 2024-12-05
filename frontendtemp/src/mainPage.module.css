@@ -1,0 +1,89 @@
+.mainPage{
+    
+    background-color: #e8ecf3; /* Light Beige as fallback */
+    color: #333333; /* Slate Gray text */
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    padding: 10px;
+  
+  
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-size: cover;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    overflow: visible; /* Allows overflow if necessary */
+  
+    position: relative; /* Ensures the content stays on top of the background */
+    z-index: 0; /* Places the background image at the lowest layer */
+
+   
+
+}
+.mainPage2 {
+    /* background-image: url('mp3.jpeg'); */
+    background-color: #29466b; /* Light Beige as fallback */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-size: cover; /* Scales the image to cover the area */
+    background-position: center; /* Center the image */
+    position: fixed; /* Ensures the background image stays fixed */
+    top: 0; /* Aligns to the top of the viewport */
+    left: 0; /* Aligns to the left of the viewport */
+    width: 40vw; /* Covers the entire viewport width */
+    height: 98vh; /* Covers the entire viewport height */
+    z-index: -1; /* Sends the background behind other content */
+    margin-left: 900px;
+    border-radius: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slight shadow for emphasis */
+   
+}
+.mainPage3 {
+    background-image: url('mp4.jpeg');
+    background-color: #29466b; /* Light Beige as fallback */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-size: cover; /* Scales the image to cover the area */
+    background-position: center; /* Center the image */
+    position: fixed; /* Ensures the background image stays fixed */
+    top: 0; /* Aligns to the top of the viewport */
+    left: 0; /* Aligns to the left of the viewport */
+    width: 100vw; /* Covers the entire viewport width */
+    height: 70vh; /* Covers the entire viewport height */
+    z-index: -1; /* Sends the background behind other content */
+    /* margin-left: 900px; */
+    border-radius: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Slight shadow for emphasis */
+   
+}
+.categoryButtons {
+    background-color: #7f8eb6e5; 
+    padding: 2rem; 
+    border-radius: 40px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    color: white; 
+    width: 96%; 
+    font-size: 1.05rem; 
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); 
+
+    /* Positioning */
+    position: fixed; /* Sticks it to the viewport */
+    bottom: 0; /* Anchors to the bottom */
+    left: 0; /* Ensures it spans the entire width */
+    margin: 0; /* Removes unnecessary margins */
+}
+
+  .button6 {
+    background-color: #f8ffc9a4; 
+    color: #7d7373; 
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border-color: #ccb8fa;
+    margin: 0.3rem 0;
+    border-style: solid;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 100%; 
+    text-align: center; 
+    box-sizing: border-box; 
+  }
+  .button6:hover {
+    background-color: #7c70e872; 
+  }

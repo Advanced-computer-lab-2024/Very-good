@@ -93,7 +93,6 @@ mongoose.connect(process.env.MONG_URI)
                 console.log('Running daily notifying of open bookings...');
                 await notifyInterestedTourists();
             });
-
         }) 
     })
     .catch((error) => {

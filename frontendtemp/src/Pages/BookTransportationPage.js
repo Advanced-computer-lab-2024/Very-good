@@ -3,7 +3,7 @@ import axios from 'axios';
 import TransportationDisplay from '../Components/TransportationDisplay';
 import { fetchTouristByEmail } from '../RequestSendingMethods';
 import { useLocation } from 'react-router-dom';
-
+import Navbar from '../Components/Navbar';
 const BookTransportationPage = () => {
   const location = useLocation();
   const { email } = location.state || {};
@@ -62,6 +62,7 @@ const BookTransportationPage = () => {
 
   return (
     <div className="book-transportation-page">
+      <Navbar/>
       <h1>Available Transportations</h1>
       {!formSubmitted ? (
         <form onSubmit={handleSubmit}>
