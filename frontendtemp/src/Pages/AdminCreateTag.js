@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import styles from '../styles/SellerPage.module.css'; 
 const AdminCreateTag = () => {
     const [tagName, setTagName] = useState('');  // State to hold the entered tag name
     const [error, setError] = useState(null);
@@ -38,7 +39,7 @@ const AdminCreateTag = () => {
     
 
     return (
-        <div className="admin-create-tag">
+        <div className={styles['category-buttons']}>
             <h2>Create a New Tag</h2>
             <form>
                 <div className="form-group">

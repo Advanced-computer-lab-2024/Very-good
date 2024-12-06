@@ -12,19 +12,19 @@ h1, h2, h3, h4 {
     color: #47241a; /* Cocoa Bean */
     margin-bottom: 15px;
 }
-.admin {
+/* .admin {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom right, #fbead1, #d48947) ; /* Gradient gold-beige with image */
+    background: linear-gradient(to bottom right, #fbead1, #d48947) ;
     background-repeat: no-repeat; 
     background-size: cover; 
-    width: 100vw; /* Full viewport width */
+    width: 100vw;
     height: 650vh;
     margin-left: -13%;
     margin-top: -4%;
-    color: var(--cocoa-bean); /* Cocoa Bean */
-}
+    color: var(--cocoa-bean);
+} */
 
 p {
     text-align: center;

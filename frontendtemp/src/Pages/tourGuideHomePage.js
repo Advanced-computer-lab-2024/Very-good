@@ -253,9 +253,9 @@ const TourGuideHomePage = ({ email }) => {
 
       {/* Sidebar */}
       <div className={styles.navbar}>
-  <button onClick={handleUploadAphoto} className={styles.button}>Upload A Photo</button>
-  <button onClick={handleViewSalesReport}className={styles.button}>View Sales Report</button>
-  <button onClick={handleviewItineraryUsersReport}className={styles.button}>View Users Report</button>
+  <button onClick={handleUploadAphoto} className={styles.button2}>Upload A Photo</button>
+  <button onClick={handleViewSalesReport}className={styles.button2}>View Sales Report</button>
+  <button onClick={handleviewItineraryUsersReport}className={styles.button2}>View Users Report</button>
    
 
 </div>
@@ -286,11 +286,11 @@ const TourGuideHomePage = ({ email }) => {
         />
       )}
     </div>
-        <div className="profile">
+    <div className={styles['category-buttons3']}>
           <h2  className={styles.h2}>Your Profile</h2>
           <div className={styles.categoryButtons}>
           <div className="categoryButton">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Name:</label>
+            <label>Name:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -303,7 +303,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Password:</label>
+            <label >Password:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -315,21 +315,9 @@ const TourGuideHomePage = ({ email }) => {
               <p>{"Not Visible" || 'NA'}</p>
             )}
           </div>
+          
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Password:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="password"
-                value={editedData?.password || ''}
-                onChange={handleEditChange}
-              />
-            ) : (
-              <p>{"Not Visible" || 'NA'}</p>
-            )}
-          </div>
-          <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Email:</label>
+            <label>Email:</label>
             {isEditing ? (
               <input
                 type="email"
@@ -342,7 +330,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Mobile:</label>
+            <label >Mobile:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -355,7 +343,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Nationality:</label>
+            <label >Nationality:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -368,7 +356,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold', color:'rgb(85, 39, 17)'}}>Previous Work:</label>
+            <label >Previous Work:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -381,7 +369,7 @@ const TourGuideHomePage = ({ email }) => {
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold ' , color:'rgb(85, 39, 17)'}}>Years of Experience:</label>
+            <label >Years of Experience:</label>
             {isEditing ? (
               <input
                 type="number"
@@ -405,7 +393,7 @@ const TourGuideHomePage = ({ email }) => {
         
         </div>
 
-        <div className={styles.categoryButtons}>
+        <div className={styles['category-buttons']}>
           <h2 className={styles.h2}>Your Itinerary</h2>
           <button className={styles.button} onClick={handleViewItineraryDisplay}>
             {showItineraryDisplay

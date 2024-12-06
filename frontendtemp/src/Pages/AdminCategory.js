@@ -8,8 +8,8 @@ import {
   archiveProduct,
   unarchiveProduct,
 } from "../Services/productServices";
-import "./admin.css"; // Ensure you import the CSS file
-
+// Ensure you import the CSS file
+import styles from '../styles/SellerPage.module.css'; 
 function AdminCategory(sellerId) {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({ name: "" });
@@ -263,22 +263,23 @@ function AdminCategory(sellerId) {
   };
 
   return (
-    <div className="admin-category">
-      <h1>Manage Categories</h1>
+    <div className={styles['category-buttons']}>
+      
+      <h1 className={styles.h1}>Manage Categories</h1>
 
       {/* Operation Selection */}
       {!selectedOperation && (
         <div>
-          <button onClick={() => setSelectedOperation("create")}>
+          <button className={styles.button} onClick={() => setSelectedOperation("create")}>
             Create Category
           </button>
-          <button onClick={() => setSelectedOperation("read")}>
+          <button  className={styles.button} onClick={() => setSelectedOperation("read")}>
             View Categories
           </button>
-          <button onClick={() => setSelectedOperation("delete")}>
+          <button  className={styles.button} onClick={() => setSelectedOperation("delete")}>
             Delete Category
           </button>
-          <button onClick={() => setSelectedOperation("update")}>
+          <button className={styles.button} onClick={() => setSelectedOperation("update")}>
             Update Category
           </button>
          
@@ -382,15 +383,15 @@ function AdminCategory(sellerId) {
 
       <h1>Manage Products</h1>
       {!selectedOperation && (
-        <div className="admin-products">
+        <div >
         
-          <button onClick={() => setSelectedOperation("create-product")}>
+          <button  className={styles.button} onClick={() => setSelectedOperation("create-product")}>
             Create product
           </button>
-          <button onClick={() => setSelectedOperation("show-products")}>
+          <button className={styles.button} onClick={() => setSelectedOperation("show-products")}>
             show products
           </button>
-          <button onClick={() => setSelectedOperation("show-products-rate")}>
+          <button className={styles.button} onClick={() => setSelectedOperation("show-products-rate")}>
             show products sorted by rating
           </button>
 

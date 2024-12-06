@@ -233,13 +233,14 @@ const ProductSort = ({ email, touristId }) => {
       style={{
         width: "125%",
         color: hover ? "grey" : "grey", // Change color on hover
-        borderColor: "#70e8c4",
+       
         borderRadius: "5px",
         backgroundColor: hover ? "#70e8c472" : "#dceb772f", // Change background color on hover
         height: "35px",
         marginLeft: "-12.5%",
         marginBottom: "-1rem",
         marginTop: "-20rem",
+        borderColor: "#70e8c4",
       }}
     >
                 {showMappings ? "Hide Products Sorted by Rating" : "Look up Products Sorted by Rating"}

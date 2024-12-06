@@ -26,7 +26,7 @@ const TransportationDisplayForAdvertiser = ({ transportation, onEdit, onDelete }
   };
 
   return (
-    <div className={styles.categoryButtons}> {/* Changed to activity-card for styling */}
+    <div className={styles['category-buttons']}>{/* Changed to activity-card for styling */}
       <h2 className={styles.h2}>Transportation Details</h2>
       <div >
         {isEditing ? (

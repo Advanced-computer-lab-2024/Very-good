@@ -124,10 +124,10 @@ const handleBackFromNumbersReport =()=>{
      
 
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className={styles.navbar2}>
-          <button onClick={handleUploadLogo} className={styles.button}>Upload Logo</button>
-          <button onClick={handleSalesReport}  className={styles.button}>Sales Report</button>
-          <button onClick={handleNumberReport}  className={styles.button}>Users Report</button>
+        <div className={styles.navbar}>
+          <button onClick={handleUploadLogo} className={styles.button2}>Upload Logo</button>
+          <button onClick={handleSalesReport}  className={styles.button2}>Sales Report</button>
+          <button onClick={handleNumberReport}  className={styles.button2}>Users Report</button>
         </div>
       </div>
 
@@ -136,11 +136,11 @@ const handleBackFromNumbersReport =()=>{
           <h1 className={styles.h1i}>Welcome, Advertiser!</h1>
         </header>
 
-        <div className={styles.categoryButtons}>
+        <div className={styles['category-buttons3']}>
           <h2 className={styles.h2i}>Advertiser Profile</h2>
 
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Name:</label>
+            <label >Name:</label>
             {isEditing ? (
               <input 
                 type="text"
@@ -150,11 +150,11 @@ const handleBackFromNumbersReport =()=>{
                 
               />
             ) : (
-              <p style={{ color:'#5c63bd'}}>{advertiserData?.name || 'NA'}</p>
+              <p >{advertiserData?.name || 'NA'}</p>
             )}
           </div>
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Password:</label>
+            <label >Password:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -163,12 +163,12 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p style={{ color:'#5c63bd'}} >{"Not Visible"|| 'NA'}</p>
+              <p >{"Not Visible"|| 'NA'}</p>
             )}
           </div>
 
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}}>Email:</label>
+            <label >Email:</label>
             {isEditing ? (
               <input
                 type="email"
@@ -177,12 +177,12 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p style={{ color:'#5c63bd'}}>{advertiserData?.email || 'NA'}</p>
+              <p>{advertiserData?.email || 'NA'}</p>
             )}
           </div>
 
           <div className="profile-info">
-            <label style={{ fontWeight: 'bold ' , color:'rgb(248, 255, 201)'}} >Description:</label>
+            <label >Description:</label>
             {isEditing ? (
               <input
                 type="text"
@@ -191,7 +191,7 @@ const handleBackFromNumbersReport =()=>{
                 onChange={handleEditChange}
               />
             ) : (
-              <p style={{ color:'#5c63bd'}}>{advertiserData?.description || 'NA'}</p>
+              <p >{advertiserData?.description || 'NA'}</p>
             )}
           </div>
           {isEditing ? (
@@ -199,7 +199,7 @@ const handleBackFromNumbersReport =()=>{
       Send delete Request
     </button>
   ) : null}
-          <button className={styles.button6} onClick={handleUpdateProfile}>
+          <button className={styles.button} onClick={handleUpdateProfile}>
             {isEditing ? 'Save Changes' : 'Update Profile'}
           </button>
 
@@ -208,10 +208,10 @@ const handleBackFromNumbersReport =()=>{
         {/* <button onClick={()=>handleDeleteReq()}> send delete request</button> */}
         
         </div>
-        <button className={styles.button5} onClick={onBack}>
+        <button className={styles.button} onClick={onBack}>
             &larr; Back
           </button>
-        <footer className={styles.footer2}>
+        <footer className={styles.footer}>
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>
