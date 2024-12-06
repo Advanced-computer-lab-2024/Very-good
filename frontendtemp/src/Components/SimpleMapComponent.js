@@ -14,7 +14,7 @@ const SimpleMapComponent = ({ location }) => {
           }} >
         <GoogleMap
             id="map"
-            mapContainerStyle={{ height: '400px', width: '800px' }}
+            mapContainerStyle={{ height: '100%', width: '100%' }}
             center={location} // Center on markerPosition or initialCenter
             zoom={10} // Adjust zoom level as needed
         >

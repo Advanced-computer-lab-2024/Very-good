@@ -163,13 +163,13 @@ const GuestPage = () => {
   return (
     <div className={styles.guestPage}>
       {/* Sidebar Toggle Button */}
-  <button className={styles.toggleBtn} onClick={toggleSidebar}>
+  <button  className={styles['toggle-btn']} onClick={toggleSidebar}>
     {isSidebarOpen ? 'Close' : 'Menu'}
   </button>
 
       {/* Sidebar */}
       <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`}>
-        <div className={styles.categoryButtons2}>
+      <div className={styles['category-buttons2']}>
           <h3>Quick Links</h3>
           <button onClick={handleFilterActivitiesClick} className={styles.button2}>
             Filter Activities
@@ -204,7 +204,7 @@ const GuestPage = () => {
           <h1 className={styles.h1}>Welcome, Guest!</h1>
         </header>
 
-        <div className={styles.categoryButtons}>
+        <div className={styles['category-buttons']}>
           <h2 className={styles.h2}>Categories to look at:</h2>
           {categories.length > 0 ? (
             categories.map((category, index) => (

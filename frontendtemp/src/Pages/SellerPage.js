@@ -208,13 +208,13 @@ const SellerPage = ({ email }) => {
     
         <div className={styles.navbar}>
        
-          <button onClick={() => setIsViewingManagement(true)} className={styles.button}>SellerProduct</button> {/* New button */}
-          <button onClick={handleProductFilterButtonOnClick} className={styles.button}>
+          <button onClick={() => setIsViewingManagement(true)} className={styles.button2}>SellerProduct</button> {/* New button */}
+          <button onClick={handleProductFilterButtonOnClick} className={styles.button2}>
             Filter Product by Price
           </button> {/* New button with commented action listener */}
-          <button onClick={handleUploadPhoto} className={styles.button}>Upload_A_Logo</button>
-          <button onClick={handleUploadAproductPicture} className={styles.button}>UploadProductPicture</button>
-          <button onClick={handleSalesReport} className={styles.button}>View Products Sales Report</button>
+          <button onClick={handleUploadPhoto} className={styles.button2}>Upload_A_Logo</button>
+          <button onClick={handleUploadAproductPicture} className={styles.button2}>UploadProductPicture</button>
+          <button onClick={handleSalesReport} className={styles.button2}>View Products Sales Report</button>
         
         </div>
       
@@ -251,10 +251,10 @@ const SellerPage = ({ email }) => {
 
 
 
-            <div className={styles.categoryButtons}>
+            <div className={styles['category-buttons3']}>
               <h2 className={styles.h2}>Your Profile</h2>
               <div className="profile-info">
-                <label style={{ fontWeight: 'bold', color:'#442446'}}>Name:</label>
+                <label >Name:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -267,7 +267,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label style={{ fontWeight: 'bold', color:'#442446'}} >Password:</label>
+                <label >Password:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -280,7 +280,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label style={{ fontWeight: 'bold', color:'#442446'}}>Email:</label>
+                <label >Email:</label>
                 {isEditing ? (
                   <input
                     type="email"
@@ -293,7 +293,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
               <div className="profile-info">
-                <label style={{ fontWeight: 'bold', color:'#442446'}}>Description:</label>
+                <label>Description:</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -306,7 +306,7 @@ const SellerPage = ({ email }) => {
                 )}
               </div>
 
-              <button className={styles.button3} onClick={handleUpdateProfile}>
+              <button className={styles.button} onClick={handleUpdateProfile}>
                 {isEditing ? 'Save Changes' : 'Update Profile'}
               </button>
               <div>
@@ -319,9 +319,10 @@ const SellerPage = ({ email }) => {
 
             </div>
               
-          
+          <div className={styles['category-buttons']}>
           <Search sellerId={sellerData?._id}/>
-          <button className={styles.button3}  onClick={() => navigate("/")}>
+          </div>
+          <button className={styles.button}  onClick={() => navigate("/")}>
            Back to login Page
           </button>
             <footer className={styles.footer}>

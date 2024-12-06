@@ -82,7 +82,7 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
   };
 
   return (
-    <div className={styles.categoryButtons}>
+    <div className={styles['category-buttons']}>
       {isEditing ? (
         <>
           <input 
@@ -196,17 +196,17 @@ const ActivityDisplay = ({ activity, onDelete, onUpdate } ) => {
       ) : (
         <>
           <h2  className={styles.h2}>{activity.name}</h2>
-          <p style={{color:"grey"}}>Date: {new Date(activity.date).toLocaleDateString()}</p>
-          <p  style={{color:"grey"}} >Price: ${activity.price}</p>
-          <p  style={{color:"grey"}}>Duration: {activity.duration} minutes</p>
-          <p style={{color:"grey"}}>Category: {categoryName}</p>
-          <p  style={{color:"grey"}}>Ratings: {activity.ratings}/5</p>
-          <p style={{color:"grey"}}>Special Discount: {activity.specialDiscount}%</p>
-          <p style={{color:"grey"}}>Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+          <p style={{color:"grey"}}><strong>Date: </strong>{new Date(activity.date).toLocaleDateString()}</p>
+          <p  style={{color:"grey"}} ><strong>Price:</strong> ${activity.price}</p>
+          <p  style={{color:"grey"}}><strong>Duration:</strong> {activity.duration} minutes</p>
+          <p style={{color:"grey"}}><strong>Category:</strong> {categoryName}</p>
+          <p  style={{color:"grey"}}><strong>Ratings:</strong> {activity.ratings}/5</p>
+          <p style={{color:"grey"}}><strong>Special Discount:</strong> {activity.specialDiscount}%</p>
+          <p style={{color:"grey"}}><strong>Booking Open: </strong>{activity.bookingOpen ? "Yes" : "No"}</p>
           
           {/* Displaying location coordinates */}
           <p  style={{color:"grey"}} >
-          Location: {activity.location.lat}, {activity.location.lng}
+          <strong>Location:</strong> {activity.location.lat}, {activity.location.lng}
           </p>
           
          

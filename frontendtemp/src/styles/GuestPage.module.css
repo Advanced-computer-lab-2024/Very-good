@@ -1,26 +1,14 @@
 /* Global styles */
-.guestPage {
-  background-image: url('gp7.jpeg');
-  background-color: #f4f1eb7e; /* Light Beige as fallback */
-  color: #333333; /* Slate Gray text */
+body {
+  background-image: url('tp2.jpeg');
+  background-color: #f4f1eb7e; /* Light Beige */
+  color: #333333; /* Slate Gray text for better readability */
   font-family: Arial, sans-serif;
-  margin: 10px;
-  padding: 10px;
-
-  background-attachment: fixed; /* Keeps the background fixed while scrolling */
-  
-  background-position: right center;
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-  overflow: visible; /* Allows overflow if necessary */
-  
-  position: relative; /* Ensures the content stays on top of the background */
-  z-index: 0; /* Places the background image at the lowest layer */
-  transform: translateX(-10.5%);
+  margin: 0;
+  padding: 0;
+ 
+ 
 }
-
-
-
 .buttonToggle {
   width: 125%;
   height: 35px;
@@ -32,17 +20,12 @@
 
 /* Header */
 .header {
-  background-color: #ffe7ded8; /* Forest Green */
-  color: #c26d6d; /* White text */
+  background-color: #71aebda2; /* Forest Green */
+  color: #FFFFFF; /* White text */
   padding: 1rem;
   text-align: center;
   font-size: 1.8rem; /* Slightly larger text */
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow for depth */
-}
-/* Headings */
- .h1, .h2, h3, h4 {
-  color: #48887f; /* Forest Green for headings */
-  text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
 }
 
 /* Footer */
@@ -85,8 +68,8 @@
 
 /* Container for buttons */
 /* Styling the container div for categories */
-.categoryButtons {
-  background-color: #74bacf7c; /* Light Beige background for a soft look */
+.category-buttons {
+  background-color: #ffffffd2; /* Light Beige background for a soft look */
   padding: 2rem; /* Adequate padding to give space around the content */
   margin: 2rem 0; /* Margin for spacing the divider from other sections */
   border-radius: 8px; /* Rounded corners for a smooth effect */
@@ -104,8 +87,8 @@
 }
 
 /* Style for the button container inside the category section */
-.categoryButtons .button {
-  background-color: #f7f8eddc; /* Muted Gold */
+.category-buttons .button {
+  background-color: #dceb772f; /* Muted Gold */
   color: #7d7373; /* Slate Gray text */
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -137,7 +120,7 @@
 
 /* Media query for mobile responsiveness */
 @media (max-width: 600px) {
-  .categoryButtons {
+  .category-buttons {
     padding: 1rem; /* Reduce padding on smaller screens */
   }
 
@@ -158,7 +141,7 @@
 
 /* Buttons */
 .button {
-  background-color: #fffef6cc; /* Muted Gold */
+  background-color: #dceb772f; /* Muted Gold */
   color: #7d7373; /* White text */
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -308,19 +291,6 @@ h1, h2, h3, h4 {
 .sidebar.open {
   left: 0; /* Slide in */
 }
-/* Adjusting the toggle button to be positioned inside the sidebar */
-.toggleBtn {
-  position: absolute; /* Positioned relative to the sidebar */
-  top: 10px;          /* Position the button 10px from the top */
-  left: 15px;     /* Position the button 10px from the right */
-  z-index: 1100;      /* Ensure the button stays on top of the sidebar */
-  background-color: #e2e4c8; /* Muted Gold background */
-  color: #403d4b;      /* Text color */
-  padding: 0.5rem 1rem; /* Padding for the button */
-  border-radius: 5px;  /* Rounded corners */
-  cursor: pointer;    /* Pointer cursor on hover */
-  font-size: 16px;     /* Font size */
-}
 
 /* Toggle button */
 .toggle-btn {
@@ -355,10 +325,10 @@ h1, h2, h3, h4 {
 .container.shifted {
   margin-left: 250px; /* Adjust width of sidebar */
 }
-.categoryButtons2 {
+.category-buttons2 {
   /* Light Beige background for a soft look */
-  padding: 1rem; /* Adequate padding to give space around the content */
-  margin: 3rem 0; /* Margin for spacing the divider from other sections */
+  padding: 2rem; /* Adequate padding to give space around the content */
+  margin: 2rem 0; /* Margin for spacing the divider from other sections */
   border-radius: 8px; /* Rounded corners for a smooth effect */
 
   position: relative; /* To add a pseudo-element divider */

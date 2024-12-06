@@ -1,4 +1,5 @@
 // TouristPage.js
+import styles from '../styles/SellerPage.module.css'; 
 import React, { useState, useEffect } from 'react';
 import './AdvertiserPage.css'; 
 import CreateMuseumForm from '../Components/CreateMuseumForm';
@@ -6,7 +7,7 @@ import MuseumList from  '../Components/MusuemList'
 import { updateTouristByEmailT } from '../RequestSendingMethods';
 import CreateTagForm from './CreateTagForm'; // Import CreateTagForm
 import {useLocation } from "react-router-dom";
-
+import { Routes, Route, useNavigate } from "react-router-dom";
 const TourismGovernerPage = ({ email }) => {
   const location = useLocation();
 
@@ -22,7 +23,7 @@ const TourismGovernerPage = ({ email }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [oldEmail, setOldEmail] = useState(email);
-  
+  const navigate = useNavigate();
   const [showProfileInfo, setShowProfileInfo] = useState(false);
 
   useEffect(() => {
@@ -118,8 +119,22 @@ const TourismGovernerPage = ({ email }) => {
   };
 
   return (
-    <div>
-      <h1>Tourism Governer Page</h1>
+    <div className={styles.sellerPage}>
+      <div className={styles.navbar}>
+      <button className={styles.button2} onClick={handleCreateMuseumButtonClick}>
+        Create Museum/Historical Place
+      </button>
+      <button className={styles.button2}  onClick={handleCreateTagButtonClick}>
+        Create Tag
+      </button>
+      <button className={styles.button2}  onClick={() => navigate("/")}>
+           Back to login Page
+          </button>
+      </div>
+      <header className={styles.header}> 
+      <h1 className={styles.h1}>Tourism Governer Page</h1>
+      </header>
+      <div className={styles['category-buttons3']}>
       <p>Welcome to the Tourism Governer Page!</p>
       <div className="profile-info">
         <label>Name:</label>
@@ -199,24 +214,23 @@ const TourismGovernerPage = ({ email }) => {
           <p>{tourismData?.nationality || 'NA'}</p>
         )}
       </div>
+     
 
-      <button className="btn" onClick={handleUpdateProfile}>
+      <button className={styles.button} onClick={handleUpdateProfile}>
         {isEditing ? 'Save Changes' : 'Update Profile'}
       </button>
-    
+      </div>
       {/* Create Museum button */}
-      <button className="create-activity-button" onClick={handleCreateMuseumButtonClick}>
-        Create Museum/Historical Place
-      </button>
+     
       {isCreatingMuseum && <CreateMuseumForm onClose={closeMuseumForm}/>}
 
       {/* Create Tag button */}
-      <button className="create-tag-button" onClick={handleCreateTagButtonClick}>
-        Create Tag
-      </button>
+     
       {isCreatingTag && <CreateTagForm onClose={closeTagForm} onAddTag={addTag} />} {/* Render CreateTagForm */}
-      
+      <div className={styles["category-buttons"]}>
       <MuseumList/>
+      </div>
+     
 
       {/* Optional: Render created tags for display */}
       {tags.length > 0 && (
@@ -227,7 +241,9 @@ const TourismGovernerPage = ({ email }) => {
               <li key={index}>{tag.name}</li>
             ))}
           </ul>
+         
         </div>
+        
       )}
     </div>
   );

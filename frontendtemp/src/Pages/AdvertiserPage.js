@@ -256,20 +256,20 @@ const AdvertiserPage = ({email}) => {
  
             <div className={styles.navbar}>
             
-            <button  className={styles.button} onClick={() => navigate("/")}>
+            <button  className={styles.button2} onClick={() => navigate("/")}>
                Back to login page 
             </button>
             {/* Create Activity button */}
-            <button  className={styles.button} onClick={handleCreateButtonClick}>
+            <button  className={styles.button2} onClick={handleCreateButtonClick}>
                 Create Activity
             </button>
 
-            <button  className={styles.button} onClick={handleCreateTransportationButtonClick} >
+            <button  className={styles.button2} onClick={handleCreateTransportationButtonClick} >
                 Create Transportation
             </button>
 
             {/* View Profile Information button */}
-            <button  className={styles.button} onClick={handleViewProfileClick}>
+            <button  className={styles.button2} onClick={handleViewProfileClick}>
                 View Profile Information
             </button>
             </div>
@@ -294,6 +294,7 @@ const AdvertiserPage = ({email}) => {
                     onEdit={handleEditTransportation} 
                     onDelete={handleDeleteTransportation}  />
                 ))}
+                <button className={styles.button} onClick={() => navigate("/")}>Back to login page</button>
             </div>
             
         </div>

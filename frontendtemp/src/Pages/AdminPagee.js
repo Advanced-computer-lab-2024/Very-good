@@ -12,6 +12,8 @@ import Deletion from '../Components/DeleteAdmin';
 import ShowAllproducts from '../Components/ShowAllproducts'
 import RevenuePage from '../Services/AdminSprint3Services'
 import './admin.css'; 
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import styles from '../styles/SellerPage.module.css'; 
 const AdminPage = ({email}) => {
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
@@ -28,7 +30,7 @@ const AdminPage = ({email}) => {
 
     ]);
     
-
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [tags, setTags] = useState([]); // State to hold the tags
     const [editingTag, setEditingTag] = useState(null); // State for the tag currently being edited
     const [formData, setFormData] = useState({ name: '' }); // State for form data
@@ -65,7 +67,7 @@ const AdminPage = ({email}) => {
     const [isChangingPassword, setIsChangingPassword] = useState(false); // State for showing password change form
     const [newPassword, setNewPassword] = useState(''); // State for the new password
     const [confirmPassword, setConfirmPassword] = useState(''); // State for confirming the new password
-  
+    const navigate = useNavigate();
     
     const handleChangePassword = () => {
         setIsChangingPassword(!isChangingPassword); // Toggle the password change form
@@ -284,10 +286,22 @@ const AdminPage = ({email}) => {
     if(showSalesReport){
         return <RevenuePage/>
     }
+    
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
     return (
         <div className='admin'> 
-            <h1>Welcome to the Admin Page!</h1>
-          
+        <button
+        className={styles['toggle-btn']} // Use the CSS Module for button
+        onClick={toggleSidebar}
+      >
+        {isSidebarOpen ? 'Close' : 'Menu'}
+      </button>
+      <header className={styles.header}> 
+            <h1 >Welcome to the Admin Page!</h1>
+         </header> 
            
         {/* ... existing JSX */}
         <button className="btn" onClick={handleChangePassword}>
@@ -330,57 +344,32 @@ const AdminPage = ({email}) => {
         ) : (
             <>
                     
-                    <div className="admin-activity-cards">
-                        {adminActivities.map(activity => (
-                            <div key={activity.id} className="activity-card">
-                                <h3>{activity.title}</h3>
-                                {activity.title === 'Add Admins' && (
-                                    <button className="view-button" onClick={handleAddAdmins}>Add Admins</button>
-                                )}
-                                {activity.title==='FilterProductsByPrice' &&(
-                                    < button className="view-button" onClick ={handleFilterProductByPrice}>Filter Products</button>
-                                    )}
-                                    {
-                                        activity.title==='Create_Tag'&&(
-                                            <button className="view-button" onClick={handleCreateTag}>Create Tag</button>
-                                        )
-                                    }
-                                {activity.title === 'View Tags' && (
-                                    <button className="view-button" onClick={handleViewTags}>View Tags</button>
-                                )}
-                                {activity.title === 'Add Tourism Governor' && (
-                                    <button className="view-button" onClick={handleAddGovernor}>Add Tourism Governor</button>
-                                )}
-                                {activity.title === 'Delete Admin' && (
-                                    <>
-                                        <button className="view-button" onClick={() => setShowAdminDelete(true)}>Delete Admin</button>
-                                        {/* New button underneath Delete Admin */}
-                                        <button className="view-button" onClick={handleNewButtonClick}>Search</button>
-                                    </>
-                                )}
-                                {activity.title === 'View Itineraries' && (
-                                        <button className="view-button" onClick={handleViewItineraries}>View Itineraries</button>
-                                )}
-                                {activity.title==='View Documents'&&(
-                                    <button className="view-button" onClick={handleViewDocmunets}>View Documents</button>
-                                )}
-                                {activity.title==='View Complaints'&&(
-                                   <button className="view-button" onClick={handleViewComplaints}>View Complaints</button>
-                                )}
-                                {activity.title==='View All products 3la ndafa'&&(
-                                    <button className="view-button" onClick={handleShowAllProductsMahmoud}>View All products</button>
-                                )} 
-                                {activity.title==='View Sales Report Page'&&(
-                                     <button className="view-button" onClick={handleSalesReportPage}>View Sales Report</button>
+                    <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`}>
+                    <div className={styles['category-buttons3']}>
+                            <h3>Quick Links</h3>
+                      
+                       <button className={styles.button2} onClick={handleAddAdmins}>Add Admins</button>
+                       < button className={styles.button2} onClick ={handleFilterProductByPrice}>Filter Products</button>
+                       <button className={styles.button2}onClick={handleCreateTag}>Create Tag</button>
+                       <button className={styles.button2} onClick={handleViewTags}>View Tags</button>
+                       <button className={styles.button2} onClick={handleAddGovernor}>Add Tourism Governor</button>
+                       <button className={styles.button2} onClick={() => setShowAdminDelete(true)}>Delete Admin</button>
+                       <button className={styles.button2} onClick={handleNewButtonClick}>Search</button>
+                       <button className={styles.button2} onClick={handleViewItineraries}>View Itineraries</button>
+                       <button className={styles.button2} onClick={handleViewDocmunets}>View Documents</button>
+                       <button className={styles.button2} onClick={handleViewComplaints}>View Complaints</button>
+                       <button className={styles.button2}onClick={handleShowAllProductsMahmoud}>View All products</button>
+                       <button className={styles.button2} onClick={handleSalesReportPage}>View Sales Report</button>
 
-                                )}
 
                                 
-                            </div>
-                        ))}
+                            
+                           
+                      
+                    </div>
                     </div>
 
-                    Display tags in enhanced cards
+                    
                     <div className="tags-container">
                         {tags.length > 0 ? (
                             tags.map(tag => (
@@ -393,7 +382,7 @@ const AdminPage = ({email}) => {
                                 </div>
                             ))
                         ) : (
-                            <p>No tags available.</p>
+                            <p></p>
                         )}
                     </div>
                     <div className="itineraries-container">
@@ -413,7 +402,7 @@ const AdminPage = ({email}) => {
             </div>
         ))
     ) : (
-        <p>No itineraries available.</p>
+        <p></p>
     )}
 </div>
 
@@ -553,7 +542,12 @@ const AdminPage = ({email}) => {
                     )}
                 </>
             )}
-            <Deletion/>
+            <div className={styles['category-buttons']}> 
+                <Deletion/>
+            </div>
+            <button className={styles.button}  onClick={() => navigate("/")}>
+           Back to login Page
+          </button>
         </div>
     );
 };
