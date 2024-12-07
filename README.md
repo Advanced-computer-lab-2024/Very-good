@@ -489,4 +489,24 @@ const registerTourist = async (touristData) => {
     }
 ```
 
+## Installation
+
+To get started with the project, follow the steps below to install and set up the backend and frontend.
+
+### Prerequisites
+
+Before installing, ensure that you have the following installed on your system:
+
+- [Node.js](https://nodejs.org/en/) (>= v14.x)
+- [npm](https://www.npmjs.com/) (>= v6.x)
+- [MongoDB](https://www.mongodb.com/) (for database setup)
+
+### Backend Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/your-repository-name.git
+
+
 
