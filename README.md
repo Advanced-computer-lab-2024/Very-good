@@ -93,7 +93,7 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 The website offers the following features for Tourists:
 
-For All Users :
+## For All Users :
 
 ### Authentication and Account Management
 •⁠  ⁠Login using a username and password.
@@ -106,7 +106,7 @@ For All Users :
 
 
 
-For Tourist :
+## For Tourist :
 
 ### User Profile Management
 •⁠  ⁠Update profile information, including wallet details.
@@ -166,7 +166,7 @@ For Tourist :
 •⁠  ⁠Receive promo codes (e.g., birthday discounts) via email and in-app.
 •⁠  ⁠Use promo codes for purchases across the platform.
 
-For Seller :
+## For Seller :
 
 ### Product Management
 •⁠  ⁠Add new products with the following details:
@@ -196,7 +196,7 @@ For Seller :
 •⁠  ⁠Filter products by price.
 •⁠  ⁠Sort products by ratings.
 
-For Tour Guide :
+## For Tour Guide :
 
 ### Itinerary Management
 •⁠  ⁠Create, read, update, and delete itineraries with detailed information, including:
@@ -234,7 +234,7 @@ For Tour Guide :
   - Itineraries
   - Museums and historical places.
 
-For Advertiser :
+## For Advertiser :
 
 ### Account and Profile Management  
 •⁠  ⁠Create, read, and update a profile with detailed information, including:  
@@ -272,7 +272,7 @@ For Advertiser :
 ### View and Manage Content  
 •⁠  ⁠Access a list of all created activities, itineraries, museums, and historical places.
 
-For Tourism Governer :
+## For Tourism Governer :
 
 The website offers the following features for the *Tourism Governor*:  
 
@@ -293,7 +293,7 @@ The website offers the following features for the *Tourism Governor*:
   - Type (e.g., museum, cultural landmark).  
   - Historical period (e.g., Medieval, Renaissance).  
 
-# For Admin :
+## For Admin :
 
 ### Account Management  
 •⁠  ⁠Change account password.  
