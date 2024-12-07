@@ -228,11 +228,8 @@ The website offers the following features for Tourists:
   - Attended an activity.
 •⁠  ⁠Filter the total number of tourist reports by month.
 
-### Activity and Itinerary Management
-•⁠  ⁠View a list of all created:
-  - Activities
-  - Itineraries
-  - Museums and historical places.
+### Itinerary Management
+•⁠  ⁠View a list of all created Itineraris
 
 ## For Advertiser :
 
