@@ -51,7 +51,7 @@ We are actively working on addressing these issues, adding more automated tests,
 
 ## Code Style
 
-We follow industry best practices using the [Prettier](https://prettier.io/) code formatter and [ESLint](https://eslint.org/) for linting.
+We follow industry best practices using the [ESLint](https://eslint.org/) for linting.
 
 ---
 
