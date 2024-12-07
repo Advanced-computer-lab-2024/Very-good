@@ -14,7 +14,7 @@ const ProductSort = ({ email, touristId }) => {
     const [showMappings, setShowMappings] = useState(false);  // Toggle for activities
     const [touristWallet, setTouristWallet] = useState(0);  // To store the tourist's wallet balance
     const [purchaseError, setPurchaseError] = useState(""); // To handle errors when purchasing
-    const [hover, setHover] = useState(false);
+    //const [hover, setHover] = useState(false);
     console.log('Passing email:', email);  
     const styles = {
         card: {
@@ -93,7 +93,7 @@ const ProductSort = ({ email, touristId }) => {
         };
 
         getProducts();  // Fetch first set of products (sorted by rating)
-    });
+    }, []);
 
     // Assuming the wallet balance is fetched here (replace with your logic)
     useEffect(() => {
@@ -227,15 +227,14 @@ const ProductSort = ({ email, touristId }) => {
             <div >
             <button
       onClick={toggleMappings}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      //onMouseEnter={() => setHover(true)}
+      //onMouseLeave={() => setHover(false)}
       className={styles.button}
       style={{
         width: "125%",
-        color: hover ? "grey" : "grey", // Change color on hover
-       
+        color: "grey", // Change color on hover
         borderRadius: "5px",
-        backgroundColor: hover ? "#70e8c472" : "#dceb772f", // Change background color on hover
+        backgroundColor:"#70e8c472", // Change background color on hover
         height: "35px",
         marginLeft: "-12.5%",
         marginBottom: "-1rem",

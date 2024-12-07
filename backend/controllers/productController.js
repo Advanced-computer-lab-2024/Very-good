@@ -131,7 +131,7 @@ const searchbyname = async (req, res) => {
         // Find products with the specified name that are also unarchived
         const products = await Product.find({
             name: name,
-            isArchived: false // Only fetch unarchived products
+            //isArchived: false // Only fetch unarchived products
         });
 
         res.status(200).json(products);

@@ -238,7 +238,7 @@ const flagItinerary = async (req, res) => {
         const itinerary = await Itinerary.findById(id);
         if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
 
-        itinerary.flagged = true; // Toggle flag status
+        itinerary.flagged = !itinerary.flagged; // Toggle flag status
         await itinerary.save();
 
         // Fetch the tour guide associated with the itinerary
@@ -246,23 +246,25 @@ const flagItinerary = async (req, res) => {
         if (!tourGuide) return res.status(404).json({ message: 'Tour guide not found' });
 
         // Create a notification for the TourGuide
-        const notification = new Notification({
-            targetId: tourGuide._id, // TourGuide ID from the itinerary
-            targetType: 'TourGuide', // Target is the TourGuide
-            subject: 'Itinerary Flagged',
-            message: `Your itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
-        });
+        if(itinerary.flagged){
+            const notification = new Notification({
+                targetId: tourGuide._id, // TourGuide ID from the itinerary
+                targetType: 'TourGuide', // Target is the TourGuide
+                subject: 'Itinerary Flagged',
+                message: `Your itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
+            });
 
-        await notification.save(); // Save the notification
+            await notification.save(); // Save the notification
 
-        // Fetch the email of the tour guide
-        const tourGuideEmail = tourGuide.email;
+            const tourGuideEmail = tourGuide.email;
 
-        await sendEmail({
-            to: tourGuideEmail,
-            subject: 'Itinerary Flagged',
-            text: `Hi ${tourGuide.name},\n\nYour itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
-        });
+            await sendEmail({
+                to: tourGuideEmail,
+                subject: 'Itinerary Flagged',
+                text: `Hi ${tourGuide.name},\n\nYour itinerary titled "${itinerary.title}" has been flagged. Please contact the admin for more details.`,
+            });
+            
+        }
 
         return res.status(200).json({ message: 'Itinerary flag status updated', itinerary });
     } catch (error) {
@@ -324,8 +326,15 @@ const addCommentToItinerary = async (req, res) => {
     }
 };
 
-
-
+const deleteAllItineraries = async (req, res) => {
+    try {
+        await Itinerary.deleteMany({});
+        res.status(200).json({ message: 'All itineraries deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting itineraries:', error);
+        res.status(500).json({ message: 'Error deleting itineraries', error: error.message });
+    }
+};
 
 module.exports = {
     createItinerary,
@@ -336,5 +345,5 @@ module.exports = {
     getItineraryByID,
     itinerary_status,
     addCommentToItinerary,
-    
+    deleteAllItineraries,
 };

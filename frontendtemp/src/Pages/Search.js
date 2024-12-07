@@ -12,10 +12,9 @@ const Search = () => {
     const [showProducts, setShowProducts] = useState(false); // State to control the visibility of products
     const [availableproductError, setAvailableProductError] = useState(null);
     const [loadingAvailableProducts, setLoadingAvailableProducts] = useState(false);
-
+    const [showAvailableProducts, setShowAvailableProducts] = useState(false); // State to control the visibility of available products
 
     const handleSearchProductbyname = async () => {
-        
         setLoadingProducts(true);
         setProductError(null);
         try {
@@ -26,6 +25,7 @@ const Search = () => {
         } finally {
             setLoadingProducts(false);
         }
+        setShowProducts(!showProducts); // Toggle visibility
     };
 
     const fetchProducts = async () => {
@@ -44,15 +44,11 @@ const Search = () => {
     // Handle button click to show available products
     const handleShowProducts = () => {
         fetchProducts();
-        setShowProducts(true); // Show products when button is clicked
+        setShowAvailableProducts(!showAvailableProducts); // Toggle visibility
     };
-
-
 
     return (
         <div>
-            <h1>Welcome, Admin!</h1>
-
             {/* Search box for products */}
         <div>
             <h2>Search products</h2>
@@ -62,73 +58,81 @@ const Search = () => {
                 onChange={(e) => setProductSearchTerm(e.target.value)}
                 placeholder="Search products by name"
             />
-            <button onClick={handleSearchProductbyname}>Search Products by name</button>
+            <button onClick={handleSearchProductbyname}>
+                {showProducts ? 'Hide Products' : 'Search Products by name'}
+            </button>
             {loadingProducts && <p>Loading Products...</p>}
             {productError && <p>{productError}</p>}
-            <div>
-            {products.length > 0 ? (
-                products.map((product) => (
-                    <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                    <h3>{product.name}</h3>
-                    <p><strong>Price:</strong> ${product.price}</p>
-                    {product.description && <p><strong>Description:</strong> {product.description}</p>}
-                    <p><strong>Stock:</strong> {product.stock} units</p>
-                    <p><strong>Rating:</strong> {product.rating}/5</p>
-                    {product.sellerId && <p><strong>Seller:</strong> {product.sellerId.name}</p>} {/* Ensure sellerId has a 'name' field in your data */}
-                    {product.pictures && product.pictures.length > 0 && (
-                    <div>
-                        <strong>Pictures:</strong>
-                        <ul>
-                            {product.pictures.map((picture, index) => (
-                                <li key={index}>
-                                    <img src={picture} alt={`Picture of ${product.name}`} style={{ width: '100px' }} />
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        ))
-    ) : (
-        !loadingProducts && <p>No products found.</p>
-    )}
-            </div>
-        </div>
-        <div>
-    <h2>Available Products</h2>
-    <button onClick={handleShowProducts}>Show Available Products</button>
-    {loadingAvailableProducts && <p>Loading available products...</p>}
-    {availableproductError && <p>{availableproductError}</p>}
-    <div>
-        {Availableproducts.length > 0 ? ( // Use Availableproducts instead of products
-            Availableproducts.map((product) => ( // Map over the correct state variable
-                <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                    <h3>{product.name}</h3>
-                    <p><strong>Price:</strong> ${product.price}</p>
-                    <p><strong>Description:</strong> {product.description}</p>
-                    <p><strong>Stock:</strong> {product.stock} available</p>
-                    <p><strong>Rating:</strong> {product.rating}/5</p>
-                    {product.sellerId && <p><strong>Seller:</strong> {product.sellerId.name}</p>}
-                    {product.pictures && product.pictures.length > 0 && (
-                        <div>
-                            <strong>Pictures:</strong>
-                            <ul>
-                                {product.pictures.map((picture, index) => (
-                                    <li key={index}>
-                                        <img src={picture} alt={`Picture of ${product.name}`} style={{ width: '100px' }} />
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+            {showProducts && (
+                <div>
+                    {products.length > 0 ? (
+                        products.map((product) => (
+                            <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                                <h3>{product.name}</h3>
+                                <p><strong>Price:</strong> ${product.price}</p>
+                                {product.description && <p><strong>Description:</strong> {product.description}</p>}
+                                <p><strong>Stock:</strong> {product.stock} units</p>
+                                <p><strong>Rating:</strong> {product.rating}/5</p>
+                                {product.sellerId && <p><strong>Seller:</strong> {product.sellerId.name}</p>} {/* Ensure sellerId has a 'name' field in your data */}
+                                {product.pictures && product.pictures.length > 0 && (
+                                    <div>
+                                        <strong>Pictures:</strong>
+                                        <ul>
+                                            {product.pictures.map((picture, index) => (
+                                                <li key={index}>
+                                                    <img src={picture} alt={`Picture of ${product.name}`} style={{ width: '100px' }} />
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        !loadingProducts && <p>No products found.</p>
                     )}
                 </div>
-            ))
-        ) : (
-            !loadingAvailableProducts && <p>No products available.</p>
-        )}
-                </div>
-            </div>
+            )}
         </div>
+        <div>
+            <h2>Available Products</h2>
+            <button onClick={handleShowProducts}>
+                {showAvailableProducts ? 'Hide Available Products' : 'Show Available Products'}
+            </button>
+            {loadingAvailableProducts && <p>Loading available products...</p>}
+            {availableproductError && <p>{availableproductError}</p>}
+            {showAvailableProducts && (
+                <div>
+                    {Availableproducts.length > 0 ? ( // Use Availableproducts instead of products
+                        Availableproducts.map((product) => ( // Map over the correct state variable
+                            <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                                <h3>{product.name}</h3>
+                                <p><strong>Price:</strong> ${product.price}</p>
+                                <p><strong>Description:</strong> {product.description}</p>
+                                <p><strong>Stock:</strong> {product.stock} available</p>
+                                <p><strong>Rating:</strong> {product.rating}/5</p>
+                                {product.sellerId && <p><strong>Seller:</strong> {product.sellerId.name}</p>}
+                                {product.pictures && product.pictures.length > 0 && (
+                                    <div>
+                                        <strong>Pictures:</strong>
+                                        <ul>
+                                            {product.pictures.map((picture, index) => (
+                                                <li key={index}>
+                                                    <img src={picture} alt={`Picture of ${product.name}`} style={{ width: '100px' }} />
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        !loadingAvailableProducts && <p>No products available.</p>
+                    )}
+                </div>
+            )}
+        </div>
+    </div>
 );
 };
 

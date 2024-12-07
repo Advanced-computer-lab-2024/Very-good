@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import '../styles/global.css'; // Ensure to have your CSS file
 import { fetchAllTags, updateTag, deleteTag, addAdmin, addTourismGoverner,fetchAllItineraries } from '../RequestSendingMethods'; // Import the addAdmin and addTourismGoverner methods
 import AdminDelete from './AdminDelete'; // Import the new AdminDelete component
@@ -15,6 +16,15 @@ import './admin.css';
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from '../styles/SellerPage.module.css'; 
 const AdminPage = ({email}) => {
+    
+    const location = useLocation();
+
+    const login = location.state?.login || false;
+    if(login){
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    email = userData?.email;
+    }
+
     const [adminActivities, setAdminActivities] = useState([
         { id: 1, title: 'Add Admins' },
         { id: 2, title: 'View Tags' },
@@ -37,6 +47,7 @@ const AdminPage = ({email}) => {
     const [isAddingAdmin, setIsAddingAdmin] = useState(false); // State to manage visibility of the add admin form
     const [isAddingGovernor, setIsAddingGovernor] = useState(false); // State to manage visibility of the add tourism governor form
     const [adminData, setAdminData] = useState({ name: '', password: '', email: '' }); // State for admin form data including email
+    const [adminId, setAdminId] = useState(''); // State for admin ID
     const [governorData, setGovernorData] = useState({ username: '', email: '', password: '', mobile: '', nationality: '', dob: '' }); // State for governor form data
     const [showAdminDelete, setShowAdminDelete] = useState(false); // State to manage visibility of AdminDelete page
     const [showSearchPage,setShowSearchPage]=useState(false);
@@ -47,6 +58,25 @@ const AdminPage = ({email}) => {
     const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
     const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
     const [showSalesReport,SetShowSalesReport]=useState(false);
+
+    useEffect(() => {
+        const fetchAdminData = async () => {
+            try {
+                const response = await axios.post('http://localhost:4000/api/admins/getAdminByEmail', {
+                    adminEmail: email,
+                });
+    
+                const data = response.data;
+                setAdminData(data);
+                setAdminId(data._id); // Set the admin ID
+            } catch (error) {
+                console.error('Error fetching admin data:', error);
+            }
+        };
+    
+        fetchAdminData();
+    }, [email]);
+
     const handleBackFromSalesReportPage =()=>{
         SetShowSalesReport(false);
     }
@@ -231,6 +261,7 @@ const AdminPage = ({email}) => {
         }
     };
     const handleFlagItinerary = async (id, isFlagged) => {
+        console.log("itineraryId : ", id);
         try {
             const response = await fetch(`http://localhost:4000/api/itineraries/${id}/flag`, {
                 method: 'PATCH',
@@ -238,8 +269,12 @@ const AdminPage = ({email}) => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            console.log("response : ", response);
     
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Failed to toggle flag status:', response.status, errorText);
                 throw new Error('Failed to toggle flag status');
             }
     
@@ -336,7 +371,7 @@ const AdminPage = ({email}) => {
             )}
       
     
-       <AdminCategory />
+       <AdminCategory adminId={adminId} />
         {showSearchPage ? ( // Conditional rendering for Search page
             <Search /> // Render the Search component
         ) : showAdminDelete ? ( // Conditional rendering for AdminDelete page

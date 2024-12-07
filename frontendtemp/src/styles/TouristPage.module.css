@@ -25,7 +25,7 @@ body {
   padding: 1rem;
   text-align: center;
   font-size: 1.8rem; /* Slightly larger text */
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow for depth */
+  /*text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add shadow for depth */
 }
 
 /* Footer */
@@ -204,7 +204,7 @@ input, textarea {
 /* Headings */
 .h1, h2, h3, h4 {
   color: #b3dabe; /* Forest Green for headings */
-  text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
+  /*text-shadow: 0px 6px 8px rgba(38, 53, 42, 0.6); /* Softer shadow with transparency */
 }
 
 

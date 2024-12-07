@@ -38,9 +38,10 @@ const ActivityHistoricalList = () => {
 
                 // Fetch itineraries
                 const itinerariesResponse = await fetchItinerariesNoId();
-                setAllItineraries(itinerariesResponse.data);
+                const unflaggedItineraries = itinerariesResponse.data.filter(itinerary => !itinerary.flagged);
+                setAllItineraries(unflaggedItineraries);
                 const filteredItineraries = itinerariesResponse.data.filter(itinerary =>
-                    itinerary.availableDates.some(date => new Date(date) > currentDate)
+                    itinerary.availableDates.some(date => new Date(date) > currentDate) && !itinerary.flagged && itinerary.isActive
                 );
                 setItineraries(filteredItineraries);
 

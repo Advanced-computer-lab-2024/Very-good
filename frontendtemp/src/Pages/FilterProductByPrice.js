@@ -20,6 +20,18 @@ const FilterProductByPrice = () => {
     }
   };
 
+  const ProductCard = ({ product }) => {
+    return (
+        <div className="itinerary-card">
+            <h3>{product.name}</h3>
+            <p><strong>Description:</strong> {product.description || "No description available"}</p>
+            <p><strong>Price:</strong> {product.price} EGP</p>
+            <p><strong>Rating:</strong> {product.rating} </p>
+            <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
+        </div>
+    );
+};
+
   return (
     <div className="filter-product-by-price">
       <h1>Filter Products by Price</h1>
@@ -48,10 +60,7 @@ const FilterProductByPrice = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product._id} className="product-item">
-              <h2>{product.name}</h2>
-              <p>Price: ${product.price}</p>
-              <p>{product.description}</p>
-              {/* Render more product details as needed */}
+              <ProductCard key={product._id} product={product} />
             </div>
           ))
         ) : (

@@ -6,10 +6,13 @@ const TourGuide = require('../models/tourGuideModel');
 const TourismGoverner = require('../models/tourismGovernerModel');
 const Advertiser = require('../models/advertiserModel');
 const Seller = require('../models/sellerModel');
+const Product = require('../models/productModel'); // Ensure this is the correct path for the Product model
 
 const checkAdmin = async (req, res) => {
 
 }
+
+
 
 const createAdmin = async (req, res) => {
     try {
@@ -102,7 +105,59 @@ const getUserStatistics = async (req, res) => {
 };
 
 const getAdmins = async (req, res) => {
-    
+  try {
+    const admins = await Admin.find({});
+    res.status(200).json(admins);
+  } catch (error) {
+    console.error('Error fetching admins:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
 }
 
-module.exports = {checkAdmin, createAdmin,  getAdmins ,flagItinerary, getUserStatistics};
+const getAdminByEmail = async (req, res) => {
+    try {
+        const { adminEmail } = req.body;
+        const admin = await Admin.findOne({ email: adminEmail });
+        if (!admin) {
+            return res.status(404).json({ message: 'Admin not found' });
+        }
+        res.status(200).json(admin);
+    } catch (error) {
+        console.error('Error fetching admin by email:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+const createProduct = async (req, res) => {
+    try {
+        const { name, description, price, sellerId, stock } = req.body;
+
+        const product = new Product({
+            name,
+            description,
+            price,
+            adminId: sellerId, // Save sellerId as adminId,
+            stock
+        });
+
+        await product.save();
+
+        res.status(201).json({
+            message: 'Product created successfully',
+            product
+        });
+    } catch (error) {
+        console.error('Error creating product:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+module.exports = { 
+    checkAdmin, 
+    createAdmin, 
+    getAdmins, 
+    flagItinerary, 
+    getUserStatistics, 
+    getAdminByEmail,
+    createProduct // Export the new function
+};

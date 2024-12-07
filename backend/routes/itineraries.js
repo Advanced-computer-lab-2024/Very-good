@@ -1,5 +1,5 @@
 const express = require('express')
-const {createItinerary, getItineraries,searchforitinerary,filterItineraries,filterItinerariesYassin,flagItinerary,getItineraryByID,itinerary_status,addCommentToItinerary} = require('../controllers/itineraryController')
+const {createItinerary, getItineraries,searchforitinerary,filterItineraries,filterItinerariesYassin,flagItinerary,getItineraryByID,itinerary_status,addCommentToItinerary, deleteAllItineraries} = require('../controllers/itineraryController')
 const router = express.Router()
 
 router.get('/', getItineraries)
@@ -15,5 +15,6 @@ router.post('/addComment',addCommentToItinerary);
 //router.patch('/:id', updateWorkout)
 router.post('/filter', filterItinerariesYassin) // POST request to filter itineraries
 router.patch('/:id/flag', flagItinerary); 
+router.delete('/deleteAll', deleteAllItineraries);
 
 module.exports = router

@@ -10,7 +10,10 @@ import {
 } from "../Services/productServices";
 // Ensure you import the CSS file
 import styles from '../styles/SellerPage.module.css'; 
-function AdminCategory(sellerId) {
+function AdminCategory({ sellerId, adminId }) {
+
+  console.log("Seller ID:", sellerId);
+  console.log("Admin ID:", adminId);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({ name: "" });
   const [selectedOperation, setSelectedOperation] = useState(null);
@@ -27,7 +30,7 @@ function AdminCategory(sellerId) {
 
   const [formData2, setFormData2] = useState({
     name: "",
-    sellerId: sellerId || "", // Ensure sellerId is initialized correctly
+    sellerId: adminId || "", // Ensure sellerId is initialized correctly
     price: "",
     description: "",
     stock: "",
@@ -39,7 +42,7 @@ function AdminCategory(sellerId) {
   useEffect(() => {
     fetchCategories();
     getAdminProducts();
-  }, []);
+  }, [sellerId, adminId]);
 
   // Fetch all categories
   const fetchCategories = async () => {
@@ -183,7 +186,7 @@ function AdminCategory(sellerId) {
   const resetForm2 = () => {
     setFormData2({
       name: "",
-      sellerId: sellerId || "", // Reset to the correct sellerId
+      sellerId: adminId || "", // Reset to the correct sellerId
       price: "",
       description: "",
       stock: "",
@@ -203,8 +206,7 @@ function AdminCategory(sellerId) {
     if (
       !formData2.name ||
       !formData2.price ||
-      !formData2.stock ||
-      !formData2.sellerId
+      !formData2.stock 
     ) {
       setError2("All fields are required.");
       return;
@@ -228,7 +230,8 @@ function AdminCategory(sellerId) {
           )
         );
       } else {
-        const newProduct = await createProduct(formData2);
+        const response = await axios.post('http://localhost:4000/api/admins/createProduct', formData2);
+        const newProduct = response.data.product;
         setProducts((prevProducts) => {
           if (!Array.isArray(prevProducts)) {
             return [newProduct];
@@ -420,14 +423,6 @@ function AdminCategory(sellerId) {
           onChange={handleInputChangeP}
           required
         />
-        <label>Seller ID</label>
-        <input
-          type="text"
-          name="sellerId"
-          value={formData2.sellerId}
-          onChange={handleInputChangeP}
-          required
-        />
         <label>Price</label>
         <input
           type="number"
@@ -453,25 +448,6 @@ function AdminCategory(sellerId) {
           onChange={handleInputChangeP}
           required
           min="0" // Validation for positive numbers
-        />
-        <label>Rating</label>
-        <input
-          type="number"
-          name="rating"
-          value={formData2.rating}
-          onChange={handleInputChangeP}
-          min="0"
-          max="5"
-          step="0.1" // Allows decimal values (e.g., 0.0, 1.5, etc.)
-        />
-
-        <label>Sales</label>
-        <input
-          type="number"
-          name="sales"
-          value={formData2.rating}
-          onChange={handleInputChangeP}
-          min="0" // Allows decimal values (e.g., 0.0, 1.5, etc.)
         />
 
         <button type="submit">

@@ -61,7 +61,7 @@
     color: white; 
     width: 96%; 
     font-size: 1.05rem; 
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); 
+    /* text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); */ 
 
     /* Positioning */
     position: fixed; /* Sticks it to the viewport */

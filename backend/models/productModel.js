@@ -30,12 +30,15 @@ const productSchema = new schema({
         type: Number,
         min: 0,
         max: 5,
-        default: 0 // Default rating if not provided
+        default: 5 // Default rating if not provided
     },
     sellerId: {
         type: schema.Types.ObjectId,
         ref: 'seller', // Reference to the Seller model
-        required: true
+    },
+    adminId: {
+        type: schema.Types.ObjectId,
+        ref: 'Admin', // Reference to the Admin model
     },
     pictures: {
         type: [String], // Array of URLs for pictures

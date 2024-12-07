@@ -19,6 +19,7 @@ const FilterActivitiesPage = ({ onBack }) => { // Receive the onBack prop
     };
 
     const filteredActivities = await filterActivities(filterCriteria);
+    console.log("filteredActivities :", filteredActivities);
     setActivities(filteredActivities || []);
   };
 

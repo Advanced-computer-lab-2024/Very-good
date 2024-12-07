@@ -624,8 +624,8 @@ const BASE_URL = 'http://localhost:4000/api/admins/';
 const addAdmin = async (adminData) => {
     try {
         console.log("admin data before sending : ", adminData)
-        adminData = {email : adminData.email, name : adminData.username, password : adminData.password}
-        console.log("admin data before sending 2: ", adminData)
+        //adminData = {email : adminData.email, name : adminData.username, password : adminData.password}
+        //console.log("admin data before sending 2: ", adminData)
         const response = await axios.post(BASE_URL, adminData);
         return response.data; // Return the response data from the server
     } catch (error) {

@@ -54,7 +54,6 @@ const Booking = ({ touristId, wallet }) => {
                     const hasUpcomingDate = itinerary.availableDates.some(date => new Date(date) >= currentDate);
                     return hasUpcomingDate && itinerary.isActive && !itinerary.flagged;
                 });
-
                 setActivities(upcomingActivities);
                 setItineraries(upcomingItineraries);
             } catch (error) {

@@ -251,47 +251,58 @@ const filterActivities = async (req, res) => {
       });
     }
   };
-  const filterActivitiesyassin = async (req, res) => {
-    try {
-        const { price, date, category, ratings } = req.body; // Destructure the input from the request body
 
-        // Prepare an array to hold all filtering conditions
+const filterActivitiesyassin = async (req, res) => {
+    try {
+        const { price, date, tags, language } = req.body; // Include language in destructuring
+
+        // Array to hold our filtering conditions
         const filterConditions = [];
 
-        // Add filters based on the provided parameters
-        if (price !== undefined) {
-            filterConditions.push({ price: price }); // Exact match for price
+        // If price is provided and not null, add it to the conditions
+        if (price !== null && price !== undefined) {
+            filterConditions.push({ price: { $eq: price } }); // Exact match for price
         }
+
+        // If date is provided and not null, add it to the conditions
         if (date) {
-            filterConditions.push({ date: new Date(date) }); // Convert string date to Date object
-        }
-        if (ratings !== undefined) {
-            filterConditions.push({ ratings:  ratings  }); // Filter activities with ratings greater than or equal to provided rating
-        }
-        if (category) {
-            // Find categoryId corresponding to category name
-            const foundCategory = await Category.findOne({ name: category });
-            if (foundCategory) {
-                filterConditions.push({ categoryId: foundCategory._id }); // Use categoryId for filtering
+            const inputDate = new Date(date); // Ensure input date is a Date object
+            if (!isNaN(inputDate)) { // Check if date is valid
+                filterConditions.push({ date: { $eq: inputDate } });
             } else {
-                return res.status(404).json({ message: 'Category not found' });
+                console.error('Invalid date format provided:', date);
+                return res.status(400).json({ error: 'Invalid date format' });
             }
         }
 
-        // If no filter conditions are provided, return all activities
-        if (filterConditions.length === 0) {
-            const activities = await Activity.find(); // Get all activities
-            return res.status(200).json(activities);
+        // If tags are provided and not null, find the corresponding tag IDs and add to the conditions
+        if (tags) {
+            const tagIds = await Tag.find({ name: tags }).select('_id'); // Find tag IDs by tag name
+            if (tagIds.length > 0) {
+                filterConditions.push({ tags: { $in: tagIds.map(tag => tag._id) } });
+            } else {
+                // If no tags are found, handle accordingly
+                return res.status(404).json({ error: 'No matching tags found' });
+            }
         }
 
-        // Use the $or operator to combine the filter conditions
-        const activities = await Activity.find({ $or: filterConditions });
+        // If language is provided and not null, add it to the conditions
+        if (language) {
+            filterConditions.push({ language: { $eq: language } }); // Exact match for language
+        }
 
-        // Return the filtered activities
+        // Check if we have any filter conditions, if not return all activities
+        let query = {};
+        if (filterConditions.length > 0) {
+            query = { $and: filterConditions }; // Use $and for all conditions to match all
+        }
+
+        // Perform the filtering query
+        const activities = await Activity.find(query);
         res.status(200).json(activities);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error filtering activities:', error.message); // Log the specific error message
+        res.status(500).json({ error: 'Error filtering activities' });
     }
 };
 
