@@ -64,10 +64,30 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 ## Tech/Framework Used
 
-- **Frontend**: React.js  
-- **Backend**: Node.js, Express.js  
-- **Database**: MongoDB  
-- **API Integration**: Amadeus API, Google Maps API  
+### Backend:
+- **Node.js** – JavaScript runtime for building scalable network applications.
+- **Express.js** – Web framework for Node.js to build web applications and APIs.
+- **Mongoose** – MongoDB object modeling tool for Node.js.
+- **bcrypt** – Library to hash passwords.
+- **jsonwebtoken (JWT)** – Library to generate JSON Web Tokens for secure authentication.
+- **dotenv** – Module to load environment variables from a `.env` file.
+- **nodemailer** – Module for sending emails from Node.js.
+- **multer** – Middleware for handling file uploads in Node.js.
+- **node-cron** – Task scheduler for running cron jobs in Node.js.
+- **stripe** – Library for integrating Stripe payments.
+
+### Frontend:
+- **React.js** – JavaScript library for building user interfaces.
+- **React Router** – Routing library for React applications.
+- **Axios** – Promise-based HTTP client for the browser and Node.js.
+- **Stripe React Library** – React bindings for integrating Stripe’s payment system.
+- **FontAwesome** – Library for scalable vector icons.
+- **@react-google-maps/api** – Library for integrating Google Maps in React applications.
+- **React Scripts** – Set of scripts for building and running React applications.
+- **Jest** – Testing framework for JavaScript, used with React.
+- **@testing-library/react** – Testing utilities for React components.
+- **cross-env** – Package to set environment variables in scripts across different OS.
+
 
 ---
 
