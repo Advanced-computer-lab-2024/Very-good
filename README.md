@@ -506,7 +506,29 @@ Before installing, ensure that you have the following installed on your system:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/your-repository-name.git
+   git clone https://github.com/Advanced-computer-lab-2024/Very-good.git
+   ```
 
+2. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+3. Install the dependencies:
+  ```bash
+  npm install
+   ```
+4. Set up environment variables:
+  ```bash
+  MONGO_URI=your-mongodb-uri
+  JWT_SECRET=your-jwt-secret
+  STRIPE_SECRET_KEY=your-stripe-secret-key
+  EMAIL_USER=maranmalak@gmail.com
+  EMAIL_PASS="your password"
+  ```
+5. Start the server:
+   ```bash
+   node server.js
+   ```
 
 
