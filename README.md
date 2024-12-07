@@ -499,12 +499,9 @@ Before installing, ensure that you have the following installed on your system:
 
 - [Node.js](https://nodejs.org/en/) (>= v14.x)
 - [npm](https://www.npmjs.com/) (>= v6.x)
-- [MongoDB](https://www.mongodb.com/) (for database setup)
-
-### Backend Installation
+- [MongoDB](https://www.mongodb.com/) (for database setup)### Backend Installation
 
 1. Clone the repository:
-
    ```bash
    git clone https://github.com/Advanced-computer-lab-2024/Very-good.git
    ```
@@ -515,20 +512,23 @@ Before installing, ensure that you have the following installed on your system:
    ```
 
 3. Install the dependencies:
-  ```bash
-      npm install
+   ```bash
+   npm install
    ```
+
 4. Set up environment variables:
-  ```bash
-     MONGO_URI=your-mongodb-uri
-     JWT_SECRET=your-jwt-secret
-     STRIPE_SECRET_KEY=your-stripe-secret-key
-     EMAIL_USER=maranmalak@gmail.com
-     EMAIL_PASS="your password"
-  ```
+   ```bash
+   MONGO_URI=your-mongodb-uri
+   JWT_SECRET=your-jwt-secret
+   STRIPE_SECRET_KEY=your-stripe-secret-key
+   EMAIL_USER=maranmalak@gmail.com
+   EMAIL_PASS="your password"
+   ```
+
 5. Start the server:
    ```bash
-    node server.js
+   node server.js
    ```
+
 
 
