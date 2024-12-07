@@ -6,49 +6,49 @@ import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
 import ItineraryDisplayFilterWise from './ItineraryDisplayFilterWise';
 import MuseumDisplayFilterWise from './MuseumDisplayFilterWise';
 import { useLocation } from 'react-router-dom';
-import styles from '../styles/TouristPage.module.css'; // Import CSS Module
-
 import axios from 'axios';
 import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 import { useNavigate} from 'react-router-dom';
+
 const ActivityHistoricalList = () => {
     const location = useLocation();
     console.log("state : ", location.state);
     const {email} = location.state;
     //console.log("email : ", email);
-    const navigate = useNavigate();
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
-    const [itineraries, setItineraries] = useState([]);
-    const [allActivities, setAllActivities] = useState([]);
-    const [allItineraries, setAllItineraries] = useState([]);
-    const [upcomingActivitiesPaidfor, setUpcomingActivitiesPaidfor] = useState([]);
-    const [upcomingItinerariesPaidfor, setUpcomingItinerariesPaidfor] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [showMappings, setShowMappings] = useState(false);
+    const [showMappingsNotUpcoming, setShowMappingsNotUpcoming] = useState(false);
+    const [itineraries, setItineraries] = useState([]);
+    const [allItineraries, setAllItineraries] = useState([]);
+    const [allActivities, setAllActivities] = useState([]);
+    const [upcomingActivitiesPaidfor, setUpcomingActivitiesPaidfor] = useState([]);
+    const [upcomingItinerariesPaidfor, setUpcomingItinerariesPaidfor] = useState([]);
+    const [pastActivitiesPaidfor, setPastActivitiesPaidfor] = useState([]);
+    const [pastItinerariesPaidfor, setPastItinerariesPaidfor] = useState([]);
+    const [showUpcomingActivitiesPaidFor, setShowUpcomingActivitiesPaidFor] = useState(false);
+    const [showPastActivitiesPaidFor, setShowPastActivitiesPaidFor] = useState(false);
+    const [showUpcomingItinerariesPaidFor, setShowUpcomingItinerariesPaidFor] = useState(false);
+    const [showPastItinerariesPaidFor, setShowPastItinerariesPaidFor] = useState(false);
+    const navigate = useNavigate();
     useEffect(() => {
-        const fetchData = async () => {
+        const getActivities = async () => {
             try {
                 const currentDate = new Date();
+                const upcomingActivities = await fetchActivitiesDate();
 
-                // Fetch all activities
-                const activitiesResponse = await fetchActivitiesDate();
-                setAllActivities(activitiesResponse.data);
-                const filteredActivities = activitiesResponse.data.filter(activity => new Date(activity.date) >= currentDate);
-                setActivities(filteredActivities);
+                setAllActivities(upcomingActivities.data)
 
-                // Fetch itineraries
-                const itinerariesResponse = await fetchItinerariesNoId();
-                setAllItineraries(itinerariesResponse.data);
-                const filteredItineraries = itinerariesResponse.data.filter(itinerary =>
-                    itinerary.availableDates.some(date => new Date(date) > currentDate)
-                );
-                setItineraries(filteredItineraries);
+                const filteredActivities = upcomingActivities.data.filter(activity => {
+                    const activityDate = new Date(activity.date);
+                    return activityDate >= currentDate;
+                });
 
-                // Fetch historical places
-                const museumsResponse = await fetchMuseums();
-                setHistoricalPlaces(museumsResponse.data);
+                if (filteredActivities.length > 0) {
+                    setActivities(filteredActivities);
+                }
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -56,7 +56,43 @@ const ActivityHistoricalList = () => {
             }
         };
 
-        fetchData();
+        const getUpcomingItineraries = async () => {
+            try {
+                const currentDate = new Date();
+                const itinerariesResponse = await fetchItinerariesNoId();
+                console.log("Itineraries Response:", itinerariesResponse); // Log response
+
+                setAllItineraries(itinerariesResponse.data);
+                
+                const filteredItineraries = itinerariesResponse.data.filter(itinerary => {
+                    return itinerary.availableDates.some(date => new Date(date) > currentDate) && !itinerary.flagged && itinerary.isActive;
+                });
+
+                if (filteredItineraries.length > 0) {
+                    setItineraries(filteredItineraries);
+                    console.log("Filtered Itineraries:", filteredItineraries); // Log filtered itineraries
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const getHistoricalPlaces = async () => {
+            try {
+                const museumResponse = await fetchMuseums();
+                setHistoricalPlaces(museumResponse.data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getActivities();
+        getHistoricalPlaces();
+        getUpcomingItineraries();
     }, []);
 
     const fetchPaidActivities = async () => {
@@ -79,22 +115,68 @@ const ActivityHistoricalList = () => {
         }
     };
 
-    const handleCategoryChange = async (event) => {
-        setSelectedCategory(event.target.value);
+    const fetchUpcomingActivitiesPaidFor = async () => {
+        const activities = await fetchPaidActivities();
+        const currentDate = new Date();
+        const filteredActivities = activities.filter(activity => new Date(activity.date) >= currentDate);
+        setUpcomingActivitiesPaidfor(filteredActivities);
+    };
 
-        if (event.target.value === 'Paid') {
-            const paidActivities = await fetchPaidActivities();
-            const paidItineraries = await fetchPaidItineraries();
-            const currentDate = new Date();
+    const fetchPastActivitiesPaidFor = async () => {
+        const activities = await fetchPaidActivities();
+        const currentDate = new Date();
+        const filteredActivities = activities.filter(activity => new Date(activity.date) < currentDate);
+        setPastActivitiesPaidfor(filteredActivities);
+    };
 
-            const filteredUpcomingActivities = paidActivities.filter(activity => new Date(activity.date) >= currentDate);
-            const filteredUpcomingItineraries = paidItineraries.filter(itinerary =>
-                itinerary.availableDates.some(date => new Date(date) >= currentDate)
-            );
+    const fetchUpcomingItinerariesPaidFor = async () => {
+        const itineraries = await fetchPaidItineraries();
+        const currentDate = new Date();
+        const filteredItineraries = itineraries.filter(itinerary => itinerary.availableDates.some(date => new Date(date) >= currentDate));
+        setUpcomingItinerariesPaidfor(filteredItineraries);
+    };
 
-            setUpcomingActivitiesPaidfor(filteredUpcomingActivities);
-            setUpcomingItinerariesPaidfor(filteredUpcomingItineraries);
+    const fetchPastItinerariesPaidFor = async () => {
+        const itineraries = await fetchPaidItineraries();
+        const currentDate = new Date();
+        const filteredItineraries = itineraries.filter(itinerary => itinerary.availableDates.some(date => new Date(date) < currentDate));
+        setPastItinerariesPaidfor(filteredItineraries);
+    };
+
+    const toggleMappings = () => {
+        setShowMappings(prevState => !prevState);
+    };
+
+    const toggleMappings2 = () => {
+        setShowMappingsNotUpcoming(prevState => !prevState);
+    };
+
+    const toggleUpcomingActivitiesPaidFor = async () => {
+        if (!showUpcomingActivitiesPaidFor) {
+            await fetchUpcomingActivitiesPaidFor();
         }
+        setShowUpcomingActivitiesPaidFor(prevState => !prevState);
+    };
+
+    const togglePastActivitiesPaidFor = async () => {
+        if (!showPastActivitiesPaidFor) {
+            await fetchPastActivitiesPaidFor();
+        }
+        setShowPastActivitiesPaidFor(prevState => !prevState);
+    };
+
+    const toggleUpcomingItinerariesPaidFor = async () => {
+        if (!showUpcomingItinerariesPaidFor) {
+            await fetchUpcomingItinerariesPaidFor();
+        }
+        setShowUpcomingItinerariesPaidFor(prevState => !prevState);
+    };
+
+    const togglePastItinerariesPaidFor = async () => {
+        if (!showPastItinerariesPaidFor) {
+            await fetchPastItinerariesPaidFor();
+        }
+        setShowPastItinerariesPaidFor(prevState => !prevState);
     };
 
     return (
@@ -102,62 +184,99 @@ const ActivityHistoricalList = () => {
             <div className={styles['category-buttons']}>
             <h1>All Activities, Historical Places, and Itineraries</h1>
             
-            <button onClick={toggleMappings2} className={styles.button}>
+            <button onClick={toggleMappings2} className={styles.button} >
                 {showMappingsNotUpcoming ? "Hide All" : "Show All"}
             </button>
-        
+
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
 
-            {selectedCategory === 'All' && (
+            {showMappingsNotUpcoming && (
                 <>
+                    {/* Display upcoming activities */}
                     <h2>All Activities</h2>
-                    {allActivities.map(activity => (
-                        <ActivityDisplayFilterWise key={activity.id} activity={activity} email={email} />
-                    ))}
+                    {allActivities.length === 0 ? (
+                        <p>No activities found.</p>
+                    ) : (
+                        allActivities.map(activity => (
+                            <ActivityDisplayFilterWise activity={activity} comments={true} email={email} />
+                        ))
+                    )}
+
+                    {/* Display upcoming itineraries */}
                     <h2>All Itineraries</h2>
-                    {allItineraries.map(itinerary => (
-                        <ItineraryDisplayFilterWise key={itinerary.id} itinerary={itinerary} />
-                    ))}
+                    {allItineraries.length === 0 ? (
+                        <p>No itineraries found.</p>
+                    ) : (
+                        allItineraries.map(itinerary => (
+                            <ItineraryDisplayFilterWise itinerary={itinerary} comments={true} />
+                        ))
+                    )}
+
+                    {/* Display historical places / museums */}
                     <h2>Historical Places / Museums</h2>
-                    {historicalPlaces.map(place => (
-                        <MuseumDisplayFilterWise key={place.id} museum={place} />
-                    ))}
+                    {historicalPlaces.length === 0 ? (
+                        <p>No historical places or museums available.</p>
+                    ) : (
+                        historicalPlaces.map(place => (
+                            <MuseumDisplayFilterWise museum={place} />
+                        ))
+                    )}
                 </>
-            )}
-     </div>
-     <div className={styles['category-buttons']}>
+            )} </div>
+<div className={styles['category-buttons']}>
             <h1>Upcoming Activities, Historical Places, and Itineraries</h1>
             
-            <button onClick={toggleMappings} className={styles.button}>
+            <button onClick={toggleMappings} className={styles.button} >
                 {showMappings ? "Hide Available to Visit" : "Show Available to Visit"}
             </button>
 
             {showMappings && (
                 <>
-                    <h2>Upcoming Activities</h2>
-                    {activities.map(activity => (
-                        <ActivityDisplayFilterWise key={activity.id} activity={activity} email={email} />
-                    ))}
+                    {/* Display upcoming activities */}
+                    <h2>Activities</h2>
+                    {activities.length === 0 ? (
+                        <p>No activities available for the selected date.</p>
+                    ) : (
+                        activities.map(activity => (
+                            <ActivityDisplayFilterWise activity={activity} email={email} />
+                        ))
+                    )}
+
+                    {/* Display upcoming itineraries */}
                     <h2>Upcoming Itineraries</h2>
-                    {itineraries.map(itinerary => (
-                        <ItineraryDisplayFilterWise key={itinerary.id} itinerary={itinerary} />
-                    ))}
+                    {itineraries.length === 0 ? (
+                        <p>No upcoming itineraries available.</p>
+                    ) : (
+                        itineraries.map(itinerary => (
+                            <ItineraryDisplayFilterWise itinerary={itinerary} />
+                        ))
+                    )}
+
+                    {/* Display historical places / museums */}
+                    <h2>Historical Places / Museums</h2>
+                    {historicalPlaces.length === 0 ? (
+                        <p>No historical places or museums available.</p>
+                    ) : (
+                        historicalPlaces.map(place => (
+                            <MuseumDisplayFilterWise museum={place} />
+                        ))
+                    )}
                 </>
             )}
 </div>
 <div className={styles['category-buttons']}>
             <h1>Paid Activities and Itineraries</h1>
-            <button onClick={toggleUpcomingActivitiesPaidFor} className={styles.button}>
+            <button onClick={toggleUpcomingActivitiesPaidFor} className={styles.button} >
                 {showUpcomingActivitiesPaidFor ? "Hide Upcoming Activities Paid For" : "Show Upcoming Activities Paid For"}
             </button>
-            <button onClick={togglePastActivitiesPaidFor} className={styles.button}>
+            <button onClick={togglePastActivitiesPaidFor} className={styles.button} >
                 {showPastActivitiesPaidFor ? "Hide Past Activities Paid For" : "Show Past Activities Paid For"}
             </button>
-            <button onClick={toggleUpcomingItinerariesPaidFor} className={styles.button}>
+            <button onClick={toggleUpcomingItinerariesPaidFor} className={styles.button} >
                 {showUpcomingItinerariesPaidFor ? "Hide Upcoming Itineraries Paid For" : "Show Upcoming Itineraries Paid For"}
             </button>
-            <button onClick={togglePastItinerariesPaidFor} className={styles.button}>
+            <button onClick={togglePastItinerariesPaidFor}className={styles.button} >
                 {showPastItinerariesPaidFor ? "Hide Past Itineraries Paid For" : "Show Past Itineraries Paid For"}
             </button>
 
@@ -212,11 +331,9 @@ const ActivityHistoricalList = () => {
                     )}
                 </>
             )}
-              
+            </div>
+            <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button>
         </div>
-        <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button>
-        </div>
-        
     );
 };
 
