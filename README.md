@@ -31,8 +31,9 @@ Travel planning should be simple, intuitive, and enjoyable. **Very Good Travel A
 
 ## Build Status
 
-- **Current Build**: ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-- Check our latest commits to see ongoing progress.
+This project is currently under development and is not suitable for production use.  
+You can review the [Issues](../../issues) section for a list of known problems.  
+Plans are in place to add more automated tests and expand the documentation in future updates.
 
 ---
 
