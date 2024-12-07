@@ -440,7 +440,53 @@ const touristRoutes = require('./routes/tourists')
 app.use('/api/tourists', touristRoutes)
 ```
 
+### a snippet from the FrontEnd requestSendingMethods File
 
+```javascript
 
+// Function for the registration of a tourist
+const registerTourist = async (touristData) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/tourists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(touristData),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Tourist registered successfully:', data);
+        return data;
+      } else {
+        console.error('Error during registration:', data);
+        return null;
+      }
+    } catch (error) {
+      console.error('Network or server error:', error);
+      return null;
+    }
+  };
+```
+### a snippet from the frontend for creating a tourist
+
+```javascript
+    // Handle tourist registration
+    if (role === "tourist") {
+      let touristData = {
+        name: formElements.username.value,
+        email: formElements.email.value,
+        password: formElements.password.value,
+        mobile: formElements.mobile.value,
+        dob: formElements.dob.value,
+        nationality: formElements.nationality.value,
+        job: formElements.job.value,
+        
+      };
+      await registerTourist(touristData);
+      navigate("/tourist");
+    }
+```
 
 
