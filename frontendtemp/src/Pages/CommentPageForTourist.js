@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPastActivities } from '../RequestSendingMethods';
 import { addCommentToItinerary,addCommentToActivity,addCommentToTourGuide } from '../Services/commentServices';
 import '../styles/global.css';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 
 const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
   const [commentType, setCommentType] = useState(null);
@@ -127,15 +128,15 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
   return (
     <div className="container">
       {!commentType ? (
-        <div>
+        <div className={styles['category-buttons']}>
           <p>What would you like to comment on?</p>
-          <button onClick={handleTourGuideSelection} className="button">Tour Guide</button>
-          <button onClick={handleActivitySelection} className="button">Activity Attended</button>
-          <button onClick={handleItinerarySelection} className="button">Itinerary</button>
+          <button onClick={handleTourGuideSelection} className={styles.button}>Tour Guide</button>
+          <button onClick={handleActivitySelection} className={styles.button}>Activity Attended</button>
+          <button onClick={handleItinerarySelection} className={styles.button}>Itinerary</button>
         </div>
       ) : commentType === 'tourGuide' && !selectedItem ? (
-        <div>
-          <h3>Select a Tour Guide to Comment On</h3>
+        <div  className={styles['category-buttons']}>
+          <h3  style={{color : '#1F4529'}}>Select a Tour Guide to Comment On</h3>
           <table className="table">
             <thead>
               <tr>
@@ -158,8 +159,8 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
           </table>
         </div>
       ) : commentType === 'itinerary' && !selectedItem ? (
-        <div>
-          <h3>Select an Itinerary to Comment On</h3>
+        <div  className={styles['category-buttons']}>
+          <h3  style={{color : '#1F4529'}}>Select an Itinerary to Comment On</h3>
           <table className="table">
             <thead>
               <tr>
@@ -186,8 +187,8 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
           </table>
         </div>
       ) : commentType === 'activity' && !selectedItem ? (
-        <div>
-          <h3>Select an Activity to Comment On</h3>
+        <div  className={styles['category-buttons']}>
+          <h3  style={{color : '#1F4529'}}>Select an Activity to Comment On</h3>
           <table className="table">
             <thead>
               <tr>
@@ -210,8 +211,8 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
           </table>
         </div>
       ) : (
-        <div>
-          <h3>Leave a Comment for {selectedItem.title || selectedItem.email || selectedItem.activityTitle}</h3>
+        <div  className={styles['category-buttons']}>
+          <h3  style={{color : '#1F4529'}}>Leave a Comment for {selectedItem.title || selectedItem.email || selectedItem.activityTitle}</h3>
           <textarea
             value={comment}
             onChange={handleCommentChange}

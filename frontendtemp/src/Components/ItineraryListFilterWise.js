@@ -45,7 +45,7 @@ const ItineraryListFilterWise = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="container">
+        <div className="container2">
             <h1>Itineraries</h1>
             {itineraries.length === 0 ? (
                 <p>No itineraries found.</p>

@@ -280,10 +280,12 @@ const TourGuideHomePage = ({ email }) => {
       </button>
       
       {showNotification && tourGuideData && (
+        <div className={styles['category-buttons']}>
         <Notification 
           targetId={tourGuideData._id} 
           targetType="TourGuide" 
         />
+        </div>
       )}
     </div>
     <div className={styles['category-buttons3']}>
@@ -415,7 +417,7 @@ const TourGuideHomePage = ({ email }) => {
            Back to login Page
           </button>
         
-        <footer className={styles.footer1}>
+        <footer className={styles.footer}>
           <p>&copy; 2024 TravelApp. All rights reserved.</p>
         </footer>
       </div>

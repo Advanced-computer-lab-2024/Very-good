@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID } from '../Services/productServices';
-
+import styles from '../styles/TouristPage.module.css';
 
 const ProductSort = () => {
     const [products, setProducts] = useState([]); 
@@ -54,21 +54,20 @@ const ProductSort = () => {
     };
     
     return (
-        <div className="container">
-            <h1>Sort Products</h1>
-            <h2>Sorted by Rating</h2>
+        <div className={styles["category-buttons"]}>
+             <h2>Sorted by Rating </h2>
             
             {/* Toggle Button: Show/Hide Products */}
-            <button onClick={toggleMappings}>
+            <button onClick={toggleMappings} className={styles["button"]}>
                 {showMappings ? "Hide Products Sorted by Rating" : "Show Products Sorted by Rating"}
             </button>
 
             {loading && <p>Loading products sorted by rating...</p>}
             {error && <p>Error: {error}</p>}
-
+            <div className='container2'>
             {showMappings && (
                 <>
-                    <h2>Products Sorted by Rating</h2>
+                    {/* <h2>Products Sorted by Rating</h2> */}
                     {products.length === 0 ? (
                         <p>No products available sorted by rating.</p>
                     ) : (
@@ -77,7 +76,9 @@ const ProductSort = () => {
                         ))
                     )}
                 </>
+               
             )}
+             </div>
         </div>
     );
 };

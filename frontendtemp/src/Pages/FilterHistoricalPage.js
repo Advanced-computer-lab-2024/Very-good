@@ -51,18 +51,19 @@ const FilterHistoricalPage = () => {
       </select>
 
       <button onClick={handleTagSelection}>Filter Museums</button>
-
+      <button className='btn' onClick={() => window.location.reload()}> Back</button>
       {/* Render filtered museums */}
-      <div className="museum-list">
+      <div className="container2">
         {museums.length > 0 ? (
           museums.map((museum) => (
-            <div key={museum._id} className="museum-item">
+            <div key={museum._id} className="container2">
               <MuseumDisplayFilterWise museum={museum} /> {/* Use the new component */}
             </div>
           ))
         ) : (
           <p>No museums found for the selected tag.</p>
         )}
+       
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ActivityDisplay.css';
-
+import styles from '../styles/TourGuidePage.module.css'; // Keep your existing global styles
 const ItineraryDisplay = ({ itinerary, onDelete, onUpdate,onStatus }) => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and view mode
   const [updatedItinerary, setUpdatedItinerary] = useState(itinerary); // Copy of the itinerary to hold updated values
@@ -76,7 +76,7 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate,onStatus }) => {
   };
 
   return (
-    <div className="activity-card">
+    <div className={styles['category-buttons']}>
       {isEditing ? (
         // Render form fields in editing mode
         <>
@@ -298,9 +298,9 @@ const ItineraryDisplay = ({ itinerary, onDelete, onUpdate,onStatus }) => {
             ))}
           </ul>
 
-          <button onClick={handleEditClick}>Edit Itinerary</button>
-          <button onClick={() => onDelete(itinerary._id)}>Delete Itinerary</button>
-          <button className="status-button" onClick={handleStatusClick}>
+          <button onClick={handleEditClick} className={styles.button}>Edit Itinerary</button>
+          <button onClick={() => onDelete(itinerary._id)} className={styles.button}>Delete Itinerary</button>
+          <button className={styles.button} onClick={handleStatusClick} >
             {updatedItinerary.isActive ? 'Deactivate' : 'Activate'}
           </button>
         </>

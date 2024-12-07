@@ -207,13 +207,15 @@ const SellerPage = ({ email }) => {
       {/* Sidebar */}
     
         <div className={styles.navbar}>
-       
-          <button onClick={() => setIsViewingManagement(true)} className={styles.button2}>SellerProduct</button> {/* New button */}
+        <button onClick={() => window.location.reload()}  className={styles.button2}>
+        Home
+      </button>
+          <button onClick={() => setIsViewingManagement(true)} className={styles.button2}>Create Product</button> {/* New button */}
           <button onClick={handleProductFilterButtonOnClick} className={styles.button2}>
             Filter Product by Price
           </button> {/* New button with commented action listener */}
-          <button onClick={handleUploadPhoto} className={styles.button2}>Upload_A_Logo</button>
-          <button onClick={handleUploadAproductPicture} className={styles.button2}>UploadProductPicture</button>
+          <button onClick={handleUploadPhoto} className={styles.button2}>Upload a Logo</button>
+          <button onClick={handleUploadAproductPicture} className={styles.button2}>Upload Product Picture</button>
           <button onClick={handleSalesReport} className={styles.button2}>View Products Sales Report</button>
         
         </div>
@@ -242,10 +244,12 @@ const SellerPage = ({ email }) => {
       </button> 
       
       {showNotification && sellerData && (
+        <div className={styles['category-buttons']}>
         <Notification 
           targetId={sellerData._id} 
           targetType="Seller" 
         />
+        </div>
       )}
     </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createActivity, fetchCategories } from '../Services/activityServices';
 import MapComponent from './MapComponent'; // Import the MapComponent
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const CreateActivityForm = ({ onClose, advertiserId }) => {
     const [newActivity, setNewActivity] = useState({
         name: '',
@@ -124,7 +124,7 @@ const CreateActivityForm = ({ onClose, advertiserId }) => {
     };
 
     return (
-        <div className="activity-card">
+        <div className={styles["category-buttons"]}>
             <input type="text" name="name" value={newActivity.name} onChange={handleInputChange} placeholder="Activity Name" />
             <input type="date" name="date" value={newActivity.date} onChange={handleInputChange} />
             <input type="number" name="price" value={newActivity.price} onChange={handleInputChange} placeholder="Price" />

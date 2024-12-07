@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {searchbyname} from '../Services/productServices';
 import {getavailableProducts} from '../Services/productServices';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const Search = () => {
     console.log("aywa hya deh el page el bt3ml el bali balak");
     const [productSearchTerm, setProductSearchTerm] = useState('');
@@ -51,7 +51,7 @@ const Search = () => {
 
     return (
         <div>
-            <h1>Welcome, Admin!</h1>
+            
 
             {/* Search box for products */}
         <div>
@@ -62,13 +62,13 @@ const Search = () => {
                 onChange={(e) => setProductSearchTerm(e.target.value)}
                 placeholder="Search products by name"
             />
-            <button onClick={handleSearchProductbyname}>Search Products by name</button>
+            <button onClick={handleSearchProductbyname} className={styles['button']}>Search Products by name</button>
             {loadingProducts && <p>Loading Products...</p>}
             {productError && <p>{productError}</p>}
             <div>
             {products.length > 0 ? (
                 products.map((product) => (
-                    <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                    <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }} className={styles['category-buttons']}>
                     <h3>{product.name}</h3>
                     <p><strong>Price:</strong> ${product.price}</p>
                     {product.description && <p><strong>Description:</strong> {product.description}</p>}
@@ -95,14 +95,14 @@ const Search = () => {
             </div>
         </div>
         <div>
-    <h2>Available Products</h2>
-    <button onClick={handleShowProducts}>Show Available Products</button>
+    <h2>All Available Products</h2>
+    <button onClick={handleShowProducts} className={styles['button']}>Show Available Products</button>
     {loadingAvailableProducts && <p>Loading available products...</p>}
     {availableproductError && <p>{availableproductError}</p>}
     <div>
         {Availableproducts.length > 0 ? ( // Use Availableproducts instead of products
             Availableproducts.map((product) => ( // Map over the correct state variable
-                <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }} className={styles['category-buttons']}>
                     <h3>{product.name}</h3>
                     <p><strong>Price:</strong> ${product.price}</p>
                     <p><strong>Description:</strong> {product.description}</p>

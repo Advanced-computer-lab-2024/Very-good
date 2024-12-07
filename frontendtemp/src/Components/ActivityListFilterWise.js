@@ -3,12 +3,12 @@ import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
 
 const ActivityListFilterWise = ({ activities }) => {
     if (activities.length === 0) {
-        return <p>No activities found.</p>;
+        return <p >No activities found.</p>;
     }
 
     return (
-        <div className="container">
-            <h1>Activities</h1>
+        <div className="container2">
+            {/* <h1>Activities</h1> */}
             {activities.map((activity) => (
                 <ActivityDisplayFilterWise 
                     key={activity._id} 

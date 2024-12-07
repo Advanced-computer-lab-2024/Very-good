@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { filterActivities } from '../RequestSendingMethods';
 import ActivityListFilterWise from '../Components/ActivityListFilterWise';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 
 const FilterActivitiesPage = ({ onBack }) => { // Receive the onBack prop
   const [budget, setBudget] = useState('');
@@ -23,9 +24,9 @@ const FilterActivitiesPage = ({ onBack }) => { // Receive the onBack prop
   };
 
   return (
-    <div className="filter-activities-page">
+    <div className={styles['category-buttonsj']}>
       <h1>Welcome to the Filter Activities Page!</h1>
-      <p>Here you can filter activities based on your preferences.</p>
+      {/* <p>Here you can filter activities based on your preferences.</p> */}
       
       <form onSubmit={handleSubmit} className="form-container">
         <label>

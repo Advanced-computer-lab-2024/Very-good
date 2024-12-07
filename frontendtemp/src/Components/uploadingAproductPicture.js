@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/global.css'; // Ensure the CSS is being imported
-
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 const FetchProducts = ({ sellerEmail }) => {
     const [products, setProducts] = useState([]); // Store fetched product info
     const [error, setError] = useState(null); // Store errors if any
@@ -112,18 +112,25 @@ const FetchProducts = ({ sellerEmail }) => {
                             ))}
                         </tbody>
                     </table>
-
+                    <button onClick={() => window.location.reload()}> back </button>
+                    <div style={ {marginLeft :"-44%"}} >
                     {/* Modal to upload image for selected product */}
                     {selectedProductId && (
-                        <div className="upload-modal">
-                            <h3>Upload Image for Product ID: {selectedProductId}</h3>
-                            <form onSubmit={handleSubmit}>
+                        <div className={styles['category-buttons']} style={ {marginLeft :"36%" , width :'60%'}}>
+                            <h3 >Upload Image for Product ID: {selectedProductId}</h3>
+                                                                            <form onSubmit={handleSubmit} className={styles['category-buttons']} style={{
+                                                width: '89%',
+                                                margin: '0 auto', // Centers the element horizontally
+                                                textAlign: 'center', // Centers text inside the element
+                                                }}
+                                                >
                                 <input type="file" onChange={handleFileChange} required />
                                 <button type="submit">Upload</button>
                                 <button type="button" onClick={() => setSelectedProductId(null)}>Cancel</button>
                             </form>
                         </div>
                     )}
+                </div>
                 </div>
             )}
         </div>

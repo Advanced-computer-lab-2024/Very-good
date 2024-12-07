@@ -3,7 +3,7 @@ import { fetchProducts, createProduct, updateProduct, deleteProduct, fetchProduc
 import ProductSort from '../Components/SortProductRate.js';
 import '../Components/ActivityDisplay.css';
 import axios from 'axios';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const SellerManagementPage = ({ sellerId }) => {
     const [products, setProducts] = useState([]); // List of products for the seller
     const [loading, setLoading] = useState(true); // Loading state
@@ -158,12 +158,12 @@ const SellerManagementPage = ({ sellerId }) => {
     
 
     return (
-        <div className="itinerary-card">
+        <div >
             <h1>Seller Product Page</h1>
             <h2>{editMode ? 'Edit Product' : 'Create New Product'}</h2>
 
             {/* Product Form */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles['category-buttons']} >
             <label>Name</label>
             <input
                 type="text"
@@ -219,8 +219,8 @@ const SellerManagementPage = ({ sellerId }) => {
             />
 
 
-            <button type="submit">{editMode ? 'Update Product' : 'Create Product'}</button>
-            {editMode && <button type="button" onClick={resetForm}>Cancel Edit</button>}
+            <button type="submit" className={styles.button}>{editMode ? 'Update Product' : 'Create Product'}</button>
+            {editMode && <button type="button" onClick={resetForm} className={styles.button}>Cancel Edit</button>}
         </form>
 
             <div>
@@ -234,6 +234,7 @@ const SellerManagementPage = ({ sellerId }) => {
             ) : (
                 <div>
                     <h2>Products List</h2>
+                    <div className='container2'> 
                     {products.length > 0 ? (
                         products.map((product) => (
                             <div key={product._id} className="itinerary-card">
@@ -252,10 +253,12 @@ const SellerManagementPage = ({ sellerId }) => {
 
                                 <button onClick={() => handleEdit(product)}>Edit</button>
                             </div>
+                            
                         ))
                     ) : (
                         <p>No products available.</p>
                     )}
+                </div>
                 </div>
             )}
         </div>

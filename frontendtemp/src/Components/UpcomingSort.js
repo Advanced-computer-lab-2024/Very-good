@@ -9,12 +9,14 @@ import { useLocation } from 'react-router-dom';
 import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 
 import axios from 'axios';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
+import { useNavigate} from 'react-router-dom';
 const ActivityHistoricalList = () => {
     const location = useLocation();
-    const { email } = location.state;
-
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    console.log("state : ", location.state);
+    const {email} = location.state;
+    //console.log("email : ", email);
+    const navigate = useNavigate();
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
     const [itineraries, setItineraries] = useState([]);
@@ -97,15 +99,13 @@ const ActivityHistoricalList = () => {
 
     return (
         <div className="container">
-            <h1>Activities, Historical Places, and Itineraries</h1>
+            <div className={styles['category-buttons']}>
+            <h1>All Activities, Historical Places, and Itineraries</h1>
             
-            <label htmlFor="categorySelect">Choose a category:</label>
-            <select id="categorySelect" value={selectedCategory} onChange={handleCategoryChange}>
-                <option value="All">All Activities, Historical Places, and Itineraries</option>
-                <option value="Upcoming">Upcoming Activities and Itineraries</option>
-                <option value="Paid">Paid Activities and Itineraries</option>
-            </select>
-
+            <button onClick={toggleMappings2} className={styles.button}>
+                {showMappingsNotUpcoming ? "Hide All" : "Show All"}
+            </button>
+        
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
 
@@ -125,8 +125,15 @@ const ActivityHistoricalList = () => {
                     ))}
                 </>
             )}
+     </div>
+     <div className={styles['category-buttons']}>
+            <h1>Upcoming Activities, Historical Places, and Itineraries</h1>
+            
+            <button onClick={toggleMappings} className={styles.button}>
+                {showMappings ? "Hide Available to Visit" : "Show Available to Visit"}
+            </button>
 
-            {selectedCategory === 'Upcoming' && (
+            {showMappings && (
                 <>
                     <h2>Upcoming Activities</h2>
                     {activities.map(activity => (
@@ -138,20 +145,78 @@ const ActivityHistoricalList = () => {
                     ))}
                 </>
             )}
+</div>
+<div className={styles['category-buttons']}>
+            <h1>Paid Activities and Itineraries</h1>
+            <button onClick={toggleUpcomingActivitiesPaidFor} className={styles.button}>
+                {showUpcomingActivitiesPaidFor ? "Hide Upcoming Activities Paid For" : "Show Upcoming Activities Paid For"}
+            </button>
+            <button onClick={togglePastActivitiesPaidFor} className={styles.button}>
+                {showPastActivitiesPaidFor ? "Hide Past Activities Paid For" : "Show Past Activities Paid For"}
+            </button>
+            <button onClick={toggleUpcomingItinerariesPaidFor} className={styles.button}>
+                {showUpcomingItinerariesPaidFor ? "Hide Upcoming Itineraries Paid For" : "Show Upcoming Itineraries Paid For"}
+            </button>
+            <button onClick={togglePastItinerariesPaidFor} className={styles.button}>
+                {showPastItinerariesPaidFor ? "Hide Past Itineraries Paid For" : "Show Past Itineraries Paid For"}
+            </button>
 
-            {selectedCategory === 'Paid' && (
+            {showUpcomingActivitiesPaidFor && (
                 <>
-                    <h2>Upcoming Paid Activities</h2>
-                    {upcomingActivitiesPaidfor.map(activity => (
-                        <ActivityDisplayFilterWise key={activity.id} activity={activity} email={email} />
-                    ))}
-                    <h2>Upcoming Paid Itineraries</h2>
-                    {upcomingItinerariesPaidfor.map(itinerary => (
-                        <ItineraryDisplayFilterWise key={itinerary.id} itinerary={itinerary} />
-                    ))}
+                    <h2>Upcoming Activities Paid For</h2>
+                    {upcomingActivitiesPaidfor.length === 0 ? (
+                        <p>No upcoming activities paid for.</p>
+                    ) : (
+                        upcomingActivitiesPaidfor.map(activity => (
+                            <ActivityDisplayFilterWise activity={activity} email={email} />
+                        ))
+                    )}
                 </>
             )}
+
+            {showPastActivitiesPaidFor && (
+                <>
+                    <h2>Past Activities Paid For</h2>
+                    {pastActivitiesPaidfor.length === 0 ? (
+                        <p>No past activities paid for.</p>
+                    ) : (
+                        pastActivitiesPaidfor.map(activity => (
+                            <ActivityDisplayFilterWise activity={activity} email={email} comments={true} />
+                        ))
+                    )}
+                </>
+            )}
+
+            {showUpcomingItinerariesPaidFor && (
+                <>
+                    <h2>Upcoming Itineraries Paid For</h2>
+                    {upcomingItinerariesPaidfor.length === 0 ? (
+                        <p>No upcoming itineraries paid for.</p>
+                    ) : (
+                        upcomingItinerariesPaidfor.map(itinerary => (
+                            <ItineraryDisplayFilterWise itinerary={itinerary} />
+                        ))
+                    )}
+                </>
+            )}
+
+            {showPastItinerariesPaidFor && (
+                <>
+                    <h2>Past Itineraries Paid For</h2>
+                    {pastItinerariesPaidfor.length === 0 ? (
+                        <p>No past itineraries paid for.</p>
+                    ) : (
+                        pastItinerariesPaidfor.map(itinerary => (
+                            <ItineraryDisplayFilterWise itinerary={itinerary} comments={true} />
+                        ))
+                    )}
+                </>
+            )}
+              
         </div>
+        <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button>
+        </div>
+        
     );
 };
 

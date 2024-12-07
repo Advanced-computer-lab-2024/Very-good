@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendComplaint } from '../RequestSendingMethods'; // Import the sendComplaint function
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const TouristComplaint = ({email}) => {
     const [title, setTitle] = useState(''); // State for complaint title
     const [body, setBody] = useState(''); // State for complaint body
@@ -33,8 +33,8 @@ const TouristComplaint = ({email}) => {
 
     return (
         <div>
-            <h2>Submit Your Complaint</h2>
-            <form onSubmit={handleSubmit}>
+            <h2 style={{color : '#1F4529'}}>Submit Your Complaint</h2>
+            <form onSubmit={handleSubmit} className={styles['category-buttons']} style={{ marginLeft : "24%"}}>
                 <input
                     type="text"
                     value={title}
@@ -51,6 +51,7 @@ const TouristComplaint = ({email}) => {
                 <button type="submit">Submit Complaint</button>
             </form>
             {message && <p>{message}</p>} {/* Display feedback message */}
+            <button className='btn' onClick={() => window.location.reload()}> Back</button>
         </div>
     );
 };
