@@ -501,6 +501,8 @@ Before installing, ensure that you have the following installed on your system:
 - [npm](https://www.npmjs.com/) (>= v6.x)
 - [MongoDB](https://www.mongodb.com/) (for database setup)### Backend Installation
 
+###Backend
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/Advanced-computer-lab-2024/Very-good.git
@@ -528,6 +530,29 @@ Before installing, ensure that you have the following installed on your system:
 5. Start the server:
    ```bash
    node server.js
+   ```
+   
+###Frontend
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontendTemp
+   ```
+
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+   REACT_APP_STRIPE_PUBLIC_KEY=your-stripe-public-key
+   ```
+
+4. Start the frontend:
+   ```bash
+   npm start
    ```
 
 
