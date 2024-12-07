@@ -1,6 +1,6 @@
 /* General Styles for Activity Page */
 .activity-card {
-  background-color: #f0f8ff; /* Sky Blue Background */
+  background-color: #fffaf0; /* Sky Blue Background */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -8,6 +8,7 @@
   color: #1e3a3a; /* Forest Green Text */
   font-family: 'Arial', sans-serif;
   position: relative; /* To position the bookmark icon */
+  width : 80% ;
 }
 
 /* Title and Text Styling */

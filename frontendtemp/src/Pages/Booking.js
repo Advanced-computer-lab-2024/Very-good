@@ -80,13 +80,13 @@ const Booking = ({email}) => {
     };
     
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='form-container' >
              <Navbar/>
             <h2>Book an Activity or Itinerary</h2>
 
 
 
-            <div>
+            <div >
                 <label htmlFor="activities">Select Activity:</label>
                 <select
                     id="activities"
@@ -125,7 +125,7 @@ const Booking = ({email}) => {
             </div>
 
             <div>
-                <label htmlFor="participants">Number of Participants:</label>
+                <label htmlFor="participants" >Number of Participants:</label>
                 <input
                     type="number"
                     id="participants"

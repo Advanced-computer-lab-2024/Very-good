@@ -15,7 +15,7 @@ const FlightSearchForm = ({ onSearch, formData, updateFormData }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='form-container'>
             <div>
                 <label>Origin:</label>
                 <select

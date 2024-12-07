@@ -38,6 +38,7 @@ const TouristPage = ({email}) => {
   }
   console.log("email from localStorge", email);
   const navigate = useNavigate();
+  const [showChild, setShowChild] = useState(true);
   const [touristData, setTouristData] = useState(null);
   const [wallet, setWallet] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -443,7 +444,7 @@ const TouristPage = ({email}) => {
 
         {/* Display Selected Activities */}
         {activities.length > 0 && (
-          <div className={styles['activities-list']}>
+         <div className={styles["category-buttons"]}>
             <h2>Available Activities:</h2>
             <ul>
               {activities.map((activity, index) => (

@@ -21,7 +21,7 @@ const MuseumDisplayFilterWise = ({ museum }) => {
   }, [museum._id]);
 
   return (
-    <div className="activity-card"> {/* Reusing activity-card class */ }
+    <div className="activity-card">{/* Reusing activity-card class */ }
       <h2 className="activity-title">{museum.name}</h2>
       <p className="activity-description">{museum.description}</p>
 

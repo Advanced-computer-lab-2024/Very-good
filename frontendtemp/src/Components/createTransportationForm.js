@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createTransportation } from '../Services/bookingTransportationServices';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const CreateTransportationForm = ({ advertiserId, onClose }) => {
   const [formData, setFormData] = useState({
     type: '',
@@ -37,7 +37,7 @@ const CreateTransportationForm = ({ advertiserId, onClose }) => {
   };
 
   return (
-    <form className="create-transportation-form" onSubmit={handleSubmit}>
+    <form className={styles["category-buttons"]} onSubmit={handleSubmit}>
       <h2>Create Transportation</h2>
 
       <label>

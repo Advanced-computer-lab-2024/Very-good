@@ -6,7 +6,7 @@ import ViewComments from './viewComments';  // Import the new ViewComments compo
 import axios from 'axios'; // Import axios for making API requests
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon component
 import { faBookmark, faBell } from '@fortawesome/free-solid-svg-icons'; // Import the bookmark and bell icons
-
+import styles from '../styles/GuestPage.module.css'; // Keep your existing global styles
 const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
   console.log("comments : ", comments);
 
@@ -78,7 +78,7 @@ const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
   };
 
   return (
-    <div className="activity-card">
+    <div className="activity-card" style={ {width : '60%' , margin : "0 auto ", marginBottom : "3%"}} >
       <div className="icon-container">
         <FontAwesomeIcon 
           icon={faBookmark} 
@@ -91,6 +91,7 @@ const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
           className={`notify-icon ${isNotified ? 'notified' : 'transparent'}`} 
         />
       </div>
+      <div className={styles['']}>
       <h2 className="activity-title">{activity.name}</h2>
       <p className="activity-date">Date: {new Date(activity.date).toLocaleDateString()}</p>
       <p className="activity-price">Price: ${activity.price}</p>
@@ -99,6 +100,7 @@ const ActivityDisplayFilterWise = ({ activity, comments = false, email }) => {
       <p className="activity-ratings">Ratings: {activity.ratings}/5</p>
       <p className="activity-special-discount">Special Discount: {activity.specialDiscount}%</p>
       <p className="activity-booking-status">Booking Open: {activity.bookingOpen ? "Yes" : "No"}</p>
+      </div>
 
       <div className="tags-container">
         {activity.tags.map((tag, index) => (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPurchasedProducts, rateTourGuide, rateItinerary, rateProduct, fetchPastActivities ,rateactivity} from '../RequestSendingMethods';
 import {addReviewToProduct} from '../Services/commentServices'
 import '../styles/global.css';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const RatePageForTourist = ({ onBackClick, email, touristId }) => {
     const [tourGuides, setTourGuides] = useState([]);
     const [itineraries, setItineraries] = useState([]);
@@ -131,26 +131,26 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
     };
 
     return (
-        <div className="container">
+        <div  className={styles['category-buttons']}>
             {!ratetype ? (
                 <div>
                     <p>What would you like to rate?</p>
-                    <button onClick={handleTourGuideSelection} className="button">
+                    <button onClick={handleTourGuideSelection} className={styles.button}>
                         Tour Guide
                     </button>
-                    <button onClick={handleProductSelection} className="button">
+                    <button onClick={handleProductSelection} className={styles.button}>
                         Product
                     </button>
-                    <button onClick={handleItinerarySelection} className="button">
+                    <button onClick={handleItinerarySelection} className={styles.button}>
                         Itinerary
                     </button>
-                    <button onClick={handleActivitySelection} className="button">
+                    <button onClick={handleActivitySelection} className={styles.button}>
                         Activity
                     </button>
                 </div>
             ) : ratetype === 'tourGuide' && !selectedItem ? (
                 <div>
-                    <h3>Select a Tour Guide to Rate</h3>
+                    <h3  style={{color : '#1F4529'}}>Select a Tour Guide to Rate</h3>
                     <table className="table">
                         <thead>
                             <tr>
@@ -174,7 +174,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                 </div>
             ) : ratetype === 'itinerary' && !selectedItem ? (
                 <div>
-                    <h3>Select an Itinerary to Rate</h3>
+                    <h3  style={{color : '#1F4529'}}>Select an Itinerary to Rate</h3>
                     <table className="table">
                         <thead>
                             <tr>
@@ -202,7 +202,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                 </div>
             ) : ratetype === 'product' && !selectedItem ? (
                 <div>
-                    <h3>Select a Product to Rate</h3>
+                    <h3  style={{color : '#1F4529'}}>Select a Product to Rate</h3>
                     <table className="table">
                         <thead>
                             <tr>
@@ -227,7 +227,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                 </div>
             ) : ratetype === 'activity' && !selectedItem ? (
                 <div>
-                    <h3>Select an Activity to Rate</h3>
+                    <h3  style={{color : '#1F4529'}}>Select an Activity to Rate</h3>
                     <table className="table">
                         <thead>
                             <tr>
@@ -255,7 +255,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                 </div>
             ) : (
                 <div>
-                    <h3>Rate {selectedItem.title ? selectedItem.title : selectedItem.email}</h3>
+                    <h3  style={{color : '#1F4529'}}>Rate {selectedItem.title ? selectedItem.title : selectedItem.email}</h3>
                     <div className="star-rating">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <span
@@ -269,7 +269,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                     </div>
                     <button onClick={handleDoneClick} className="done-button">Done</button>
                     <div>
-          <h3>Leave a Review</h3>
+          <h3  style={{color : '#1F4529'}}>Leave a Review</h3>
           <textarea
             value={comment}
             onChange={handleCommentChange}

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { filterItineraries } from '../RequestSendingMethods'; // Import the new method
 import ItineraryDisplayFilterWise from '../Components/ItineraryDisplayFilterWise'; // Component to render filtered itineraries
+import { useNavigate } from 'react-router-dom';
 
-const FilterItenaryPage = () => {
+const FilterItenaryPage = (onBack) => {
   const [budget, setBudget] = useState('');
   const [date, setDate] = useState(''); // Single date state
   const [tag, setTag] = useState('');
@@ -78,10 +79,10 @@ const FilterItenaryPage = () => {
         <button type="submit" className="btn">Proceed</button>
       </form>
 
-      <button className="btn" onClick={() => window.history.back()}>Back</button>
+      <button className='btn' onClick={() => window.location.reload()}> Back</button>
 
       {/* Render filtered itineraries */}
-      <div className="itineraries-list">
+      <div className="container2">
         {itineraries.length > 0 ? (
           itineraries.map((itinerary) => (
             <ItineraryDisplayFilterWise
@@ -92,6 +93,7 @@ const FilterItenaryPage = () => {
         ) : (
           <p>No itineraries found based on the selected filters.</p>
         )}
+      
       </div>
       
     </div>

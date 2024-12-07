@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ItineraryDisplay from './ItineraryDisplay'; // Assume this is your Itinerary display component
 import { fetchItineraries, deleteItinerary, updateItinerary } from '../Services/itineraryServices'; // Adjust the import path as needed
-
+import styles from '../styles/TourGuidePage.module.css'; // Keep your existing global styles
 const ItineraryList = ({ tourGuideId }) => {
     const [itineraries, setItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -77,12 +77,15 @@ const ItineraryList = ({ tourGuideId }) => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className="container">
-            <h1>Itineraries</h1>
+        <div className={styles['category-buttons']} >
+            <h1 style={{marginLeft : '-5%'}}>Itineraries</h1>
+           
             {itineraries.length === 0 ? (
                 <p>No itineraries found.</p>
             ) : (
-                itineraries.map((itinerary) => (
+                
+                itineraries.map((itinerary) => 
+                    (
                     <ItineraryDisplay 
                         key={itinerary._id} 
                         itinerary={itinerary} 
@@ -90,8 +93,9 @@ const ItineraryList = ({ tourGuideId }) => {
                         onUpdate={handleUpdateItinerary} 
                         onStatus={handleStatusItinerary}
                     />
+                  
                 ))
-            )}
+            )} 
         </div>
     );
 };

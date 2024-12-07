@@ -195,8 +195,8 @@ const ProductSort = ({ email, touristId }) => {
 
     const ProductCard = ({ product }) => {
         return (
-            <div className="itinerary-card">
-                <h3>{product.name}</h3>
+            <div className="activity-card">
+                <h3 style={{color:"#1F4529"}}>{product.name}</h3>
                 <p><strong>Description:</strong> {product.description || "No description available"}</p>
                 <p><strong>Price:</strong> {product.price} EGP</p>
                 <p><strong>Rating:</strong> {product.rating}</p>
@@ -241,6 +241,19 @@ const ProductSort = ({ email, touristId }) => {
         marginBottom: "-1rem",
         marginTop: "-20rem",
         borderColor: "#70e8c4",
+        backGroundColor: '#dceb77f', /* Muted Gold */
+        color: '#7d7373', /* White text */
+        padding: '0.5rem 1rem',
+        borderRadius: '5px',
+        borderColor: '#70e8c4',
+        borderStyle: 'solid',
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+        width: '167%', /* Make all buttons take the same width */
+        textAlign: 'center', /* Center the text inside the button */
+        boxSizing: 'border-box',
+        marginLeft: '-31%'
+         
       }}
     >
                 {showMappings ? "Hide Products Sorted by Rating" : "Look up Products Sorted by Rating"}

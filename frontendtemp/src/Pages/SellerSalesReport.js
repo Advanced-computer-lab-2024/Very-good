@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/global.css"; // Replace with your actual stylesheet filename
 import { fetchProductsNoID } from "../Services/productServices";
-
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 const SellerSalesReport = ({ sellerId }) => {
     console.log("ID DA5L LEL COMPONENT:",sellerId) 
   const [products, setProducts] = useState([]); // Fetched products
@@ -80,7 +80,7 @@ useEffect(() => {
     const filteredProducts = getFilteredProducts();
 
     return (
-      <div className="partition">
+      <div >
         <h3 className="partition-title">Seller Products Sales</h3>
         <table className="table">
           <thead>
@@ -130,11 +130,11 @@ useEffect(() => {
   }
 
   return (
-    <div className="revenue-page">
-      <div className="header">Seller Products Revenue</div>
+    <div className="f">
+      <div className={styles.header}>Seller Products Revenue</div>
 
       {/* Filters Section */}
-      <div className="filters">
+      <div className={styles['category-buttons']}>
         <label>
           Filter by Date:
           <input
@@ -142,7 +142,7 @@ useEffect(() => {
             onChange={(e) => handleFilterChange("date", e.target.value)}
           />
         </label>
-        <label>
+        <label >
           Filter by Month:
           <select onChange={(e) => handleFilterChange("month", e.target.value)}>
             <option value="">Select Month</option>
@@ -157,7 +157,7 @@ useEffect(() => {
 
       {/* Render Products Table */}
       <div className="horizontal-partitions">{renderProductsTable()}</div>
-
+      <button onClick={() => window.location.reload()}> back </button>
       <div className="footer">Powered by Very Good App</div>
     </div>
   );

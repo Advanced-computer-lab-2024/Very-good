@@ -23,7 +23,7 @@ const FilterProductByPrice = () => {
   return (
     <div className="filter-product-by-price">
       <h1>Filter Products by Price</h1>
-      <form onSubmit={handleFilterSubmit}>
+      <form onSubmit={handleFilterSubmit} className='form-container'>
         <input
           type="number"
           value={minPrice}
@@ -42,13 +42,13 @@ const FilterProductByPrice = () => {
       </form>
 
       {error && <p className="error-message">{error}</p>}
-
+      <button className='btn' onClick={() => window.location.reload()}> Back</button>
       {/* Render filtered products */}
-      <div className="filtered-products-list">
+      <div className="container2">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div key={product._id} className="product-item">
-              <h2>{product.name}</h2>
+            <div key={product._id} className="activity-card">
+              <h2 style={{color : '#1F4529'}}>{product.name}</h2>
               <p>Price: ${product.price}</p>
               <p>{product.description}</p>
               {/* Render more product details as needed */}

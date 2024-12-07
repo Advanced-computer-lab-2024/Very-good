@@ -7,12 +7,14 @@ import ItineraryDisplayFilterWise from './ItineraryDisplayFilterWise';
 import MuseumDisplayFilterWise from './MuseumDisplayFilterWise';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
+import { useNavigate} from 'react-router-dom';
 const ActivityHistoricalList = () => {
     const location = useLocation();
     console.log("state : ", location.state);
     const {email} = location.state;
     //console.log("email : ", email);
+    const navigate = useNavigate();
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -179,12 +181,13 @@ const ActivityHistoricalList = () => {
 
     return (
         <div className="container">
+            <div className={styles['category-buttons']}>
             <h1>All Activities, Historical Places, and Itineraries</h1>
             
-            <button onClick={toggleMappings2}>
+            <button onClick={toggleMappings2} className={styles.button}>
                 {showMappingsNotUpcoming ? "Hide All" : "Show All"}
             </button>
-
+        
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
 
@@ -221,10 +224,11 @@ const ActivityHistoricalList = () => {
                     )}
                 </>
             )}
-
+     </div>
+     <div className={styles['category-buttons']}>
             <h1>Upcoming Activities, Historical Places, and Itineraries</h1>
             
-            <button onClick={toggleMappings}>
+            <button onClick={toggleMappings} className={styles.button}>
                 {showMappings ? "Hide Available to Visit" : "Show Available to Visit"}
             </button>
 
@@ -261,18 +265,19 @@ const ActivityHistoricalList = () => {
                     )}
                 </>
             )}
-
+</div>
+<div className={styles['category-buttons']}>
             <h1>Paid Activities and Itineraries</h1>
-            <button onClick={toggleUpcomingActivitiesPaidFor}>
+            <button onClick={toggleUpcomingActivitiesPaidFor} className={styles.button}>
                 {showUpcomingActivitiesPaidFor ? "Hide Upcoming Activities Paid For" : "Show Upcoming Activities Paid For"}
             </button>
-            <button onClick={togglePastActivitiesPaidFor}>
+            <button onClick={togglePastActivitiesPaidFor} className={styles.button}>
                 {showPastActivitiesPaidFor ? "Hide Past Activities Paid For" : "Show Past Activities Paid For"}
             </button>
-            <button onClick={toggleUpcomingItinerariesPaidFor}>
+            <button onClick={toggleUpcomingItinerariesPaidFor} className={styles.button}>
                 {showUpcomingItinerariesPaidFor ? "Hide Upcoming Itineraries Paid For" : "Show Upcoming Itineraries Paid For"}
             </button>
-            <button onClick={togglePastItinerariesPaidFor}>
+            <button onClick={togglePastItinerariesPaidFor} className={styles.button}>
                 {showPastItinerariesPaidFor ? "Hide Past Itineraries Paid For" : "Show Past Itineraries Paid For"}
             </button>
 
@@ -327,7 +332,11 @@ const ActivityHistoricalList = () => {
                     )}
                 </>
             )}
+              
         </div>
+        <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button>
+        </div>
+        
     );
 };
 

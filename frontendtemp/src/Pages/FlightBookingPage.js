@@ -88,15 +88,20 @@ const FlightBookingPage = ({ onBack, touristId }) => {
             <Navbar/>
             <h1>Flight Booking</h1>
             <FlightSearchForm onSearch={handleSearch} formData={formData} updateFormData={updateFormData} />
+            
             <h2>Flight Offers</h2>
             <button onClick={onBack}>Back</button>
+            <div className='container'>
             {console.log("homa dol :",flightoffers)}
             {bookingStatus && <p>{bookingStatus}</p>}
+          
             {flightoffers.length > 0 ? (
-                <FlightOffersDisplay flightOffers={flightoffers} onBookFlight={onBookFlight}/>
+               
+                <FlightOffersDisplay flightOffers={flightoffers} onBookFlight={onBookFlight}/>  
             ) : (
-                <p>No flight offers available. Please try a different search.</p>
+                <p>No flight offers available. Please try a different search.</p> 
             )}
+            </div>
         </div>
     );
 };

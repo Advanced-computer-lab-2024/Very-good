@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 // now here we need to specify the connection between the frontend and the backend 
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 const UploadDocumentsSeller= ({ onBack,email }) =>  {
   const [idCard, setIdCard] = useState(null); // Holds the uploaded ID card file.
   const [certificates, setCertificates] = useState([]);// Holds an array of uploaded certificate files.
@@ -52,7 +53,7 @@ const UploadDocumentsSeller= ({ onBack,email }) =>  {
     <div>
       <h1>Upload Your Documents</h1>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles['category-buttons']}>
         <div>
           <label>ID Card:</label>
           <input type="file" accept="image/*" onChange={handleIdCardChange} required />

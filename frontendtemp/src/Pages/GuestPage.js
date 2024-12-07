@@ -229,7 +229,7 @@ const GuestPage = () => {
 
         {/* Display Selected Activities */}
         {activities.length > 0 && (
-          <div className={styles.activitiesList}>
+          <div className={styles["category-buttons"]}>
             <h2>Available Activities:</h2>
             <ul>
               {activities.map((activity, index) => (
