@@ -230,6 +230,8 @@ function AdminCategory({ sellerId, adminId }) {
           )
         );
       } else {
+        formData2.sellerId = adminId; // Ensure sellerId is set to adminId
+        console.log("formData2:", formData2); // Log the form data
         const response = await axios.post('http://localhost:4000/api/admins/createProduct', formData2);
         const newProduct = response.data.product;
         setProducts((prevProducts) => {

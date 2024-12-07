@@ -254,7 +254,7 @@ const filterActivities = async (req, res) => {
 
 const filterActivitiesyassin = async (req, res) => {
     try {
-        const { price, date, tags, language } = req.body; // Include language in destructuring
+        const { price, date, category, ratings } = req.body; // Include language in destructuring
 
         // Array to hold our filtering conditions
         const filterConditions = [];
@@ -275,20 +275,17 @@ const filterActivitiesyassin = async (req, res) => {
             }
         }
 
-        // If tags are provided and not null, find the corresponding tag IDs and add to the conditions
-        if (tags) {
-            const tagIds = await Tag.find({ name: tags }).select('_id'); // Find tag IDs by tag name
-            if (tagIds.length > 0) {
-                filterConditions.push({ tags: { $in: tagIds.map(tag => tag._id) } });
-            } else {
-                // If no tags are found, handle accordingly
-                return res.status(404).json({ error: 'No matching tags found' });
-            }
+        if (ratings !== undefined && ratings !== null) {
+            filterConditions.push({ ratings:  ratings  }); // Filter activities with ratings greater than or equal to provided rating
         }
-
-        // If language is provided and not null, add it to the conditions
-        if (language) {
-            filterConditions.push({ language: { $eq: language } }); // Exact match for language
+        if (category !== undefined && category !== null) {
+            // Find categoryId corresponding to category name
+            const foundCategory = await Category.findOne({ name: category });
+            if (foundCategory) {
+                filterConditions.push({ categoryId: foundCategory._id }); // Use categoryId for filtering
+            } else {
+                return res.status(200).json([]);
+            }
         }
 
         // Check if we have any filter conditions, if not return all activities
