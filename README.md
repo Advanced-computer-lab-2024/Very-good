@@ -250,7 +250,14 @@ The website offers the following features for Tourists:
   - Location (integrated with Google Maps).  
   - Price or price range.  
   - Category, tags, and any special discounts.  
-  - Whether bookings are open or closed.  
+  - Whether bookings are open or closed.
+
+### Transportation Management  
+•⁠  ⁠Create, read, update, and delete Transportations with comprehensive details, such as:  
+  - Date and time of the Transportation.  
+  - Pickup Location.
+  - DropOff Location.   
+  - Price.
 
 ### Reporting and Analytics  
 •⁠  ⁠View a sales report containing all revenue generated through activities.  
@@ -267,7 +274,7 @@ The website offers the following features for Tourists:
 •⁠  ⁠Receive email notifications for flagged activities.  
 
 ### View and Manage Content  
-•⁠  ⁠Access a list of all created activities, itineraries, museums, and historical places.
+•⁠  ⁠Access a list of all created activities, transportations.
 
 ## For Tourism Governer :
 
