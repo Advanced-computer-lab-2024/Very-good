@@ -93,7 +93,7 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 The website offers the following features for Tourists:
 
-#For All Users :
+For All Users :
 
 ### Authentication and Account Management
 •⁠  ⁠Login using a username and password.
@@ -106,7 +106,7 @@ The website offers the following features for Tourists:
 
 
 
-##For Tourist :
+For Tourist :
 
 ### User Profile Management
 •⁠  ⁠Update profile information, including wallet details.
@@ -165,6 +165,192 @@ The website offers the following features for Tourists:
 ### Promotions and Discounts
 •⁠  ⁠Receive promo codes (e.g., birthday discounts) via email and in-app.
 •⁠  ⁠Use promo codes for purchases across the platform.
+
+For Seller :
+
+### Product Management
+•⁠  ⁠Add new products with the following details:
+  - Name
+  - Price
+  - Description
+  - Available quantity
+•⁠  ⁠Upload product images.
+•⁠  ⁠Edit product details, including price and description.
+•⁠  ⁠Archive and unarchive products as needed.
+
+### Inventory and Notifications
+•⁠  ⁠View available quantity and sales data for each product.
+•⁠  ⁠Receive notifications via email and system alerts when a product goes out of stock.
+
+### Sales and Revenue Reports
+•⁠  ⁠View a detailed sales report containing revenue data.
+•⁠  ⁠Filter sales reports by product, date, or month.
+
+### Product Discovery
+•⁠  ⁠Provide a list of all available products, including:
+  - Product images
+  - Prices
+  - Descriptions
+  - Ratings and reviews
+•⁠  ⁠Search for products based on their names.
+•⁠  ⁠Filter products by price.
+•⁠  ⁠Sort products by ratings.
+
+For Tour Guide :
+
+### Itinerary Management
+•⁠  ⁠Create, read, update, and delete itineraries with detailed information, including:
+  - Activities included in the itinerary.
+  - Locations to be visited.
+  - Timeline and duration of each activity.
+  - Language of the tour.
+  - Price of the tour.
+  - Available dates and times.
+  - Accessibility options.
+  - Pickup/drop-off locations.
+•⁠  ⁠Activate or deactivate itineraries with existing bookings.
+•⁠  ⁠Create, read, update, and delete tourist-specific itineraries for a defined date range, including tags and all associated details.
+
+### Notifications
+•⁠  ⁠Receive system notifications when:
+  - An event or itinerary is flagged as inappropriate by an admin.
+•⁠  ⁠Receive email notifications for flagged events or itineraries.
+
+### Reports and Analytics
+•⁠  ⁠View a sales report containing revenue details for itineraries and activities.
+•⁠  ⁠Filter sales reports by:
+  - Activity
+  - Itinerary
+  - Date
+  - Month
+•⁠  ⁠View reports on the total number of tourists who:
+  - Used an itinerary.
+  - Attended an activity.
+•⁠  ⁠Filter the total number of tourist reports by month.
+
+### Activity and Itinerary Management
+•⁠  ⁠View a list of all created:
+  - Activities
+  - Itineraries
+  - Museums and historical places.
+
+For Advertiser :
+
+### Account and Profile Management  
+•⁠  ⁠Create, read, and update a profile with detailed information, including:  
+  - Link to the company website.  
+  - Hotline.  
+  - Company profile.  
+  - Other relevant details (if accepted as an advertiser on the system).  
+
+•⁠  ⁠Upload a company logo or related image.  
+•⁠  ⁠Accept the terms and conditions upon account approval or updates.  
+•⁠  ⁠Request account deletion from the system.  
+
+### Activity Management  
+•⁠  ⁠Create, read, update, and delete activities with comprehensive details, such as:  
+  - Date and time of the activity.  
+  - Location (integrated with Google Maps).  
+  - Price or price range.  
+  - Category, tags, and any special discounts.  
+  - Whether bookings are open or closed.  
+
+### Reporting and Analytics  
+•⁠  ⁠View a sales report containing all revenue generated through activities.  
+•⁠  ⁠Filter sales reports by:  
+  - Activity.  
+  - Date.  
+  - Month.  
+•⁠  ⁠View reports detailing the total number of participants or tourists attending activities.  
+•⁠  ⁠Filter participant reports by month.  
+
+### Notifications  
+•⁠  ⁠Receive system notifications when:  
+  - An activity is flagged as inappropriate by the admin.  
+•⁠  ⁠Receive email notifications for flagged activities.  
+
+### View and Manage Content  
+•⁠  ⁠Access a list of all created activities, itineraries, museums, and historical places.
+
+For Tourism Governer :
+
+The website offers the following features for the *Tourism Governor*:  
+
+### Account and Profile Management  
+•⁠  ⁠Change account password.  
+•⁠  ⁠Recover password using an OTP sent to the registered email.  
+
+### Museum and Historical Places Management  
+•⁠  ⁠Create, read, update, and delete museums and historical places with comprehensive details, including:  
+  - Description of the place.  
+  - Pictures.  
+  - Location (with Google Maps integration).  
+  - Opening hours.  
+  - Ticket prices.  
+
+### Tag Management  
+•⁠  ⁠Create tags for different historical locations based on attributes such as:  
+  - Type (e.g., museum, cultural landmark).  
+  - Historical period (e.g., Medieval, Renaissance).  
+
+# For Admin :
+
+### Account Management  
+•⁠  ⁠Change account password.  
+•⁠  ⁠Recover password using an OTP sent to the registered email.  
+•⁠  ⁠Add new *Tourism Governors* and *Admins* to the system by creating a unique username and password.  
+
+### User and Content Moderation  
+•⁠  ⁠View documents uploaded by *Tour Guides, **Advertisers, and **Sellers* during registration.  
+•⁠  ⁠Accept or reject registration requests for *Tour Guides, **Advertisers, and **Sellers* based on uploaded documents.  
+•⁠  ⁠Delete user accounts off the system.  
+•⁠  ⁠Flag an event or itinerary deemed inappropriate.  
+
+### Complaint Management  
+•⁠  ⁠View a list of all complaints issued along with their statuses (pending/resolved).  
+•⁠  ⁠View the details of a selected complaint.  
+•⁠  ⁠Mark complaints as pending or resolved.  
+•⁠  ⁠Reply to complaints issued by users.  
+•⁠  ⁠Sort complaints by date.  
+•⁠  ⁠Filter complaints by their status.  
+
+### Product Management  
+•⁠  ⁠View a list of all available products, including:  
+  - Product details (picture, price, description, ratings, and reviews).  
+  - Available quantity and sales of each product.  
+•⁠  ⁠Add products with their details (price, description, available quantity).  
+•⁠  ⁠Upload product images.  
+•⁠  ⁠Edit product details and pricing.  
+•⁠  ⁠Archive or unarchive products.  
+•⁠  ⁠Receive notifications when products are out of stock on the system (both in the system and via email).  
+
+### Reporting and Analytics  
+•⁠  ⁠View a sales report containing all revenue generated from:  
+  - Events.  
+  - Itineraries.  
+  - Gift shop sales.  
+•⁠  ⁠Filter sales reports based on a product, date, or month.  
+•⁠  ⁠View total registered users and the number of new users added per month.  
+
+### Activity and Tag Management  
+•⁠  ⁠Create, read, update, and delete activity categories such as:  
+  - Food.  
+  - Stand-up comedy.  
+  - Concerts.  
+  - Parties.  
+  - Exhibitions.  
+  - Sports matches/events.  
+  - Parks.  
+•⁠  ⁠Create, read, update, and delete preference tags, including:  
+  - Historic areas.  
+  - Beaches.  
+  - Family-friendly.  
+  - Shopping.  
+  - Budget-friendly.  
+
+### Promotions Management  
+•⁠  ⁠Create promotional codes for discounts on events, itineraries, or products.
+
 
 
 
