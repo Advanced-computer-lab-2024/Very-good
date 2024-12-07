@@ -75,6 +75,7 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 - **multer** – Middleware for handling file uploads in Node.js.
 - **node-cron** – Task scheduler for running cron jobs in Node.js.
 - **stripe** – Library for integrating Stripe payments.
+- **Amadeus APIs** – A set of APIs for accessing travel-related services, including flight and hotel bookings, and more.
 
 ### Frontend:
 - **React.js** – JavaScript library for building user interfaces.
@@ -84,10 +85,7 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 - **FontAwesome** – Library for scalable vector icons.
 - **@react-google-maps/api** – Library for integrating Google Maps in React applications.
 - **React Scripts** – Set of scripts for building and running React applications.
-- **Jest** – Testing framework for JavaScript, used with React.
-- **@testing-library/react** – Testing utilities for React components.
 - **cross-env** – Package to set environment variables in scripts across different OS.
-
 
 ---
 
