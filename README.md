@@ -425,5 +425,22 @@ const getTourist = async (req, res) => {
     }
 };
 
+```
+### a snippet from the tourist Routes
+
+```javascript
+router.get('/', getTourist)
+router.post('/', createTourist)
+```
+
+### a snippet from the server.js File
+
+```javascript
+const touristRoutes = require('./routes/tourists')
+app.use('/api/tourists', touristRoutes)
+```
+
+
+
 
 
