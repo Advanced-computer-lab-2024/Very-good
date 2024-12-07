@@ -32,8 +32,19 @@ Travel planning should be simple, intuitive, and enjoyable. **Very Good Travel A
 ## Build Status
 
 This project is currently under development and is not suitable for production use.  
-You can review the [Issues](../../issues) section for a list of known problems.  
-Plans are in place to add more automated tests and expand the documentation in future updates.
+
+### Known Issues:
+- **Navigation Challenges**:  
+  Users may find it difficult to navigate the site if the layout or menu system is not intuitive.  
+
+- **Inadequate Error Handling**:  
+  Missing or unclear error messages can confuse users when something goes wrong (e.g., failed bookings or API errors).  
+
+- **Accessibility Barriers**:  
+  Lack of accessibility features (e.g., screen reader support, keyboard navigation) could make the site unusable for some users.  
+
+Plans are in place to address these issues, add more automated tests, and expand the documentation in future updates.
+
 
 ---
 
