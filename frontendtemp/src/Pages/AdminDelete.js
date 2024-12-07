@@ -32,8 +32,6 @@ const AdminDelete = ({ onBack }) => {
 
     return (
         <div>
-            <h2>Admin Delete Page</h2>
-            <p>Welcome to the Admin Delete page!</p>
             <h3>Select an account type to delete:</h3>
             <div>
                 <button onClick={() => handleOptionSelect('Tourist')}>Delete Tourist</button>
