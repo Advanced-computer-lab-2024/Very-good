@@ -91,11 +91,82 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 ## Features
 
-- Explore and book itineraries, activities, and flights.  
-- Share activities via copy link or email.  
-- Manage user accounts for tourists and tour guides.  
-- Dynamic location mapping with Google Maps integration.  
-- Search and filter activities by category and tags.  
+The website offers the following features for Tourists:
+
+#For All Users :
+
+### Authentication and Account Management
+•⁠  ⁠Login using a username and password.
+•⁠  ⁠Change password securely.
+•⁠  ⁠Recover a forgotten password via OTP sent to email.
+•⁠  ⁠Create, read, and update a seller profile, including name and description, upon acceptance into the system.
+•⁠  ⁠Upload a profile picture.
+•⁠  ⁠Accept terms and conditions upon registration or system updates.
+•⁠  ⁠Request account deletion from the system.
+
+
+
+##For Tourist :
+
+### User Profile Management
+•⁠  ⁠Update profile information, including wallet details.
+•⁠  ⁠Set vacation preferences (e.g., historic areas, beaches, budget-friendly options, etc.).
+
+### Search and Discovery
+•⁠  ⁠Search for specific museums, historical places, activities, or itineraries by name, category, or tags.
+•⁠  ⁠Choose preferred currency to view prices.
+
+### Booking and Payments
+•⁠  ⁠Book flights, hotels, and transportation through third-party applications.
+•⁠  ⁠Book tickets for events, activities, or itineraries directly on the platform.
+•⁠  ⁠Pay for bookings using:
+  - Credit card or debit card (via Stripe integration).
+  - Wallet balance (if available).
+•⁠  ⁠Cancel bookings up to 48 hours before the start of the event/activity or itinerary.
+•⁠  ⁠View the refunded amount from cancellations in the wallet.
+•⁠  ⁠Receive payment receipts via email.
+
+### Event and Itinerary Management
+•⁠  ⁠View and manage:
+  - Upcoming activities and itineraries.
+  - Past activities and itineraries (history).
+•⁠  ⁠Bookmark and save events for later viewing.
+•⁠  ⁠Receive notifications about:
+  - Upcoming bookings via email or in-app.
+  - Events of interest starting their booking phase.
+•⁠  ⁠Share activities, museums, historical places, or itineraries via email or copy link.
+
+### Reviews and Ratings
+•⁠  ⁠Rate and comment on:
+  - Tour guides after completing a tour.
+  - Itineraries created by tour guides.
+  - Events or activities attended.
+
+### Rewards and Loyalty
+•⁠  ⁠Earn loyalty points upon payments for events/itineraries.
+•⁠  ⁠Redeem points as cash into the wallet.
+•⁠  ⁠Receive badges based on user level.
+
+### Wishlist and Shopping
+•⁠  ⁠Save products to a wishlist for future reference.
+•⁠  ⁠Add or remove items from the cart.
+•⁠  ⁠Modify quantities of items in the cart.
+•⁠  ⁠Checkout and pay using:
+  - Wallet balance.
+  - Credit card (via Stripe).
+  - Cash on delivery.
+•⁠  ⁠View current and past orders.
+•⁠  ⁠Rate and review purchased products.
+
+### Complaint and Support
+•⁠  ⁠File complaints with details like title, body, and date.
+•⁠  ⁠Track complaint statuses (pending/resolved).
+
+### Promotions and Discounts
+•⁠  ⁠Receive promo codes (e.g., birthday discounts) via email and in-app.
+•⁠  ⁠Use promo codes for purchases across the platform.
+
+
 
 ---
 
