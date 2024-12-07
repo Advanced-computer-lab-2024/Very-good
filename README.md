@@ -516,15 +516,15 @@ Before installing, ensure that you have the following installed on your system:
 
 3. Install the dependencies:
   ```bash
-   npm install
+      npm install
    ```
 4. Set up environment variables:
   ```bash
-   MONGO_URI=your-mongodb-uri
-   JWT_SECRET=your-jwt-secret
-   STRIPE_SECRET_KEY=your-stripe-secret-key
-   EMAIL_USER=maranmalak@gmail.com
-   EMAIL_PASS="your password"
+     MONGO_URI=your-mongodb-uri
+     JWT_SECRET=your-jwt-secret
+     STRIPE_SECRET_KEY=your-stripe-secret-key
+     EMAIL_USER=maranmalak@gmail.com
+     EMAIL_PASS="your password"
   ```
 5. Start the server:
    ```bash
