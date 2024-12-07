@@ -6,6 +6,8 @@ import ActivityDisplayFilterWise from './ActivityDisplayFilterWise';
 import ItineraryDisplayFilterWise from './ItineraryDisplayFilterWise';
 import MuseumDisplayFilterWise from './MuseumDisplayFilterWise';
 import { useLocation } from 'react-router-dom';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
+
 import axios from 'axios';
 import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 import { useNavigate} from 'react-router-dom';
@@ -17,61 +19,36 @@ const ActivityHistoricalList = () => {
     const navigate = useNavigate();
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [showMappings, setShowMappings] = useState(false);
-    const [showMappingsNotUpcoming, setShowMappingsNotUpcoming] = useState(false);
     const [itineraries, setItineraries] = useState([]);
-    const [allItineraries, setAllItineraries] = useState([]);
     const [allActivities, setAllActivities] = useState([]);
+    const [allItineraries, setAllItineraries] = useState([]);
     const [upcomingActivitiesPaidfor, setUpcomingActivitiesPaidfor] = useState([]);
     const [upcomingItinerariesPaidfor, setUpcomingItinerariesPaidfor] = useState([]);
-    const [pastActivitiesPaidfor, setPastActivitiesPaidfor] = useState([]);
-    const [pastItinerariesPaidfor, setPastItinerariesPaidfor] = useState([]);
-    const [showUpcomingActivitiesPaidFor, setShowUpcomingActivitiesPaidFor] = useState(false);
-    const [showPastActivitiesPaidFor, setShowPastActivitiesPaidFor] = useState(false);
-    const [showUpcomingItinerariesPaidFor, setShowUpcomingItinerariesPaidFor] = useState(false);
-    const [showPastItinerariesPaidFor, setShowPastItinerariesPaidFor] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const getActivities = async () => {
+        const fetchData = async () => {
             try {
                 const currentDate = new Date();
-                const upcomingActivities = await fetchActivitiesDate();
 
-                setAllActivities(upcomingActivities.data)
+                // Fetch all activities
+                const activitiesResponse = await fetchActivitiesDate();
+                setAllActivities(activitiesResponse.data);
+                const filteredActivities = activitiesResponse.data.filter(activity => new Date(activity.date) >= currentDate);
+                setActivities(filteredActivities);
 
-                const filteredActivities = upcomingActivities.data.filter(activity => {
-                    const activityDate = new Date(activity.date);
-                    return activityDate >= currentDate;
-                });
-
-                if (filteredActivities.length > 0) {
-                    setActivities(filteredActivities);
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const getUpcomingItineraries = async () => {
-            try {
-                const currentDate = new Date();
+                // Fetch itineraries
                 const itinerariesResponse = await fetchItinerariesNoId();
-                console.log("Itineraries Response:", itinerariesResponse); // Log response
-
                 setAllItineraries(itinerariesResponse.data);
-                
-                const filteredItineraries = itinerariesResponse.data.filter(itinerary => {
-                    return itinerary.availableDates.some(date => new Date(date) > currentDate) && !itinerary.flagged && itinerary.isActive;
-                });
+                const filteredItineraries = itinerariesResponse.data.filter(itinerary =>
+                    itinerary.availableDates.some(date => new Date(date) > currentDate)
+                );
+                setItineraries(filteredItineraries);
 
-                if (filteredItineraries.length > 0) {
-                    setItineraries(filteredItineraries);
-                    console.log("Filtered Itineraries:", filteredItineraries); // Log filtered itineraries
-                }
+                // Fetch historical places
+                const museumsResponse = await fetchMuseums();
+                setHistoricalPlaces(museumsResponse.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -79,20 +56,7 @@ const ActivityHistoricalList = () => {
             }
         };
 
-        const getHistoricalPlaces = async () => {
-            try {
-                const museumResponse = await fetchMuseums();
-                setHistoricalPlaces(museumResponse.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getActivities();
-        getHistoricalPlaces();
-        getUpcomingItineraries();
+        fetchData();
     }, []);
 
     const fetchPaidActivities = async () => {
@@ -115,68 +79,22 @@ const ActivityHistoricalList = () => {
         }
     };
 
-    const fetchUpcomingActivitiesPaidFor = async () => {
-        const activities = await fetchPaidActivities();
-        const currentDate = new Date();
-        const filteredActivities = activities.filter(activity => new Date(activity.date) >= currentDate);
-        setUpcomingActivitiesPaidfor(filteredActivities);
-    };
+    const handleCategoryChange = async (event) => {
+        setSelectedCategory(event.target.value);
 
-    const fetchPastActivitiesPaidFor = async () => {
-        const activities = await fetchPaidActivities();
-        const currentDate = new Date();
-        const filteredActivities = activities.filter(activity => new Date(activity.date) < currentDate);
-        setPastActivitiesPaidfor(filteredActivities);
-    };
+        if (event.target.value === 'Paid') {
+            const paidActivities = await fetchPaidActivities();
+            const paidItineraries = await fetchPaidItineraries();
+            const currentDate = new Date();
 
-    const fetchUpcomingItinerariesPaidFor = async () => {
-        const itineraries = await fetchPaidItineraries();
-        const currentDate = new Date();
-        const filteredItineraries = itineraries.filter(itinerary => itinerary.availableDates.some(date => new Date(date) >= currentDate));
-        setUpcomingItinerariesPaidfor(filteredItineraries);
-    };
+            const filteredUpcomingActivities = paidActivities.filter(activity => new Date(activity.date) >= currentDate);
+            const filteredUpcomingItineraries = paidItineraries.filter(itinerary =>
+                itinerary.availableDates.some(date => new Date(date) >= currentDate)
+            );
 
-    const fetchPastItinerariesPaidFor = async () => {
-        const itineraries = await fetchPaidItineraries();
-        const currentDate = new Date();
-        const filteredItineraries = itineraries.filter(itinerary => itinerary.availableDates.some(date => new Date(date) < currentDate));
-        setPastItinerariesPaidfor(filteredItineraries);
-    };
-
-    const toggleMappings = () => {
-        setShowMappings(prevState => !prevState);
-    };
-
-    const toggleMappings2 = () => {
-        setShowMappingsNotUpcoming(prevState => !prevState);
-    };
-
-    const toggleUpcomingActivitiesPaidFor = async () => {
-        if (!showUpcomingActivitiesPaidFor) {
-            await fetchUpcomingActivitiesPaidFor();
+            setUpcomingActivitiesPaidfor(filteredUpcomingActivities);
+            setUpcomingItinerariesPaidfor(filteredUpcomingItineraries);
         }
-        setShowUpcomingActivitiesPaidFor(prevState => !prevState);
-    };
-
-    const togglePastActivitiesPaidFor = async () => {
-        if (!showPastActivitiesPaidFor) {
-            await fetchPastActivitiesPaidFor();
-        }
-        setShowPastActivitiesPaidFor(prevState => !prevState);
-    };
-
-    const toggleUpcomingItinerariesPaidFor = async () => {
-        if (!showUpcomingItinerariesPaidFor) {
-            await fetchUpcomingItinerariesPaidFor();
-        }
-        setShowUpcomingItinerariesPaidFor(prevState => !prevState);
-    };
-
-    const togglePastItinerariesPaidFor = async () => {
-        if (!showPastItinerariesPaidFor) {
-            await fetchPastItinerariesPaidFor();
-        }
-        setShowPastItinerariesPaidFor(prevState => !prevState);
     };
 
     return (
@@ -191,37 +109,20 @@ const ActivityHistoricalList = () => {
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
 
-            {showMappingsNotUpcoming && (
+            {selectedCategory === 'All' && (
                 <>
-                    {/* Display upcoming activities */}
                     <h2>All Activities</h2>
-                    {allActivities.length === 0 ? (
-                        <p>No activities found.</p>
-                    ) : (
-                        allActivities.map(activity => (
-                            <ActivityDisplayFilterWise activity={activity} comments={true} email={email} />
-                        ))
-                    )}
-
-                    {/* Display upcoming itineraries */}
+                    {allActivities.map(activity => (
+                        <ActivityDisplayFilterWise key={activity.id} activity={activity} email={email} />
+                    ))}
                     <h2>All Itineraries</h2>
-                    {allItineraries.length === 0 ? (
-                        <p>No itineraries found.</p>
-                    ) : (
-                        allItineraries.map(itinerary => (
-                            <ItineraryDisplayFilterWise itinerary={itinerary} comments={true} />
-                        ))
-                    )}
-
-                    {/* Display historical places / museums */}
+                    {allItineraries.map(itinerary => (
+                        <ItineraryDisplayFilterWise key={itinerary.id} itinerary={itinerary} />
+                    ))}
                     <h2>Historical Places / Museums</h2>
-                    {historicalPlaces.length === 0 ? (
-                        <p>No historical places or museums available.</p>
-                    ) : (
-                        historicalPlaces.map(place => (
-                            <MuseumDisplayFilterWise museum={place} />
-                        ))
-                    )}
+                    {historicalPlaces.map(place => (
+                        <MuseumDisplayFilterWise key={place.id} museum={place} />
+                    ))}
                 </>
             )}
      </div>
@@ -234,35 +135,14 @@ const ActivityHistoricalList = () => {
 
             {showMappings && (
                 <>
-                    {/* Display upcoming activities */}
-                    <h2>Activities</h2>
-                    {activities.length === 0 ? (
-                        <p>No activities available for the selected date.</p>
-                    ) : (
-                        activities.map(activity => (
-                            <ActivityDisplayFilterWise activity={activity} email={email} />
-                        ))
-                    )}
-
-                    {/* Display upcoming itineraries */}
+                    <h2>Upcoming Activities</h2>
+                    {activities.map(activity => (
+                        <ActivityDisplayFilterWise key={activity.id} activity={activity} email={email} />
+                    ))}
                     <h2>Upcoming Itineraries</h2>
-                    {itineraries.length === 0 ? (
-                        <p>No upcoming itineraries available.</p>
-                    ) : (
-                        itineraries.map(itinerary => (
-                            <ItineraryDisplayFilterWise itinerary={itinerary} />
-                        ))
-                    )}
-
-                    {/* Display historical places / museums */}
-                    <h2>Historical Places / Museums</h2>
-                    {historicalPlaces.length === 0 ? (
-                        <p>No historical places or museums available.</p>
-                    ) : (
-                        historicalPlaces.map(place => (
-                            <MuseumDisplayFilterWise museum={place} />
-                        ))
-                    )}
+                    {itineraries.map(itinerary => (
+                        <ItineraryDisplayFilterWise key={itinerary.id} itinerary={itinerary} />
+                    ))}
                 </>
             )}
 </div>
