@@ -767,6 +767,40 @@ router.get('/search', searchforHP);
 ```
 ### sellers routes file
 ```javascript
+router.get('/', getSellers)
+//EndPoint to the backend Controller that fetches all instances of sellers
+router.post('/', createSeller)
+//EndPoint to the backend Controller that handles creating an instance of the seller
+router.post('/getSellerByEmail', fetchSellerByEmail);
+//EndPoint to the backend Controller that fetches a specific instance of the seller specified by an email which is sent in the request body 
+router.put('/updateSeller', updateSeller);
+//EndPoint to the backend Controller that handles updating a specifc seller , specified by an email which is sent in the request body
+router.delete('/:id', deleteSeller); 
+//EndPoint to the backend Controller that handles deleting a specific seller , specified by the id which is passed as a parameter 
+
+router.put('/:sellerId/accepted-terms', updateAcceptedTermsAndConditions);
+//EndPoint to the backend Controller that handles the action of accepting terms and conditions for the calling instance of seller 
+
+router.post('/upload/:email', 
+        uploadSeller.fields([
+        { name: 'IdDocument', maxCount: 1 }, 
+        { name: 'taxationRegistryCard', maxCount: 10 } 
+    ]), 
+    uploadDocuments
+);
+//EndPoint to the middleware and backend Controller that handles the act of the specified seller uploading documents , the seller is identified by the passed as a parameter email
+router.post('/uploadPhoto/:email', 
+uploadSeller.single('photo'), 
+    uploadPhoto 
+);
+//EndPoint to the middleware and backend Controller that handles the act of the specified seller uploading a logo , the seller is identified by the passed as a parameter email
+
+router.post('/acceptsellers', acceptsellers);
+//EndPoint to the backend Controller that handles the act of an admin accepting a seller onto the system , the sellers email is passed in the request body 
+router.post('/rejectsellers',rejectsellers);
+//EndPoint to the backend Controller that handles the act of an admin rejecting a seller onto the system , the sellers email is passed in the request body 
+router.post('/fetchproductsforSpecificSeller/:email',fetchProductsBySellerEmail)
+//EndPoint to the backend Controller that handles fetching Products created by a specific seller , specified by the email passed as a parameter
 ```
 ### stripeRoutes routes file 
 ```javascript
