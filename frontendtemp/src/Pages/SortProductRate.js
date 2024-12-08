@@ -92,7 +92,9 @@ const ProductSort = ({ email, touristId }) => {
             }
         };
 
-        getProducts();  // Fetch first set of products (sorted by rating)
+        const intervalId = setInterval(getProducts, 10000);  // Fetch products every 5 seconds
+
+        return () => clearInterval(intervalId);  // Cleanup interval on component unmount
     }, []);
 
     // Assuming the wallet balance is fetched here (replace with your logic)

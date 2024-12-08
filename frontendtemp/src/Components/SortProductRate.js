@@ -68,7 +68,7 @@ const ProductSort = () => {
 
             {showMappings && (
                 <>
-                    <h2>Products Sorted by Rating</h2>
+                    <h2>Products Sorted by Rating hhh</h2>
                     {products.length === 0 ? (
                         <p>No products available sorted by rating.</p>
                     ) : (

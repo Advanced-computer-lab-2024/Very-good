@@ -622,18 +622,22 @@ const purchaseProductbck = async ({ email, productId, credit, promoCodePercentag
     }
 
     if (product.stock === 0 && !product.isOutOfStock) {
-      const sellerId = product.sellerId;
 
-      const notification = new Notification({
-        targetId: sellerId, // TourGuide ID from the itinerary
-        targetType: 'Seller', // Target is the TourGuide
-        subject: 'Product is out of Stock',
-        message: `Your product ${product.name} with id : ${product._id} is out of stock`,
-      });
+      const sellerId = product?.sellerId;
+      
+      if(sellerId){
+        const notification = new Notification({
+          targetId: sellerId, // TourGuide ID from the itinerary
+          targetType: 'Seller', // Target is the TourGuide
+          subject: 'Product is out of Stock',
+          message: `Your product ${product.name} with id : ${product._id} is out of stock`,
+        });
 
 
-      await notification.save(); // Save the notification
-      await sendMailToSeller(sellerId, product);
+        await notification.save(); // Save the notification
+        await sendMailToSeller(sellerId, product);
+      }
+      
       await notifyAdmins(product);
       product.isOutOfStock = true;
     }
@@ -802,7 +806,7 @@ const sendMailToSeller = async (sellerId, product) => {
 
 const getPurchasedProducts = async (req, res) => {
   try {
-      const { email } = req.query; // Extract the tourist email
+      const { email } = req.body; // Extract the tourist email
 
       // Find the tourist by email
       const tourist = await Tourist.findOne({ email: email });
@@ -1335,9 +1339,10 @@ const viewCart = async (req, res) => {
       const updatedTourist = await tourist.save();
   
       // Return the updated cart array
+      const populatedTourist = await Tourist.findById(touristId).populate('cart');
       res.status(200).json({
         message: 'Product removed from cart successfully',
-        updatedCart: updatedTourist.cart, // Return the updated cart array
+        updatedCart: populatedTourist.cart, // Return the updated cart array with populated products
       });
     } catch (error) {
       console.error('Error removing product from cart:', error);

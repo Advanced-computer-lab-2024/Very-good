@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchPastbookedbytouristItineraries, fetchPastbookedbytouristItinerariesItneraryComment, fetchPurchasedProducts, rateTourGuide, rateItinerary, rateProduct, fetchPastActivities ,rateactivity} from '../RequestSendingMethods';
 import {addReviewToProduct} from '../Services/commentServices'
 import '../styles/global.css';
+import axios from 'axios';
 
 const RatePageForTourist = ({ onBackClick, email, touristId }) => {
     const [tourGuides, setTourGuides] = useState([]);
@@ -53,10 +54,18 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
 
     const loaditinerariesWithTourGuideName = async () => {
         try {
-            const response = await fetchPastbookedbytouristItinerariesItneraryComment(email);
-            if (response && Array.isArray(response.data)) {
-                setItineraries(response.data);
-            }
+            // const response = await fetchPastbookedbytouristItinerariesItneraryComment(email);
+            // if (response && Array.isArray(response.data)) {
+            //     setItineraries(response.data);
+            // }
+            console.log("email : ", email);
+            const response = await axios.get(`http://localhost:4000/api/tourists/${email}/itineraries`);
+            console.log(" response:", response);
+            const itineraries = response.data.itineraries;
+            const currentDate = new Date();
+            const filteredItineraries = itineraries.filter(itinerary => itinerary.availableDates.some(date => new Date(date) < currentDate));
+            console.log("Filtered itineraries:", filteredItineraries);
+            setItineraries(filteredItineraries);
         } catch (error) {
             console.error('Error fetching itineraries:', error);
         }
@@ -101,8 +110,8 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
         setSelectedItem(item);
     };
 
-    const handleStarClick = (star) => {
-        setrate(star);
+    const handleRateChange = (e) => {
+        setrate(Number(e.target.value));
     };
 
     const handleDoneClick = async () => {
@@ -111,7 +120,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                 await rateTourGuide(selectedItem.email, rate);
                 console.log(`Tour guide ${selectedItem.email} rated with ${rate} stars.`);
             } else if (ratetype === 'itinerary') {
-                await rateItinerary(selectedItem.id, rate);
+                await rateItinerary(selectedItem._id, rate);
                 console.log(`Itinerary ${selectedItem.itineraryTitle} rated with ${rate} stars.`);
             } else if (ratetype === 'product' && selectedItem._id) {
                 await rateProduct(selectedItem._id, rate);
@@ -179,7 +188,6 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                         <thead>
                             <tr>
                                 <th>Itinerary Title</th>
-                                <th>Tour Guide Name</th>
                                 <th>Rating</th>
                                 <th>ID</th>
                                 <th>Select</th>
@@ -188,8 +196,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                         <tbody>
                             {itineraries.map((itinerary, index) => (
                                 <tr key={index}>
-                                    <td>{itinerary.itineraryTitle}</td>
-                                    <td>{itinerary.tourGuideName}</td>
+                                    <td>{itinerary.title}</td>
                                     <td>{itinerary.ratings}</td>
                                     <td>{itinerary.id}</td>
                                     <td>
@@ -256,28 +263,25 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
             ) : (
                 <div>
                     <h3>Rate {selectedItem.title ? selectedItem.title : selectedItem.email}</h3>
-                    <div className="star-rating">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                                key={star}
-                                className={`star ${star <= rate ? 'filled' : ''}`}
-                                onClick={() => handleStarClick(star)}
-                            >
-                                ★
-                            </span>
+                    <select value={rate} onChange={handleRateChange}>
+                        <option value={0}>Select a rating</option>
+                        {[1, 2, 3, 4, 5].map((value) => (
+                            <option key={value} value={value}>
+                                {value}
+                            </option>
                         ))}
-                    </div>
+                    </select>
                     <button onClick={handleDoneClick} className="done-button">Done</button>
                     <div>
-          <h3>Leave a Review</h3>
-          <textarea
-            value={comment}
-            onChange={handleCommentChange}
-            placeholder="Write your Review here..."
-            className="comment-textarea"
-          />
-          <button onClick={handleReviewClick} className="done-button">Done</button>
-        </div>
+                        <h3>Leave a Review</h3>
+                        <textarea
+                            value={comment}
+                            onChange={handleCommentChange}
+                            placeholder="Write your Review here..."
+                            className="comment-textarea"
+                        />
+                        <button onClick={handleReviewClick} className="done-button">Done</button>
+                    </div>
                 </div>
 
             )}

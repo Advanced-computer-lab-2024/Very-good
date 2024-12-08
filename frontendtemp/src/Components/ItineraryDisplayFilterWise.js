@@ -20,6 +20,7 @@ const ItineraryDisplayFilterWise = ({ itinerary, comments = false }) => {
       <h4 className="itinerary-language">Language:</h4><p> {itinerary.language}</p>
       <h4 className="itinerary-pickup">Pick Up Location:</h4><p> {itinerary.pickUpLocation}</p>
       <h4 className="itinerary-dropoff">Drop Off Location: </h4><p>{itinerary.dropOffLocation}</p>
+      <h4 className="itinerary-rating">Rating:</h4><p>{itinerary.ratings} / 5</p>
 
       <h3>Activities</h3>
       <div className="activities-list">

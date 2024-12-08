@@ -102,6 +102,7 @@ const CheckOutComponent = () => {
 
   const handleCheckOutOrder = () => {
     const credit = paymentMethod === 'credit-card';
+    console.log("TouristID :", touristID, "Credit:", credit, "PromoCodePercentage:", promoCodePercentage);
     navigate('/tourist/viewOrders', { state: { TouristID: touristID, credit, promoCodePercentage } });
   };
 
@@ -243,9 +244,6 @@ const CheckOutComponent = () => {
         {promoCodePercentage > 0 && (
           <h3>{`Discounted Price: $${calculateDiscountedPrice(totalPrice, promoCodePercentage).toFixed(2)}`}</h3> 
         )}
-        <button className="btn" onClick={handleViewCart}>
-          View Cart
-        </button>
         <button className="btn" onClick={handleCheckOutOrder}>
           Check Out Order
         </button>

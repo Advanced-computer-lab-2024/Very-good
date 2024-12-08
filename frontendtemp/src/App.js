@@ -246,9 +246,9 @@ const handleLogin = async (event) => {
                   <button onClick={() => handleActionSelection("register")}>
                     Register
                   </button>
-                  <button onClick={() => handleAdminSignIn()}>
+                  {/*<button onClick={() => handleAdminSignIn()}>
                     Sign In as an Admin
-                  </button>
+                  </button>*/}
                   <button onClick={() => handleGuest()}>
                     Continue as a Guest
                   </button>

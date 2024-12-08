@@ -7,6 +7,7 @@ const ViewCart = ({ TouristID, onBack }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [productStockMap, setProductStockMap] = useState(new Map()); // Initialize product stock map
   const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch cart products for the given touristId
@@ -16,6 +17,11 @@ const ViewCart = ({ TouristID, onBack }) => {
         const response = await axios.get(`http://localhost:4000/api/tourists/${TouristID}/cart`);
         setCartProducts(response.data);
         setLoading(false);
+        const stockMap = new Map();
+        response.data.forEach(product => {
+          stockMap.set(product._id, product.stock);
+        });
+        setProductStockMap(stockMap); // Save stock in the map
       } catch (err) {
         setError('Failed to fetch cart products. Please try again later.');
         setLoading(false);
@@ -28,17 +34,29 @@ const ViewCart = ({ TouristID, onBack }) => {
   // Delete product from cart
   const handleDeleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:4000/api/tourists/${TouristID}/cart/${productId}`);
-      setCartProducts((prevProducts) => prevProducts.filter((product) => product._id !== productId)); // Remove product from the local state
+      const response = await axios.delete(`http://localhost:4000/api/tourists/${TouristID}/cart/${productId}`);
+      console.log("hwa dh el response : ", response);
+      setCartProducts(response.data.updatedCart); // Update the state with the updated cart from the backend
     } catch (error) {
       console.error('Error deleting product from cart:', error);
     }
   };
 
-  const handleIncreaseQuantity = async (productId, stock) => {
-    if (stock !== 0) {
+  const handleIncreaseQuantity = async (productId) => {
+    const currentStock = productStockMap.get(productId);
+    const currentQuantity = cartProducts.filter(product => product._id === productId).length;
+    if (currentQuantity < currentStock) {
       try {
-        await addProductToCart(TouristID, productId); // Assuming this removes the product in your backend
+        await addProductToCart(TouristID, productId); // Assuming this adds the product in your backend
+        setCartProducts((prevProducts) => {
+          const productIndex = prevProducts.findIndex((product) => product._id === productId);
+          if (productIndex !== -1) {
+            const updatedProducts = [...prevProducts];
+            updatedProducts.push(prevProducts[productIndex]);
+            return updatedProducts;
+          }
+          return [...prevProducts];
+        });
         alert(`Product added to cart.`);
       } catch (error) {
         console.error("Failed to add product to cart:", error);
@@ -73,7 +91,7 @@ const ViewCart = ({ TouristID, onBack }) => {
       <p>{`Price: $${product.price}`}</p>
       <p>{`Stock: ${product.stock}`}</p>
       <div className="quantity-controls">
-        <button onClick={() => handleIncreaseQuantity(product._id, product.stock)}>Increase</button>
+        <button onClick={() => handleIncreaseQuantity(product._id)}>Increase</button>
         <button onClick={() => handleDeleteProduct(product._id)} className="delete-button">
           Delete
         </button>

@@ -133,8 +133,6 @@ const fetchPastbookedbytouristItinerariesItneraryComment = async (email) => {
     throw error; // Rethrow the error to handle it in the calling function
   }
 };
-
-
   
   // Tour guide request methods
   
@@ -771,8 +769,8 @@ const bookItem = async (bookingData) => {
 const fetchPurchasedProducts = async (email) => {
   try {
     console.log(email);
-    const response = await axios.get(`http://localhost:4000/api/tourists/purchased`, {
-      params: { email } // Send the tourist's email as a query parameter
+    const response = await axios.post(`http://localhost:4000/api/tourists/purchased`, {
+       email  // Send the tourist's email as a query parameter
     });
     return response.data; // Handle the response as needed
   } catch (error) {
@@ -805,6 +803,8 @@ const rateProduct = async (productId, rating) => {
 };
 const rateItinerary = async (itineraryId, rating) => {
   try {
+    console.log("itineraryId : ", itineraryId);
+    console.log("rating : ", rating);
     const response = await axios.patch('http://localhost:4000/api/tourists/rate-itinerary', {    // Send the tourist's ID
       itineraryId: itineraryId, // Send the itinerary's ID
       rating: rating            // Send the rating
