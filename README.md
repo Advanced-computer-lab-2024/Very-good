@@ -1132,5 +1132,8 @@ Obviously us as a team could have never been able to reach this point in the dev
 [![hi](https://img.youtube.com/vi/O3BUHwfHf84/0.jpg)](https://www.youtube.com/watch?v=O3BUHwfHf84)
 ### Amadeus , the Api used for booking 
 [![hi](https://img.youtube.com/vi/Lyy26SlgBZU/0.jpg)](https://www.youtube.com/watch?v=Lyy26SlgBZU)
+  #### Documentation 
+        [Amadeus](https://servicehub.amadeus.com/doc)
+
 
     
