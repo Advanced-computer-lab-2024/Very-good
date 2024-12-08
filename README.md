@@ -1097,6 +1097,6 @@ router.delete('/:id', deleteTransportation);
 ![Did so Correctly](test3.png)
 
 ## How to Use
-after being done with the Installation steps , we discussed earlier 
+After being done with the Installation steps , we discussed earlier 
 ### Add a .env file in the very-good/backend folder that should contain the following data layed out in the below picture 
 ![env](test3.png)
