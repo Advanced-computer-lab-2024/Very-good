@@ -235,8 +235,12 @@ const TouristPage = ({email}) => {
  const handleBackFromOrderPage =()=>SetShowOrdersPage(false);
  const handleViewCart =()=>SetShowCart(true);
  const handleBackFromViewCart =()=>SetShowCart(false);
+ const [showVideo, setShowVideo] = useState(false);
  const handleViewBookmarkedActivities = () => {
     navigate('/tourist/viewBookmarkedActivities', { state: { email: email } });
+  };
+  const toggleVideo = () => {
+    setShowVideo(!showVideo);
   };
   if(ShowCart) return <ViewCart onBack={handleBackFromViewCart} TouristID={touristId}/>
   if(ShowOrdersPage) return <TouristOrders touristId={touristId}/>
@@ -324,7 +328,30 @@ const TouristPage = ({email}) => {
         <button className={styles.button} onClick={handleUpdateProfile}>
           {isEditing ? 'Save Changes' : 'Update Profile'}
         </button>
+        <button
+        onClick={toggleVideo}
+        className={styles.button}
+      >
+        {showVideo ? "Hide Demo Video" : "Show Demo Video"}
+      </button>
 
+      {/* Conditionally render the video */}
+      {showVideo && (
+        <video
+          controls
+          style={{
+            maxWidth: "90%",
+            display: "block",
+            margin: "20px auto",
+            borderRadius: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+           
+          }}
+        >
+          <source src="/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> )}
+        
         {showProfileInfo && (
           <div className={styles['category-buttons3']}>
             <h2 className={styles['form-header']}>Your Profile</h2>

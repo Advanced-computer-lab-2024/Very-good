@@ -20,6 +20,7 @@ const TicketViewForTourist = (offer) => {
 
   return (
     <div>
+       <button onClick={() => navigate('/tourist')}>Back to Home</button> 
     <div className="ticket-container">
        
       <div className="ticket-header">
@@ -52,7 +53,7 @@ const TicketViewForTourist = (offer) => {
         <p>Thank you for booking with us!</p>
       </div>
       </div>
-      <button onClick={() => navigate('/tourist')}>Back to Home</button> 
+     
     </div>
   );
 };
