@@ -556,7 +556,32 @@ Before installing, ensure that you have the following installed on your system:
    ```
    ---
 ## API References
+   ### Activities route file
+   ```javascript
+       
+router.get('/', getActivities); 
+// Endpoint to the backend controller that fetches all activities
 
+router.get('/search', searchactivity); 
+// Endpoint to the backend controller that allows searching for an activity by name
+
+router.get('/:id', getActivityById); 
+// Endpoint to fetch an activity by its ID
+
+// router.get('/:id', getWorkout);
+
+router.post('/', createActivity); 
+// Endpoint to the controller function that creates an activity
+
+router.post('/addComment', addCommentToActivity); 
+// Endpoint to the backend controller function that allows adding a comment to an activity
+
+// router.delete('/:id', deleteWorkout);
+
+router.post('/filterYassin', filterActivitiesyassin); 
+// Endpoint to a backend controller that filters activities based on some categories
+
+  ```
 
 
 
