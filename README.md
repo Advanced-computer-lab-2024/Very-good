@@ -1108,6 +1108,7 @@ After being done with the Installation steps , we discussed earlier
    ```
 
 ### 2- Open two new terminals 
+   ```
     in the first one write the following Commands
    ```bash
     cd backend
