@@ -743,18 +743,67 @@ router.get('/search', searchforHP);
 ```
 ### hotelInfos routes file 
 ```javascript
+
+router.get('/:id',getHotelInfoByOfferId);
+//EndPoint to the backend Controller that handles fetching a specific Hotel  by id passed as a parameter 
+router.get('/', getAllHotelInfo);
+//EndPoint to the backend Controller that handles fetching all instances of Hotels info
+router.post('/', createHotelInfo);
+//EndPoint to the backend Controller that handles creating an instance of a hotel info , with the data being sent in the request body 
 ```
 ### hotelOffers routes file 
 ```javascript
+
+router.get('/:id',getHotelOfferById);
+//EndPoint to the backend Controller that handles fetching a specific Hotel offer by id passed as a parameter 
+router.get('/', getAllHotelOffers);
+//EndPoint to the backend Controller that handles fetching all instances of HotelOffers
+router.post('/', createHotelOffer);
+//EndPoint to the backend Controller that handles creating a hotel offer with the data being sent in the request body
 ```
 ### itineraries routes file 
 ```javascript
+
+router.get('/', getItineraries)
+//EndPoint to the backend Controller that handles Fetching all instances of the itineraries
+router.get('/search', searchforitinerary)
+//EndPoint to the backend Controller that handles searching for a specific itineary , where the data is sent in the request body 
+router.get('/:id', getItineraryByID)
+//EndPoint to the back Controller that handles fetching a specific itinerary , specified by the id passed as a parameter 
+router.post('/', createItinerary)
+//EndPoint to the backend Controller that handles creating an instance of an itinerary with the data sent in the rq body
+router.patch('/:id/status', itinerary_status)
+//EndPoint to the backend Controller that handles setting the status of an itineray , specifed by the id sent as a parameter
+router.post('/addComment',addCommentToItinerary);
+//EndPoint to the backend Controller that handles adding a comment to an itinerary , specifed by the id sent in the request body
+router.post('/filter', filterItinerariesYassin) 
+//EndPoint to the backend Controller that handles filtering itineraries , with the data specified in the req body
+router.patch('/:id/flag', flagItinerary); 
+//EndPoint to the backend Controller that handles , flaging a specific itinerary specified by the id sent as a parameter
 ```
 ### login routes file 
 ```javascript
+
+router.post("/", loginUser); 
+//EndPoint to the backend Controller that handles , the act of login , with the parameters passed in the request body 
+router.post("/forgetPassword", forgotPasswordHandler);
+//EndPoint to the backend Controller that handles , the act of user forget password , with the parameters passed in the request body 
+router.post("/verifyOTP", verifyOTPHandler);
+//EndPoint to the backend Controller that handles , verification, with the parameters passed in the request body 
+router.post("/resetPassword", resetPasswordHandler);
+//EndPoint to the backend Controller that handles , reseting the password, with the parameters passed in the request body 
 ```
 ### notifications routes file 
 ```javascript
+
+router.post('/', notificationController.createNotification);
+//EndPoint to the backend Controller , that handles creating a new instance of a notification
+router.get('/:targetType/:targetId', notificationController.getNotifications);
+//EndPoint to the backend Controller , that handles fetching a specific instance of a notfication specified by the id passed as a parameter 
+router.patch('/:id', notificationController.markAsRead);
+//EndPoint to the backend Controller , that handles marking a specific instance of a notification as read , specified by the id passed as a parameter 
+router.delete('/:id', notificationController.deleteNotification);
+//EndPoint to the backend Controller , that handles deleting a specific instance of a notifications , specified by the id passed as a parameter
 ```
 ### orders routes file
 ```javascript
