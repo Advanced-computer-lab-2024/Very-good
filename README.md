@@ -1088,7 +1088,10 @@ router.delete('/:id', deleteTransportation);
 //EndPoint to the backend Controller that handles deleting a transportation whos id corresponds to the one sent as a parameter
 ```
 ## Tests
-### ScreenShot of psotman where we test the API route http://localhost:4000/api/products/ , that should return an instance of all products 
+### ScreenShot of postman where we test the API route get http://localhost:4000/api/products/ , that should return an instance of all products (fetching all products , takes no parameters and no body )
+![Did so Correctly](Test1.png)
+
+### ScreenShot of postman where we test the API route post http://localhost:4000/api/products/ , that should return a success message in the response body (creating a product , takes a json body )
 ![Did so Correctly](Test1.png)
 
 
