@@ -776,6 +776,54 @@ router.get('/search', searchforHP);
 ```
 ### tourGuides routes file 
 ```javascript
+
+router.get('/', getTourGuides)
+//EndPoint to the backend Controller that handles fetching all instances of tourGuides 
+
+router.get('/:id/itineraries', getItinerarieswithTourGuideId)
+//EndPoint to the backend Controller that handles fetching a specific instance of a TourGuide That corresponds to the id passed as a parameter 
+
+router.delete('/:id/itineraries', deleteItineraryById);
+//EndPoint to the backend Controller that handles deleting a specific instance of an itineray That corresponds to the id passed as a paramter 
+
+router.put('/:id/itineraries', updateItineraryWithId);
+//EndPoint to the backend Controller that handles updating a specific instance of an itineray That corresponds to the id passed as a paramter 
+router.post('/', createTourGuide)
+//EndPoint to the backend Controller that handles creating an instance of a tourguide 
+
+router.put('/:tourGuideId/accepted-terms', updateAcceptedTermsAndConditions);
+//EndPoint to the backend Controller that handles accepting the terms and condition of a tourguide That corresponds to the id passed as a parameter 
+
+router.post('/getByEmail',getTourGuideByEmail)
+//EndPoint to the backend Controller that handles fetching a specific tourguide that has an email corresponding to the one sent in the request body 
+
+router.delete('/:id', deleteTourGuide);
+//EndPoint to the backend Controller that handles deleting a specific instance of a tourGuide which has an id equal to the one passed as a parameter 
+router.post('/upload/:email', 
+    uploadTourGuide.fields([
+        { name: 'IdDocument', maxCount: 1 }, 
+        { name: 'certificatesDocument', maxCount: 10 } 
+    ]), 
+    uploadDocuments 
+);
+//EndPoint to the middleware and backend Controller  handling the action of uploading a document for the calling instance of the tourguide , that has an email equal to the one passed as a parameter
+router.post('/uploadPhoto/:email', 
+    uploadTourGuide.single('photo'), // Only one file named 'photo'
+    uploadPhoto // Controller function to handle storing the photo URL in the database
+);
+//EndPoint to the middleware and backend Controller  handling the action of uploading a picture for the calling instance of the tourguide , that has an email equal to the one passed as a parameter
+router.post('/addComment', addCommentToTourGuide)
+//EndPoint to the backend Controller that handles adding a comment to the tourguide whos id is sent in the request body 
+router.post('/accept-tour-guide', acceptTourGuide);
+//EndPoint to the backend Controller that handles a tourguide being accepted on the system by an admin , the tourguide id is sent in the request body 
+router.post('/reject-tour-guide',rejectTourGuide);
+//EndPoint to the backend Controller that handles a tourguide being rejected on the system by an admin , the tourguide id is sent in the request body 
+
+
+
+
+router.put('/updateTourGuideByEmail', updateTourGuideByEmail);
+//EndPoint to the backend Controller that handles updating the information of a specific tourguide instance, the email alongside data updates are sent in the request body
 ```
 ### tourismGoverners routes file 
 ```javascript
