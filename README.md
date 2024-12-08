@@ -704,4 +704,163 @@ router.put('/:complaintId/status', updateComplaintStatus);
 router.put('/:complaintId/reply', replyToComplaint); 
 // Endpoint to the backend controller that handles an admin replying to a complaint corresponding to the provided complaint ID
 ```
+### flightInfo routes file 
+```javascript
+router.get('/:id', getInfoByOfferId); 
+// Endpoint to the backend controller that fetches the information of an offer corresponding to the provided ID
+
+router.get('/', getAllFlightInfo); 
+// Endpoint to the backend controller that fetches all flights informations
+
+router.post('/', createFlightInfo); 
+// Endpoint to the backend controller that handles the creation of new flight information
+```
+### historicalPlaces routes file 
+```javascript
+router.get('/', getHistoricalPlaces); 
+// Endpoint to the backend controller that fetches all historical places
+
+router.get('/:id', getMuseumByID); 
+// Endpoint to the backend controller that fetches a museum that corresponds to the passed ID
+
+router.get('/:id/tags', getHistoricalPlaceTags); 
+// Endpoint to the backend controller that fetches tags of a historical place corresponding to the passed ID
+
+router.post('/', createHistoricalPlace); 
+// Endpoint to the backend controller that handles creating a new historical place
+
+router.delete('/:id', deleteHistoricalPlace); 
+// Endpoint to the backend controller that handles deleting a historical place corresponding to the passed ID
+
+router.put('/:id', updateHistoricalPlace); 
+// Endpoint to the backend controller that handles updating a historical place corresponding to the passed ID
+
+router.post('/filterByTag', FilterMuseumByTagName); 
+// Endpoint to the backend controller that filters museums according to the tag name
+
+router.get('/search', searchforHP); 
+// Endpoint to the backend controller that handles searching for historical places
+```
+### hotelInfos routes file 
+```javascript
+```
+### hotelOffers routes file 
+```javascript
+```
+### itineraries routes file 
+```javascript
+```
+### login routes file 
+```javascript
+```
+### notifications routes file 
+```javascript
+```
+### orders routes file
+```javascript
+```
+### products routes file 
+```javascript
+```
+### promoCodes routes file 
+```javascript
+```
+### sellers routes file
+```javascript
+```
+### stripeRoutes routes file 
+```javascript
+```
+### tags routes file 
+```javascript
+```
+### tourGuides routes file 
+```javascript
+```
+### tourismGoverners routes file 
+```javascript
+```
+### tourists routes file 
+```javascript
+
+router.get('/', getTourist)
+//EndPoint to the backend Controller that fetches all tourists 
+router.delete('/deleteAll', deleteAllTourists); 
+//EndPoint to the backend Controller that deletes all tourists of the system 
+router.get('/:id', getTouristById); 
+//EndPoint to the backend Controller that fetches a specific tourist according to the passed id
+router.post('/addProductToCart',addProductToCard)
+//EndPoint to the backend Controller that handles adding a product to a tourist`s cart
+router.post('/removeProductWishList',removeProductFromWishlist) 
+//EndPoint to the backend Controller that handles removing a product from a tourist`s whishlist
+router.post('/getWishList',getWishlistProducts)
+//EndPoint to the backend Controller that handles fetching all the products in the calling tourist`s wishlist
+router.post('/addProductToWishList',addProductToWishlist)
+//EndPoint to the backend Controller that adds a product to the calling Tourist`s wishlist
+router.patch('/:id/bookTransportation', bookTransportation);
+//EndPoint to the backend Controller that handles the action of booking a transportation for the tourist with the corresponding passed id 
+router.post('/', createTourist)
+//EndPoint to the backend Controller that handles creating a new tourist 
+router.post('/getByEmail' ,getTouristByEmail);
+//EndPoint to the backend Controller that fetches a specific tourist according to the email corresponding to the one sent in the request body 
+router.post('/updateByEmail',updateRecords);
+//EndPoint to the backend Controller that handles updating a tourist that has an email corresponding to the one sent in the request body 
+router.delete('/:id', deleteTourist);
+//EndPoint to the backend Controller that deletes a tourist which has an id equal to the one passed as a parameter 
+router.post('/past-itineraries', getPastItinerariesWithTourGuides);
+//EndPoint to the backend Controller that handles fetching all past itineraries with their tourguide data 
+router.post('/past-itineraries2', getPastItinerariesWithTourGuidesForCommentOnItenrary);
+//EndPoint to the backend Controller that fetches again all past itineraries with their tourguide data , used for commenting on an itineray
+router.post('/past-activities',getPastBookedActivities)
+//EndPoint to the backend Controller that fetches all past activities of the calling tourist 
+router.put('/:userId/book-flight-offer/:offerId', addFlightOfferToTourist);
+//EndPoint to the backend Controller that handles adding a flight booking to the tourist with the corresponding id sent as a parameter 
+router.put('/:userId/book-hotel-offer/:offerId', addHotelOfferToTourist);
+//EndPoint to the backend Controller that handles adding a hotel booking to the tourist with the corresponding id sent as a parameter 
+router.post('/purchase', purchaseProductbck);
+//EndPoint to the backend Controller that handles the action of a tourist purchasing a product 
+router.get('/purchased', getPurchasedProducts);
+//EndPoint to the backend Controller that fetches all purchased products of the calling tourist 
+router.patch('/rate/', rateProduct);
+//EndPoint to the backend Controller that handles the action of the calling tourist rating a purchased product 
+router.patch('/rate-tour-guide', rateTourGuide);
+//EndPoint to the backend Controller that handles the action of the calling tourist rating a tourguide 
+router.patch('/rate-itinerary', rateItinerary);
+//EndPoint to the backend Controller that handles the action of the calling tourist rating an itinerary
+router.patch('/rate-activity', rateActivity);
+//EndPoint to the backend Controller that handles the action of the calling tourist rating an activity
+router.post('/:id/make-payment', makePayment);
+//EndPoint to the backend Controller that handles subtracting from the wallet or using the credit card for the tourist with an id equal to the one passed as parameter when purchasing a product 
+router.post('/:id/redeem-points', redeemPoints);
+//EndPoint to the backend Controller that handles the act of the tourist with the passed id as a parameter , to redeem gained points 
+router.post('/:id/make-payment2', makePayment2);
+//EndPoint to the backend Controller that handles subtracting from the wallet or using the credit card for the tourist with an id equal to the one passed as parameter when purchasing a product 
+router.get('/:email/itineraries', getItinerariesForTourist);
+//EndPoint to the backend Controller that fetches all itineraries booked by the tourist whos email is sent as a parameter
+router.get('/:email/activities', getActivitiesForTourist);
+//EndPoint to the backend Controller that fetches all activities booked by the tourist whos email is sent as a parameter
+router.post('/bookmark-activity', bookmarkActivity);
+//EndPoint to the backend Controller that handles adding an activity to the calling tourist bookmarked array
+router.post('/getBookmarkedActivities', getBookmarkedActivities);
+//EndPoint to the backend Controller that fetches all bookmarked activities 
+router.post('/:touristId/add-delivery-address', addDeliveryAddress);
+//EndPoint to the backend Controller that adds a deliveryAddress to the tourist whos id is sent as a parameter 
+router.get('/:touristId/get-delivery-addresses', getDeliveryAddresses);
+//EndPoint to the backend Controller that fetches all deliveryAddresses of the tourit whos id is sent as a parameter
+router.post('/:touristId/orders-create-view',CreateAndReturnOrderArray)
+//EndPoint to the backend Controller that handles creating and viewing of an order of the tourist whos id is equal to the one passed as a parameter
+router.post('/:touristId/ordersView',viewOrders)
+//EndPoint to the backend Controller that views all orders of the tourist whos id is equal to the one passed as a parameter and their status 
+router.delete('/:touristId/orders/:orderId', deleteOrder);
+//EndPoint to the backend Controller that deletes an order of the tourist whos id is equal to the one passed as a parameter
+router.get('/:touristId/cart', viewCart);
+//EndPoint to the backend Controller that views the cart of the tourist whos id is equal to the one passed as a parameter
+router.delete('/:touristId/cart/:productId', removeProductFromCart);
+//EndPoint to the backend Controller that removes an item from the cart of the tourist whos id is equal to the one passed as a parameter
+```
+### transportations routes file 
+```javascript
+```
+
+
 
