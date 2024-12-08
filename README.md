@@ -875,6 +875,16 @@ router.put('/updateTourGuideByEmail', updateTourGuideByEmail);
 ```
 ### tourismGoverners routes file 
 ```javascript
+
+router.get('/', getTourismGoverners);
+//EndPoint to the backend Controller that handles fetching all instances of tourismGoverners 
+router.post('/', createTourismGoverner);
+//EndPoint to the backend Controller that creats an instance of tourismGoverner
+router.put('/updateByEmailTourism', updateRecordsTourism);
+//EndPoint to the backend Controller that handles updating a specific tourism governer instance , specified by an email sent in the request body 
+router.delete('/:id', deleteTourismGoverner);
+//EndPoint to the backend Controller that handles deleting a specific tourism governer , specified by the id passed as a parameter  
+
 ```
 ### tourists routes file 
 ```javascript
