@@ -554,7 +554,8 @@ Before installing, ensure that you have the following installed on your system:
    ```bash
    npm start
    ```
-##API References
+   ---
+## API References
 
 
 
