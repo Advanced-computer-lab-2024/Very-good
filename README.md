@@ -773,6 +773,17 @@ router.get('/search', searchforHP);
 ```
 ### tags routes file 
 ```javascript
+
+router.get('/', getTags); 
+//EndPoint to the backend Controller that handles fetching all instances of tags 
+router.post('/create', createTag); 
+//EndPoint to the backend Controller that handles creating an instance of a tag 
+router.patch('/update/:id', updateTag); 
+//Endpoint to the backend Controller that updates a specific tag instance , which has an id corresponding to the one sent as a parameter 
+router.delete('/deletee/:id', deleteTag);
+//EndPoint to the backend Controller that handles deleting a specific instance of a tag that corresponds to the id sent as a parameter 
+router.get('/tags/names', getAllTagNames);
+//EndPoint to the backend Controller that fetches All tags Names 
 ```
 ### tourGuides routes file 
 ```javascript
