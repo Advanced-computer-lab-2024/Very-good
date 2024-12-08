@@ -273,7 +273,7 @@ const ProductSort = ({ email, touristId }) => {
     };
     
     return (
-        <div className="container">
+        <div className="">
             
             {/* Toggle Button: Show/Hide Products */}
             <div >
