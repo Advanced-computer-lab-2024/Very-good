@@ -860,6 +860,21 @@ router.delete('/:touristId/cart/:productId', removeProductFromCart);
 ```
 ### transportations routes file 
 ```javascript
+
+router.get('/advertiser/:advertiserId', getTransportationsByAdvertiserId)
+//EndPoint to the backend Controller that handles fetching An instance of transportations that have a corresponding AdvertiserId ,eequal to the one passed as a parameter
+router.get('/:id', getTransportationById)
+//EndPoint to the backend Controller that handles fetching a specific transportation which has an id equal to the one passed as a parameter 
+router.get('/', getAllTransportations)
+//EndPoint to the backend Controller that handles fetching all transportation instances 
+router.post('/', createTransportation)
+//EndPoint to the backend Controller that handles creating an instance of a transportation
+router.post('/getWithLocation', getTransportationsWithLocation)
+//EndPoint to the backend Controller that handles fetching transportations with their location 
+router.put('/:id', editTransportation);
+//EndPoint to the backend Controller that handles editing a transportation whos id corresponds to the one sent as a parameter 
+router.delete('/:id', deleteTransportation); 
+//EndPoint to the backend Controller that handles deleting a transportation whos id corresponds to the one sent as a parameter
 ```
 
 
