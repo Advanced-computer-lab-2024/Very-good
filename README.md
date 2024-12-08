@@ -1130,5 +1130,7 @@ Obviously us as a team could have never been able to reach this point in the dev
 [![For Stripe](https://img.youtube.com/vi/9N9zfiqRqjU/0.jpg)](https://www.youtube.com/watch?v=9N9zfiqRqjU)
 ### Getting introduced to a mern stack react project 
 [![hi](https://img.youtube.com/vi/O3BUHwfHf84/0.jpg)](https://www.youtube.com/watch?v=O3BUHwfHf84)
+### Amadeus , the Api used for booking 
+[![hi](https://img.youtube.com/vi/Lyy26SlgBZU/0.jpg)](https://www.youtube.com/watch?v=Lyy26SlgBZU)
 
     
