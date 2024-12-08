@@ -910,5 +910,27 @@ const addProductToWishlist = async (req, res) => {
 };
 
 
+
+// const jwt = require('jsonwebtoken');
+
+// // Secret key for signing the token (use a strong, unique secret in production)
+// const secretKey = 'mahmoud';
+
+// // Function to generate a token
+// const generateToken = (userId) => {
+//     // Customize the payload with user information
+//     const payload = {
+//         _id: userId
+//     };
+
+//     // Sign the token with the payload and secret key
+//     const token = jwt.sign(payload, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
+//     return token;
+// };
+// const userId = '62decb3de2313b301763b748'; // Example user ID
+// const token = generateToken(userId);
+// console.log('Generated Token:', token);
+
+
 module.exports = {createTourist, getTourist,getTouristByEmail, updateRecords ,deleteTourist, bookTransportation, addFlightOfferToTourist, addHotelOfferToTourist,getPastItinerariesWithTourGuides,
   getPastItinerariesWithTourGuidesForCommentOnItenrary,addItineraryToTourist,getPastBookedActivities, rateTourGuide, rateItinerary, purchaseProductbck, getPurchasedProducts, rateProduct,updateLoyaltyPoints,redeemPoints,makePayment,rateActivity,makePayment2,updateLoyaltyPoints2, addProductToWishlist, getWishlistProducts, removeProductFromWishlist}

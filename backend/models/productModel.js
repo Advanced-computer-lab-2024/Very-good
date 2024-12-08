@@ -63,6 +63,12 @@ const productSchema = new schema({
         type : Number,
         default : 1
       }
+
+    //   quantity: {
+    //     type: Number,
+    //     default: 1,
+    //     min: 1 // Ensure quantity is at least 1
+    // }
 }, { timestamps: true });
 
 

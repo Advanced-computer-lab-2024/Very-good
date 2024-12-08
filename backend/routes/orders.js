@@ -17,4 +17,13 @@ router.patch('/:orderId', orderController.updateOrderStatus);
 // Delete an order
 router.delete('/:orderId', orderController.deleteOrder);
 
+// Get current orders
+router.get('/orders/current/:touristId', orderController.getCurrentOrders);
+
+// Get past orders
+router.get('/orders/past/:touristId', orderController.getPastOrders);
+
+router.put('/orders/cancel/:orderId', orderController.cancelOrder);
+
+
 module.exports = router;

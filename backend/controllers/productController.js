@@ -1,6 +1,7 @@
 //const mongoose = require('mongoose');
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
+const Tourist = require('../models/touristModel');
 
 // Create a new Product
 const createProduct = async (req, res) => {
@@ -261,9 +262,128 @@ const unarchiveProduct = async (req, res) => {
     }
 };
 
+const addToCart = async (req, res) => {
+    try {
+        const { productId, touristId } = req.body;
+
+        // Log the input
+        console.log('Received productId:', productId);
+        console.log('Received touristId:', touristId);
+
+        // Check if the product exists in the database
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        console.log('Product found:', product);
+
+        // Find the tourist by ID (provided in the request body)
+        const tourist = await Tourist.findById(touristId);
+        if (!tourist) {
+            return res.status(404).json({ message: 'Tourist not found' });
+        }
+        console.log('Tourist found:', tourist);
+
+        // Check if the product is already in the cart
+        if (tourist.cart.includes(productId)) {
+            return res.status(400).json({ message: 'Product already in cart' });
+        }
+
+        // Add the product to the tourist's cart
+        tourist.cart.push(productId);
+        await tourist.save();
+
+        console.log('Updated cart:', tourist.cart);
+
+        return res.status(200).json({ message: 'Product added to cart', cart: tourist.cart });
+    } catch (error) {
+        // Log the error details
+        console.error('Error in addToCart function:', error);
+        return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+const removeFromCart = async (req, res) => {
+    try {
+        const { productId, touristId } = req.body;
+
+        // Log the input
+        console.log('Received productId:', productId);
+        console.log('Received touristId:', touristId);
+
+        // Check if the tourist exists
+        const tourist = await Tourist.findById(touristId);
+        if (!tourist) {
+            return res.status(404).json({ message: 'Tourist not found' });
+        }
+        console.log('Tourist found:', tourist);
+
+        // Check if the product is in the tourist's cart
+        const productIndex = tourist.cart.indexOf(productId);
+        if (productIndex === -1) {
+            return res.status(400).json({ message: 'Product not found in cart' });
+        }
+
+        // Remove the product from the cart
+        tourist.cart.splice(productIndex, 1);
+        await tourist.save();
+
+        console.log('Updated cart:', tourist.cart);
+
+        return res.status(200).json({ message: 'Product removed from cart', cart: tourist.cart });
+    } catch (error) {
+        // Log the error details
+        console.error('Error in removeFromCart function:', error);
+        return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+const updateCartItemAmount = async (req, res) => {
+    try {
+        const { productId, amount } = req.body;
+
+        // Validate input
+        if (!productId || amount === undefined) {
+            return res.status(400).json({ message: "Product ID and amount are required" });
+        }
+
+        // Find the product by ID
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Ensure the requested amount does not exceed the available stock
+        if (amount > product.stock) {
+            return res.status(400).json({ 
+                message: `Insufficient stock. Available stock: ${product.stock}` 
+            });
+        }
+
+        // Logic to simulate cart update (assuming a Cart model exists)
+        const updatedCartItem = {
+            productId: product._id,
+            name: product.name,
+            amount: amount,
+            price: product.price * amount, // Total price for this item
+        };
+
+        // Send a response with the updated cart item details
+        return res.status(200).json({
+            message: "Cart item updated successfully",
+            cartItem: updatedCartItem,
+        });
+    } catch (error) {
+        console.error("Error in updateCartItemAmount function:", error);
+        return res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
 
 
-module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,archiveProduct,unarchiveProduct}
+
+
+module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,archiveProduct,unarchiveProduct, addToCart, removeFromCart, updateCartItemAmount}
 const deleteProductsBySeller = async (req, res) => {
     try {
         const { sellerId } = req.params; // Get sellerId from URL parameters
@@ -389,4 +509,4 @@ const getfullproductbyid = async (req, res) => {
 
 module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller,addReviewToProduct,    
     archiveProduct,
-    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid}
+    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid, addToCart, removeFromCart, updateCartItemAmount}

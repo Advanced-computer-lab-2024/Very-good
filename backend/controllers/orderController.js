@@ -80,3 +80,63 @@ exports.deleteOrder = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to delete order', error });
     }
 };
+
+exports.getCurrentOrders = async (req, res) => {
+    const { touristId } = req.params; // Assuming `touristId` is passed in the request
+
+    try {
+        // Find orders where the status is not 'Delivered' or 'Cancelled'
+        const currentOrders = await Order.find({
+            status: { $nin: ['Delivered', 'Cancelled'] }
+        })
+        .populate('products'); // Populate products for details
+
+        res.status(200).json({ success: true, currentOrders });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch current orders', error });
+    }
+};
+
+
+exports.getPastOrders = async (req, res) => {
+    const { touristId } = req.params; // Assuming `touristId` is passed in the request
+
+    try {
+        // Find orders where the status is 'Delivered' or 'Cancelled'
+        const pastOrders = await Order.find({
+            status: { $in: ['Delivered', 'Cancelled'] }
+        })
+        .populate('products'); // Populate products for details
+
+        res.status(200).json({ success: true, pastOrders });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch past orders', error });
+    }
+};
+
+
+exports.cancelOrder = async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+        // Find the order by ID
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        // Check if the order status is not already cancelled
+        if (order.status === 'Cancelled') {
+            return res.status(400).json({ success: false, message: 'Order is already cancelled' });
+        }
+
+        // Update the order status to 'Cancelled'
+        order.status = 'Cancelled';
+        await order.save();
+
+        res.status(200).json({ success: true, message: 'Order cancelled successfully', order });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to cancel order', error });
+    }
+};
+
