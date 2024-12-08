@@ -1095,3 +1095,8 @@ router.delete('/:id', deleteTransportation);
 ![Did so Correctly](test2.png)
 ### ScreenShot of postman where we test the API route patch http://localhost:4000/api/products/672d71cb7b921bfd1bbe84de/archive,that should return the product and a success message after being Archived (archiving a product , takes the product id as a parameter in the link )
 ![Did so Correctly](test3.png)
+
+## How to Use
+after being done with the Installation steps , we discussed earlier 
+### Add a .env file in the very-good/backend folder that should contain the following data layed out in the below picture 
+![env](test3.png)
