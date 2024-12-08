@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import './ActivityDisplay.css'; // Make sure to replace with the actual path to your CSS file
 import { redeemPoints } from '../Services/payementServices'; // Import redeemPoints function
 import { fetchTouristByEmail } from '../RequestSendingMethods'; // Import method to fetch tourist data
+import { useNavigate } from 'react-router-dom';
 
 const ViewBalance = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const ViewBalance = () => {
   const [tourist, setTourist] = useState(touristData); // Initialize tourist state with passed touristData
   const [pointsToRedeem, setPointsToRedeem] = useState(0);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Handle redeem points button click
   const handleRedeemPoints = async () => {
@@ -50,6 +52,8 @@ const ViewBalance = () => {
   }
 
   return (
+    <div>
+       <button onClick={() => navigate('/tourist')}>Back to Home</button> 
     <div className="activity-card">
       <h2 className="activity-title">Tourist Balance Details</h2>
       
@@ -77,6 +81,7 @@ const ViewBalance = () => {
         />
         <button onClick={handleRedeemPoints}>Redeem Points</button>
       </div>
+    </div>
     </div>
   );
 };

@@ -140,8 +140,9 @@ const TouristOrders = ({touristId}) => {
 
   return (
     <div className="container">
-      <div className="header">Tourist Orders</div>
-      <div className="filter-buttons">
+          <button onClick={() => window.location.reload()}>Back </button>
+      <div className={styles.header}>Tourist Orders</div>
+      <div  className={styles['category-buttons']}>
         <button
           onClick={() => setFilter('current')}
           className={filter === 'current' ? 'active-filter' : ''}

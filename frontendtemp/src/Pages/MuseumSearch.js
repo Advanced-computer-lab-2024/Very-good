@@ -8,8 +8,8 @@ import {getavailableProducts} from '../Services/productServices';
 import ItineraryDisplay2 from '../Components/ItineraryDisplay2';
 import ActivityDisplayFilterWise from '../Components/ActivityDisplayFilterWise';
 import ItineraryDisplayFilterWise from '../Components/ItineraryDisplayFilterWise';
-
-
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
+import { useNavigate } from 'react-router-dom';
 const MuseumSearch = () => {
     const [activitySearchTerm, setActivitySearchTerm] = useState('');
     const [museumSearchTerm, setMuseumSearchTerm] = useState('');
@@ -29,6 +29,7 @@ const MuseumSearch = () => {
     const [museums, setMuseums] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
     const [Availableproducts, setAvailableProducts] = useState([]);
     const [showProducts, setShowProducts] = useState(false); // State to control the visibility of products
 
@@ -146,10 +147,10 @@ const MuseumSearch = () => {
 
     return (
         <div>
-            <h1>Welcome, Tourist!</h1>
+            <h1 className={styles.header}>Welcome, Tourist!</h1>
 
             {/* Search box for activities */}
-        <div>
+        <div className={styles["category-buttons"]}>
             <h2>Search Activities</h2>
             <input
                 type="text"
@@ -157,9 +158,9 @@ const MuseumSearch = () => {
                 onChange={(e) => setActivitySearchTerm(e.target.value)}
                 placeholder="Search activities by name, category or tag"
             />
-            <button onClick={handleSearchActivitybyname}>Search Activities by name</button>
-            <button onClick={handleSearchActivitybytag}>Search Activities by tag</button>
-            <button onClick={handleSearchActivitybycat}>Search Activities by category</button>
+            <button onClick={handleSearchActivitybyname} className={styles.button}>Search Activities by name</button>
+            <button onClick={handleSearchActivitybytag} className={styles.button}>Search Activities by tag</button>
+            <button onClick={handleSearchActivitybycat} className={styles.button}>Search Activities by category</button>
             {loadingActivities && <p>Loading activities...</p>}
             {activityError && <p>{activityError}</p>}
             <div>
@@ -174,7 +175,7 @@ const MuseumSearch = () => {
         </div>
 
         {/* Search box for museums/historical places */}
-        <div>
+        <div className={styles["category-buttons"]}>
             <h2>Search Museums or Historical Places</h2>
             <input
                 type="text"
@@ -182,8 +183,8 @@ const MuseumSearch = () => {
                 onChange={(e) => setMuseumSearchTerm(e.target.value)}
                 placeholder="Search museums or historical places by name or tag"
             />
-            <button onClick={handleSearchMuseumbyname}>Search Museums or Historical Places by name</button>
-            <button onClick={handleSearchMuseumbytag}>Search Museums or Historical Places by tag</button>
+            <button onClick={handleSearchMuseumbyname}  className={styles.button}>Search Museums or Historical Places by name</button>
+            <button onClick={handleSearchMuseumbytag}  className={styles.button}>Search Museums or Historical Places by tag</button>
             {loadingMuseums && <p>Loading museums or historical places...</p>}
             {museumError && <p>{museumError}</p>}
             <div>
@@ -236,7 +237,7 @@ const MuseumSearch = () => {
                 )}
             </div>
         </div>
-        <div>
+        <div className={styles["category-buttons"]}>
             {/* Search box for Itineraries */}
             <h2>Search Itineraries</h2>
             <input
@@ -245,17 +246,19 @@ const MuseumSearch = () => {
                 onChange={(e) => setItinerarySearchTerm(e.target.value)}
                 placeholder="Search itineraries by title"
             />
-            <button onClick={handleSearchItinerarybytitle}>Search Itinerary by Title</button>
+            <button onClick={handleSearchItinerarybytitle} className={styles.button}>Search Itinerary by Title</button>
 
             {loadingItinerary && <p>Loading itineraries...</p>}
             {itineraryError && <p>{itineraryError}</p>}
             
-            <div>
+            <div >
                 {itineraries.length > 0 ? (
                     itineraries.map((itinerary) => (
-                        <div key={itinerary._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                        <div key={itinerary._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }} className='activity-car'>
                             <h3>{itinerary.title}</h3>
+                            <div style={{marginLeft : '10% '}}>
                             <ItineraryDisplayFilterWise itinerary={itinerary}/>
+                            </div>
                         </div>
                     ))
                 ) : (
@@ -264,7 +267,7 @@ const MuseumSearch = () => {
             </div>
         </div>
             {/* Search box for products */}
-            <div>
+            <div className={styles["category-buttons"]}>
             <h2>Search products</h2>
             <input
                 type="text"
@@ -272,13 +275,13 @@ const MuseumSearch = () => {
                 onChange={(e) => setProductSearchTerm(e.target.value)}
                 placeholder="Search products by name"
             />
-            <button onClick={handleSearchProductbyname}>Search Products by name</button>
+            <button onClick={handleSearchProductbyname} className={styles["button"]}>Search Products by name</button>
             {loadingProducts && <p>Loading Products...</p>}
             {productError && <p>{productError}</p>}
             <div>
             {products.length > 0 ? (
         products.map((product) => (
-            <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+            <div key={product._id} style={{ border: '0px solid #ccc', padding: '-19px', marginBottom: '10px' , width : '50%' , marginLeft: "25%"}}  className='activity-card'>
                 <h3>{product.name}</h3>
                 <p><strong>Price:</strong> ${product.price}</p>
                 {product.description && <p><strong>Description:</strong> {product.description}</p>}
@@ -304,15 +307,15 @@ const MuseumSearch = () => {
     )}
             </div>
         </div>
-        <div>
-    <h2>Available Products</h2>
-    <button onClick={handleShowProducts}>Show Available Products</button>
+        <div className={styles["category-buttons"]}>
+    <h2 >Available Products</h2>
+    <button onClick={handleShowProducts} className={styles["button"]}>Show Available Products</button>
     {loadingAvailableProducts && <p>Loading available products...</p>}
     {availableproductError && <p>{availableproductError}</p>}
     <div>
         {Availableproducts.length > 0 ? ( // Use Availableproducts instead of products
             Availableproducts.map((product) => ( // Map over the correct state variable
-                <div key={product._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+                <div key={product._id} style={{ border: '0px solid #ccc', padding: '-19px', marginBottom: '10px' , width : '50%' , marginLeft: "25%"}}  className='activity-card'>
                     <h3>{product.name}</h3>
                     <p><strong>Price:</strong> ${product.price}</p>
                     <p><strong>Description:</strong> {product.description}</p>
@@ -338,6 +341,7 @@ const MuseumSearch = () => {
         )}
                 </div>
             </div>
+            <button onClick={()=>navigate('/tourist')}> back</button>
         </div>
 );
 };

@@ -12,6 +12,7 @@ import ComplaintsList from './ComplaintsList'
 import Deletion from '../Components/DeleteAdmin';
 import ShowAllproducts from '../Components/ShowAllproducts'
 import RevenuePage from '../Services/AdminSprint3Services'
+import ProductSort from "../Components/SortProductRate.js";
 import './admin.css'; 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from '../styles/SellerPage.module.css'; 
@@ -372,12 +373,18 @@ const AdminPage = ({email}) => {
       
     
        <AdminCategory adminId={adminId} />
+     
         {showSearchPage ? ( // Conditional rendering for Search page
-            <Search /> // Render the Search component
+          <div className={styles['category-buttons']}>
+            <Search /> 
+             <button onClick={() => window.location.reload()}>Back </button>
+        </div>
         ) : showAdminDelete ? ( // Conditional rendering for AdminDelete page
             <AdminDelete onBack={() => setShowAdminDelete(false)} /> // Pass back function to return to AdminPage
         ) : (
+           
             <>
+           
                     
                     <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`}>
                     <div className={styles['category-buttons3']}>
@@ -441,7 +448,8 @@ const AdminPage = ({email}) => {
     )}
 </div>
 
-
+                  
+    
 
                     {/* Editing Form */}
                     {editingTag && (
@@ -466,9 +474,9 @@ const AdminPage = ({email}) => {
 
                     {/* Add Admin Form */}
                     {isAddingAdmin && (
-                        <div className="add-admin-form">
+                        <div className={styles['container-buttons']}>
                             <h3>Add Admin</h3>
-                            <form onSubmit={handleAdminFormSubmit}>
+                            <form onSubmit={handleAdminFormSubmit} className={styles['category-buttons']}  style={{margin : '0 auto'}}>
                                 <label>
                                     Name:
                                     <input
@@ -507,9 +515,9 @@ const AdminPage = ({email}) => {
 
                     {/* Add Tourism Governor Form */}
                     {isAddingGovernor && (
-                        <div className="add-governor-form">
+                        <div className="add-governor-">
                             <h3>Add Tourism Governor</h3>
-                            <form onSubmit={handleGovernorFormSubmit}>
+                            <form onSubmit={handleGovernorFormSubmit} className={styles['category-buttons']} style={{margin :'0 auto'}}>
                                 <label>
                                     Username:
                                     <input
@@ -577,6 +585,7 @@ const AdminPage = ({email}) => {
                     )}
                 </>
             )}
+                   <ProductSort/>
             <div className={styles['category-buttons']}> 
                 <Deletion/>
             </div>

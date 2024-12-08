@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ComplaintDetails from './ComplaintDetails'; // Ensure this path is correct
+import styles from '../styles/SellerPage.module.css'; 
 
 const ComplaintsList = () => {
   const [complaints, setComplaints] = useState([]);
@@ -121,28 +122,28 @@ const ComplaintsList = () => {
   return (
     <div>
       <h1>Complaints List</h1>
-      <div>
-        <button onClick={() => handleFilterResolved(true)}>Filter Resolved</button>
-        <button onClick={() => handleFilterResolved(false)}>Filter Unresolved</button>
-        <button onClick={() => handleFilterResolved(null)}>Clear Filter</button>
-        <button onClick={handleToggleSortOrder}>
+      <div className={styles['navbar']}>
+        <button onClick={() => handleFilterResolved(true)} className={styles['button2']}>Filter Resolved</button>
+        <button onClick={() => handleFilterResolved(false)} className={styles['button2']}>Filter Unresolved</button>
+        <button onClick={() => handleFilterResolved(null)} className={styles['button2']}>Clear Filter</button>
+        <button onClick={handleToggleSortOrder} className={styles['button2']}>
           Sort by Date {sortDescending ? 'Descending' : 'Ascending'}
         </button>
       </div>
       
       <ul>
         {filteredComplaints.map((complaint) => (
-          <div key={complaint._id}>
+          <div key={complaint._id} className={styles['category-buttons']}>
             <h3>{complaint.title}</h3>
             <p>{complaint.body}</p>
             <p>Date: {new Date(complaint.date).toLocaleString()}</p>
             <p>Resolved: {complaint.isResolved ? 'Yes' : 'No'}</p>
             <p>Admin Reply: {complaint.adminReply || 'No reply yet'}</p>
-            <button onClick={() => handleViewDetails(complaint)}>View Details</button>
+            <button onClick={() => handleViewDetails(complaint)} className={styles['button']}>View Details</button>
             {!complaint.isResolved && (
-              <button onClick={() => handleMarkAsResolved(complaint._id)}>Mark as Resolved</button>
+              <button onClick={() => handleMarkAsResolved(complaint._id)} className={styles['button']}>Mark as Resolved</button>
             )}
-            <button onClick={() => handleReply(complaint)}>Reply</button>
+            <button onClick={() => handleReply(complaint)} className={styles['button']}>Reply</button>
 
             {replyingComplaintId === complaint._id && (
               <div>
@@ -165,6 +166,7 @@ const ComplaintsList = () => {
           onClose={handleCloseDetails}
         />
       )}
+      <button onClick={() => window.location.reload()}>Back </button>
     </div>
   );
 };

@@ -125,7 +125,7 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
   };
 
   return (
-    <div className="container">
+    <div className="container" >
       <h2>View Documents of</h2>
       <select value={selectedOption} onChange={handleSelectChange} className="dropdown">
         <option value="">Select Role</option>
@@ -133,9 +133,9 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
         <option value="seller">Seller</option>
         <option value="advertiser">Advertiser</option>
       </select>
-
+      <div  style={{marginLeft : '-50%'}}>
       {tableData.length > 0 && (
-        <table className="table">
+        <table className="table" >
           <thead>
             <tr>
               <th>Email</th>
@@ -190,7 +190,10 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
             ))}
           </tbody>
         </table>
+        
       )}
+      </div>
+      <button onClick={() => window.location.reload()}>Back </button>
     </div>
   );
 };

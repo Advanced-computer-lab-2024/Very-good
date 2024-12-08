@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { addProductToCart } from '../Services/TouristService';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 
 const ViewCart = ({ TouristID, onBack }) => {
   const [cartProducts, setCartProducts] = useState([]);
@@ -100,7 +101,7 @@ const ViewCart = ({ TouristID, onBack }) => {
   );
 
   return (
-    <div className="view-cart-container">
+    <div className={styles['category-buttonsk']}>
       <button onClick={onBack} className="back-button">
         Back
       </button>
@@ -108,13 +109,13 @@ const ViewCart = ({ TouristID, onBack }) => {
       {cartProducts.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        <div className="cart-products">
+        <div className={styles['category-buttons']}>
           {cartProducts.map((product) => (
             <ProductCard key={product._id} product={product} /> // Ensure key is unique and correctly assigned
           ))}
         </div>
       )}
-      <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
+      <h3 className={styles.header} style={{ fontSize: "1em"}}>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
       <button onClick={handleCheckout} className="checkout-button">
         Checkout
       </button>

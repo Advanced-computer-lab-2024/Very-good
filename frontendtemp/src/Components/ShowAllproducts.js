@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getavailableProducts } from '../Services/productServices'; // Ensure this is the correct path
 import axios from 'axios';
-
+import styles from '../styles/SellerPage.module.css'; 
 const ShowAllProducts = () => {
     const [products, setProducts] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -58,12 +58,12 @@ const ShowAllProducts = () => {
     };
 
     return (
-        <div className="products-container">
+        <div >
             {products.length === 0 ? (
                 <p>No products available</p>
             ) : (
                 products.map((product) => (
-                    <div className="product-card" key={product._id}>
+                    <div className={styles['category-buttons']} key={product._id}>
                         <h3>{product.name}</h3>
                         <p>{product.description}</p>
                         <p>Price: ${product.price}</p>
@@ -75,7 +75,7 @@ const ShowAllProducts = () => {
                                 <img
                                     src={product.pictures[0]}
                                     alt="Product"
-                                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                                    style={{ marginLeft : '27%', maxWidth: '2000px', maxHeight: '200px', objectFit: 'cover' ,}}
                                 />
                             </div>
                         )}
@@ -86,7 +86,7 @@ const ShowAllProducts = () => {
                             onChange={handleFileChange}
                             disabled={uploading} 
                         />
-                        <button 
+                        <button  className={styles.button}
                             onClick={() => handleFileUpload(product._id)} 
                             disabled={uploading || !selectedFile}
                         >
@@ -95,6 +95,7 @@ const ShowAllProducts = () => {
                     </div>
                 ))
             )}
+            <button onClick={() => window.location.reload()}>Back </button>
         </div>
     );
 };

@@ -149,6 +149,22 @@ const getTourGuideByEmail = async (req, res) => {
   }
 };
 
+const getTourGuideById = async (req, res) => {
+  const { id } = req.body; // Ensure the email is in the request body
+  
+  try {
+      const tourGuide = await TourGuide.findById(id);
+
+      if (!tourGuide) {
+          return res.status(404).json({ message: 'Tour Guide not found' });
+      }
+
+      res.status(200).json({ tourGuide });
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching Tour Guide', error: error.message });
+  }
+};
+
 const deleteItineraryById = async (req, res) => {
   try {
       const { id } = req.params; // Get the ID from the request parameters
@@ -384,5 +400,5 @@ const updateTourGuideByEmail = async (req, res) => {
 
 
 
-module.exports = {updateAcceptedTermsAndConditions, createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide}
+module.exports = {updateAcceptedTermsAndConditions, createTourGuide, getTourGuides ,getTourGuideByEmail,deleteTourGuide, getItinerarieswithTourGuideId, updateTourGuideByEmail, deleteItineraryById, updateItineraryWithId,uploadDocuments,uploadPhoto,acceptTourGuide,rejectTourGuide, addCommentToTourGuide, getTourGuideById}
 

@@ -216,6 +216,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                             <tr>
                                 <th>Product Title</th>
                                 <th>Price</th>
+                                <th>Rating</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
@@ -224,6 +225,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                                 <tr key={index}>
                                     <td>{product.name}</td>
                                     <td>${product.price}</td>
+                                    <td>{product.rating}</td>
                                     <td>
                                         <button onClick={() => handleItemClick(product)}>Select</button>
                                     </td>
@@ -274,7 +276,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
                     </select>
                     <button onClick={handleDoneClick} className="done-button">Done</button>
                     <div>
-                        <h3>Leave a Review</h3>
+                        <h3>Leave a Review (in case of product)</h3>
                         <textarea
                             value={comment}
                             onChange={handleCommentChange}

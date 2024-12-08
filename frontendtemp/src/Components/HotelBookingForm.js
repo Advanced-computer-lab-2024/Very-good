@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createHotelInfo } from '../Services/BookingFlightServices';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const HotelBookingForm = () => {
   const { state } = useLocation(); // Access the hotel offer from the location state
   const { hotel, hotelId } = state;
@@ -27,9 +27,9 @@ const HotelBookingForm = () => {
   };
 
   return (
-    <div>
+    <div >
       <h2>Book Hotel</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles['category-buttons']} style={{margin : '0 auto'}}>
         <input 
           type="text" 
           placeholder="Full Name" 

@@ -7,6 +7,8 @@ import {makePayment} from '../Services/payementServices'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Navbar from "../Components/Navbar";
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
+
 const ViewWishList = () => {
     const [wishlistProducts, setWishlistProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,9 +19,18 @@ const ViewWishList = () => {
     const email = location?.state?.email;
     console.log("touristId : ", touristId);
 
+    const [showReviews, setShowReviews] = useState({});
+
+    const toggleReviews = (productId) => {
+        setShowReviews(prevState => ({
+            ...prevState,
+            [productId]: !prevState[productId]
+        }));
+    };
+
     const ProductCard = ({ product, handleRemoveFromWishlist, handleAddToCart }) => {
       return (
-        <div className="itinerary-card" style={styles.card}>
+        <div className="itinerary-card">
           <h3 style={styles.title}>{product.name}</h3>
           <p><strong>Description:</strong> {product.description || "No description available"}</p>
           <p><strong>Price:</strong> {product.price} EGP</p>
@@ -46,11 +57,28 @@ const ViewWishList = () => {
             >
               <FontAwesomeIcon icon={faShoppingCart} />
             </button>
+
+            <button onClick={() => toggleReviews(product._id)}>
+                    {showReviews[product._id] ? "Hide Reviews" : "View Reviews"}
+                </button>
+
+            {showReviews[product._id] && (
+                    <div className="reviews-section">
+                        {product.reviewsArray && product.reviewsArray.length > 0 ? (
+                            product.reviewsArray.map(review => (
+                                <div key={review._id} className="review">
+                                    <p><strong>Comment:</strong> {review.comment}</p>
+                                    <p><strong>Tourist ID:</strong> {review.touristId}</p>
+                                    <p>--------------------------------------------------</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No reviews available for this product.</p>
+                        )}
+                    </div>
+                )}
+
           </div>
-    
-          <button onClick={() => handlePurchase(product)} disabled={product.stock <= 0} style={styles.purchaseButton}>
-            {product.stock > 0 ? "Purchase" : "Out of Stock"}
-          </button>
     
           {/* Show error if wallet balance is insufficient */}
           {purchaseError && <p style={styles.errorText}>{purchaseError}</p>}
@@ -58,6 +86,55 @@ const ViewWishList = () => {
       );
     };
   
+    // const styles = {
+    //   card: {
+    //     border: "1px solid #ddd",
+    //     borderRadius: "8px",
+    //     padding: "16px",
+    //     margin: "16px 0",
+    //     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    //     backgroundColor: "#fff",
+    //   },
+    //   title: {
+    //     fontSize: "1.5em",
+    //     marginBottom: "8px",
+    //   },
+    //   buttonContainer: {
+    //     display: "flex",
+    //     alignItems: "center",
+    //     marginTop: "8px",
+    //   },
+    //   removeButton: {
+    //     background: "transparent",
+    //     border: "none",
+    //     cursor: "pointer",
+    //     color: "red",
+    //     fontSize: "18px",
+    //     marginRight: "10px",
+    //   },
+    //   addButton: {
+    //     background: "transparent",
+    //     border: "none",
+    //     cursor: "pointer",
+    //     color: "green",
+    //     fontSize: "18px",
+    //   },
+    //   purchaseButton: {
+    //     marginTop: "16px",
+    //     padding: "8px 16px",
+    //     backgroundColor: "#007bff",
+    //     color: "#fff",
+    //     border: "none",
+    //     borderRadius: "4px",
+    //     cursor: "pointer",
+    //     fontSize: "16px",
+    //   },
+    //   errorText: {
+    //     color: "red",
+    //     marginTop: "8px",
+    //   },
+    // };
+
     const styles = {
       card: {
         border: "1px solid #ddd",
@@ -106,6 +183,7 @@ const ViewWishList = () => {
         marginTop: "8px",
       },
     };
+  
 
     const handlePurchase = async (product) => {
       try {

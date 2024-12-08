@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createMuseum, fetchTags } from '../Services/museumServices'; // Adjust the import path as needed
 import './ActivityDisplay.css';
+import styles from '../styles/Advertisor.module.css'; // Keep your existing global styles
 
 const CreateMuseumForm = ({ onClose }) => {
     const [newMuseum, setNewMuseum] = useState({
@@ -178,7 +179,7 @@ const CreateMuseumForm = ({ onClose }) => {
     
 
     return (
-        <div className="museum-card">
+        <div className={styles['category-buttons']}>
             <h2>Create Museum</h2>
             <input type="text" name="name" value={newMuseum.name} onChange={handleInputChange} placeholder="Museum Name" required />
             <textarea name="description" value={newMuseum.description} onChange={handleInputChange} placeholder="Description"></textarea>

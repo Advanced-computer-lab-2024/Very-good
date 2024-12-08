@@ -42,6 +42,7 @@ import CheckOutComponent from './Pages/CheckOutComponent'
 import TouristOrders from './Pages/ViewTouristOrders'
 //require('dotenv').config();
 import FlightBookingPage  from "./Pages/FlightBookingPage";
+import styles from './mainPage.module.css'; 
 
 
 function App() {
@@ -240,10 +241,10 @@ const handleLogin = async (event) => {
             <>
               {/* Welcome Message and Action Selection */}
               {!isComingFromGuest && action === "" && (
-                <div className="welcome-message">
+                <div className={styles['category-buttons']} style={{margin:'0 auto'}}>
                   <h1>Welcome to the Very Good Travel App</h1>
                   <p>Please select an action:</p>
-                  <button onClick={() => handleActionSelection("register")}>
+                  <button onClick={() => handleActionSelection("register")} className={styles['button']}>
                     Register
                   </button>
                   {/*<button onClick={() => handleAdminSignIn()}>
@@ -252,15 +253,15 @@ const handleLogin = async (event) => {
                   <button onClick={() => handleGuest()}>
                     Continue as a Guest
                   </button>
-                  <button onClick={() => handleActionSelection("login")}>
+                  <button onClick={() => handleActionSelection("login")} className={styles['button']}>
                     Login
                   </button>
                 </div>
               )}
               {action === "login" && (
-  <div className="form-container">
+  <div >
     <h2 className="form-header">Login</h2>
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className={styles['category-buttons']} style={{margin : '0 auto'}}>
       <label htmlFor="loginEmail">Email:</label>
       <input
         type="email"
@@ -306,9 +307,9 @@ const handleLogin = async (event) => {
 )}
 
               {action === "register" && step === 1 && (
-                <div className="form-container">
+                <div className="form-contaikner">
                   <h2 className="form-header">Register</h2>
-                  <form onSubmit={handleProceed}>
+                  <form onSubmit={handleProceed} className={styles['category-buttons']} style={{margin:'0 auto'}}>
                     <label htmlFor="registrationType">
                       Are you registering as an individual or an organization?
                     </label>
@@ -373,11 +374,11 @@ const handleLogin = async (event) => {
               )}
 
               {action === "register" && step === 2 && (
-                <div className="form-container">
+                <div className="form-contakiner">
                   <h2 className="form-header">
                     Complete Your {role} Registration
                   </h2>
-                  <form onSubmit={handleRegister}>
+                  <form onSubmit={handleRegister} className={styles['category-buttons']} style={{margin:'0 auto'}}>
                     {role === "tourist" && (
                       <>
                         <label htmlFor="username">Username:</label>

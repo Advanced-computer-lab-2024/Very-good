@@ -195,6 +195,41 @@ const ProductSort = ({ email, touristId }) => {
     // Toggle function
     const toggleMappings = () => setShowMappings(prevState => !prevState);
 
+    // const ProductCard = ({ product }) => {
+    //     return (
+    //         <div className="itinerary-card">
+    //             <h3>{product.name}</h3>
+    //             <p><strong>Description:</strong> {product.description || "No description available"}</p>
+    //             <p><strong>Price:</strong> {product.price} EGP</p>
+    //             <p><strong>Rating:</strong> {product.rating}</p>
+    //             <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
+
+    //             {/* Purchase Button */}
+    //              {/*HERE ADD THE ICON OF ADD TO CART  */}
+    //              <button
+    //           className="add-to-cart-button"
+    //           onClick={() => handleAddToCart(product._id)}
+    //           title="Add to Cart"
+    //           style={styles.addButton}
+    //         >
+    //           <FontAwesomeIcon icon={faShoppingCart} />
+    //         </button>
+    //             <button onClick={() => handleAddToWishList(product._id, touristId)}>Add to WishList</button>
+
+    //             {/* Show error if wallet balance is insufficient */}
+    //             {purchaseError && <p style={{ color: 'red' }}>{purchaseError}</p>}
+    //         </div>
+    //     );
+    // };
+    const [showReviews, setShowReviews] = useState({});
+
+    const toggleReviews = (productId) => {
+        setShowReviews(prevState => ({
+            ...prevState,
+            [productId]: !prevState[productId]
+        }));
+    };
+
     const ProductCard = ({ product }) => {
         return (
             <div className="itinerary-card">
@@ -204,19 +239,34 @@ const ProductSort = ({ email, touristId }) => {
                 <p><strong>Rating:</strong> {product.rating}</p>
                 <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
 
-                {/* Purchase Button */}
-                 {/*HERE ADD THE ICON OF ADD TO CART  */}
-                 <button
-              className="add-to-cart-button"
-              onClick={() => handleAddToCart(product._id)}
-              title="Add to Cart"
-              style={styles.addButton}
-            >
-              <FontAwesomeIcon icon={faShoppingCart} />
-            </button>
+                <button
+                    className="add-to-cart-button"
+                    onClick={() => handleAddToCart(product._id)}
+                    title="Add to Cart"
+                    style={styles.addButton}
+                >
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                </button>
                 <button onClick={() => handleAddToWishList(product._id, touristId)}>Add to WishList</button>
+                <button onClick={() => toggleReviews(product._id)}>
+                    {showReviews[product._id] ? "Hide Reviews" : "View Reviews"}
+                </button>
 
-                {/* Show error if wallet balance is insufficient */}
+                {showReviews[product._id] && (
+                    <div className="reviews-section">
+                        {product.reviewsArray && product.reviewsArray.length > 0 ? (
+                            product.reviewsArray.map(review => (
+                                <div key={review._id} className="review">
+                                    <p><strong>Comment:</strong> {review.comment}</p>
+                                    <p><strong>Tourist ID:</strong> {review.touristId}</p>
+                                    <p>--------------------------------------------------</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No reviews available for this product.</p>
+                        )}
+                    </div>
+                )}
                 {purchaseError && <p style={{ color: 'red' }}>{purchaseError}</p>}
             </div>
         );

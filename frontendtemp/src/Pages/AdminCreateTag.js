@@ -39,9 +39,9 @@ const AdminCreateTag = () => {
     
 
     return (
-        <div className={styles['category-buttons']}>
+        <div className={styles['category-buttonms']}>
             <h2>Create a New Tag</h2>
-            <form>
+            <form className={styles['category-buttons']} style={{margin : '0 auto'}}>
                 <div className="form-group">
                     <label htmlFor="tagName">Tag Name:</label>
                     <input
@@ -59,6 +59,7 @@ const AdminCreateTag = () => {
                     Create
                 </button>
             </form>
+            <button onClick={() => window.location.reload()}  className={styles.buttonj}>Back</button>
         </div>
     );
 };

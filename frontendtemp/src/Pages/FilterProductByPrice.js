@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { filterProductsByPrice } from '../RequestSendingMethods'; // Import the request sending method
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const FilterProductByPrice = () => {
   const [minPrice, setMinPrice] = useState('');
@@ -20,17 +23,47 @@ const FilterProductByPrice = () => {
     }
   };
 
+  const [showReviews, setShowReviews] = useState({});
+
+  const toggleReviews = (productId) => {
+      setShowReviews(prevState => ({
+          ...prevState,
+          [productId]: !prevState[productId]
+      }));
+  };
+
   const ProductCard = ({ product }) => {
-    return (
-        <div className="itinerary-card">
-            <h3>{product.name}</h3>
-            <p><strong>Description:</strong> {product.description || "No description available"}</p>
-            <p><strong>Price:</strong> {product.price} EGP</p>
-            <p><strong>Rating:</strong> {product.rating} </p>
-            <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
-        </div>
-    );
-};
+      return (
+          <div className="itinerary-card">
+              <h3>{product.name}</h3>
+              <p><strong>Description:</strong> {product.description || "No description available"}</p>
+              <p><strong>Price:</strong> {product.price} EGP</p>
+              <p><strong>Rating:</strong> {product.rating}</p>
+              <p><strong>Stock:</strong> {product.stock > 0 ? `${product.stock} available` : "Out of stock"}</p>
+
+              <button onClick={() => toggleReviews(product._id)}>
+                  {showReviews[product._id] ? "Hide Reviews" : "View Reviews"}
+              </button>
+
+              {showReviews[product._id] && (
+                  <div className="reviews-section">
+                      {product.reviewsArray && product.reviewsArray.length > 0 ? (
+                          product.reviewsArray.map(review => (
+                              <div key={review._id} className="review">
+                                  <p><strong>Comment:</strong> {review.comment}</p>
+                                  <p><strong>Tourist ID:</strong> {review.touristId}</p>
+                                  <p>--------------------------------------------------</p>
+                              </div>
+                          ))
+                      ) : (
+                          <p>No reviews available for this product.</p>
+                      )}
+                  </div>
+              )}
+          </div>
+      );
+  };
+  
 
   return (
     <div className="filter-product-by-price">

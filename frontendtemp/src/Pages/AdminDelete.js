@@ -5,6 +5,7 @@ import SellerAccountsList from './SellerAccountsList';
 import AdvertiserAccountsList from './AdvertiserAccountsList';
 import TourGuideAccountsList from './TourGuideAccountsList';
 import TourismGovernerAccountsList from './TourismGovernerAccountsList';
+import styles from '../styles/SellerPage.module.css'; 
 const AdminDelete = ({ onBack }) => {
     const [selectedOption, setSelectedOption] = useState(null); // State to hold the selected account type
 
@@ -31,17 +32,19 @@ const AdminDelete = ({ onBack }) => {
     };
 
     return (
-        <div>
+        <div className={styles['category-buttons']}  style={{margin : '0 auto' }}>
+            <h2>Admin Delete Page</h2>
+            <p>Welcome to the Admin Delete page!</p>
             <h3>Select an account type to delete:</h3>
             <div>
-                <button onClick={() => handleOptionSelect('Tourist')}>Delete Tourist</button>
-                <button onClick={() => handleOptionSelect('Advertiser')}>Delete Advertiser</button>
-                <button onClick={() => handleOptionSelect('TourGuide')}>Delete Tour Guide</button>
-                <button onClick={() => handleOptionSelect('Seller')}>Delete Seller</button>
-                <button onClick={() => handleOptionSelect('TourismGovernor')}>Delete Tourism Governor</button>
+                <button onClick={() => handleOptionSelect('Tourist')}  className={styles.button}>Delete Tourist</button>
+                <button onClick={() => handleOptionSelect('Advertiser')} className={styles.button}>Delete Advertiser</button>
+                <button onClick={() => handleOptionSelect('TourGuide')} className={styles.button}>Delete Tour Guide</button>
+                <button onClick={() => handleOptionSelect('Seller')} className={styles.button}>Delete Seller</button>
+                <button onClick={() => handleOptionSelect('TourismGovernor')} className={styles.button}>Delete Tourism Governor</button>
             </div>
             {renderSelectedComponent()} {/* Conditionally render based on selection */}
-            <button onClick={onBack}>Back to Admin Page</button>
+            <button onClick={onBack}>Back </button>
         </div>
     );
 };

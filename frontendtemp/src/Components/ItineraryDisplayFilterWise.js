@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';  // Import axios
 import './ActivityDisplay.css';
 import ShareComponent from './shareComponent';
 import ViewComments from './viewComments';  // Import ViewComments component
@@ -7,9 +8,33 @@ const ItineraryDisplayFilterWise = ({ itinerary, comments = false }) => {
   // State to toggle visibility of comments
   const [showComments, setShowComments] = useState(false);
 
+  // State to store tour guide information
+  const [tourGuide, setTourGuide] = useState(null);
+  const [showTourGuideComments, setShowTourGuideComments] = useState(false);
+
   // Function to handle toggle of comments visibility
   const toggleComments = () => {
     setShowComments(prevState => !prevState);
+  };
+
+  // Function to handle view tour guide button click
+  const viewTourGuide = async () => {
+    if (showTourGuideComments) {
+      setShowTourGuideComments(false);
+      setTourGuide(null);
+      return;
+    }
+    try {
+      console.log('Fetching tour guide:', itinerary.tourGuideId);
+      const response = await axios.post('http://localhost:4000/api/tourGuides/getById', {
+        id: itinerary.tourGuideId,
+      });
+      setTourGuide(response.data.tourGuide);
+      setShowTourGuideComments(true);  // Show comments after fetching tour guide
+      console.log('Tour guide:', response.data);
+    } catch (error) {
+      console.error('Error fetching tour guide:', error);
+    }
   };
 
   return (
@@ -60,15 +85,49 @@ const ItineraryDisplayFilterWise = ({ itinerary, comments = false }) => {
         ))}
       </div>
 
-      {/* View Comments Button */}
+      {/* View Tour Guide Button */}
+      <button className="view-tourguide-button" onClick={viewTourGuide}>
+        {tourGuide && showTourGuideComments ? 'Hide Tour Guide' : 'View Tour Guide'}
+      </button>
+
+      {/* Display Tour Guide Information */}
+      {tourGuide && showTourGuideComments && (
+        <div className="tour-guide-info">
+          <h4>Tour Guide Name: {tourGuide.name}</h4>
+          <p>Email: {tourGuide.email}</p>
+          <p>Mobile: {tourGuide.mobile}</p>
+          <p>Experience: {tourGuide.yearsOfExperience} years</p>
+
+          {/* Conditionally render Tour Guide Comments */}
+          {showTourGuideComments && (
+            <div className="tour-guide-comments">
+              <button onClick={toggleComments} className="view-comments-button">
+          {showComments ? 'Hide Comments on tour guide' : 'View Comments on tour guide'}
+        </button>
+        {showComments && <ViewComments comments={tourGuide.commentsArray} />}
+            </div>
+          )}
+        </div>
+      )}
+      
+
+      {comments && (
+        <button onClick={toggleComments} className="view-comments-button">
+          {showComments ? 'Hide Comments on Itinerary' : 'View Comments on Itinerary'}
+        </button>
+      )}
+
+      {/* Conditionally render ViewComments component for Itinerary */}
+      {comments && showComments && <ViewComments comments={itinerary.commentsArray} />}
+
+      {/* View Comments Button
       {comments && (
         <button onClick={toggleComments} className="view-comments-button">
           {showComments ? 'Hide Comments' : 'View Comments'}
         </button>
-      )}
+      )} */}
 
       {/* Conditionally render ViewComments component */}
-      {showComments && <ViewComments comments={itinerary.commentsArray} />}
 
       <div className="itinerary-buttons">
       </div>

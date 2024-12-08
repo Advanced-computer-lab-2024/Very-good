@@ -52,10 +52,10 @@ p {
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.activity-card:hover, .tag-card:hover, .itinerary-card:hover {
+/* .activity-card:hover, .tag-card:hover, .itinerary-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .tag-actions, .itinerary-actions {
     display: flex;

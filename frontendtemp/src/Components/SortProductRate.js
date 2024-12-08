@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProductsNoID } from '../Services/productServices';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 
 
 const ProductSort = () => {
@@ -54,9 +55,8 @@ const ProductSort = () => {
     };
     
     return (
-        <div className="container">
-            <h1>Sort Products</h1>
-            <h2>Sorted by Rating</h2>
+        <div className={styles["category-buttons"]}>
+             {/* <h2>Sorted by Rating </h2> */}
             
             {/* Toggle Button: Show/Hide Products */}
             <button onClick={toggleMappings}>

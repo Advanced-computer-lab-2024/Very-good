@@ -30,7 +30,7 @@ const BookingForm = () => {
   return (
     <div>
       <h2>Book Flight</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='form-container'>
         <input 
           type="text" 
           placeholder="Full Name" 

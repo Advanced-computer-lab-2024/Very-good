@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import styles from '../styles/SellerPage.module.css';
 const UploadingPhotoTourGuide = ({ onBack, email }) => {
   const [photo, setPhoto] = useState(null); // Holds the uploaded photo file
   const [errorMessage, setErrorMessage] = useState('');
@@ -40,7 +40,7 @@ const UploadingPhotoTourGuide = ({ onBack, email }) => {
     <div>
       <h1>Upload Your Photo</h1>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles['category-buttons']} style={{margin : '0 auto'}}>
         <div>
           <label>Photo:</label>
           <input type="file" accept="image/*" onChange={handlePhotoChange} required />

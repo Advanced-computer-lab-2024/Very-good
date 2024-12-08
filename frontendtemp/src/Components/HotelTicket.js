@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './Ticket.css';
-
+import { useNavigate } from 'react-router-dom';
 const HotelTicket = () => {
   const { state } = useLocation();
   const { hotel, formData } = state;
@@ -11,11 +11,12 @@ const HotelTicket = () => {
   const hotelCountry = hotel.address ? hotel.address.countryCode : 'N/A';
   const hotelDistance = hotel.distance ? `${hotel.distance.value} ${hotel.distance.unit}` : 'N/A';
   const geoCode = hotel.geoCode || {};
-
+  const navigate = useNavigate();
   // Booking details from formData
   const { name, email, dateOfBirth, nationality, phoneNumber, roomType, extraBed } = formData;
 
   return (
+    <div> <button onClick={() => navigate('/tourist')}>Back to Home</button> 
     <div className="ticket-container">
       <div className="ticket-header">
         <h2 className="ticket-title">Booking Confirmed!</h2>
@@ -49,6 +50,7 @@ const HotelTicket = () => {
       <div className="ticket-footer">
         <p>Thank you for booking with us!</p>
       </div>
+    </div>
     </div>
   );
 };

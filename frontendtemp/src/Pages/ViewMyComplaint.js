@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
 import { fetchComplaintsByEmail } from '../RequestSendingMethods';
+import styles from '../styles/SellerPage.module.css'; // Import the styles
 
 const ViewMyComplaint = ({email}) => {
   
@@ -48,12 +48,13 @@ const ViewMyComplaint = ({email}) => {
       ) : complaints.length > 0 ? (
         <ul>
           {complaints.map((complaint) => (
-            <li key={complaint._id}> {/* Use the unique ID */}
+            <div key={complaint._id} className={styles['category-buttons']}> {/* Apply the same styling */}
               <h3>{complaint.title}</h3> {/* Display complaint title */}
               <p>{complaint.body}</p> {/* Display complaint body */}
               <p>Date: {new Date(complaint.date).toLocaleString()}</p> {/* Format date */}
               <p>Status: {complaint.isResolved ? "Resolved" : "Not Resolved"}</p> {/* Display status */}
-            </li>
+              <p>Admin Reply: {complaint.adminReply || 'No reply yet'}</p> {/* Display admin reply */}
+            </div>
           ))}
         </ul>
       ) : (

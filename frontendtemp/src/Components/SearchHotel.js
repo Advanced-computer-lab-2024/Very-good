@@ -3,6 +3,7 @@ import { fetchHotelsByCity, createHotelOffer,  addHotelOfferToTourist} from '../
 import HotelOffersDisplay from './HotelOffersDisplay';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const locationOptions = [
     { name: "London", code: "LON" },
     { name: "New York City", code: "NYC" },
@@ -82,10 +83,10 @@ const SearchHotel = () => {
     };
 
     return (
-        <div className="search-hotel-container">
+        <div >
             <Navbar/>
             <h2>Search Hotels</h2>
-            <form className="search-hotel-form" onSubmit={handleSubmit}>
+            <form  onSubmit={handleSubmit} className={styles['category-buttons'] } style={{margin : '0 auto'}}>
                 <div className="form-group">
                     <label>City:</label>
                     <select
@@ -134,7 +135,7 @@ const SearchHotel = () => {
             </form>
             {error && <div className="error-message">{error}</div>}
             {hotels && (
-                <div className="hotel-results">
+                <div className="" style={{marginLeft : '10%'}}>
                     <HotelOffersDisplay hotels={hotels} onBookHotel={onBookHotel}/>
                 </div>
             )}
