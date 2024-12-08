@@ -42,7 +42,7 @@ p {
 }
 
 .activity-card, .tag-card, .itinerary-card {
-    background-color: #fbead1; /* Limed Oak */
+    background-color: #e2ceb0ee; /* Limed Oak */
     border: 1px solid #d9c2b6; /* Clam Shell */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

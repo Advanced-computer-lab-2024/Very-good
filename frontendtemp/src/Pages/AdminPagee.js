@@ -16,6 +16,7 @@ import ProductSort from "../Components/SortProductRate.js";
 import './admin.css'; 
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from '../styles/SellerPage.module.css'; 
+import NumberofUsers from './NumberofUsers.js';
 const AdminPage = ({email}) => {
     
     const location = useLocation();
@@ -30,7 +31,7 @@ const AdminPage = ({email}) => {
         { id: 1, title: 'Add Admins' },
         { id: 2, title: 'View Tags' },
         { id: 3, title: 'Add Tourism Governor' }, // New activity for adding tourism governor
-        { id: 4, title: 'Delete Admin' }, // New activity for deleting admin
+        { id: 4, title: 'Delete User' }, // New activity for deleting admin
         {id :5 ,title : 'FilterProductsByPrice' },
         {id :6,title :'Create_Tag'},
         { id: 7, title: 'View Itineraries' },
@@ -59,6 +60,7 @@ const AdminPage = ({email}) => {
     const [ShowViewComplaintsPage,setShowViewComplaintsPage]=useState(false);
     const [showAllproductsMahmoud,SetshowAllproductsMahmoud]=useState(false);
     const [showSalesReport,SetShowSalesReport]=useState(false);
+    const [showNumberOfUsers,setShowNumberOfUsers]=useState(false);
 
     useEffect(() => {
         const fetchAdminData = async () => {
@@ -83,6 +85,9 @@ const AdminPage = ({email}) => {
     }
     const handleSalesReportPage=()=>{
         SetShowSalesReport(true);
+    }
+    const handleNumberOfUsers=()=>{
+        setShowNumberOfUsers(true);
     }
     const handleShowAllProductsMahmoud =()=>{
         SetshowAllproductsMahmoud(true);
@@ -322,6 +327,9 @@ const AdminPage = ({email}) => {
     if(showSalesReport){
         return <RevenuePage/>
     }
+    if(showNumberOfUsers){
+        return <NumberofUsers/>
+    }
     
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -386,28 +394,24 @@ const AdminPage = ({email}) => {
             <>
            
                     
-                    <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`}>
+                    <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`} style={{margin : '0 auto'}}>
                     <div className={styles['category-buttons3']}>
-                            <h3>Quick Links</h3>
+                        <h3>Quick Links</h3>
                       
                        <button className={styles.button2} onClick={handleAddAdmins}>Add Admins</button>
                        < button className={styles.button2} onClick ={handleFilterProductByPrice}>Filter Products</button>
                        <button className={styles.button2}onClick={handleCreateTag}>Create Tag</button>
                        <button className={styles.button2} onClick={handleViewTags}>View Tags</button>
                        <button className={styles.button2} onClick={handleAddGovernor}>Add Tourism Governor</button>
-                       <button className={styles.button2} onClick={() => setShowAdminDelete(true)}>Delete Admin</button>
-                       <button className={styles.button2} onClick={handleNewButtonClick}>Search</button>
+                       <button className={styles.button2} onClick={() => setShowAdminDelete(true)}>Delete User</button>
+                       <button className={styles.button2} onClick={handleNewButtonClick}>Show/Search Products</button>
                        <button className={styles.button2} onClick={handleViewItineraries}>View Itineraries</button>
                        <button className={styles.button2} onClick={handleViewDocmunets}>View Documents</button>
                        <button className={styles.button2} onClick={handleViewComplaints}>View Complaints</button>
-                       <button className={styles.button2}onClick={handleShowAllProductsMahmoud}>View All products</button>
+                       <button className={styles.button2}onClick={handleShowAllProductsMahmoud}>Upload Product Pictures</button>
                        <button className={styles.button2} onClick={handleSalesReportPage}>View Sales Report</button>
+                       <button className={styles.button2} onClick={handleNumberOfUsers}>View Number Of Users</button>
 
-
-                                
-                            
-                           
-                      
                     </div>
                     </div>
 

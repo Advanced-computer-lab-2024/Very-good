@@ -25,7 +25,7 @@ const AdminCreateTag = () => {
 
             // Send the POST request to create the tag
             const response = await axios.post('http://localhost:4000/api/tags/create', tagData);
-            
+            alert('Tag created successfully');
             console.log('Tag created successfully:', response.data);
             // Optionally, reset the input field
             setTagName('');

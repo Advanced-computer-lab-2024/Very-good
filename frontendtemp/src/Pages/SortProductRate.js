@@ -16,54 +16,54 @@ const ProductSort = ({ email, touristId }) => {
     const [purchaseError, setPurchaseError] = useState(""); // To handle errors when purchasing
     //const [hover, setHover] = useState(false);
     console.log('Passing email:', email);  
-    const styles = {
-        card: {
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          padding: "16px",
-          margin: "16px 0",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          backgroundColor: "#fff",
-        },
-        title: {
-          fontSize: "1.5em",
-          marginBottom: "8px",
-        },
-        buttonContainer: {
-          display: "flex",
-          alignItems: "center",
-          marginTop: "8px",
-        },
-        removeButton: {
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          color: "red",
-          fontSize: "18px",
-          marginRight: "10px",
-        },
-        addButton: {
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          color: "green",
-          fontSize: "18px",
-        },
-        purchaseButton: {
-          marginTop: "16px",
-          padding: "8px 16px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "16px",
-        },
-        errorText: {
-          color: "red",
-          marginTop: "8px",
-        },
-      };
+    // const styles = {
+    //     card: {
+    //       border: "1px solid #ddd",
+    //       borderRadius: "8px",
+    //       padding: "16px",
+    //       margin: "16px 0",
+    //       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    //       backgroundColor: "#fff",
+    //     },
+    //     title: {
+    //       fontSize: "1.5em",
+    //       marginBottom: "8px",
+    //     },
+    //     buttonContainer: {
+    //       display: "flex",
+    //       alignItems: "center",
+    //       marginTop: "8px",
+    //     },
+    //     removeButton: {
+    //       background: "transparent",
+    //       border: "none",
+    //       cursor: "pointer",
+    //       color: "red",
+    //       fontSize: "18px",
+    //       marginRight: "10px",
+    //     },
+    //     addButton: {
+    //       background: "transparent",
+    //       border: "none",
+    //       cursor: "pointer",
+    //       color: "green",
+    //       fontSize: "18px",
+    //     },
+    //     purchaseButton: {
+    //       marginTop: "16px",
+    //       padding: "8px 16px",
+    //       backgroundColor: "#007bff",
+    //       color: "#fff",
+    //       border: "none",
+    //       borderRadius: "4px",
+    //       cursor: "pointer",
+    //       fontSize: "16px",
+    //     },
+    //     errorText: {
+    //       color: "red",
+    //       marginTop: "8px",
+    //     },
+    //   };
     useEffect(() => {
         const getProducts = async () => {
             try {
@@ -282,17 +282,17 @@ const ProductSort = ({ email, touristId }) => {
       //onMouseEnter={() => setHover(true)}
       //onMouseLeave={() => setHover(false)}
       className={styles.button}
-      style={{
-        width: "125%",
-        color: "grey", // Change color on hover
-        borderRadius: "5px",
-        backgroundColor:"#70e8c472", // Change background color on hover
-        height: "35px",
-        marginLeft: "-12.5%",
-        marginBottom: "-1rem",
-        marginTop: "-20rem",
-        borderColor: "#70e8c4",
-      }}
+    //   style={{
+    //     width: "125%",
+    //     color: "grey", // Change color on hover
+    //     borderRadius: "5px",
+    //     backgroundColor:"#70e8c472", // Change background color on hover
+    //     height: "35px",
+    //     marginLeft: "-12.5%",
+    //     marginBottom: "-1rem",
+    //     marginTop: "-20rem",
+    //     borderColor: "#70e8c4",
+    //   }}
     >
                 {showMappings ? "Hide Products Sorted by Rating" : "Look up Products Sorted by Rating"}
             </button>

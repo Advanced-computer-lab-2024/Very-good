@@ -113,7 +113,12 @@ const RevenuePage = () => {
         const itemDate =
           type === "itineraries"
             ? item.lastAvailableDate
-            : new Date(item.date); // Use lastAvailableDate for itineraries, `date` for activities
+            : new Date(item.date); // Use lastAvailableDate for itineraries, ⁠ date ⁠ for activities
+                  // Ensure the date is valid before using it
+      if (!(itemDate instanceof Date) || isNaN(itemDate.getTime())) {
+        console.error("Invalid date:", itemDate); // You can log this to debug
+        return false; // Skip invalid dates
+      }
         return itemDate && itemDate.toISOString().split("T")[0] === filterDate;
       });
     }

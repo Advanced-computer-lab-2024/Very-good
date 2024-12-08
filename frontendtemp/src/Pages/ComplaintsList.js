@@ -139,7 +139,6 @@ const ComplaintsList = () => {
             <p>Date: {new Date(complaint.date).toLocaleString()}</p>
             <p>Resolved: {complaint.isResolved ? 'Yes' : 'No'}</p>
             <p>Admin Reply: {complaint.adminReply || 'No reply yet'}</p>
-            <button onClick={() => handleViewDetails(complaint)} className={styles['button']}>View Details</button>
             {!complaint.isResolved && (
               <button onClick={() => handleMarkAsResolved(complaint._id)} className={styles['button']}>Mark as Resolved</button>
             )}

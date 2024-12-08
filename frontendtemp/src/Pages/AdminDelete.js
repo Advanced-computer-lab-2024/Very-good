@@ -33,8 +33,6 @@ const AdminDelete = ({ onBack }) => {
 
     return (
         <div className={styles['category-buttons']}  style={{margin : '0 auto' }}>
-            <h2>Admin Delete Page</h2>
-            <p>Welcome to the Admin Delete page!</p>
             <h3>Select an account type to delete:</h3>
             <div>
                 <button onClick={() => handleOptionSelect('Tourist')}  className={styles.button}>Delete Tourist</button>

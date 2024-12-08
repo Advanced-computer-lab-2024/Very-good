@@ -315,7 +315,9 @@ const TouristPage = ({email}) => {
           <button onClick={handleViewBookmarkedActivities} className={styles.button2}>View Bookmarked Activities</button>
           <button onClick={handleViewCart} className={styles.button2}>View Cart</button>
           <button onClick={handleViewOrdersPage} className={styles.button2}>View Orders</button>
-          <div className="notification-container"></div>
+          <div className="notification-container">
+            <Notification targetId={touristId} targetType="Tourist" />
+          </div>
         </div>
       </div>
 

@@ -54,10 +54,19 @@ a:hover {
 
 /* Containers */
 .container {
-  width: 80%;
+  width: 60%;
   margin: 0 auto;
   padding: 20px;
+ 
 }
+.container2{
+   
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust the 200px as needed */
+  gap: 1rem; /* Adds space between grid items */
+}
+  
+
 
 /* Form Elements */
 input, textarea {
@@ -122,4 +131,66 @@ h1, h2, h3, h4 {
 
 .footer a:hover {
   color: #FFD700; /* Muted Gold on hover in footer */
+}
+.form-container{
+  background-color: #ffffffd2; /* Light Beige background for a soft look */
+  padding: 2rem; 
+  padding-right: 2.5rem;/* Adequate padding to give space around the content */
+  margin: 2rem 0; /* Margin for spacing the divider from other sections */
+  border-radius: 8px; /* Rounded corners for a smooth effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a card-like effect */
+  position: center; /* To add a pseudo-element divider */
+  margin-left: 24%;
+}
+/* Basic Table Styling */
+table {
+  width: 100%; /* Full width */
+  border-collapse: collapse; /* Removes gaps between borders */
+  margin: 1rem 0; /* Adds spacing around the table */
+  font-size: 1rem; /* Base font size */
+  text-align: left; /* Aligns text to the left */
+}
+
+/* Table Header */
+thead {
+  background-color: #f4f4f4; /* Light background color */
+  color: #333; /* Dark text color */
+}
+
+th {
+  padding: 0.75rem; /* Padding for headers */
+  border: 1px solid #ddd; /* Light border */
+  font-weight: bold; /* Bold headers */
+}
+
+/* Table Body */
+td {
+  padding: 0.75rem; /* Padding for cells */
+  border: 1px solid #ddd; /* Light border */
+}
+
+/* Zebra Striping for Rows */
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9; /* Light gray for odd rows */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff; /* White for even rows */
+}
+
+/* Hover Effect */
+tbody tr:hover {
+  background-color: #f1f1f1; /* Slightly darker gray on hover */
+  cursor: pointer; /* Adds a pointer on hover */
+}
+
+/* Responsive Table */
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 0.9rem; /* Smaller font size on small screens */
+  }
+
+  th, td {
+    padding: 0.5rem; /* Reduce padding */
+  }
 }

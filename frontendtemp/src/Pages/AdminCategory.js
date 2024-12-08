@@ -221,6 +221,12 @@ function AdminCategory({ sellerId, adminId }) {
     try {
       if (editMode && currentProductId) {
         console.log("Current Product ID:", currentProductId); // Log current product ID
+        const product = products.find((prod) => prod._id === currentProductId);
+          if (product && product.sellerId) {
+            formData2.sellerId = product.sellerId;
+          } else {
+            formData2.sellerId = adminId;
+          }
         await updateProduct(formData2.sellerId, currentProductId, {
           ...formData2,
         });
@@ -229,6 +235,7 @@ function AdminCategory({ sellerId, adminId }) {
             prod._id === currentProductId ? { ...prod, ...formData2 } : prod
           )
         );
+        alert("Product updated successfully.");
       } else {
         formData2.sellerId = adminId; // Ensure sellerId is set to adminId
         console.log("formData2:", formData2); // Log the form data
@@ -240,6 +247,7 @@ function AdminCategory({ sellerId, adminId }) {
           }
           return [...prevProducts, newProduct];
         });
+        alert("Product created successfully.");
       }
       resetForm2();
     } catch (err) {
@@ -265,6 +273,7 @@ function AdminCategory({ sellerId, adminId }) {
     setEditMode(true);
     setCurrentProductId(product._id); // Set the current product ID
     setSellerProductId(formData2.sellerId); // Store the seller ID for reference
+    setSelectedOperation("create-product"); // Switch to the product form
   };
 
   return (

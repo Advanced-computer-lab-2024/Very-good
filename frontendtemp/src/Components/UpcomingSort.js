@@ -225,7 +225,7 @@ const ActivityHistoricalList = () => {
                 </>
             )} </div>
 <div className={styles['category-buttons']}>
-            <h1>Upcoming Activities, Historical Places, and Itineraries</h1>
+            <h1>Upcoming Activities, and Itineraries</h1>
             
             <button onClick={toggleMappings} className={styles.button} >
                 {showMappings ? "Hide Available to Visit" : "Show Available to Visit"}
@@ -260,6 +260,27 @@ const ActivityHistoricalList = () => {
                     ) : (
                         historicalPlaces.map(place => (
                             <MuseumDisplayFilterWise museum={place} />
+                        ))
+                    )}
+                </>
+            )}
+            {showMappings && (
+                <>
+                    <h2>Upcoming Activities</h2>
+                    {activities.length === 0 ? (
+                        <p>No upcoming activities available.</p>
+                    ) : (
+                        activities.map(activity => (
+                            <ActivityDisplayFilterWise activity={activity} email={email} />
+                        ))
+                    )}
+
+                    <h2>Upcoming Itineraries</h2>
+                    {itineraries.length === 0 ? (
+                        <p>No upcoming itineraries available.</p>
+                    ) : (
+                        itineraries.map(itinerary => (
+                            <ItineraryDisplayFilterWise itinerary={itinerary} />
                         ))
                     )}
                 </>
