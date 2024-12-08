@@ -668,5 +668,40 @@ router.get('/:touristId', bookingController.getBookings);
 //EndPoint to the backend Controller that fetches all the booking of the calling tourist
  ```
 ### category routes file 
+```javascript
+router.get('/:id', getCategoryById); 
+// Endpoint to the backend controller that fetches a category corresponding to the provided ID
 
+router.get('/', getCategories); 
+// Endpoint to the backend controller that fetches all categories
+
+router.post('/', createCategory); 
+// Endpoint to the backend controller that creates a new category
+
+router.delete('/:id', deleteCategory); 
+// Endpoint to the backend controller that deletes a category corresponding to the provided ID
+
+router.patch('/:categoryName', updateCategory); 
+// Endpoint to the backend controller that updates a category corresponding to the provided name
+```
+### complaints routes file 
+```javascript
+router.post('/submit', submitComplaint); 
+// Endpoint to the backend controller that handles the act of a tourist submitting a complaint
+
+router.get('/my-complaints', getComplaintsForTourist); 
+// Endpoint to the backend controller that fetches complaints submitted by the calling tourist
+
+router.get('/', getComplaints); 
+// Endpoint to the backend controller that fetches all complaints
+
+router.get('/:id', getComplaintById); 
+// Endpoint to the backend controller that fetches a complaint corresponding to the provided ID
+
+router.put('/:complaintId/status', updateComplaintStatus); 
+// Endpoint to the backend controller that handles updating the status of a complaint corresponding to the provided complaint ID
+
+router.put('/:complaintId/reply', replyToComplaint); 
+// Endpoint to the backend controller that handles an admin replying to a complaint corresponding to the provided complaint ID
+```
 
