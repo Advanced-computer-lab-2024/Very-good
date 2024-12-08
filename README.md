@@ -764,6 +764,17 @@ router.get('/search', searchforHP);
 ```
 ### promoCodes routes file 
 ```javascript
+
+router.post('/', promoCodeController.createPromoCode);
+//EndPoint to the backend Controller , that handles creating a new instance of a promoCode
+router.get('/', promoCodeController.getAllPromoCodes);
+//EndPoint to the backend Controller , that handles fetching all instances of a promoCode
+router.get('/:promoCodeId', promoCodeController.getPromoCodeById);
+//EndPoint to the backend Controller , that handles fetching a specific promoCode , specified by the id sent as a parameter
+router.patch('/:promoCodeId', promoCodeController.updatePromoCode);
+//EndPoint to the backend Controller , that handles updating a specific promoCode , specified by the id sent as a parameter
+router.delete('/:promoCodeId', promoCodeController.deletePromoCode);
+//EndPoint to the backend Controller , that handles deleting a specific promoCode , specified by the id sent as a parameter
 ```
 ### sellers routes file
 ```javascript
