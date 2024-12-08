@@ -758,6 +758,17 @@ router.get('/search', searchforHP);
 ```
 ### orders routes file
 ```javascript
+
+router.post('/', orderController.createOrder);
+//EndPoint to the backend Controller that handles creating an instance of an order
+router.get('/', orderController.getAllOrders);
+//EndPoint to the backend Controller that handles retrieving all instances of orders 
+router.get('/:orderId', orderController.getOrderById);
+//EndPoint to the backend Controller that fetches a specific order , specifed by the id passed as a paarameter 
+router.patch('/:orderId', orderController.updateOrderStatus);
+//EndPoint to the backend Controller that updates a specific order , specified by the id passed as a parameter
+router.delete('/:orderId', orderController.deleteOrder);
+//EndPoint to the backend Controller that deletes a specific order , specified by the id passed as a parameter
 ```
 ### products routes file 
 ```javascript
