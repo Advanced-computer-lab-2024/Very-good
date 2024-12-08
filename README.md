@@ -1087,6 +1087,8 @@ router.put('/:id', editTransportation);
 router.delete('/:id', deleteTransportation); 
 //EndPoint to the backend Controller that handles deleting a transportation whos id corresponds to the one sent as a parameter
 ```
-
+## Tests
+### ScreenShot of psotman where we test the API route http://localhost:4000/api/products/ , that should return an instance of all products 
+![Did so Correctly](C:\Users\AM\Pictures\Screenshots\Screenshot 2024-12-08 205723)
 
 
