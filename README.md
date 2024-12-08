@@ -1098,5 +1098,17 @@ router.delete('/:id', deleteTransportation);
 
 ## How to Use
 After being done with the Installation steps , we discussed earlier 
-### Add a .env file in the very-good/backend folder that should contain the following data layed out in the below picture 
-![env](test3.png)
+### Add a .env file in the very-good/backend folder that should contain the link to the database and the port on which you want to run the backend on
+
+### Open two new terminals 
+    in the first one write the following Commands
+    ```javascript
+    cd backend
+    nodemon server.js
+    ```
+    in the second one write the following Commands 
+    ```javascript
+    cd frontendtemp
+    npm start 
+    ```
+    
