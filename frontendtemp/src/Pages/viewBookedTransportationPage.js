@@ -3,7 +3,7 @@ import axios from 'axios';
 import TransportationDisplay from '../Components/TransportationDisplay';
 import { fetchTouristByEmail } from '../RequestSendingMethods';
 import { useLocation } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 const ViewBookedTransportationPage = () => {
   const location = useLocation();
   const { email } = location.state || {};
@@ -11,7 +11,7 @@ const ViewBookedTransportationPage = () => {
   const [transportations, setTransportations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
   // Fetch booked transportations (IDs) for the tourist by email
   useEffect(() => {
     const fetchBookedTransportations = async () => {
@@ -65,6 +65,7 @@ const ViewBookedTransportationPage = () => {
 
   return (
     <div className="book-transportation-page">
+     <button onClick={() => navigate('/tourist')}>Back to Home</button> 
       <h1>Your Booked Transportations</h1>
       {transportations.length === 0 ? (
         <p>No transportations available at the moment.</p>

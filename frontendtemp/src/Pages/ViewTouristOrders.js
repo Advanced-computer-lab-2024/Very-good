@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation
 import axios from 'axios';
 import '../styles/global.css';
+import styles from '../styles/SellerPage.module.css'; 
 
 const TouristOrders = ({touristId}) => {
   const location = useLocation(); // Initialize useLocation
@@ -66,8 +67,9 @@ const TouristOrders = ({touristId}) => {
 
   return (
     <div className="container">
-      <div className="header">Tourist Orders</div>
-      <div className="filter-buttons">
+          <button onClick={() => window.location.reload()}>Back </button>
+      <div className={styles.header}>Tourist Orders</div>
+      <div  className={styles['category-buttons']}>
         <button
           onClick={() => setFilter('current')}
           className={filter === 'current' ? 'active-filter' : ''}
@@ -86,7 +88,7 @@ const TouristOrders = ({touristId}) => {
       ) : (
         <div>
           {filteredOrders.map((order) => (
-            <div key={order._id} className="order-card">
+            <div key={order._id} className={styles.header}>
               <h3>Order ID: {order._id}</h3>
               <p>Status: {order.status}</p>
               <p>Order Date: {new Date(order.orderDate).toLocaleDateString()}</p>

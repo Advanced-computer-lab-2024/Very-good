@@ -9,6 +9,7 @@ import PaymentForm from './PaymentForm'; // Import the PaymentForm component
 import { useNavigate } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 
 const stripePromise = loadStripe('pk_test_51QP6GEIjdL7iHsR6Zjy5EB8ixOlCfL2PnqICOkaAorgK8zFYvpnsDeHCZSx78V0uBCIaZ8uvdtVbw2FYPCbKxWMx00qSClGNRP'); // Replace with your Stripe publishable key
 
@@ -290,8 +291,9 @@ const Booking = ({ touristId, wallet }) => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div >
+               <button onClick={() => window.location.reload()}>Back </button>
+            <form onSubmit={handleSubmit} className={styles['category-buttons']}  style={{margin : '0 auto'}}>
                 <h2>Book an Activity or Itinerary</h2>
                 <div>
                     <label htmlFor="activities">Select Activity:</label>
@@ -416,12 +418,13 @@ const Booking = ({ touristId, wallet }) => {
             )}
             {data && (
                 <div>
-                    <h4>{`Total Price: $${data.price}`}</h4> {/* Display total price */}
+                    <h4 className={styles.header} style={{width : '47%' , fontSize : '1rem' , margin : '0 AUTO'}}>{`Total Price: $${data.price}`}</h4> {/* Display total price */}
                     {promoCodePercentage > 0 && (
                         <h4>{`Discounted Price: $${calculateDiscountedPrice(data.price, promoCodePercentage).toFixed(2)}`}</h4> 
                     )}
                 </div>
             )}
+            <div className={styles['category-buttons']}>
             <h2>Your Bookings</h2>
             {bookings.length > 0 ? (
                 bookings.map((booking) => (
@@ -466,11 +469,13 @@ const Booking = ({ touristId, wallet }) => {
                             Cancel Booking
                         </button>
                         )}
+                      
                     </div>
                 ))
             ) : (
                 <p>No bookings yet.</p>
             )}
+            </div>
         </div>
     );
 };

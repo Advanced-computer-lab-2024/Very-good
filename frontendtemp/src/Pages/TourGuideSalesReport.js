@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/global.css"; // Reuse the existing styles
 import { getItinerariesWithTourGuideId } from "../Services/tourGuideServices";
-
+import styles from '../styles/SellerPage.module.css';
 const TourGuideSalesReport = ({ id, onBack }) => {
   const [itineraries, setItineraries] = useState([]); // State to store itineraries
   const [filteredItineraries, setFilteredItineraries] = useState([]); // State for filtered itineraries
@@ -9,6 +9,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
   const [error, setError] = useState(null); // State for error handling
   const [filterDate, setFilterDate] = useState(""); // Date filter
   const [filterMonth, setFilterMonth] = useState(""); // Month filter
+
 
   useEffect(() => {
     const fetchSalesReport = async () => {
@@ -120,10 +121,10 @@ const TourGuideSalesReport = ({ id, onBack }) => {
 
   return (
     <div className="revenue-page">
-      <div className="header">Tour Guide Sales Report</div>
+      <div className={styles.header}>Tour Guide Sales Report</div>
 
       {/* Filters Section */}
-      <div className="filters">
+      <div className={styles['category-buttons']}>
         <label>
           Filter by Date:
           <input
@@ -156,7 +157,7 @@ const TourGuideSalesReport = ({ id, onBack }) => {
         </button>
       </div>
 
-      <div className="footer">Powered by Very Good App</div>
+      <div className={styles.footer}>Powered by Very Good App</div>
     </div>
   );
 };

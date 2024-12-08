@@ -6,6 +6,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import PaymentForm from '../Components/PaymentForm'; // Import the PaymentForm component
 import axios from 'axios';
+import styles from '../styles/SellerPage.module.css'; 
 
 
 const stripePromise = loadStripe('pk_test_51QP6GEIjdL7iHsR6Zjy5EB8ixOlCfL2PnqICOkaAorgK8zFYvpnsDeHCZSx78V0uBCIaZ8uvdtVbw2FYPCbKxWMx00qSClGNRP'); // Replace with your Stripe publishable key
@@ -151,13 +152,14 @@ const CheckOutComponent = () => {
 
   return (
     <div className="container">
-      <div className="header">
+       <button onClick={() => navigate('/tourist')}>Back to Home</button> 
+      <div className={styles.header}>
         <h2>Checkout Page</h2>
       </div>
 
-      <div className="form-container">
-        <div className="profile">
-          <div className="profile-info">
+      <div className="form-container" style={{margin : '0 auto'}}>
+        <div className="profile" >
+          <div className="profile-info" >
             <label htmlFor="address">Select Address</label>
             <select
               id="address"
@@ -238,15 +240,15 @@ const CheckOutComponent = () => {
         )}
       </div>
 
-      <div className="footer">
+      <div className={styles.footer}>
         <h3>{`Total Price: $${totalPrice}`}</h3> {/* Display total price */}
         {promoCodePercentage > 0 && (
           <h3>{`Discounted Price: $${calculateDiscountedPrice(totalPrice, promoCodePercentage).toFixed(2)}`}</h3> 
         )}
-        <button className="btn" onClick={handleViewCart}>
+        <button className={styles.button} onClick={handleViewCart}>
           View Cart
         </button>
-        <button className="btn" onClick={handleCheckOutOrder}>
+        <button className={styles.button} onClick={handleCheckOutOrder}>
           Check Out Order
         </button>
       </div>

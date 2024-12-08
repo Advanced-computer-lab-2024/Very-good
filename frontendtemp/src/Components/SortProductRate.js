@@ -55,7 +55,7 @@ const ProductSort = () => {
     
     return (
         <div className={styles["category-buttons"]}>
-             <h2>Sorted by Rating </h2>
+             {/* <h2>Sorted by Rating </h2> */}
             
             {/* Toggle Button: Show/Hide Products */}
             <button onClick={toggleMappings} className={styles["button"]}>

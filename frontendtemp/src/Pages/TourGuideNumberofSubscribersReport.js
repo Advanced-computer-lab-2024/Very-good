@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/global.css";
 import { getItinerariesWithTourGuideId } from "../Services/tourGuideServices"; // Fetch itineraries
-
+import styles from '../styles/SellerPage.module.css';
 
 const TourGuideItinerariesUsersReport = ({ id, onBack }) => {
   const [itineraries, setItineraries] = useState([]); // List of itineraries
@@ -86,10 +86,10 @@ const TourGuideItinerariesUsersReport = ({ id, onBack }) => {
 
   return (
     <div className="revenue-page">
-      <div className="header">Tour Guide Itineraries</div>
+      <div className={styles.header}>Tour Guide Itineraries</div>
 
       {/* Filters Section */}
-      <div className="filters">
+      <div className={styles['category-buttons']}>
         <label>
           Filter by Month:
           <select
@@ -114,7 +114,7 @@ const TourGuideItinerariesUsersReport = ({ id, onBack }) => {
         </button>
       </div>
 
-      <div className="footer">Powered by Very Good App</div>
+      <div className={styles.footer}>Powered by Very Good App</div>
     </div>
   );
 };

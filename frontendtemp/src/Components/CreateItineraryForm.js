@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createItinerary } from '../Services/itineraryServices'; // Adjust the import path as needed
 import axios from 'axios';
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const CreateItineraryForm = ({ onClose, tourGuideId }) => {
     const [newItinerary, setNewItinerary] = useState({
         title: '',
@@ -170,7 +170,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
     };
 
     return (
-        <div className="itinerary-card">
+        <div className={styles['category-buttons']}>
             {/* Form fields */}
             <input type="text" name="title" value={newItinerary.title} onChange={handleInputChange} placeholder="Itinerary Title" required />
             <textarea name="description" value={newItinerary.description} onChange={handleInputChange} placeholder="Itinerary Description" />
@@ -291,7 +291,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                         />
                     </div>
                 ))}
-                <button onClick={handleAddActivity}>Add Activity</button>
+                <button onClick={handleAddActivity}className={styles['button']}>Add Activity</button>
             </div>
 
             {/* Locations to visit */}
@@ -345,7 +345,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                         />
                     </div>
                 ))}
-                <button onClick={handleAddLocation}>Add Location</button>
+                <button onClick={handleAddLocation} className={styles['button']}>Add Location</button>
             </div>
 
             {/* Available Dates */}
@@ -364,7 +364,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                         />
                     </div>
                 ))}
-                <button onClick={handleAddAvailableDate}>Add Available Date</button>
+                <button onClick={handleAddAvailableDate} className={styles['button']}>Add Available Date</button>
             </div>
 
             {/* Available Times */}
@@ -383,7 +383,7 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                         />
                     </div>
                 ))}
-                <button onClick={handleAddAvailableTime}>Add Available Time</button>
+                <button onClick={handleAddAvailableTime} className={styles['button']}>Add Available Time</button>
             </div>
 
             <label>
@@ -424,8 +424,8 @@ const CreateItineraryForm = ({ onClose, tourGuideId }) => {
                 )}
             </div>
 
-            <button onClick={handleSaveClick}>Save Itinerary</button>
-            <button onClick={onClose}>Close</button>
+            <button onClick={handleSaveClick} className={styles['button']}>Save Itinerary</button>
+            <button onClick={onClose} className={styles['button']} >Close</button>
         </div>
     );
 };

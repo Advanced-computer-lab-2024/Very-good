@@ -3,7 +3,7 @@ import "../styles/global.css"; // Replace with your actual stylesheet filename
 import { fetchAllActivities } from "../Services/activityServices";
 import { fetchAllItineraries } from "../Services/itineraryServices";
 import { fetchProductsNoID } from "../Services/productServices";
-
+import styles from '../styles/SellerPage.module.css'; 
 const RevenuePage = () => {
   const [activities, setActivities] = useState([]); // Fetched activities
   const [itineraries, setItineraries] = useState([]); // Fetched itineraries
@@ -206,10 +206,10 @@ const RevenuePage = () => {
 
   return (
     <div className="revenue-page">
-      <div className="header">Revenue Overview</div>
+      <div className={styles.header}>Revenue Overview</div>
 
       {/* Filters Section */}
-      <div className="filters">
+      <div className={styles['category-buttons']}>
         <label>
           Filter by Date:
           <input
@@ -236,8 +236,8 @@ const RevenuePage = () => {
         {renderPartition("Itineraries", getFilteredData(itineraries, "itineraries"), "itineraries")}
         {renderPartition("Gift Shop Sales", getFilteredData(products))}
       </div>
-
-      <div className="footer">تحيات فيري جوود اب</div>
+      <button onClick={() => window.location.reload()}>Back </button>
+      <div className={styles.footer}>Powered  by Very Good app</div>
     </div>
   );
 };

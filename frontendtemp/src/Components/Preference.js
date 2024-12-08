@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchMuseums } from '../Services/museumServices';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
 const PreferenceChoose = () => {
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
@@ -210,20 +211,20 @@ const PreferenceChoose = () => {
 
     const ResultPer = () => {
         return (
-            <div>
+            <div >
                 {savedPre.length > 0 ? (
                     <div>
                         <h4>We suggest you look into those based on your preference:</h4>
-                        <ul>
+                        <ul >
                             {savedPre.map((preference, index) => {
                                 const results = filterResult2(preference); // Get filtered results based on preference
                                 return (
-                                    <li key={index}>
+                                    <li key={index}  className='activity-card'>
                                         <strong><em>{preference.replace(/-/g, " ")}</em></strong>
-                                        <ul>
+                                        <ul >
                                             {results.filteredActivities && results.filteredActivities.length > 0 ? (
                                                 results.filteredActivities.map((activity, idx) => (
-                                                    <li key={`${index}-${idx}`}>
+                                                    <li key={`${index}-${idx}`}   className='form-container' style={{margin :'0 auto' , marginBottom : '1%'}}>
                                                         <p><strong>Name:</strong> {activity.name}</p>
                                                         <p><strong>Price:</strong> {activity.price}</p>
                                                         <p><strong>Ratings:</strong> {activity.ratings || 'N/A'}</p>
@@ -247,8 +248,11 @@ const PreferenceChoose = () => {
     
     
     return (
-        <div className="container">
+        <div>
+        <div className={styles['category-buttons']}>
+          
             <h2>Please Choose Your Preferences So We Could Help Plan The Perfect Vacation</h2>
+            <div style={{marginLeft :'10% ' , width : '150%'}}>
             <label>Are you interested in:</label><br />
             <label><input type="checkbox" value="family-friendly" onChange={handleCheckboxChange} /> <strong><em>Family-Friendly</em></strong></label><br />
             <label><input type="checkbox" value="nights-out" onChange={handleCheckboxChange} /> <strong><em>Nights Out</em></strong></label><br />
@@ -261,17 +265,19 @@ const PreferenceChoose = () => {
             <label><input type="checkbox" value="shopping" onChange={handleCheckboxChange} /> <strong><em>Shopping</em></strong></label><br />
             <label><input type="checkbox" value="budget-friendly" onChange={handleCheckboxChange} /> <strong><em>Budget Friendly </em></strong></label><br />
             <label><input type="checkbox" value="luxury" onChange={handleCheckboxChange} /> <strong><em>Luxury </em></strong></label><br />
-
-            <button id="show" onClick={toggleMappings}>{buttonText}</button>
-
-            {/* Display saved preferences and results */}
-            {showResults && <ResultPer />}
-              {/* Back button to navigate to the previous page */}
-               <button onClick={() => navigate('/tourist')}>Back to Home</button> 
+            </div>
+            <button id="show" onClick={toggleMappings} className={styles['button']}>{buttonText}</button>
+              {/* Display saved preferences and results */}
+              </div>
+          {showResults && <ResultPer />}
+          {/* Back button to navigate to the previous page */}
+           <button onClick={() => navigate('/tourist')}>Back to Home</button> 
+          
 
 {/* Display saved preferences and results */}
 {/* {showResults && <ResultPer />} */}
         </div>
+        
     );
 };
 

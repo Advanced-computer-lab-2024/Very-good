@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './Ticket.css'; // Ensure you import the CSS file
-
+import styles from '../styles/TouristPage.module.css'; // Import CSS Module
 const Ticket = () => {
   const { state } = useLocation();
   const { offer, formData } = state;
@@ -17,7 +17,7 @@ const Ticket = () => {
   const currency = offer.price.currency;
 
   return (
-    <div className="ticket-container">
+    <div className={styles['category-buttons']}>
       <div className="ticket-header">
         <h2 className="ticket-title">Booking Confirmed!</h2>
       </div>

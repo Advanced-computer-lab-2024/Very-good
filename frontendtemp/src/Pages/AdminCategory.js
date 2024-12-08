@@ -391,16 +391,21 @@ function AdminCategory(sellerId) {
           <button className={styles.button} onClick={() => setSelectedOperation("show-products")}>
             show products
           </button>
-          <button className={styles.button} onClick={() => setSelectedOperation("show-products-rate")}>
+          {/* <button className={styles.button} onClick={() => setSelectedOperation("show-products-rate")}>
             show products sorted by rating
-          </button>
-
+          </button> */}
+          <div style={{marginTop : "-10px" , marginLeft : '20px'} }>  
+         
+          </div>
+          {/* <ProductSort/> */}
         </div>
+        
       )}
+      
       {selectedOperation === "show-products-rate" && (
    <div>
    
-   <ProductSort />
+   {/* <ProductSort /> */}
  </div>
 )}
  {selectedOperation === "create-product" && (
@@ -411,7 +416,7 @@ function AdminCategory(sellerId) {
       {/* Product Form */}
 
       {/* Product Form */}
-      <form className="opening-hours" onSubmit={handleSubmitP}>
+      <form className={styles['category-buttons']} onSubmit={handleSubmitP} style={{margin : '0 auto'}}>
         <label>Name</label>
         <input
           type="text"
@@ -529,8 +534,8 @@ function AdminCategory(sellerId) {
     <button onClick={() => setSelectedOperation(null)}>Back</button>
   </div>
 )}
-
     </div>
+    
   );
 }
 export default AdminCategory;

@@ -4,6 +4,7 @@ import TransportationDisplay from '../Components/TransportationDisplay';
 import { fetchTouristByEmail } from '../RequestSendingMethods';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
+import styles from '../styles/TourGuidePage.module.css'; // Keep your existing global styles
 const BookTransportationPage = () => {
   const location = useLocation();
   const { email } = location.state || {};
@@ -65,7 +66,7 @@ const BookTransportationPage = () => {
       <Navbar/>
       <h1>Available Transportations</h1>
       {!formSubmitted ? (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles['category-buttons']} style={{margin : '0 auto'}}>
           <div>
             <label>Departure Location:</label>
             <input

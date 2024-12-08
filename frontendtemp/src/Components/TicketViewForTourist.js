@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './Ticket.css'; // Ensure you import the CSS file
-
+import { useNavigate } from 'react-router-dom';
 const TicketViewForTourist = (offer) => {
   console.log("offer inside : ", offer)
   const formData = offer.offer.flightInfo.data
@@ -13,13 +13,15 @@ const TicketViewForTourist = (offer) => {
   const segments = flightItinerary.segments;
   const departureSegment = segments[0]; // First segment for departure
   const arrivalSegment = segments[segments.length - 1]; // Last segment for arrival
-
+  const navigate = useNavigate();
   // Price details
   const totalPrice = offer.price.grandTotal;
   const currency = offer.price.currency;
 
   return (
+    <div>
     <div className="ticket-container">
+       
       <div className="ticket-header">
         <h2 className="ticket-title">Booking Confirmed!</h2>
       </div>
@@ -49,6 +51,8 @@ const TicketViewForTourist = (offer) => {
       <div className="ticket-footer">
         <p>Thank you for booking with us!</p>
       </div>
+      </div>
+      <button onClick={() => navigate('/tourist')}>Back to Home</button> 
     </div>
   );
 };

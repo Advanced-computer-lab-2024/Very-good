@@ -300,7 +300,7 @@ const TouristPage = ({email}) => {
           <button onClick={handleCommentClick} className={styles.button2}>Comment</button>
           <button onClick={handleRateClick} className={styles.button2}>Rate</button>
           <button onClick={handleComplaintpageClick} className={styles.button2}>Complaint</button>
-          <button onClick={handleComplaintViewPageClick} className={styles.button2}>View_My_Complaints</button>
+          <button onClick={handleComplaintViewPageClick} className={styles.button2}>View My Complaints</button>
           <button onClick={handleBookingPageClick} className={styles.button2}>Book itineraries/activities</button>
           <button onClick={handleViewBookedFlightsPageClick} className={styles.button2}>View my Booked Flights</button>
           <button onClick={() => handleHotelFlightPageClick(touristId)} className={styles.button2}>Book a Hotel</button>

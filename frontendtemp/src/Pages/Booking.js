@@ -3,6 +3,7 @@ import axios from 'axios';
 import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchItinerariesNoId } from '../Services/itineraryServices';
 import Navbar from '../Components/Navbar';
+import styles from '../styles/TourGuidePage.module.css'; 
 
 const Booking = ({email}) => {
     const [activities, setActivities] = useState([]);
@@ -80,7 +81,7 @@ const Booking = ({email}) => {
     };
     
     return (
-        <form onSubmit={handleSubmit} className='form-container' >
+        <form onSubmit={handleSubmit} className={styles['category-buttons']} >
              <Navbar/>
             <h2>Book an Activity or Itinerary</h2>
 
@@ -139,7 +140,9 @@ const Booking = ({email}) => {
             <button type="submit">Book Now</button>
 
             {message && <p>{message}</p>}
+            
         </form>
+        
     );
 };
 

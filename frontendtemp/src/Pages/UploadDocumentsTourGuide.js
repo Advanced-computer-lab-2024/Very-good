@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/SellerPage.module.css';
 // now here we need to specify the connection between the frontend and the backend 
 const UploadDocumentsTourGuide= ({ onBack,email }) =>  {
   const [idCard, setIdCard] = useState(null); // Holds the uploaded ID card file.
@@ -49,10 +50,10 @@ const UploadDocumentsTourGuide= ({ onBack,email }) =>  {
 };
 
   return (
-    <div>
+    <div >
       <h1>Upload Your Documents</h1>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles['category-buttons']}>
         <div>
           <label>ID Card:</label>
           <input type="file" accept="image/*" onChange={handleIdCardChange} required />
