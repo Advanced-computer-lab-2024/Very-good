@@ -89,6 +89,7 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
       try {
         await addCommentToItinerary(selectedItem.id, touristId, comment);
         console.log(`Comment for ${selectedItem.title || selectedItem.email || selectedItem.activityTitle}:`, comment);
+        alert("Comment added successfully");
       } catch (error) {
         console.error('Error adding comment:', error);
       }
@@ -102,6 +103,7 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
       try {
         await addCommentToActivity(selectedItem.id, touristId, comment);
         console.log(`Comment for ${selectedItem.title || selectedItem.email || selectedItem.activityTitle}:`, comment);
+        alert("Comment added successfully");
       } catch (error) {
         console.error('Error adding comment:', error);
       }
@@ -113,6 +115,7 @@ const CommentPageForTourist = ({ onBackClick, email, touristId }) => {
       try {
         await addCommentToTourGuide(selectedItem.id, touristId, comment);
         console.log(`Comment for ${selectedItem.title || selectedItem.email || selectedItem.activityTitle}:`, comment);
+        alert("Comment added successfully");
       } catch (error) {
         console.error('Error adding comment:', error);
       }

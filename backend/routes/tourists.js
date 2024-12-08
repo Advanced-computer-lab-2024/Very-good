@@ -22,7 +22,7 @@ router.post('/past-activities',getPastBookedActivities)
 router.put('/:userId/book-flight-offer/:offerId', addFlightOfferToTourist);
 router.put('/:userId/book-hotel-offer/:offerId', addHotelOfferToTourist);
 router.post('/purchase', purchaseProductbck);
-router.get('/purchased', getPurchasedProducts);
+router.post('/purchased', getPurchasedProducts);
 router.patch('/rate/', rateProduct);
 router.patch('/rate-tour-guide', rateTourGuide);
 router.patch('/rate-itinerary', rateItinerary);

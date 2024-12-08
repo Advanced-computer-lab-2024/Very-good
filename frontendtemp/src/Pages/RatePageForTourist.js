@@ -35,6 +35,7 @@ const RatePageForTourist = ({ onBackClick, email, touristId }) => {
 
           try {
             await addReviewToProduct(selectedItem._id, touristId, comment);
+            alert('Review added successfully');
           } catch (error) {
             console.error('Error adding review:', error);
           }
