@@ -556,7 +556,7 @@ Before installing, ensure that you have the following installed on your system:
    ```
    ---
 ## API References
-   ### Activities route file
+   ### activities route file
    ```javascript
        
 router.get('/', getActivities); 
@@ -568,21 +568,17 @@ router.get('/search', searchactivity);
 router.get('/:id', getActivityById); 
 // Endpoint to fetch an activity by its ID
 
-// router.get('/:id', getWorkout);
-
 router.post('/', createActivity); 
 // Endpoint to the controller function that creates an activity
 
 router.post('/addComment', addCommentToActivity); 
 // Endpoint to the backend controller function that allows adding a comment to an activity
 
-// router.delete('/:id', deleteWorkout);
-
 router.post('/filterYassin', filterActivitiesyassin); 
 // Endpoint to a backend controller that filters activities based on some categories
 
   ```
-  ### Admin route file
+  ### admin route file
   ```javascript
 
 router.post('/', createAdmin); 
@@ -609,6 +605,68 @@ router.get('/', getAdmins);
 router.get('/getUserStatistics', getUserStatistics); 
 // Endpoint to the backend controller that handles statistics on numbers of users
 
-       
+```
+### advertisers Route File 
+  ```javascript
+router.get('/', getAdvertisers); 
+// Endpoint to the backend controller that handles fetching all advertisers
+
+router.get('/:id/activities', getActivitieswithAdvertiserId); 
+// Endpoint to the backend controller that fetches activities for an advertiser with a specific ID
+
+router.delete('/:id/activities', deleteActivityById); 
+// Endpoint to the backend controller that deletes an activity with a specific ID
+
+router.put('/:id/activities', updateActivityWithId); 
+// Endpoint to the backend controller that updates an activity with a specific ID
+
+router.delete('/:id', deleteAdvertiser); 
+// Endpoint to the backend controller that deletes an advertiser with a specific ID
+
+router.post('/getAdvertiserByEmail', fetchAdvertiserByEmail); 
+// Endpoint to the backend controller that fetches an advertiser by email
+
+router.post('/', createAdvertiser); 
+// Endpoint to the backend controller that handles creating a new advertiser
+
+router.put('/updateAdvertiserByEmail', updateAdvertiserByEmail); 
+// Endpoint to the backend controller that updates an advertiser by email
+
+router.put('/:advertiserId/accepted-terms', updateAcceptedTermsAndConditions); 
+// Endpoint to the backend controller that handles an advertiser accepting terms and conditions
+
+router.post(
+    '/upload/:email', 
+    uploadAdvertiser.fields([
+        { name: 'IdDocument', maxCount: 1 },
+        { name: 'taxationRegistryCard', maxCount: 10 }
+    ]), 
+    uploadDocuments
+); 
+// Endpoint to the middleware and backend controller that handles advertiser document uploads
+
+router.post(
+    '/uploadPhoto/:email', 
+    uploadAdvertiser.single('photo'), 
+    uploadPhoto
+); 
+// Endpoint to the middleware and backend controller that handles advertiser photo uploads
+
+router.post('/acceptadvertisers', acceptAdvertiser); 
+// Endpoint to the backend controller that handles an admin accepting an advertiser
+
+router.post('/rejectadvertisers', rejectadvertiser); 
+// Endpoint to the backend controller that handles an admin rejecting an advertiser
+```
+### bookingRoutes routes file 
+  ```javascript
+router.post('/', bookingController.createBooking);
+ //EndPoint to the backend Controller that handles the act of tourist booking either an event or an itinerary 
+router.patch('/cancel/:bookingId', bookingController.cancelBooking);
+// EndPoint to the backend Controller that handles Cancelling a booking 
+router.get('/:touristId', bookingController.getBookings);
+//EndPoint to the backend Controller that fetches all the booking of the calling tourist
+ ```
+### category routes file 
 
 
