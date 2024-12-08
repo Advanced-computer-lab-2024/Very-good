@@ -1092,6 +1092,6 @@ router.delete('/:id', deleteTransportation);
 ![Did so Correctly](Test1.png)
 
 ### ScreenShot of postman where we test the API route post http://localhost:4000/api/products/ , that should return a success message in the response body (creating a product , takes a json body )
-![Did so Correctly](Test1.png)
+![Did so Correctly](test2.png)
 
 
