@@ -1098,16 +1098,23 @@ router.delete('/:id', deleteTransportation);
 
 ## How to Use
 After being done with the Installation steps , we discussed earlier 
-### Add a .env file in the very-good/backend folder that should contain the link to the database and the port on which you want to run the backend on
+### 1- Add a .env file in the very-good/backend folder that should contain the following info :
+   ```bash
+   MONGO_URI=your-mongodb-uri
+   JWT_SECRET=your-jwt-secret
+   STRIPE_SECRET_KEY=your-stripe-secret-key
+   EMAIL_USER=maranmalak@gmail.com
+   EMAIL_PASS="your password"
+   ```
 
-### Open two new terminals 
+### 2- Open two new terminals 
     in the first one write the following Commands
-    ```javascript
+```bash
     cd backend
     nodemon server.js
     ```
     in the second one write the following Commands 
-    ```javascript
+```bash
     cd frontendtemp
     npm start 
     ```
