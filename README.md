@@ -582,6 +582,33 @@ router.post('/filterYassin', filterActivitiesyassin);
 // Endpoint to a backend controller that filters activities based on some categories
 
   ```
+  ### Admin route file
+  ```javascript
 
+router.post('/', createAdmin); 
+// Endpoint to the backend controller that creates a new admin
+
+router.get('/getadmintag', getTags); 
+// Endpoint to the backend controller that gets all tags
+
+router.post('/createadmintag', createTag); 
+// Endpoint to the backend controller that creates a new tag
+
+router.patch('/updateadmintag/:id', updateTag); 
+// Endpoint to the backend controller that updates an existing tag by ID
+
+router.delete('/deleteadmintag/:id', deleteTag); 
+// Endpoint to the backend controller that deletes a tag by ID
+
+router.put('/itinerary/:itineraryId/flag', flagItinerary); 
+// Endpoint to the backend controller that handles flagging/unflagging an itinerary
+
+router.get('/', getAdmins); 
+// Endpoint to the backend controller that fetches all admins
+
+router.get('/getUserStatistics', getUserStatistics); 
+// Endpoint to the backend controller that handles statistics on numbers of users
+
+       
 
 
