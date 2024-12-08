@@ -770,6 +770,9 @@ router.get('/search', searchforHP);
 ```
 ### stripeRoutes routes file 
 ```javascript
+
+router.post('/create-payment-intent', createPaymentIntent);
+//EndPoint to the backend Controller that creats a payement intent
 ```
 ### tags routes file 
 ```javascript
