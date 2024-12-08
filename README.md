@@ -1089,6 +1089,6 @@ router.delete('/:id', deleteTransportation);
 ```
 ## Tests
 ### ScreenShot of psotman where we test the API route http://localhost:4000/api/products/ , that should return an instance of all products 
-![Did so Correctly](Screenshot 2024-12-08 205723.png)
+![Did so Correctly](Test1.png)
 
 
