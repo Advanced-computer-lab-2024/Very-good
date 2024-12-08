@@ -761,6 +761,40 @@ router.get('/search', searchforHP);
 ```
 ### products routes file 
 ```javascript
+something the controller uses
+
+const router = express.Router();
+router.post('/uploadPhoto/:id', 
+    uploadProduct.single('photo'), 
+    uploadPhoto 
+);
+//EndPoint to the middleware and the backend Controller that handles adding a photo to a specific product that is specified by the id sent as a parameter 
+router.get('/fetchproductNameandIDbyID/:productId',getProductNameById)
+//EndPoint to the backend Controller that handles fetching a specific products name , specified by the id sent as a parameter
+router.get('/', getProducts);
+//EndPoint to the backend Controller that handles fetching all instances of products
+router.get('/available', getavailableProducts);
+//EndPoint to the backend Controller that handles fetching all availiable instances of products
+router.get('/FetchTheEntireProductById/:productId',getfullproductbyid);
+//EndPoint to the backend Controller that handles fetching a specific instance of a product , specified by the id sent as a parameter
+router.patch('/:id/archive', archiveProduct);
+//EndPoint to the backend Controller that handles archiving a specific product , specified by the product id sent as a parameter
+router.patch('/:id/unarchive', unarchiveProduct);
+//EndPoint to the backend Controller that handles unarchiving a specific product , specified by the product id sent as a parameter
+router.post('/review',addReviewToProduct)
+//EndPoint to the backend Controller that handles adding a review to a specific product , the id is sent in the request body
+router.delete('/:sellerId/products', deleteProductsBySeller);
+//EndPoint to the backend Controller that handles deleting a specific product , specified by the seller id of the seller that created said product
+
+router.post('/', createProduct);
+//EndPoint to the backend Controller that handles creating an instance of a product
+router.get('/search', searchbyname);
+//EndPoint to the backend Controller that handles searching for a product by its name 
+
+router.patch('/:sellerId/products/:productId', putProducts);  // Update product route
+//EndPoint to the backend Controller that handles updating a specific product , specified by product id and seller id sent as parameters
+router.get('/filter', filterProductsByPrice);
+//EndPoint to the backend Controller that handles filtering instances of products , categories sent thro the request body
 ```
 ### promoCodes routes file 
 ```javascript
