@@ -1114,15 +1114,18 @@ After being done with the Installation steps , we discussed earlier
     cd frontendtemp
     npm start    
     
-### Contribute 
-#### The app is far from perfect and would indeed benefit from the expertise of others , All you need to do to contribute in the development of this app  is to follow the next simple steps :-
-##### 1- Clone the repositry 
-##### 2- Create a new branch (git checkout -b my-new-branch)
-##### 3- Make the modifications you wish to make 
-##### 4- stage the changes 
-##### 5- commit with a message  (git commit -am 'Add some feature')
-##### 6- push onto your created branch 
+## Contribute 
+### The app is far from perfect and would indeed benefit from the expertise of others , All you need to do to contribute in the development of this app  is to follow the next simple steps :-
+#### 1- Clone the repositry 
+#### 2- Create a new branch (git checkout -b my-new-branch)
+#### 3- Make the modifications you wish to make 
+#### 4- stage the changes 
+#### 5- commit with a message  (git commit -am 'Add some feature')
+#### 6- push onto your created branch 
 
-### Credits 
+### Credits
+Obviously us as a team could have never been able to reach this point in the development of this app if it wasnt for our great staff of TAs
+## Youtube Videos
+[![For Stripe](https://img.youtube.com/vi/9N9zfiqRqjU/0.jpg)](https://www.youtube.com/watch?v=9N9zfiqRqjU)
 
     
