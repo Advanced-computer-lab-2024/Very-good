@@ -31,7 +31,8 @@ Travel planning should be simple, intuitive, and enjoyable. **Very Good Travel A
 
 ## Build Status
 
-This project is currently under development and is not suitable for production use.  
+This project is currently under development and is not suitable for production use,
+it is however built successfully
 
 ### Current Issues:
 - **Navigation Challenges**:  
@@ -57,8 +58,24 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 ## Screenshots
 
-![Homepage Screenshot](screenshots/homepage.png)  
-*Caption: A view of the homepage with featured destinations.*  
+![Homepage Screenshot](FirstScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SecondScreenShot.jpeg)  
+ A view of the homepage with featured destinations.* 
+![Homepage Screenshot](ThirdScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](FourthScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](FifthScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SixthScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SeventhScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](EighthScreenShot.jpeg)  
+* A view of the homepage with featured destinations.* 
+![Homepage Screenshot](NinthScreenShot.jpeg)  
+
 
 ---
 
@@ -227,9 +244,6 @@ The website offers the following features for Tourists:
   - Used an itinerary.
   - Attended an activity.
 •⁠  ⁠Filter the total number of tourist reports by month.
-
-### Itinerary Management
-•⁠  ⁠View a list of all created Itineraris
 
 ## For Advertiser :
 
@@ -715,6 +729,15 @@ router.get('/', getAllFlightInfo);
 router.post('/', createFlightInfo); 
 // Endpoint to the backend controller that handles the creation of new flight information
 ```
+### flightOffer routes file
+```javascript
+router.get('/:id',getFlightOfferById);
+//EndPoint to the backend Controller that handles fetching a specific instance of the flightoffer by id passed as parameter
+router.get('/', getAllFlightOffers);
+//EndPoint to the backend Controller that handles fetching all instances of flightoffers
+router.post('/', createFlightOffer);
+//EndPoint to the backend Controller that handles creating
+```
 ### historicalPlaces routes file 
 ```javascript
 router.get('/', getHistoricalPlaces); 
@@ -743,27 +766,132 @@ router.get('/search', searchforHP);
 ```
 ### hotelInfos routes file 
 ```javascript
+
+router.get('/:id',getHotelInfoByOfferId);
+//EndPoint to the backend Controller that handles fetching a specific Hotel  by id passed as a parameter 
+router.get('/', getAllHotelInfo);
+//EndPoint to the backend Controller that handles fetching all instances of Hotels info
+router.post('/', createHotelInfo);
+//EndPoint to the backend Controller that handles creating an instance of a hotel info , with the data being sent in the request body 
 ```
 ### hotelOffers routes file 
 ```javascript
+
+router.get('/:id',getHotelOfferById);
+//EndPoint to the backend Controller that handles fetching a specific Hotel offer by id passed as a parameter 
+router.get('/', getAllHotelOffers);
+//EndPoint to the backend Controller that handles fetching all instances of HotelOffers
+router.post('/', createHotelOffer);
+//EndPoint to the backend Controller that handles creating a hotel offer with the data being sent in the request body
 ```
 ### itineraries routes file 
 ```javascript
+
+router.get('/', getItineraries)
+//EndPoint to the backend Controller that handles Fetching all instances of the itineraries
+router.get('/search', searchforitinerary)
+//EndPoint to the backend Controller that handles searching for a specific itineary , where the data is sent in the request body 
+router.get('/:id', getItineraryByID)
+//EndPoint to the back Controller that handles fetching a specific itinerary , specified by the id passed as a parameter 
+router.post('/', createItinerary)
+//EndPoint to the backend Controller that handles creating an instance of an itinerary with the data sent in the rq body
+router.patch('/:id/status', itinerary_status)
+//EndPoint to the backend Controller that handles setting the status of an itineray , specifed by the id sent as a parameter
+router.post('/addComment',addCommentToItinerary);
+//EndPoint to the backend Controller that handles adding a comment to an itinerary , specifed by the id sent in the request body
+router.post('/filter', filterItinerariesYassin) 
+//EndPoint to the backend Controller that handles filtering itineraries , with the data specified in the req body
+router.patch('/:id/flag', flagItinerary); 
+//EndPoint to the backend Controller that handles , flaging a specific itinerary specified by the id sent as a parameter
 ```
 ### login routes file 
 ```javascript
+
+router.post("/", loginUser); 
+//EndPoint to the backend Controller that handles , the act of login , with the parameters passed in the request body 
+router.post("/forgetPassword", forgotPasswordHandler);
+//EndPoint to the backend Controller that handles , the act of user forget password , with the parameters passed in the request body 
+router.post("/verifyOTP", verifyOTPHandler);
+//EndPoint to the backend Controller that handles , verification, with the parameters passed in the request body 
+router.post("/resetPassword", resetPasswordHandler);
+//EndPoint to the backend Controller that handles , reseting the password, with the parameters passed in the request body 
 ```
 ### notifications routes file 
 ```javascript
+
+router.post('/', notificationController.createNotification);
+//EndPoint to the backend Controller , that handles creating a new instance of a notification
+router.get('/:targetType/:targetId', notificationController.getNotifications);
+//EndPoint to the backend Controller , that handles fetching a specific instance of a notfication specified by the id passed as a parameter 
+router.patch('/:id', notificationController.markAsRead);
+//EndPoint to the backend Controller , that handles marking a specific instance of a notification as read , specified by the id passed as a parameter 
+router.delete('/:id', notificationController.deleteNotification);
+//EndPoint to the backend Controller , that handles deleting a specific instance of a notifications , specified by the id passed as a parameter
 ```
 ### orders routes file
 ```javascript
+
+router.post('/', orderController.createOrder);
+//EndPoint to the backend Controller that handles creating an instance of an order
+router.get('/', orderController.getAllOrders);
+//EndPoint to the backend Controller that handles retrieving all instances of orders 
+router.get('/:orderId', orderController.getOrderById);
+//EndPoint to the backend Controller that fetches a specific order , specifed by the id passed as a paarameter 
+router.patch('/:orderId', orderController.updateOrderStatus);
+//EndPoint to the backend Controller that updates a specific order , specified by the id passed as a parameter
+router.delete('/:orderId', orderController.deleteOrder);
+//EndPoint to the backend Controller that deletes a specific order , specified by the id passed as a parameter
 ```
 ### products routes file 
 ```javascript
+something the controller uses
+
+const router = express.Router();
+router.post('/uploadPhoto/:id', 
+    uploadProduct.single('photo'), 
+    uploadPhoto 
+);
+//EndPoint to the middleware and the backend Controller that handles adding a photo to a specific product that is specified by the id sent as a parameter 
+router.get('/fetchproductNameandIDbyID/:productId',getProductNameById)
+//EndPoint to the backend Controller that handles fetching a specific products name , specified by the id sent as a parameter
+router.get('/', getProducts);
+//EndPoint to the backend Controller that handles fetching all instances of products
+router.get('/available', getavailableProducts);
+//EndPoint to the backend Controller that handles fetching all availiable instances of products
+router.get('/FetchTheEntireProductById/:productId',getfullproductbyid);
+//EndPoint to the backend Controller that handles fetching a specific instance of a product , specified by the id sent as a parameter
+router.patch('/:id/archive', archiveProduct);
+//EndPoint to the backend Controller that handles archiving a specific product , specified by the product id sent as a parameter
+router.patch('/:id/unarchive', unarchiveProduct);
+//EndPoint to the backend Controller that handles unarchiving a specific product , specified by the product id sent as a parameter
+router.post('/review',addReviewToProduct)
+//EndPoint to the backend Controller that handles adding a review to a specific product , the id is sent in the request body
+router.delete('/:sellerId/products', deleteProductsBySeller);
+//EndPoint to the backend Controller that handles deleting a specific product , specified by the seller id of the seller that created said product
+
+router.post('/', createProduct);
+//EndPoint to the backend Controller that handles creating an instance of a product
+router.get('/search', searchbyname);
+//EndPoint to the backend Controller that handles searching for a product by its name 
+
+router.patch('/:sellerId/products/:productId', putProducts);  // Update product route
+//EndPoint to the backend Controller that handles updating a specific product , specified by product id and seller id sent as parameters
+router.get('/filter', filterProductsByPrice);
+//EndPoint to the backend Controller that handles filtering instances of products , categories sent thro the request body
 ```
 ### promoCodes routes file 
 ```javascript
+
+router.post('/', promoCodeController.createPromoCode);
+//EndPoint to the backend Controller , that handles creating a new instance of a promoCode
+router.get('/', promoCodeController.getAllPromoCodes);
+//EndPoint to the backend Controller , that handles fetching all instances of a promoCode
+router.get('/:promoCodeId', promoCodeController.getPromoCodeById);
+//EndPoint to the backend Controller , that handles fetching a specific promoCode , specified by the id sent as a parameter
+router.patch('/:promoCodeId', promoCodeController.updatePromoCode);
+//EndPoint to the backend Controller , that handles updating a specific promoCode , specified by the id sent as a parameter
+router.delete('/:promoCodeId', promoCodeController.deletePromoCode);
+//EndPoint to the backend Controller , that handles deleting a specific promoCode , specified by the id sent as a parameter
 ```
 ### sellers routes file
 ```javascript
@@ -875,6 +1003,16 @@ router.put('/updateTourGuideByEmail', updateTourGuideByEmail);
 ```
 ### tourismGoverners routes file 
 ```javascript
+
+router.get('/', getTourismGoverners);
+//EndPoint to the backend Controller that handles fetching all instances of tourismGoverners 
+router.post('/', createTourismGoverner);
+//EndPoint to the backend Controller that creats an instance of tourismGoverner
+router.put('/updateByEmailTourism', updateRecordsTourism);
+//EndPoint to the backend Controller that handles updating a specific tourism governer instance , specified by an email sent in the request body 
+router.delete('/:id', deleteTourismGoverner);
+//EndPoint to the backend Controller that handles deleting a specific tourism governer , specified by the id passed as a parameter  
+
 ```
 ### tourists routes file 
 ```javascript
@@ -972,6 +1110,59 @@ router.put('/:id', editTransportation);
 router.delete('/:id', deleteTransportation); 
 //EndPoint to the backend Controller that handles deleting a transportation whos id corresponds to the one sent as a parameter
 ```
+## Tests
+### ScreenShot of postman where we test the API route get http://localhost:4000/api/products/ , that should return an instance of all products (fetching all products , takes no parameters and no body )
+![Did so Correctly](Test1.png)
 
+### ScreenShot of postman where we test the API route post http://localhost:4000/api/products/ , that should return a success message in the response body (creating a product , takes a json body )
+![Did so Correctly](test2.png)
+### ScreenShot of postman where we test the API route patch http://localhost:4000/api/products/672d71cb7b921bfd1bbe84de/archive ,that should return the product and a success message after being Archived (archiving a product , takes the product id as a parameter in the link )
+![Did so Correctly](test3.png)
 
+## How to Use
+After being done with the Installation steps , we discussed earlier 
+### 1- Add a .env file in the very-good/backend folder that should contain the following info :
+   MONGO_URI=your-mongodb-uri
+   JWT_SECRET=your-jwt-secret
+   STRIPE_SECRET_KEY=your-stripe-secret-key
+   EMAIL_USER=maranmalak@gmail.com
+   EMAIL_PASS="your password"
 
+### 2- Open two new terminals 
+   #### in the first one write the following Commands
+    cd backend
+    nodemon server.js
+
+   #### in the second one write the following Commands 
+    cd frontendtemp
+    npm start    
+    
+## Contribute 
+### The app is far from perfect and would indeed benefit from the expertise of others , All you need to do to contribute in the development of this app  is to follow the next simple steps :-
+#### 1- Clone the repositry 
+#### 2- Create a new branch (git checkout -b my-new-branch)
+#### 3- Make the modifications you wish to make 
+#### 4- stage the changes 
+#### 5- commit with a message  (git commit -am 'Add some feature')
+#### 6- push onto your created branch 
+
+### Credits
+Obviously us as a team could have never been able to reach this point in the development of this app if it wasnt for our great staff of TAs
+## Youtube Videos
+### for learning how to deal with Stripe
+[![For Stripe](https://img.youtube.com/vi/9N9zfiqRqjU/0.jpg)](https://www.youtube.com/watch?v=9N9zfiqRqjU)
+### Getting introduced to a mern stack react project 
+[![hi](https://img.youtube.com/vi/O3BUHwfHf84/0.jpg)](https://www.youtube.com/watch?v=O3BUHwfHf84)
+### Amadeus , the Api used for booking 
+[![hi](https://img.youtube.com/vi/Lyy26SlgBZU/0.jpg)](https://www.youtube.com/watch?v=Lyy26SlgBZU)
+  #### Documentation 
+  [Amadeus](https://servicehub.amadeus.com/doc)
+
+## License 
+### Csv File Containing All licenses
+ The license report for all dependencies in the frontendtemp folder can be found [here](licensesForFrontEnd.csv).
+
+  
+ The license report for all dependencies in the frontendtemp folder can be found [here](licensesforBackend.csv).
+
+    
