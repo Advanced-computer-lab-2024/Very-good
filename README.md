@@ -31,7 +31,8 @@ Travel planning should be simple, intuitive, and enjoyable. **Very Good Travel A
 
 ## Build Status
 
-This project is currently under development and is not suitable for production use.  
+This project is currently under development and is not suitable for production use,
+it is howwever built successfully
 
 ### Current Issues:
 - **Navigation Challenges**:  
@@ -1106,7 +1107,7 @@ router.delete('/:id', deleteTransportation);
 
 ### ScreenShot of postman where we test the API route post http://localhost:4000/api/products/ , that should return a success message in the response body (creating a product , takes a json body )
 ![Did so Correctly](test2.png)
-### ScreenShot of postman where we test the API route patch http://localhost:4000/api/products/672d71cb7b921bfd1bbe84de/archive,that should return the product and a success message after being Archived (archiving a product , takes the product id as a parameter in the link )
+### ScreenShot of postman where we test the API route patch http://localhost:4000/api/products/672d71cb7b921bfd1bbe84de/archive ,that should return the product and a success message after being Archived (archiving a product , takes the product id as a parameter in the link )
 ![Did so Correctly](test3.png)
 
 ## How to Use
