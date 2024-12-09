@@ -42,6 +42,7 @@ const UploadDocumentsTourGuide= ({ onBack,email }) =>  {
                 'Content-Type': 'multipart/form-data'
             }
         });
+        alert('Upload successful');
         console.log('Upload successful:', response.data);
     } catch (error) {
        // console.error('Upload failed:', error);

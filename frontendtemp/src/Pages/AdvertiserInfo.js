@@ -82,11 +82,10 @@ const AdvertiserInfo = ({ email, onBack,id }) => {
 
         // Assuming 'sellerData' contains the email or ID of the seller you want to update
         const response = await updateAdvertiserByEmail(advertiserData.email,  { updatedData: editedData });  // or sellerData._id if you're using ID instead of email
-        
+        alert("Advertiser has been marked for deletion.");
         // Check if the update was successful
         if (response.success) {
             console.log("Seller marked for deletion:", response);
-            alert("Seller has been marked for deletion.");
             // Handle success (e.g., update UI or alert user)
         } else {
             console.error("Failed to mark seller for deletion:", response.message);
@@ -207,7 +206,7 @@ const handleBackFromNumbersReport =()=>{
             )}
           </div>
           {isEditing ? (
-    <button onClick={() => handleDeleteReq()} className={styles.button6}>
+    <button className={styles.button} onClick={() => handleDeleteReq()} >
       Send delete Request
     </button>
   ) : null}
@@ -217,7 +216,6 @@ const handleBackFromNumbersReport =()=>{
 
           
        
-         <button onClick={()=>handleDeleteReq()}> send delete request</button> 
         
         </div>
         <button className={styles.button} onClick={onBack}>

@@ -116,11 +116,10 @@ const SellerPage = ({ email }) => {
 
         // Assuming 'sellerData' contains the email or ID of the seller you want to update
         const response = await updateSellerByEmail(sellerData.email, editedData);  // or sellerData._id if you're using ID instead of email
-        
+        alert("Seller has been marked for deletion.");
         // Check if the update was successful
         if (response.success) {
             console.log("Seller marked for deletion:", response);
-            alert("Seller has been marked for deletion.");
             // Handle success (e.g., update UI or alert user)
         } else {
             console.error("Failed to mark seller for deletion:", response.message);
@@ -147,6 +146,7 @@ const SellerPage = ({ email }) => {
       return
     }
   }
+
     setIsEditing(!isEditing);
     if (isEditing) {
       if (editedData.email !== oldEmail) {

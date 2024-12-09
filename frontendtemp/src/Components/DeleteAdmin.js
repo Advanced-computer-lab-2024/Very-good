@@ -141,6 +141,10 @@ const Deletion = () => {
                 alert(`Cannot delete Tour Guide with ${itineraryCount} active itineraries.`);
                 return;
             }
+            else if (entity.role === 'Seller' && productCount > 0) {
+                alert(`Cannot delete Seller with ${productCount} active products.`);
+                return;
+            }
     
             // Delete from backend based on role
             if (entity.role === 'Advertiser') {
