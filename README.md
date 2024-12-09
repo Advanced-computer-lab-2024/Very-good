@@ -58,7 +58,23 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 ## Screenshots
 
 ![Homepage Screenshot](FirstScreenShot.jpeg)  
-*Caption: A view of the homepage with featured destinations.*  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SecondScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](ThirdScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](FourthScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](FifthScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SixthScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](SeventhScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](EighthScreenShot.jpeg)  
+*Caption: A view of the homepage with featured destinations.* 
+![Homepage Screenshot](NinthScreenShot.jpeg)  
+
 
 ---
 
