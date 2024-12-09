@@ -1140,6 +1140,6 @@ Obviously us as a team could have never been able to reach this point in the dev
  The license report for all dependencies in the frontendtemp folder can be found [here](licensesForFrontEnd.csv).
 
   
- The license report for all dependencies in the frontendtemp folder can be found [here](licensesforBackEnd.csv).
+ The license report for all dependencies in the frontendtemp folder can be found [here](licensesforBackend.csv).
 
     
