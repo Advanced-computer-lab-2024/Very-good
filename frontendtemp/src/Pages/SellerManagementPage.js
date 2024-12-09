@@ -38,7 +38,7 @@ const SellerManagementPage = ({ sellerId }) => {
         };
 
         getSellerProducts();
-    },);
+    },[]);
 
     // Handle form input changes
     const handleInputChange = (e) => {
@@ -69,6 +69,7 @@ const SellerManagementPage = ({ sellerId }) => {
             if (editMode && currentProductId && currentSellerId) {
                 // Update product if in edit mode
                 await updateProduct(formData.sellerId, currentProductId, { ...formData }); // Pass the productId
+                alert('Product updated successfully.');
                 setProducts((prevProducts) =>
                     prevProducts.map((prod) =>
                         prod._id === currentProductId ? { ...prod, ...formData } : prod // Update the product in state
@@ -77,6 +78,7 @@ const SellerManagementPage = ({ sellerId }) => {
             } else {
                 // Create new product
                 const newProduct = await createProduct(formData); // formData includes sellerId
+                alert('Product created successfully.');
                 setProducts((prevProducts) => {
                     if (!Array.isArray(prevProducts)) {
                         return [newProduct]; // Handle case where prevProducts is not an array
@@ -197,25 +199,6 @@ const SellerManagementPage = ({ sellerId }) => {
                 onChange={handleInputChange}
                 required
                 min="0" // Validation for positive numbers
-            />
-            <label>Rating</label>
-            <input
-                type="number"
-                name="rating"
-                value={formData.rating}
-                onChange={handleInputChange}
-                min="0" 
-                max="5"
-                step="0.1" // Allows decimal values (e.g., 0.0, 1.5, etc.)
-            />
-            <label>sales</label>
-            <input
-                type="number"
-                name="sales"
-                value={formData.sales}
-                onChange={handleInputChange}
-                min="0" 
-                
             />
 
 

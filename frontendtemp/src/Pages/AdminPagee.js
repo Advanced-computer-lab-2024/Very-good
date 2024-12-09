@@ -394,7 +394,7 @@ const AdminPage = ({email}) => {
             <>
            
                     
-                    <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`} style={{margin : '0 auto'}}>
+                    <div className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ''}`} style={{ margin: '0 auto', width: isSidebarOpen ? '250px' : '0' }}>
                     <div className={styles['category-buttons3']}>
                         <h3>Quick Links</h3>
                       

@@ -212,8 +212,8 @@ const SellerPage = ({ email }) => {
           <button onClick={handleProductFilterButtonOnClick} className={styles.button2}>
             Filter Product by Price
           </button> {/* New button with commented action listener */}
-          <button onClick={handleUploadPhoto} className={styles.button2}>Upload_A_Logo</button>
-          <button onClick={handleUploadAproductPicture} className={styles.button2}>UploadProductPicture</button>
+          <button onClick={handleUploadPhoto} className={styles.button2}>Upload A Logo</button>
+          <button onClick={handleUploadAproductPicture} className={styles.button2}>Upload Product Picture</button>
           <button onClick={handleSalesReport} className={styles.button2}>View Products Sales Report</button>
         
         </div>

@@ -60,6 +60,17 @@ const FilterProductByPrice = () => {
                       )}
                   </div>
               )}
+
+                        {product.pictures && product.pictures.length > 0 && (
+                            <div>
+                                <p>Product Image:</p>
+                                <img
+                                    src={product.pictures[0]}
+                                    alt="Product"
+                                    style={{ marginLeft : '27%', maxWidth: '2000px', maxHeight: '200px', objectFit: 'cover' ,}}
+                                />
+                            </div>
+                        )}
           </div>
       );
   };

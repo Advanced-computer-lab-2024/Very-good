@@ -30,6 +30,7 @@ const UploadingALogoAdvertiser = ({ onBack, email }) => {
           'Content-Type': 'multipart/form-data'
         }
       });
+      alert('Photo uploaded successfully.');
       console.log('Upload successful:', response.data);
     } catch (error) {
       setErrorMessage('Upload failed. Please try again.');

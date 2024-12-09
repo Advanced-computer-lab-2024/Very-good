@@ -250,7 +250,7 @@ const handleLogin = async (event) => {
                   {/*<button onClick={() => handleAdminSignIn()}>
                     Sign In as an Admin
                   </button>*/}
-                  <button onClick={() => handleGuest()}>
+                  <button onClick={() => handleGuest()} className={styles['button']}>
                     Continue as a Guest
                   </button>
                   <button onClick={() => handleActionSelection("login")} className={styles['button']}>
