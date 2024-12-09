@@ -32,7 +32,7 @@ Travel planning should be simple, intuitive, and enjoyable. **Very Good Travel A
 ## Build Status
 
 This project is currently under development and is not suitable for production use,
-it is howwever built successfully
+it is however built successfully
 
 ### Current Issues:
 - **Navigation Challenges**:  
