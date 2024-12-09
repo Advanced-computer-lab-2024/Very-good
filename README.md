@@ -729,6 +729,15 @@ router.get('/', getAllFlightInfo);
 router.post('/', createFlightInfo); 
 // Endpoint to the backend controller that handles the creation of new flight information
 ```
+### flightOffer routes file
+```javascript
+router.get('/:id',getFlightOfferById);
+//EndPoint to the backend Controller that handles fetching a specific instance of the flightoffer by id passed as parameter
+router.get('/', getAllFlightOffers);
+//EndPoint to the backend Controller that handles fetching all instances of flightoffers
+router.post('/', createFlightOffer);
+//EndPoint to the backend Controller that handles creating
+```
 ### historicalPlaces routes file 
 ```javascript
 router.get('/', getHistoricalPlaces); 
