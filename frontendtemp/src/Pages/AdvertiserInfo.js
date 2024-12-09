@@ -140,6 +140,18 @@ const handleBackFromNumbersReport =()=>{
           <h2 className={styles.h2i}>Advertiser Profile</h2>
 
           <div className="profile-info">
+          <label >Logo:</label>
+              <div className="seller-logo-container">
+                {advertiserData && advertiserData.logo ? (
+                  <img
+                    src={advertiserData.logo}
+                    alt="advertiser Logo"
+                    style={{ marginLeft : '45%', width: '100px', height: '100px', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <p>Loading logo...</p> // Fallback during data fetch or when logo is unavailable
+                )}
+              </div>
             <label >Name:</label>
             {isEditing ? (
               <input 
@@ -205,7 +217,7 @@ const handleBackFromNumbersReport =()=>{
 
           
        
-        {/* <button onClick={()=>handleDeleteReq()}> send delete request</button> */}
+         <button onClick={()=>handleDeleteReq()}> send delete request</button> 
         
         </div>
         <button className={styles.button} onClick={onBack}>

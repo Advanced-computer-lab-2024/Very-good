@@ -290,6 +290,18 @@ const TourGuideHomePage = ({ email }) => {
           <h2  className={styles.h2}>Your Profile</h2>
           <div className={styles.categoryButtons}>
           <div className="categoryButton">
+          <label >Logo:</label>
+              <div className="seller-logo-container">
+                {tourGuideData && tourGuideData.photo ? (
+                  <img
+                    src={tourGuideData.photo}
+                    alt="tour guide Logo"
+                    style={{ marginLeft : '45%', width: '100px', height: '100px', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <p>Loading logo...</p> // Fallback during data fetch or when logo is unavailable
+                )}
+              </div>
             <label>Name:</label>
             {isEditing ? (
               <input

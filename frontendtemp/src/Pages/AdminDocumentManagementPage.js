@@ -133,7 +133,7 @@ const AdminDocumentManagementPage = ({ onSelect }) => {
         <option value="seller">Seller</option>
         <option value="advertiser">Advertiser</option>
       </select>
-      <div  style={{marginLeft : '-50%'}}>
+      <div  style={{marginLeft : '-15%'}}>
       {tableData.length > 0 && (
         <table className="table" >
           <thead>

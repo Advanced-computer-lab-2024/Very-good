@@ -136,7 +136,8 @@ const TouristPage = ({email}) => {
             alert("tourist has been marked for deletion.");
             // Handle success (e.g., update UI or alert user)
         } else {
-            console.error("Failed to mark tourist for deletion:", response.message);
+          alert("tourist has been marked for deletion.");
+          console.error("Failed to mark tourist for deletion:", response.message);
             // Handle failure (e.g., show error message)
         }
         console.log("resp" ,response)

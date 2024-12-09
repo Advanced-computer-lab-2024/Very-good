@@ -234,25 +234,20 @@ const AdvertiserPage = ({email}) => {
         return <AdvertiserInfo email={email} onBack={handleBackButtonClick} id={advertiserId} />;
     }
 
-    
-    
-//   const r1 =()=>{
-//     console.log("00000000000")
-//     navigate("/");
-    
-//   }
-    // if(!AdvertiserInfo.isAccepted){
-    //     return <NotAccepted onAccept={()=>r1()} />
-    // }
-    // if (AdvertiserInfo.isAccepted &&!termsAccepted) {
-    //   return <TermsAndConditionsModal onAccept={handleAcceptTerms} />;
-    // }
-
     // Otherwise, render the main AdvertiserPage
     return (
         <div className={styles.advertisorPage}>
- 
-
+            {/* Display advertiser logo if it exists */}
+            {advertiserData?.logo && console.log('Advertiser Logo URL:', advertiserData.logo) && (
+                <div className={styles.logoContainer}>
+                    <img 
+                        src={advertiserData.logo} 
+                        alt="Advertiser Logo" 
+                        className={styles.logo} 
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'default-logo.png'; }} // Replace with a default image if there's an error
+                    />
+                </div>
+            )}
  
             <div className={styles.navbar}>
             

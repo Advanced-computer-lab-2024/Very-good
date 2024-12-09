@@ -181,10 +181,10 @@ const GuestPage = () => {
             Filter Historical Places
           </button>
           <button onClick={handleViewUpcomingActivitiesItenariesHistoricalPlaces} className={styles.button2}>
-            View Upcoming Act/Itin/HistorcPlaces
+            View Upcoming Events
           </button>
           <button onClick={handleSignInClick} className={styles.button2}>
-            Sign In
+            Sign Up
           </button>
 
           {/* Sign In Dropdown */}

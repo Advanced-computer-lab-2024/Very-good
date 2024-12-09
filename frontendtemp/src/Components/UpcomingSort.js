@@ -12,7 +12,7 @@ import { useNavigate} from 'react-router-dom';
 
 const ActivityHistoricalList = () => {
     const location = useLocation();
-    const { email } = location.state;
+    const email = location.state?.email || '';
 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [activities, setActivities] = useState([]);
@@ -287,7 +287,9 @@ const ActivityHistoricalList = () => {
             )}
 </div>
 <div className={styles['category-buttons']}>
-            <h1>Paid Activities and Itineraries</h1>
+    <h1>Paid Activities and Itineraries</h1>
+    {email ? (
+        <>
             <button onClick={toggleUpcomingActivitiesPaidFor} className={styles.button} >
                 {showUpcomingActivitiesPaidFor ? "Hide Upcoming Activities Paid For" : "Show Upcoming Activities Paid For"}
             </button>
@@ -352,9 +354,12 @@ const ActivityHistoricalList = () => {
                     )}
                 </>
             )}
-            
-            </div>
-            <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button>
+        </>
+    ) : (
+        <p>Please log in to view your paid activities and itineraries.</p>
+    )}
+</div>
+            {/* <button className={styles.button} onClick={() => navigate("/tourist")}>Back </button> */}
         </div>
     );
 };

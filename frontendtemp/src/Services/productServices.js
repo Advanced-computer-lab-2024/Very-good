@@ -51,6 +51,15 @@ export const updateProduct = async (sellerId, productId, updatedData) => {
     return response.data;
 };
 
+export const updateProductAdmin = async (sellerId, productId, updatedData) => {
+    console.log(sellerId, productId, updatedData)
+    const url = `http://localhost:4000/api/products/${sellerId}/productsByAdmin/${productId}`;
+    console.log('Updating product at:', url);
+
+    const response = await axios.patch(url, updatedData); // Change to PATCH if that is your backend method
+    return response.data;
+};
+
 export const updateProductNoID = async (updateProduct) => {
     const url = `http://localhost:4000/api/products`;
     const response = await axios.put(url, updateProduct); // Assuming your backend uses PUT for updates

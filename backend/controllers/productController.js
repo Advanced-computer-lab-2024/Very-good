@@ -189,6 +189,31 @@ const putProducts = async (req, res) => {
     }
 };
 
+const updateProductByAdmin = async (req, res) => {
+    const { sellerId, productId } = req.params;
+    const updatedData = req.body;
+
+    // Check if stock value is provided and greater than zero
+    if (updatedData.stock && updatedData.stock > 0) {
+        updatedData.isOutOfStock = false;
+    }
+
+    try {
+        const updatedProduct = await Product.findOneAndUpdate(
+            { _id: productId, adminId: sellerId }, // Find by both product ID and admin ID
+            { $set: updatedData }, // Apply the updates
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(updatedProduct); // Send back updated product data
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating product', error });
+    }
+};
 // Filter Products by Price
 const filterProductsByPrice = async (req, res) => {
     try {
@@ -394,4 +419,4 @@ const getfullproductbyid = async (req, res) => {
 
 module.exports = {createProduct, getProducts ,putProducts, getavailableProducts, searchbyname,filterProductsByPrice,deleteProductsBySeller,addReviewToProduct,    
     archiveProduct,
-    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid}
+    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid, updateProductByAdmin}

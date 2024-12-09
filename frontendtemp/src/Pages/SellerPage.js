@@ -202,7 +202,7 @@ const SellerPage = ({ email }) => {
   };
   return (
     <div className={styles.sellerPage}>
- 
+
 
       {/* Sidebar */}
     
@@ -254,6 +254,18 @@ const SellerPage = ({ email }) => {
             <div className={styles['category-buttons3']}>
               <h2 className={styles.h2}>Your Profile</h2>
               <div className="profile-info">
+              <label >Logo:</label>
+              <div className="seller-logo-container">
+                {sellerData && sellerData.logo ? (
+                  <img
+                    src={sellerData.logo}
+                    alt="Seller Logo"
+                    style={{ marginLeft : '45%', width: '100px', height: '100px', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <p>Loading logo...</p> // Fallback during data fetch or when logo is unavailable
+                )}
+              </div>
                 <label >Name:</label>
                 {isEditing ? (
                   <input

@@ -3,6 +3,8 @@ import { fetchActivitiesDate } from '../Services/activityServices';
 import { fetchMuseums } from '../Services/museumServices';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/SellerPage.module.css'; // Keep your existing global styles
+import ActivityDisplayFilterWise from './ActivityDisplayFilterWise'; // Import the new component
+
 const PreferenceChoose = () => {
     const [activities, setActivities] = useState([]);
     const [historicalPlaces, setHistoricalPlaces] = useState([]);
@@ -211,23 +213,21 @@ const PreferenceChoose = () => {
 
     const ResultPer = () => {
         return (
-            <div >
+            <div>
                 {savedPre.length > 0 ? (
                     <div>
                         <h4>We suggest you look into those based on your preference:</h4>
-                        <ul >
+                        <ul>
                             {savedPre.map((preference, index) => {
                                 const results = filterResult2(preference); // Get filtered results based on preference
                                 return (
-                                    <li key={index}  className='activity-card'>
+                                    <li key={index} className='activity-card'>
                                         <strong><em>{preference.replace(/-/g, " ")}</em></strong>
-                                        <ul >
+                                        <ul>
                                             {results.filteredActivities && results.filteredActivities.length > 0 ? (
                                                 results.filteredActivities.map((activity, idx) => (
-                                                    <li key={`${index}-${idx}`}   className='form-container' style={{margin :'0 auto' , marginBottom : '1%'}}>
-                                                        <p><strong>Name:</strong> {activity.name}</p>
-                                                        <p><strong>Price:</strong> {activity.price}</p>
-                                                        <p><strong>Ratings:</strong> {activity.ratings || 'N/A'}</p>
+                                                    <li key={`${index}-${idx}`}>
+                                                        <ActivityDisplayFilterWise activity={activity} />
                                                     </li>
                                                 ))
                                             ) : (
@@ -245,7 +245,7 @@ const PreferenceChoose = () => {
             </div>
         );
     };
-    
+
     
     return (
         <div>

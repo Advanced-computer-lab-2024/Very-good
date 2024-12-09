@@ -7,7 +7,8 @@ const {
     putProducts,
     filterProductsByPrice,deleteProductsBySeller,addReviewToProduct ,
     archiveProduct,
-    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid
+    unarchiveProduct,uploadPhoto,getProductNameById,getfullproductbyid,
+    updateProductByAdmin
 } = require('../controllers/productController');
 const uploadProduct = require('../middlewares/uploadMiddlewareProduct'); // middleware is different from the controller, something the controller uses
 
@@ -30,7 +31,7 @@ router.post('/', createProduct);
 router.get('/search', searchbyname);
 
 router.patch('/:sellerId/products/:productId', putProducts);  // Update product route
-
+router.patch('/:sellerId/productsByAdmin/:productId', updateProductByAdmin);  // Update product route
 // Filter products by price
 router.get('/filter', filterProductsByPrice);
 

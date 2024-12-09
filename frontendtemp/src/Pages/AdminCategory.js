@@ -5,6 +5,7 @@ import {
   createProduct,
   updateProduct,
   fetchProductsNoID,
+  updateProductAdmin,
   archiveProduct,
   unarchiveProduct,
 } from "../Services/productServices";
@@ -224,12 +225,15 @@ function AdminCategory({ sellerId, adminId }) {
         const product = products.find((prod) => prod._id === currentProductId);
           if (product && product.sellerId) {
             formData2.sellerId = product.sellerId;
+            await updateProduct(formData2.sellerId, currentProductId, {
+              ...formData2,
+            });
           } else {
             formData2.sellerId = adminId;
+            await updateProductAdmin(formData2.sellerId, currentProductId, {
+              ...formData2,
+            });
           }
-        await updateProduct(formData2.sellerId, currentProductId, {
-          ...formData2,
-        });
         setProducts((prevProducts) =>
           prevProducts.map((prod) =>
             prod._id === currentProductId ? { ...prod, ...formData2 } : prod
