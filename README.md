@@ -57,7 +57,7 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 
 ## Screenshots
 
-![Homepage Screenshot](screenshots/homepage.png)  
+![Homepage Screenshot](FirstScreenShot.jpeg)  
 *Caption: A view of the homepage with featured destinations.*  
 
 ---
@@ -227,9 +227,6 @@ The website offers the following features for Tourists:
   - Used an itinerary.
   - Attended an activity.
 •⁠  ⁠Filter the total number of tourist reports by month.
-
-### Itinerary Management
-•⁠  ⁠View a list of all created Itineraris
 
 ## For Advertiser :
 
