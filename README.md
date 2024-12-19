@@ -1119,7 +1119,7 @@ router.delete('/:id', deleteTransportation);
 ### ScreenShot of postman where we test the API route patch http://localhost:4000/api/products/672d71cb7b921bfd1bbe84de/archive ,that should return the product and a success message after being Archived (archiving a product , takes the product id as a parameter in the link )
 ![Did so Correctly](test3.png)
 ### Fourth ScreenShot of Postman Testing 
-(FourthPostmanScreenShot.jpeg)
+![Did so Correctly](FourthPostmanScreenShot.jpeg)
 
 ## How to Use
 After being done with the Installation steps , we discussed earlier 
