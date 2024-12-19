@@ -75,6 +75,8 @@ We follow industry best practices using the [ESLint](https://eslint.org/) for li
 ![Homepage Screenshot](EighthScreenShot.jpeg)  
 * A view of the homepage with featured destinations.* 
 ![Homepage Screenshot](NinthScreenShot.jpeg)  
+* A demo video of the website *
+[Watch the video](path-to-your-video-file.mp4)
 
 
 ---
