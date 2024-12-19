@@ -1149,22 +1149,205 @@ router.delete('/:id', deleteTransportation);
 
 
 ## How to Use
-After being done with the Installation steps , we discussed earlier 
-### 1- Add a .env file in the very-good/backend folder that should contain the following info :
-   MONGO_URI=your-mongodb-uri
-   JWT_SECRET=your-jwt-secret
-   STRIPE_SECRET_KEY=your-stripe-secret-key
-   EMAIL_USER=maranmalak@gmail.com
-   EMAIL_PASS="your password"
+## Overview
+This guide explains how to use the system from the perspective of each stakeholder type. Follow the step-by-step instructions to utilize the platform effectively.
 
-### 2- Open two new terminals 
-   #### in the first one write the following Commands
-    cd backend
-    nodemon server.js
+### General Instructions for All Users
 
-   #### in the second one write the following Commands 
-    cd frontendtemp
-    npm start    
+1. **Register and Log In** (Except for Admins and Tourism Governors)
+   - Navigate to the website and click "Sign Up" to create an account.
+   - Select your role (Tourist, Tour Guide, Advertiser, Seller) and fill in the required details.
+   - Log in using your credentials.
+
+2. **Log In Only** (For Admins and Tourism Governors)
+   - Admins and Tourism Governors are added to the system by an Admin.
+   - Use the provided credentials to log in directly.
+
+3. **Forgot Password**
+   - If you forget your password, click "Forgot Password" on the login page.
+   - Enter your registered email to receive password reset instructions.
+
+### Tourists
+
+1. **Navigate the Sidebar**
+   - Use the sidebar to access:
+     - **Comment**: View and add comments to activities or itineraries.
+     - **Rate**: Provide ratings for activities, museums, or itineraries.
+     - **Book a Flight**: Search for and book flights.
+     - **View My Booked Flights**: Access details of your booked flights.
+     - **Book a Transportation**: Search for and book transportation options.
+     - **View My Booked Transportations**: Access details of your booked transportation.
+     - **Book Itineraries/Activities**: Select and book itineraries or activities.
+     - **View My Cart**: Check items saved for later booking or purchase.
+     - **View My Orders**: Access details of products or services purchased.
+
+2. **Browse and Search**
+   - Use the homepage to explore featured activities, museums, and historical places.
+   - Click the search bar or apply filters (e.g., location, price) to refine your search.
+   - Access your itineraries, activities, and products directly from the homepage.
+
+3. **Make a Booking**
+   - Select an activity, transportation, or product and click "Book Now."
+   - Fill in the required details such as date, number of participants, and payment information.
+   - Confirm the booking and check your "My Bookings" section for details.
+
+4. **Share Experiences**
+   - Click the "Share" button on an activity or itinerary page to copy a link or send it via email.
+   - Add comments and reviews after participating in activities.
+
+### Tour Guides
+
+1. **Sign Up and Submit Documents**
+   - Create an account and select "Tour Guide" as your role.
+   - Upload required documents like ID and certifications for verification.
+
+2. **Profile Setup**
+   - Once approved, log in and complete your profile by adding your bio, expertise, and photos.
+
+3. **Create Itineraries**
+   - Navigate to the "Itineraries" section and click "Create New."
+   - Add details such as title, description, activities, and schedule.
+   - Save or publish the itinerary to make it visible to tourists.
+
+4. **Manage Bookings**
+   - View bookings from tourists in the "My Bookings" dashboard.
+   - Respond to inquiries and confirm or modify bookings as needed.
+
+### Tourism Governors
+
+1. **Log In to the Dashboard**
+   - Access the admin portal using your credentials.
+
+2. **Manage Tags**
+   - Create, edit, or delete tags that can be associated with activities, museums, or historical places.
+
+3. **Manage Historical Places and Museums**
+   - Use the "Manage Content" section to add, update, or remove details of museums and historical places, including descriptions, locations, ticket prices, and photos.
+
+### Admins
+
+1. **Account Management**
+   - Log in to the system using your credentials.
+   - Navigate to the "Users" section to:
+     - Change your account password.
+     - Recover a forgotten password using an OTP sent to the registered email.
+     - Add new Tourism Governors and Admins by creating a unique username and password for them.
+
+2. **User and Content Moderation**
+   - Access the "Moderation" section to:
+     - View documents uploaded by Tour Guides, Advertisers, and Sellers during registration.
+     - Accept or reject registration requests based on the uploaded documents.
+     - Delete user accounts from the system if necessary.
+     - Flag inappropriate events or itineraries.
+
+3. **Complaint Management**
+   - Open the "Complaints" section to:
+     - View all complaints along with their statuses (pending/resolved).
+     - View details of a specific complaint.
+     - Mark complaints as pending or resolved.
+     - Reply to complaints submitted by users.
+     - Sort complaints by date or filter them by status.
+
+4. **Product Management**
+   - Navigate to the "Products" section to:
+     - View a list of all available products, including their details (picture, price, description, ratings, reviews, available quantity, and sales).
+     - Add new products with relevant details.
+     - Upload product images.
+     - Edit product details and pricing.
+     - Archive or unarchive products.
+     - Receive notifications (both in the system and via email) when products are out of stock.
+
+5. **Reporting and Analytics**
+   - Access the "Reports" section to:
+     - View sales reports for events, itineraries, and gift shop sales.
+     - Filter reports by product, date, or month.
+     - View total registered users and new users added per month.
+
+6. **Activity and Tag Management**
+   - Manage categories and tags by:
+     - Creating, reading, updating, and deleting activity categories (e.g., Food, Concerts, Parks).
+     - Creating, reading, updating, and deleting preference tags (e.g., Historic Areas, Family-friendly).
+
+7. **Promotions Management**
+   - Navigate to the "Promotions" section to create promotional codes for discounts on events, itineraries, or products.
+
+### Advertisers
+
+1. **Account and Profile Management**
+   - Register as an advertiser and log in.
+   - Navigate to the "Profile" section to update your account details, including:
+     - Company website link.
+     - Hotline and other contact information.
+     - Company profile details.
+   - Upload a company logo or relevant image.
+   - Accept terms and conditions when updating your profile or after account approval.
+   - Request account deletion via the "Profile" section if needed.
+
+2. **Activity Management**
+   - Navigate to the "Activities" section to manage your activities:
+     - Click "Create New Activity" to add details such as:
+       - Date and time of the activity.
+       - Location (integrated with Google Maps).
+       - Price or price range.
+       - Category, tags, and special discounts.
+       - Status (open or closed for booking).
+     - View, update, or delete existing activities as needed.
+
+3. **Transportation Management**
+   - Navigate to the "Transportation" section to manage transport services:
+     - Click "Create New Transportation" to add details such as:
+       - Date and time of the service.
+       - Pickup and drop-off locations.
+       - Price.
+     - Update or delete existing transport services as required.
+
+4. **Reporting and Analytics**
+   - Access the "Reports" section to view performance metrics:
+     - View sales reports, including revenue generated from activities.
+     - Filter reports by activity, date, or month.
+     - Access participant reports detailing the number of tourists attending activities, with monthly filters.
+
+5. **Notifications**
+   - Check the "Notifications" section for system updates:
+     - Receive notifications for flagged activities.
+     - Access email alerts for flagged content.
+
+6. **View and Manage Content**
+   - Access a complete list of created activities and transport services in the "Manage Content" section.
+   - Use filters and search tools to find specific entries.
+
+### Sellers
+
+1. **Product Management**
+   - Add new products with the following details:
+     - Name
+     - Price
+     - Description
+     - Available quantity
+   - Upload product images.
+   - Edit product details, including price and description.
+   - Archive and unarchive products as needed.
+
+2. **Inventory and Notifications**
+   - View available quantity and sales data for each product.
+   - Receive notifications via email and system alerts when a product goes out of stock.
+
+3. **Sales and Revenue Reports**
+   - View a detailed sales report containing revenue data.
+   - Filter sales reports by product, date, or month.
+
+4. **Product Discovery**
+   - Provide a list of all available products, including:
+     - Product images
+     - Prices
+     - Descriptions
+     - Ratings and reviews
+   - Search for products based on their names.
+   - Filter products by price.
+   - Sort products by ratings.
+
+## General Tips
+- Always keep your profile and content updated for better visibility.   
     
 ## Contribute 
 ### The app is far from perfect and would indeed benefit from the expertise of others , All you need to do to contribute in the development of this app  is to follow the next simple steps :-
